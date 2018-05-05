@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map width="128" height="128" maxEntityCount="20" background="Space">
+  <Entity name="RockAsteroid" spawnRate="0.3"></Entity>
+  <Entity name="LavaAsteroid" spawnRate="0.3"></Entity>
+  <Entity name="BlueAsteroid" spawnRate="0.15"></Entity>
+  <Entity name="GreenAsteroid" spawnRate="0.15"></Entity>
+  <Entity name="YellowAsteroid" spawnRate="0.15"></Entity>
+</Map>

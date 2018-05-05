@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+  <Type>Enemy</Type>
+  <Sprite>Coin3</Sprite>
+  <Animation>
+    <Action name="default" delay="0.2">
+      <Frame>Coin1</Frame>
+      <Frame>Coin2</Frame>
+      <Frame>Coin3</Frame>
+      <Frame>Coin4</Frame>
+    </Action>
+  </Animation>
+</Entity>

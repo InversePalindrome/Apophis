@@ -1,0 +1,103 @@
+/*
+Copyright (c) 2018 Inverse Palindrome
+JATR66 - Map.cpp
+InversePalindrome.com
+*/
+
+
+#include "Map.hpp"
+#include "Events.hpp"
+
+#include <tinyxml2/tinyxml2.h>
+
+#include <cocos/2d/CCSprite.h>
+#include <cocos/platform/CCFileUtils.h>
+
+
+Map::Map(EntityFactory& entityFactory, entityx::EventManager& eventManager) :
+	entityFactory(entityFactory),
+	eventManager(eventManager),
+	maxEntityCount(0u)
+{
+}
+
+void Map::init(cocos2d::Node* mainNode)
+{
+	this->mainNode = mainNode;
+}
+
+void Map::load(const std::string& fileName)
+{
+	auto* fileUtils = cocos2d::FileUtils::getInstance();
+	const auto& path = fileUtils->fullPathForFilename(fileName + ".xml");
+	const auto& data = fileUtils->getStringFromFile(path);
+
+	tinyxml2::XMLDocument doc;
+	doc.Parse(data.c_str());
+
+	if (const auto* mapNode = doc.RootElement())
+	{
+		const auto* width = mapNode->Attribute("width");
+		const auto* height = mapNode->Attribute("height");
+
+		if (width && height)
+		{
+			dimensions = { std::stof(width), std::stof(height) };
+		}
+		if (const auto* background = mapNode->Attribute("background"))
+		{
+			auto* sprite = cocos2d::Sprite::createWithSpriteFrameName(background);
+			sprite->getTexture()->setTexParameters({ GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT });
+			sprite->setTextureRect({ 0.f, 0.f, dimensions.x * PTM_RATIO, dimensions.y * PTM_RATIO });
+
+			mainNode->addChild(sprite);
+		}
+		if (const auto* maxEntityCount = mapNode->Attribute("maxEntityCount"))
+		{
+			this->maxEntityCount = std::stoull(maxEntityCount);
+		}
+		
+		float totalSpawnRate = 0.f;
+
+		for (const auto* entityNode = mapNode->FirstChildElement("Entity"); entityNode; entityNode = entityNode->NextSiblingElement("Entity"))
+		{
+			const auto* name = entityNode->Attribute("name");
+			const auto* spawnRate = entityNode->Attribute("spawnRate");
+
+			if (name && spawnRate)
+			{
+				totalSpawnRate += std::stof(spawnRate);
+
+				entitySpawnRates.insert({ totalSpawnRate, name });
+			}
+		}
+	}
+
+	generateMap();
+}
+
+b2Vec2 Map::getDimensions() const
+{
+	return dimensions;
+}
+
+void Map::generateMap()
+{
+	for (std::size_t i = 0; i < maxEntityCount; ++i)
+	{
+		auto randomSpawnRate = cocos2d::rand_0_1();
+
+		for (const auto& [rate, name] : entitySpawnRates)
+		{
+			if (randomSpawnRate <= rate)
+			{
+				auto entity = entityFactory.createEntity(name);
+
+				eventManager.emit(SetPosition{ entity, { cocos2d::rand_minus1_1() * dimensions.x / 2.f, cocos2d::rand_minus1_1() * dimensions.y / 2.f } });
+				eventManager.emit(SetRotation{ entity, cocos2d::RandomHelper::random_real(0.f, 2.f * PI) });
+
+				break;
+			}
+		}
+	}
+}

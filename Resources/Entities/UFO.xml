@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+  <Player></Player>
+  <Weapon projectileName="laser" projectileVelocity="16" reloadTime="0.5"></Weapon>
+  <Speed>16</Speed>
+  <Sprite>UFO</Sprite>
+  <Body object="Enemy" type="2" linearDamping="1" x="0" y="0" fixedRotation="false">
+     <Fixture shape="circle" radius="1.6" density="0.3"></Fixture>
+  </Body>
+  <Sound>
+    <Action name="Shoot" filename="Laser.mp3"></Action>
+  </Sound>
+</Entity>

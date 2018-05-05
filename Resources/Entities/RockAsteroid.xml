@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+  <Sprite>RockAsteroid</Sprite>
+  <Body object="Asteroid" type="0">
+    <Fixture shape="circle" radius="2"></Fixture>
+  </Body>
+</Entity>

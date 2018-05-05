@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+  <AI></AI>
+  <Sprite>SpaceCruiser</Sprite>
+  <Body object="Enemy" type="2" linearDamping="0.3" x="10" y="10">
+    <Fixture shape="circle" radius="1.6" density="0.3"></Fixture>
+  </Body>
+  <Speed>12</Speed>
+  <Explosion name="boom" time="2"></Explosion>
+  <Health>3</Health>
+  <Evade></Evade>
+</Entity>

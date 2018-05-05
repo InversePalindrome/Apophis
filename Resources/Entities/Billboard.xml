@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+  <Label text="HELLO WORLD" font="Bebas Regular" fontSize="100" r="207" g="16" b="32" a="255" xPosition="500" yPosition="500"></Label>
+</Entity>

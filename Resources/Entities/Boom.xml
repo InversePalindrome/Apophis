@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+  <Sprite>Explosion1</Sprite>
+  <Body type="2" fixedRotation="true">
+    <Fixture shape="circle" radius="0.01" density="0.001"></Fixture>
+  </Body>
+  <Sound>
+    <Action name="Explosion" filename="Boom.mp3"></Action>
+  </Sound>
+  <Animation>
+    <Action name="Explosion" delay="0.2">
+      <Frame>Explosion1</Frame>
+      <Frame>Explosion2</Frame>
+      <Frame>Explosion3</Frame>
+      <Frame>Explosion4</Frame>
+      <Frame>Explosion5</Frame>
+      <Frame>Explosion6</Frame>
+    </Action>
+  </Animation>
+</Entity>
