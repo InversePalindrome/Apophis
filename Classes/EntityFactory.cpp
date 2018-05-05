@@ -14,15 +14,14 @@ InversePalindrome.com
 #include "LabelComponent.hpp"
 #include "AvoidComponent.hpp"
 #include "FlockComponent.hpp"
-#include "HealthComponent.hpp"
 #include "SpriteComponent.hpp"
 #include "WeaponComponent.hpp"
-#include "DamageComponent.hpp"
 #include "ArriveComponent.hpp"
 #include "WanderComponent.hpp"
 #include "PatrolComponent.hpp"
 #include "FollowComponent.hpp"
 #include "PredictComponent.hpp"
+#include "HitpointComponent.hpp"
 #include "ParticleComponent.hpp"
 #include "AnimationComponent.hpp"
 #include "ExplosionComponent.hpp"
@@ -41,8 +40,8 @@ EntityFactory::EntityFactory(entityx::EntityManager& entityManager, entityx::Eve
 	parsers["Align"] = [](auto entity, const auto* componentNode) { entity.assign<AlignComponent>(); };
 	parsers["Cohesion"] = [](auto entity, const auto* componentNode) { entity.assign<CohesionComponent>(); };
 	parsers["Separate"] = [](auto entity, const auto* componentNode) { entity.assign<SeparateComponent>(); };
-	parsers["Pursue"] = [](auto entity, const auto* componentNode) { entity.assign<PredictComponent<Pursue>>(componentNode); };
-	parsers["Evade"] = [](auto entity, const auto* componentNode) { entity.assign<PredictComponent<Evade>>(componentNode); };
+	parsers["Pursue"] = [](auto entity, const auto* componentNode) { entity.assign<PursueComponent>(componentNode); };
+	parsers["Evade"] = [](auto entity, const auto* componentNode) { entity.assign<EvadeComponent>(componentNode); };
 	parsers["Avoid"] = [](auto entity, const auto* componentNode) { entity.assign<AvoidComponent>(componentNode); };
 	parsers["Arrive"] = [](auto entity, const auto* componentNode) { entity.assign<ArriveComponent>(componentNode); };
 	parsers["Wander"] = [](auto entity, const auto* componentNode) { entity.assign<WanderComponent>(componentNode); };

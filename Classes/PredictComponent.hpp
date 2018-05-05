@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - PredictComponent.cpp
+JATR66 - PredictComponent.hpp
 InversePalindrome.com
 */
 
@@ -46,3 +46,6 @@ void PredictComponent<T>::setPredictionTime(float predictionTime)
 {
 	this->predictionTime = predictionTime;
 }
+
+using PursueComponent = PredictComponent<struct Pursue>;
+using EvadeComponent = PredictComponent<struct Evade>;

@@ -8,9 +8,8 @@ InversePalindrome.com
 #include "CombatSystem.hpp"
 #include "BodyComponent.hpp"
 #include "SpeedComponent.hpp"
-#include "HealthComponent.hpp"
-#include "DamageComponent.hpp"
 #include "WeaponComponent.hpp"
+#include "HitpointComponent.hpp"
 #include "ExplosionComponent.hpp"
 
 
