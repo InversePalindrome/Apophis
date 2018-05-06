@@ -17,10 +17,16 @@ InversePalindrome.com
 namespace SteeringBehaviors
 {
 	void seek(b2Body* body, const b2Vec2& targetPosition, float maxSpeed);
-	void pursue(b2Body* body, const b2Vec2& targetPosition, const b2Vec2& targetVelocity, float maxSpeed, float predictionTime);
-	void arrive(b2Body* body, const b2Vec2& targetPosition, float maxSpeed, float slowRadius);
-    void avoid(b2Body* body, const b2Vec2& targetPosition, const std::vector<b2Body*>& bodies, float maxSpeed);
-	void wander(b2Body* body, float wanderDistance, float wanderRadius, float wanderRate, float& wanderAngle, float maxSpeed);
+	void pursue(b2Body* body, const b2Vec2& targetPosition, const b2Vec2& targetVelocity, float maxSpeed = 10.f, float predictionTime = 5.f);
+	void arrive(b2Body* body, const b2Vec2& targetPosition, float maxSpeed = 10.f, float slowRadius = 5.f);
+    void avoid(b2Body* body, float avoidanceDistance = 5.f, float avoidanceForce = 10.f);
+	void wander(b2Body* body, float wanderDistance, float wanderRadius, float wanderRate, float& wanderAngle, float maxSpeed = 10.f);
+
+	void align(b2Body* agentBody, const std::vector<b2Body*>& neighborBodies, float maxSpeed);
+	void cohesion(b2Body* agentBody, const std::vector<b2Body*>& neighborBodies, float maxSpeed);
+	void separate(b2Body* agentBody, const std::vector<b2Body*>& neighborBodies, float maxSpeed);
+
+	void follow(b2Body* body, const b2Vec2& targetPosition, const b2Vec2& targetVelocity, float distanceFromLeader = 5.f, float maxSpeed = 10.f);
 	
 	b2Vec2 desiredVelocity(const b2Vec2& bodyPosition, const b2Vec2& targetPosition, float maxSpeed);
 }

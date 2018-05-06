@@ -15,13 +15,13 @@ class AvoidComponent
 public:
 	explicit AvoidComponent(const tinyxml2::XMLElement* componentNode);
 
-	float getVisionDistance() const;
-	void setVisionDistance(float visionDistance);
+	float getAvoidanceDistance() const;
+	void setAvoidanceDistance(float avoidanceDistance);
 
 	float getAvoidanceForce() const;
 	void setAvoidanceForce(float avoidanceForce);
 
 private:
-	float visionDistance;
+	float avoidanceDistance;
 	float avoidanceForce;
 };

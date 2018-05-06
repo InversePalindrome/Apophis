@@ -9,7 +9,7 @@ InversePalindrome.com
 
 
 ExplosionComponent::ExplosionComponent(const tinyxml2::XMLElement* componentNode) :
-	explosionTime(0.f)
+	explosionTime(1.f)
 {
 	if (const auto* explosionName = componentNode->Attribute("name"))
 	{

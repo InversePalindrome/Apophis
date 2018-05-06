@@ -6,8 +6,11 @@ InversePalindrome.com
 
 
 #include "BodyData.hpp"
+#include "RayCastQuery.hpp"
 #include "PhysicsUtility.hpp"
 #include "SteeringBehaviors.hpp"
+
+#include <Box2D/Dynamics/b2World.h>
 
 #include <cocos/base/ccRandom.h>
 
@@ -45,15 +48,24 @@ void SteeringBehaviors::arrive(b2Body* body, const b2Vec2& targetPosition,  floa
 	}
 }
 
-void SteeringBehaviors::avoid(b2Body* body, const b2Vec2& lookAhead, const std::vector<b2Body*>& rayBodies, float maxSpeed)
+void SteeringBehaviors::avoid(b2Body* body, float avoidanceDistance, float avoidanceForce)
 {
-	for (const auto *rayBody : rayBodies)
+	auto lookAhead = body->GetLinearVelocity();
+	lookAhead.Normalize();
+	lookAhead *= avoidanceDistance;
+	lookAhead += body->GetPosition();
+
+	RayCastQuery rayQuery;
+
+	body->GetWorld()->RayCast(&rayQuery, body->GetPosition(), lookAhead);
+
+	for (const auto *rayBody : rayQuery.queryBodies)
 	{
 		if (const auto* rayBodyData = static_cast<BodyData*>(rayBody->GetUserData()))
 		{
 			if (rayBodyData->objectType & ObjectType::Obstacle)
 			{
-				body->ApplyLinearImpulse(desiredVelocity(rayBody->GetPosition(), lookAhead, maxSpeed), body->GetWorldCenter(), true);
+				body->ApplyLinearImpulse(desiredVelocity(rayBody->GetPosition(), lookAhead, avoidanceForce), body->GetWorldCenter(), true);
 			}
 		}
 	}
@@ -69,6 +81,125 @@ void SteeringBehaviors::wander(b2Body* body, float wanderDistance, float wanderR
 	wanderAngle += cocos2d::random() * wanderRate;
 
 	seek(body, body->GetPosition() + wanderCenter, maxSpeed);
+}
+
+void SteeringBehaviors::align(b2Body* agentBody, const std::vector<b2Body*>& neighborBodies, float maxSpeed)
+{
+	if (const auto* agentData = static_cast<BodyData*>(agentBody->GetUserData()))
+	{
+		b2Vec2 alignForce(0.f, 0.f);
+		std::size_t groupCount = 0u;
+
+		for (const auto* neighborBody : neighborBodies)
+		{
+			if (agentBody != neighborBody)
+			{
+				if (const auto* neighborBodyData = static_cast<BodyData*>(neighborBody->GetUserData()))
+				{
+					if (neighborBodyData->objectType & agentData->objectType)
+					{
+						alignForce += neighborBody->GetLinearVelocity();
+						++groupCount;
+					}
+				}
+			}
+		}
+
+		if (groupCount > 0u)
+		{
+			alignForce *= 1 / groupCount;
+			alignForce.Normalize();
+			alignForce *= maxSpeed;
+
+			agentBody->ApplyLinearImpulse(alignForce, agentBody->GetWorldCenter(), true);
+		}
+	}
+}
+
+void SteeringBehaviors::cohesion(b2Body* agentBody, const std::vector<b2Body*>& neighborBodies, float maxSpeed)
+{
+	if (const auto* agentData = static_cast<BodyData*>(agentBody->GetUserData()))
+	{
+		b2Vec2 cohesionForce(0.f, 0.f);
+		std::size_t groupCount = 0u;
+
+		for (const auto* neighborBody : neighborBodies)
+		{
+			if (agentBody != neighborBody)
+			{
+				if (const auto* neighborBodyData = static_cast<BodyData*>(neighborBody->GetUserData()))
+				{
+					if (neighborBodyData->objectType & agentData->objectType)
+					{
+						cohesionForce += neighborBody->GetPosition();
+						++groupCount;
+					}
+				}
+			}
+		}
+
+		if (groupCount > 0u)
+		{
+			cohesionForce *= 1 / groupCount;
+			cohesionForce -= agentBody->GetPosition();
+			cohesionForce.Normalize();
+			cohesionForce *= maxSpeed;
+
+			agentBody->ApplyLinearImpulse(cohesionForce, agentBody->GetWorldCenter(), true);
+		}
+	}
+}
+
+void SteeringBehaviors::separate(b2Body* agentBody, const std::vector<b2Body*>& neighborBodies, float maxSpeed)
+{
+	if (const auto* agentData = static_cast<BodyData*>(agentBody->GetUserData()))
+	{
+		b2Vec2 separationForce(0.f, 0.f);
+		std::size_t groupCount = 0u;
+
+		for (const auto* neighborBody : neighborBodies)
+		{
+			if (agentBody != neighborBody)
+			{
+				if (const auto* neighborBodyData = static_cast<BodyData*>(neighborBody->GetUserData()))
+				{
+					if (neighborBodyData->objectType & agentData->objectType)
+					{
+						separationForce += agentBody->GetPosition() - neighborBody->GetPosition();
+						++groupCount;
+					}
+				}
+			}
+		}
+
+		if (groupCount > 0u)
+		{
+			separationForce *= -1 / groupCount;
+			separationForce.Normalize();
+			separationForce *= maxSpeed;
+
+			agentBody->ApplyLinearImpulse(separationForce, agentBody->GetWorldCenter(), true);
+		}
+	}
+}
+
+void SteeringBehaviors::follow(b2Body* body, const b2Vec2& targetPosition, const b2Vec2& targetVelocity, float distanceFromLeader, float maxSpeed)
+{
+	auto leaderDirection = targetVelocity;
+	leaderDirection.Normalize();
+	leaderDirection *= distanceFromLeader;
+
+	for (const auto* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
+	{
+		b2RayCastOutput output;
+
+		if (fixture->RayCast(&output, { targetPosition, targetPosition + leaderDirection, 1.f}, 0))
+		{
+			pursue(body, targetPosition, targetVelocity, -maxSpeed);
+		}
+	}
+
+	arrive(body, targetPosition - leaderDirection, maxSpeed, distanceFromLeader);
 }
 
 b2Vec2 SteeringBehaviors::desiredVelocity(const b2Vec2& bodyPosition, const b2Vec2& targetPosition, float maxSpeed)

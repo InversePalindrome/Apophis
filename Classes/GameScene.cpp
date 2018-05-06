@@ -63,6 +63,8 @@ bool GameScene::init()
 	map.load("Andromeda");
 	entityFactory.createEntity("UFO");
 	entityFactory.createEntity("SpaceCruiser");
+	entityFactory.createEntity("SpaceCruiser");
+	entityFactory.createEntity("SpaceCruiser");
 	entityFactory.createEntity("Star");
 
 	return true;

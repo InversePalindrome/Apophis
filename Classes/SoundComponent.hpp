@@ -10,7 +10,6 @@ InversePalindrome.com
 #include <tinyxml2/tinyxml2.h>
 
 #include <string>
-#include <string_view>
 #include <unordered_map>
 
 

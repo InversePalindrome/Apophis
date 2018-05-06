@@ -7,7 +7,6 @@ InversePalindrome.com
 
 #include "Tags.hpp"
 #include "AreaQuery.hpp"
-#include "RayCastQuery.hpp"
 #include "FlockComponent.hpp"
 #include "BehaviorSystem.hpp"
 #include "SpeedComponent.hpp"
@@ -19,7 +18,6 @@ InversePalindrome.com
 #include "FollowComponent.hpp"
 #include "PredictComponent.hpp"
 #include "SteeringBehaviors.hpp"
-#include "FlockingBehaviors.hpp"
 
 
 void BehaviorSystem::configure(entityx::EventManager& eventManager)
@@ -152,16 +150,7 @@ void BehaviorSystem::updateAvoid(entityx::Entity entity)
 
 	if(avoid && body)
 	{
-		auto lookAhead = body->getLinearVelocity();
-		lookAhead.Normalize();
-		lookAhead *= avoid->getVisionDistance();
-		lookAhead += body->getPosition();
-
-		RayCastQuery rayQuery;
-
-		body->getWorld()->RayCast(&rayQuery, body->getPosition(), lookAhead);
-
-		SteeringBehaviors::avoid(body->getBody(), lookAhead, rayQuery.queryBodies, avoid->getAvoidanceForce());
+		SteeringBehaviors::avoid(body->getBody(), avoid->getAvoidanceDistance(), avoid->getAvoidanceForce());
 	}
 }
 
@@ -183,15 +172,15 @@ void BehaviorSystem::updateFlocking(entityx::Entity entity)
 
 		if (entity.has_component<AlignComponent>())
 		{
-			FlockingBehaviors::align(body->getBody(), areaQuery.queryBodies, speed->getMaxSpeed());
+		    SteeringBehaviors::align(body->getBody(), areaQuery.queryBodies, speed->getMaxSpeed());
 		}
 		if (entity.has_component<CohesionComponent>())
 		{
-			FlockingBehaviors::cohesion(body->getBody(), areaQuery.queryBodies, speed->getMaxSpeed());
+			SteeringBehaviors::cohesion(body->getBody(), areaQuery.queryBodies, speed->getMaxSpeed());
 		}
 		if (entity.has_component<SeparateComponent>())
 		{
-			FlockingBehaviors::separate(body->getBody(), areaQuery.queryBodies, speed->getMaxSpeed());
+			SteeringBehaviors::separate(body->getBody(), areaQuery.queryBodies, speed->getMaxSpeed());
 		}
 	}
 }
@@ -204,14 +193,7 @@ void BehaviorSystem::updateFollow(entityx::Entity entity)
 
 	if(follow && body && speed)
 	{
-		auto leaderDirection = targetBody->getLinearVelocity();
-		leaderDirection.Normalize();
-		leaderDirection *= follow->getDistanceFromLeader();
-		
-		auto ahead = targetBody->getPosition() + leaderDirection;
-		auto behind = targetBody->getPosition() - leaderDirection;
-
-		SteeringBehaviors::arrive(body->getBody(), behind, speed->getMaxSpeed(), follow->getDistanceFromLeader());
+		SteeringBehaviors::follow(body->getBody(), targetBody->getPosition(), targetBody->getLinearVelocity(), follow->getDistanceFromLeader(), speed->getMaxSpeed());
 	}
 }
 
