@@ -11,6 +11,7 @@ InversePalindrome.com
 #include "BehaviorSystem.hpp"
 #include "SpeedComponent.hpp"
 #include "AvoidComponent.hpp"
+#include "QueueComponent.hpp"
 #include "PhysicsUtility.hpp"
 #include "ArriveComponent.hpp"
 #include "WanderComponent.hpp"
@@ -39,8 +40,11 @@ void BehaviorSystem::update(entityx::EntityManager& entityManager, entityx::Even
 		updateWander(entity);
 		updatePatrol(entity);
 		updateAvoid(entity);
-		updateFlocking(entity);
+		updateAlign(entity);
+		updateCohesion(entity);
+		updateSeparate(entity);
 		updateFollow(entity);
+		updateQueue(entity);
 		updateRotation(entity);
 	}
 }
@@ -154,34 +158,39 @@ void BehaviorSystem::updateAvoid(entityx::Entity entity)
 	}
 }
 
-void BehaviorSystem::updateFlocking(entityx::Entity entity)
+void BehaviorSystem::updateAlign(entityx::Entity entity)
 {
 	auto flock = entity.component<FlockComponent>();
 	auto body = entity.component<BodyComponent>();
 	auto speed = entity.component<SpeedComponent>();
 
-	if(flock && body && speed)
+	if (entity.has_component<AlignComponent>() && flock && body && speed)
 	{
-		AreaQuery areaQuery;
+		SteeringBehaviors::align(body->getBody(), flock->getGroupRadius(), speed->getMaxSpeed());
+	}
+}
 
-		b2AABB groupArea;
-		groupArea.lowerBound = { body->getPosition().x - flock->getGroupRadius(), body->getPosition().y - flock->getGroupRadius() };
-		groupArea.upperBound = { body->getPosition().x + flock->getGroupRadius(), body->getPosition().y + flock->getGroupRadius() };
+void BehaviorSystem::updateCohesion(entityx::Entity entity)
+{
+	auto flock = entity.component<FlockComponent>();
+	auto body = entity.component<BodyComponent>();
+	auto speed = entity.component<SpeedComponent>();
 
-		body->getWorld()->QueryAABB(&areaQuery, groupArea);
+	if (entity.has_component<CohesionComponent>() && flock && body && speed)
+	{
+		SteeringBehaviors::cohesion(body->getBody(), flock->getGroupRadius(), speed->getMaxSpeed());
+	}
+}
 
-		if (entity.has_component<AlignComponent>())
-		{
-		    SteeringBehaviors::align(body->getBody(), areaQuery.queryBodies, speed->getMaxSpeed());
-		}
-		if (entity.has_component<CohesionComponent>())
-		{
-			SteeringBehaviors::cohesion(body->getBody(), areaQuery.queryBodies, speed->getMaxSpeed());
-		}
-		if (entity.has_component<SeparateComponent>())
-		{
-			SteeringBehaviors::separate(body->getBody(), areaQuery.queryBodies, speed->getMaxSpeed());
-		}
+void BehaviorSystem::updateSeparate(entityx::Entity entity)
+{
+	auto flock = entity.component<FlockComponent>();
+	auto body = entity.component<BodyComponent>();
+	auto speed = entity.component<SpeedComponent>();
+
+	if (entity.has_component<SeparateComponent>() && flock && body && speed)
+	{
+		SteeringBehaviors::separate(body->getBody(), flock->getGroupRadius(), speed->getMaxSpeed());
 	}
 }
 
@@ -194,6 +203,19 @@ void BehaviorSystem::updateFollow(entityx::Entity entity)
 	if(follow && body && speed)
 	{
 		SteeringBehaviors::follow(body->getBody(), targetBody->getPosition(), targetBody->getLinearVelocity(), follow->getDistanceFromLeader(), speed->getMaxSpeed());
+	}
+}
+
+void BehaviorSystem::updateQueue(entityx::Entity entity)
+{
+	auto queue = entity.component<QueueComponent>();
+	auto flock = entity.component<FlockComponent>();
+	auto body = entity.component<BodyComponent>();
+	auto speed = entity.component<SpeedComponent>();
+
+	if (queue && flock && body && speed)
+	{
+		SteeringBehaviors::queue(body->getBody(), flock->getGroupRadius(), queue->getQueueDistance(), queue->getShrinkingFactor(), speed->getMaxSpeed());
 	}
 }
 

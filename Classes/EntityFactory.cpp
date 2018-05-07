@@ -14,6 +14,7 @@ InversePalindrome.com
 #include "LabelComponent.hpp"
 #include "AvoidComponent.hpp"
 #include "FlockComponent.hpp"
+#include "QueueComponent.hpp"
 #include "SpriteComponent.hpp"
 #include "WeaponComponent.hpp"
 #include "ArriveComponent.hpp"
@@ -48,6 +49,7 @@ EntityFactory::EntityFactory(entityx::EntityManager& entityManager, entityx::Eve
 	parsers["Patrol"] = [](auto entity, const auto* componentNode) { entity.assign<PatrolComponent>(componentNode); };
 	parsers["Flock"] = [](auto entity, const auto* componentNode) { entity.assign<FlockComponent>(componentNode); };
 	parsers["Follow"] = [](auto entity, const auto* componentNode) { entity.assign<FollowComponent>(componentNode); };
+	parsers["Queue"] = [](auto entity, const auto* componentNode) { entity.assign<QueueComponent>(componentNode); };
 	parsers["Body"] = [&eventManager](auto entity, const auto* componentNode) { eventManager.emit(CreateBody{ entity, componentNode }); };
 	parsers["Sprite"] = [](auto entity, const auto* componentNode) { entity.assign<SpriteComponent>(componentNode); };
 	parsers["Label"] = [](auto entity, const auto* componentNode) { entity.assign<LabelComponent>(componentNode); };

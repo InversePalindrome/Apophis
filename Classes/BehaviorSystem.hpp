@@ -31,7 +31,10 @@ private:
 	void updateWander(entityx::Entity entity);
 	void updatePatrol(entityx::Entity entity);
 	void updateAvoid(entityx::Entity entity);
-	void updateFlocking(entityx::Entity entity);
+	void updateAlign(entityx::Entity entity);
+	void updateCohesion(entityx::Entity entity);
+	void updateSeparate(entityx::Entity entity);
 	void updateFollow(entityx::Entity entity);
+	void updateQueue(entityx::Entity entity);
 	void updateRotation(entityx::Entity entity);
 };

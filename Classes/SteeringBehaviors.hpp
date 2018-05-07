@@ -22,11 +22,12 @@ namespace SteeringBehaviors
     void avoid(b2Body* body, float avoidanceDistance = 5.f, float avoidanceForce = 10.f);
 	void wander(b2Body* body, float wanderDistance, float wanderRadius, float wanderRate, float& wanderAngle, float maxSpeed = 10.f);
 
-	void align(b2Body* agentBody, const std::vector<b2Body*>& neighborBodies, float maxSpeed);
-	void cohesion(b2Body* agentBody, const std::vector<b2Body*>& neighborBodies, float maxSpeed);
-	void separate(b2Body* agentBody, const std::vector<b2Body*>& neighborBodies, float maxSpeed);
+	void align(b2Body* body, float groupRadius = 1.f, float maxSpeed = 10.f);
+	void cohesion(b2Body* body, float groupRadius = 1.f, float maxSpeed = 10.f);
+	void separate(b2Body* body,  float groupRadius = 1.f, float maxSpeed = 10.f);
 
 	void follow(b2Body* body, const b2Vec2& targetPosition, const b2Vec2& targetVelocity, float distanceFromLeader = 5.f, float maxSpeed = 10.f);
+	void queue(b2Body* body,  float groupRadius = 5.f, float queueDistance = 1.f, float shrinkFactor = 0.3f, float maxSpeed = 10.f);
 	
-	b2Vec2 desiredVelocity(const b2Vec2& bodyPosition, const b2Vec2& targetPosition, float maxSpeed);
+	b2Vec2 desiredVelocity(const b2Vec2& bodyPosition, const b2Vec2& targetPosition, float maxSpeed = 10.f);
 }
