@@ -8,9 +8,9 @@ InversePalindrome.com
 #include "PhysicsSystem.hpp"
 
 
-PhysicsSystem::PhysicsSystem(cocos2d::Node* mainNode, entityx::EventManager& eventManager) :
+PhysicsSystem::PhysicsSystem(cocos2d::Node* gameNode, entityx::EventManager& eventManager) :
 	world({ 0.f, 0.f }),
-	collisionManager(mainNode, eventManager)
+	collisionManager(gameNode, eventManager)
 {
 	world.SetContactListener(&collisionManager);
 }

@@ -18,7 +18,7 @@ InversePalindrome.com
 class CombatSystem : public entityx::System<CombatSystem>, public entityx::Receiver<CombatSystem>
 {
 public:
-	CombatSystem(cocos2d::Node* mainNode, EntityFactory& entityFactory);
+	CombatSystem(cocos2d::Node* gameNode, EntityFactory& entityFactory);
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
@@ -27,7 +27,7 @@ public:
 	virtual void receive(const CombatOcurred& event);
 
 private:
-	cocos2d::Node* mainNode;
+	cocos2d::Node* gameNode;
 	EntityFactory& entityFactory;
 	entityx::EventManager* eventManager;
 

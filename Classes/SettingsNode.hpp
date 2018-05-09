@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - SettingsScene.hpp
+JATR66 - SettingsNode.hpp
 InversePalindrome.com
 */
 
@@ -9,20 +9,20 @@ InversePalindrome.com
 
 #include "KeyboardManager.hpp"
 
-#include <cocos/2d/CCLayer.h>
+#include <cocos/2d/CCNode.h>
 #include <cocos/2d/CCScene.h>
 #include <cocos/ui/UIRadioButton.h>
 
 
-class SettingsScene : public cocos2d::Layer
+class SettingsNode : public cocos2d::Node
 {
 public:
-	~SettingsScene();
+	~SettingsNode();
 
 	virtual bool init() override;
 	virtual void update(float dt) override;
 
-	CREATE_FUNC(SettingsScene);
+	CREATE_FUNC(SettingsNode);
 
 	static cocos2d::Scene* scene();
 

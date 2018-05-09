@@ -1,13 +1,13 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - MenuScene.cpp
+JATR66 - MenuNode.cpp
 InversePalindrome.com
 */
 
 
-#include "MenuScene.hpp"
+#include "MenuNode.hpp"
 #include "GameScene.hpp"
-#include "SettingsScene.hpp"
+#include "SettingsNode.hpp"
 
 #include <cocos/2d/CCMenu.h>
 #include <cocos/2d/CCLabel.h>
@@ -16,21 +16,20 @@ InversePalindrome.com
 #include <cocos/base/CCDirector.h>
 
 
-bool MenuScene::init()
+bool MenuNode::init()
 {
-	if (!Layer::init())
+	if (!Node::init())
 	{
 		return false;
 	}
 
 	auto* director = cocos2d::Director::getInstance();
-	const auto& windowSize = cocos2d::Director::getInstance()->getVisibleSize();
 
 	auto* background = cocos2d::Sprite::create("SpaceBackground.png");
-	background->setPosition(windowSize.width / 2.f, windowSize.height / 2.f);
+	background->setPosition(director->getWinSize().width / 2.f, director->getWinSize().height / 2.f);
 
 	auto* playItem = cocos2d::MenuItemSprite::create(cocos2d::Sprite::createWithSpriteFrameName("RegularRectangleButton"), cocos2d::Sprite::createWithSpriteFrameName("SelectedRectangleButton"),
-		[director](auto* sender) { director->replaceScene(GameScene::scene()); });
+		[director](auto* sender) { director->replaceScene(GameScene::create()); });
 
 	auto* playLabel = cocos2d::Label::createWithTTF("play", "Zian.ttf", 60.f);
 	playLabel->setTextColor(cocos2d::Color4B(135, 206, 250, 255));
@@ -38,7 +37,7 @@ bool MenuScene::init()
 	playItem->addChild(playLabel);
 
 	auto* settingsItem = cocos2d::MenuItemSprite::create(cocos2d::Sprite::createWithSpriteFrameName("RegularRectangleButton"), cocos2d::Sprite::createWithSpriteFrameName("SelectedRectangleButton"), 
-		[director](auto* sender) { director->pushScene(SettingsScene::scene()); });
+		[director](auto* sender) { director->pushScene(SettingsNode::scene()); });
 
 	auto* settingsLabel = cocos2d::Label::createWithTTF("settings", "Zian.ttf", 60.f);
 	settingsLabel->setTextColor(cocos2d::Color4B(135, 206, 250, 255));
@@ -55,7 +54,7 @@ bool MenuScene::init()
 
 	auto* menu = cocos2d::Menu::create(playItem, settingsItem, exitItem, nullptr);
 	menu->alignItemsVertically();
-	menu->setPosition(windowSize.width / 2.f, windowSize.height / 2.f);
+	menu->setPosition(director->getWinSize().width / 2.f, director->getWinSize().height / 2.f);
 
 	addChild(background);
 	addChild(menu);
@@ -63,10 +62,10 @@ bool MenuScene::init()
 	return true;
 }
 
-cocos2d::Scene* MenuScene::scene()
+cocos2d::Scene* MenuNode::scene()
 {
 	auto* scene = cocos2d::Scene::create();
-	scene->addChild(MenuScene::create());
+	scene->addChild(MenuNode::create());
 
 	return scene;
 }

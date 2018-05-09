@@ -1,25 +1,25 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - StartScene.hpp
+JATR66 - StartNode.hpp
 InversePalindrome.com
 */
 
 
 #include "KeyboardManager.hpp"
 
-#include <cocos/2d/CCLayer.h>
+#include <cocos/2d/CCNode.h>
 #include <cocos/2d/CCScene.h>
 
 
-class StartScene : public cocos2d::Layer
+class StartNode : public cocos2d::Node
 {
 public:
-	~StartScene();
+	~StartNode();
 
 	virtual bool init() override;
 	virtual void update(float dt) override;
 
-	CREATE_FUNC(StartScene);
+	CREATE_FUNC(StartNode);
 
 	static cocos2d::Scene* scene();
 

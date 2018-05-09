@@ -21,11 +21,6 @@ Map::Map(EntityFactory& entityFactory, entityx::EventManager& eventManager) :
 {
 }
 
-void Map::init(cocos2d::Node* mainNode)
-{
-	this->mainNode = mainNode;
-}
-
 void Map::load(const std::string& fileName)
 {
 	auto* fileUtils = cocos2d::FileUtils::getInstance();
@@ -74,6 +69,11 @@ void Map::load(const std::string& fileName)
 	}
 
 	generateMap();
+}
+
+void Map::setMainNode(cocos2d::Node* mainNode)
+{
+	this->mainNode = mainNode;
 }
 
 b2Vec2 Map::getDimensions() const

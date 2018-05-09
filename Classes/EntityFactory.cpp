@@ -22,6 +22,7 @@ InversePalindrome.com
 #include "PatrolComponent.hpp"
 #include "FollowComponent.hpp"
 #include "PredictComponent.hpp"
+#include "PowerUpComponent.hpp"
 #include "HitpointComponent.hpp"
 #include "ParticleComponent.hpp"
 #include "AnimationComponent.hpp"
@@ -61,6 +62,7 @@ EntityFactory::EntityFactory(entityx::EntityManager& entityManager, entityx::Eve
 	parsers["Weapon"] = [](auto entity, const auto* componentNode) { entity.assign<WeaponComponent>(componentNode); };
 	parsers["Explosion"] = [](auto entity, const auto* componentNode) { entity.assign<ExplosionComponent>(componentNode); };
 	parsers["Speed"] = [](auto entity, const auto* componentNode) { entity.assign<SpeedComponent>(componentNode); };
+	parsers["PowerUp"] = [](auto entity, const auto* componentNode) { entity.assign<PowerUpComponent>(componentNode); };
 }
 
 entityx::Entity EntityFactory::createEntity(const std::string& entityName)

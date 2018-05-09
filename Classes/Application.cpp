@@ -5,8 +5,8 @@ InversePalindrome.com
 */
 
 
+#include "SplashNode.hpp"
 #include "Application.hpp"
-#include "SplashScene.hpp"
 #include "AudioManager.hpp"
 
 #include <tinyxml2/tinyxml2.h>
@@ -36,7 +36,7 @@ bool Application::applicationDidFinishLaunching()
 
 	initSpriteFrames();
 
-	director->runWithScene(SplashScene::scene());
+	director->runWithScene(SplashNode::scene());
 
 	return true;
 }

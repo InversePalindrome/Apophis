@@ -1,12 +1,12 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - StartScene.cpp
+JATR66 - StartNode.cpp
 InversePalindrome.com
 */
 
 
-#include "MenuScene.hpp"
-#include "StartScene.hpp"
+#include "MenuNode.hpp"
+#include "StartNode.hpp"
 
 #include <cocos/2d/CCLabel.h>
 #include <cocos/2d/CCSprite.h>
@@ -15,14 +15,14 @@ InversePalindrome.com
 #include <cocos/2d/CCParticleSystemQuad.h>
 
 
-StartScene::~StartScene()
+StartNode::~StartNode()
 {
 	keyboardManager->release();
 }
 
-bool StartScene::init()
+bool StartNode::init()
 {
-	if (!Layer::init())
+	if (!Node::init())
 	{
 		return false;
 	}
@@ -32,7 +32,6 @@ bool StartScene::init()
 	keyboardManager = KeyboardManager::create();
 	keyboardManager->retain();
 
-	auto* director = cocos2d::Director::getInstance();
 	const auto& windowSize = cocos2d::Director::getInstance()->getVisibleSize();
 
 	auto* background = cocos2d::Sprite::create("SpaceBackground.png");
@@ -62,18 +61,18 @@ bool StartScene::init()
 	return true;
 }
 
-void StartScene::update(float dt)
+void StartNode::update(float dt)
 {
 	if (keyboardManager->isKeyPressed())
 	{
-		cocos2d::Director::getInstance()->replaceScene(MenuScene::scene());
+		cocos2d::Director::getInstance()->replaceScene(MenuNode::scene());
 	}
 }
 
-cocos2d::Scene* StartScene::scene()
+cocos2d::Scene* StartNode::scene()
 {
 	auto* scene = cocos2d::Scene::create();
-	scene->addChild(StartScene::create());
+	scene->addChild(StartNode::create());
 
 	return scene;
 }

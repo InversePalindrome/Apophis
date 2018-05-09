@@ -9,17 +9,19 @@ InversePalindrome.com
 
 #include "Map.hpp"
 #include "Events.hpp"
+#include "HudNode.hpp"
+#include "PauseNode.hpp"
 #include "MouseManager.hpp"
 #include "EntityFactory.hpp"
 #include "KeyboardManager.hpp"
 
 #include <entityx/entityx.h>
 
-#include <cocos/2d/CCLayer.h>
+#include <cocos/2d/CCNode.h>
 #include <cocos/2d/CCScene.h>
 
 
-class GameScene : public cocos2d::Layer
+class GameScene : public cocos2d::Scene
 {
 public:
 	GameScene();
@@ -30,11 +32,13 @@ public:
 	
 	CREATE_FUNC(GameScene);
 
-	static cocos2d::Scene* scene();
-
 private:
 	KeyboardManager* keyboardManager;
 	MouseManager* mouseManager;
+
+	cocos2d::Node* gameNode;
+	HudNode* hudNode;
+	PauseNode* pauseNode;
 
 	entityx::EventManager eventManager;
 	entityx::EntityManager entityManager;
@@ -43,8 +47,6 @@ private:
 	EntityFactory entityFactory;
 
 	Map map;
-
-	cocos2d::Layer* createPauseMenu();
 
 	void initSystems();
 };

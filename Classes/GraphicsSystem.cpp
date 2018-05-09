@@ -14,8 +14,9 @@ InversePalindrome.com
 #include <cocos/2d/CCActionInterval.h>
 
 
-GraphicsSystem::GraphicsSystem(cocos2d::Node* mainNode, Map& map) :
-	mainNode(mainNode),
+GraphicsSystem::GraphicsSystem(cocos2d::Node* gameNode, cocos2d::Node* hudNode, Map& map) :
+	gameNode(gameNode),
+	hudNode(hudNode),
 	map(map)
 {
 }
@@ -51,7 +52,7 @@ void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::Even
 
 void GraphicsSystem::receive(const entityx::ComponentAddedEvent<NodeComponent>& event)
 {
-	mainNode->addChild(event.component->getNode());
+	gameNode->addChild(event.component->getNode());
 }
 
 void GraphicsSystem::receive(const entityx::ComponentAddedEvent<SpriteComponent>& event)
@@ -123,15 +124,15 @@ void GraphicsSystem::receive(const PlayAction& event)
 
 void GraphicsSystem::moveView(const cocos2d::Vec2& focusPoint)
 {
-	const auto& worldPoint = mainNode->convertToWorldSpace(focusPoint);
+	const auto& worldPoint = gameNode->convertToWorldSpace(focusPoint);
 	const auto& windowSize = cocos2d::Director::getInstance()->getWinSize();
 
 	if (std::abs(focusPoint.x) < map.getDimensions().x * PTM_RATIO / 2.f - windowSize.width / 2.f)
 	{
-		mainNode->setPositionX(mainNode->getPosition().x - worldPoint.x + windowSize.width / 2.f);
+		gameNode->setPositionX(gameNode->getPosition().x - worldPoint.x + windowSize.width / 2.f);
     }
 	if (std::abs(focusPoint.y) < map.getDimensions().y  * PTM_RATIO / 2.f - windowSize.height / 2.f)
 	{
-		mainNode->setPositionY(mainNode->getPosition().y - worldPoint.y + windowSize.height / 2.f);
+		gameNode->setPositionY(gameNode->getPosition().y - worldPoint.y + windowSize.height / 2.f);
 	}
 }

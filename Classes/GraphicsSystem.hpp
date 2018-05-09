@@ -22,7 +22,7 @@ InversePalindrome.com
 class GraphicsSystem : public entityx::System<GraphicsSystem>, public entityx::Receiver<GraphicsSystem>
 {
 public:
-	GraphicsSystem(cocos2d::Node* mainNode, Map& map);
+	GraphicsSystem(cocos2d::Node* gameNode, cocos2d::Node* hudNode, Map& map);
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
@@ -34,9 +34,11 @@ public:
 	virtual void receive(const SetRotation& event);
 	virtual void receive(const CreateTransform& event);
 	virtual void receive(const PlayAction& event);
-
+	
 private:
-	cocos2d::Node* mainNode;
+	cocos2d::Node* gameNode;
+	cocos2d::Node* hudNode;
+
 	Map& map;
 
 	void moveView(const cocos2d::Vec2& focusPoint);

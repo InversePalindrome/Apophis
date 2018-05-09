@@ -23,12 +23,12 @@ InversePalindrome.com
 class CollisionManager : public b2ContactListener
 {
 public:
-	CollisionManager(cocos2d::Node* mainNode, entityx::EventManager& eventManager);
+	CollisionManager(cocos2d::Node* gameNode, entityx::EventManager& eventManager);
 	CollisionManager(const CollisionManager&) = delete;
 	CollisionManager& operator= (const CollisionManager&) = delete;
 
 private:
-	cocos2d::Node* mainNode;
+	cocos2d::Node* gameNode;
 	entityx::EventManager& eventManager;
 
 	virtual void BeginContact(b2Contact* contact) override;

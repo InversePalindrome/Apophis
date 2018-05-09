@@ -12,8 +12,8 @@ InversePalindrome.com
 #include <Box2D/Dynamics/b2Fixture.h>
 
 
-CollisionManager::CollisionManager(cocos2d::Node* mainNode, entityx::EventManager& eventManager) :
-	mainNode(mainNode),
+CollisionManager::CollisionManager(cocos2d::Node* gameNode, entityx::EventManager& eventManager) :
+	gameNode(gameNode),
 	eventManager(eventManager)
 {
 }
@@ -28,16 +28,17 @@ void CollisionManager::BeginContact(b2Contact* contact)
 		return;
 	}
 
-	mainNode->scheduleOnce([this, bodyA, bodyB](auto dt) 
+	gameNode->scheduleOnce([this, bodyA, bodyB](auto dt) 
 	{
-		if (const auto& collisionPair = getCollisionPair(bodyA, bodyB, ObjectType::Player, ObjectType::Enemy))
-		{
-
-		}
-		else if (auto collisionPair = getCollisionPair(bodyA, bodyB, ObjectType::Projectile, ObjectType::Enemy))
+		if (auto collisionPair = getCollisionPair(bodyA, bodyB, ObjectType::Projectile, ObjectType::Alive))
 		{
 			eventManager.emit(CombatOcurred{ collisionPair->first, collisionPair->second });
 			collisionPair->first.destroy();
+		}
+		else if (auto collisionPair = getCollisionPair(bodyA, bodyB, ObjectType::Player, ObjectType::PowerUp))
+		{
+			eventManager.emit(TouchedPowerUp{ collisionPair->first, collisionPair->second });
+			collisionPair->second.destroy();
 		}
 	}, 0.f, "CollisionStarted");
 }
@@ -65,7 +66,7 @@ CollisionManager::getCollisionPair(const b2Body* bodyA, const b2Body* bodyB, Obj
 
 	if (bodyDataA && bodyDataB)
 	{
-		if (bodyDataA->objectType& objectTypeA && bodyDataB->objectType & objectTypeB)
+		if (bodyDataA->objectType & objectTypeA && bodyDataB->objectType & objectTypeB)
 		{
 			return { {bodyDataA->entity, bodyDataB->entity} };
 		}

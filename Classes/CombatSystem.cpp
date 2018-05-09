@@ -13,8 +13,8 @@ InversePalindrome.com
 #include "ExplosionComponent.hpp"
 
 
-CombatSystem::CombatSystem(cocos2d::Node* mainNode, EntityFactory& entityFactory) :
-	mainNode(mainNode),
+CombatSystem::CombatSystem(cocos2d::Node* gameNode, EntityFactory& entityFactory) :
+	gameNode(gameNode),
 	entityFactory(entityFactory)
 {
 }
@@ -64,7 +64,7 @@ void CombatSystem::receive(const ShootProjectile& event)
 		
 		weapon->setReloadStatus(false);
 
-		mainNode->scheduleOnce([weapon](float t) mutable
+		gameNode->scheduleOnce([weapon](auto dt) mutable
 		{
 			weapon->setReloadStatus(true);
 		}, weapon->getReloadTime(), "reload");
@@ -87,7 +87,7 @@ void CombatSystem::receive(const EntityDied& event)
 		eventManager->emit(SetPosition{ explosionEntity, bodyPosition });
 		eventManager->emit(PlayAction{ explosionEntity, "Explosion", false });
 				
-        mainNode->scheduleOnce([explosionEntity](float t) mutable
+        gameNode->scheduleOnce([explosionEntity](auto dt) mutable
 	   {
 		  explosionEntity.destroy();
 	   }, explosionTime, "destroy");

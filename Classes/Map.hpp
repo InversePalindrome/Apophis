@@ -24,9 +24,9 @@ class Map
 public:
 	Map(EntityFactory& entityFactory, entityx::EventManager& eventManager);
 
-    void init(cocos2d::Node* mainNode);
-
 	void load(const std::string& fileName);
+
+	void setMainNode(cocos2d::Node* mainNode);
 
 	b2Vec2 getDimensions() const;
 

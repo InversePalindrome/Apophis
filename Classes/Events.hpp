@@ -90,3 +90,9 @@ struct CombatOcurred
 	mutable entityx::Entity attacker;
 	mutable entityx::Entity victim;
 };
+
+struct TouchedPowerUp
+{
+	mutable entityx::Entity entity;
+	mutable entityx::Entity powerUp;
+};

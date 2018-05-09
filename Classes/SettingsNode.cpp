@@ -1,12 +1,12 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - SettingsScene.cpp
+JATR66 - SettingsNode.cpp
 InversePalindrome.com
 */
 
 
 #include "AppSettings.hpp"
-#include "SettingsScene.hpp"
+#include "SettingsNode.hpp"
 
 #include <tinyxml2/tinyxml2.h>
 
@@ -17,15 +17,15 @@ InversePalindrome.com
 #include <cocos/base/CCDirector.h>
 
 
-SettingsScene::~SettingsScene()
+SettingsNode::~SettingsNode()
 {
 	keyboardManager->release();
 	controlButtons->release();
 }
 
-bool SettingsScene::init()
+bool SettingsNode::init()
 {
-	if (!Layer::init())
+	if (!Node::init())
 	{
 		return false;
 	}
@@ -38,7 +38,7 @@ bool SettingsScene::init()
 	auto& appSettings = AppSettings::getInstance();
 
 	auto* director = cocos2d::Director::getInstance();
-	const auto& windowSize = cocos2d::Director::getInstance()->getVisibleSize();
+	const auto& windowSize = director->getVisibleSize();
 	
 	auto* background = cocos2d::Sprite::create("SpaceBackground.png");
 	background->setPosition(windowSize.width / 2.f, windowSize.height / 2.f);
@@ -139,7 +139,7 @@ bool SettingsScene::init()
 	return true;
 }
 
-void SettingsScene::update(float dt)
+void SettingsNode::update(float dt)
 {
 	if (keyboardManager->isKeyPressed())
 	{
@@ -154,10 +154,10 @@ void SettingsScene::update(float dt)
 	}
 }
 
-cocos2d::Scene* SettingsScene::scene()
+cocos2d::Scene* SettingsNode::scene()
 {
 	auto* scene = cocos2d::Scene::create();
-	scene->addChild(SettingsScene::create());
+	scene->addChild(SettingsNode::create());
 
 	return scene;
 }
