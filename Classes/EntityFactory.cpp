@@ -9,6 +9,8 @@ InversePalindrome.com
 #include "Events.hpp"
 #include "EntityFactory.hpp"
 #include "BodyComponent.hpp"
+#include "ItemComponent.hpp"
+#include "DropComponent.hpp"
 #include "SpeedComponent.hpp"
 #include "SoundComponent.hpp"
 #include "LabelComponent.hpp"
@@ -21,9 +23,10 @@ InversePalindrome.com
 #include "WanderComponent.hpp"
 #include "PatrolComponent.hpp"
 #include "FollowComponent.hpp"
+#include "HealthComponent.hpp"
+#include "DamageComponent.hpp"
 #include "PredictComponent.hpp"
 #include "PowerUpComponent.hpp"
-#include "HitpointComponent.hpp"
 #include "ParticleComponent.hpp"
 #include "AnimationComponent.hpp"
 #include "ExplosionComponent.hpp"
@@ -55,6 +58,8 @@ EntityFactory::EntityFactory(entityx::EntityManager& entityManager, entityx::Eve
 	parsers["Sprite"] = [](auto entity, const auto* componentNode) { entity.assign<SpriteComponent>(componentNode); };
 	parsers["Label"] = [](auto entity, const auto* componentNode) { entity.assign<LabelComponent>(componentNode); };
 	parsers["Particle"] = [](auto entity, const auto* componentNode) { entity.assign<ParticleComponent>(componentNode); };
+	parsers["Drop"] = [](auto entity, const auto* componentNode) { entity.assign<DropComponent>(componentNode); };
+	parsers["Item"] = [](auto entity, const auto* componentNode) { entity.assign<ItemComponent>(componentNode); };
 	parsers["Health"] = [](auto entity, const auto* componentNode) { entity.assign<HealthComponent>(componentNode); };
 	parsers["Damage"] = [](auto entity, const auto* componentNode) { entity.assign<DamageComponent>(componentNode); };
 	parsers["Sound"] = [](auto entity, const auto* componentNode) { entity.assign<SoundComponent>(componentNode); };

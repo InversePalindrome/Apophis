@@ -8,13 +8,14 @@ InversePalindrome.com
 #include "Tags.hpp"
 #include "BodyComponent.hpp"
 #include "GraphicsSystem.hpp"
+#include "HealthComponent.hpp"
 #include "AnimationComponent.hpp"
 
 #include <cocos/base/CCDirector.h>
 #include <cocos/2d/CCActionInterval.h>
 
 
-GraphicsSystem::GraphicsSystem(cocos2d::Node* gameNode, cocos2d::Node* hudNode, Map& map) :
+GraphicsSystem::GraphicsSystem(cocos2d::Node* gameNode, HudNode* hudNode, Map& map) :
 	gameNode(gameNode),
 	hudNode(hudNode),
 	map(map)
@@ -27,6 +28,7 @@ void GraphicsSystem::configure(entityx::EventManager& eventManager)
 	eventManager.subscribe<entityx::ComponentAddedEvent<SpriteComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<LabelComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<ParticleComponent>>(*this);
+	eventManager.subscribe<entityx::ComponentAddedEvent<Player>>(*this);
 	eventManager.subscribe<SetPosition>(*this);
 	eventManager.subscribe<SetRotation>(*this);
 	eventManager.subscribe<CreateTransform>(*this);
@@ -40,13 +42,14 @@ void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::Even
 
 	for (auto entity : entityManager.entities_with_components(node, body))
 	{
-		node->getNode()->setPosition({ body->getPosition().x * PTM_RATIO, body->getPosition().y * PTM_RATIO });
-	   	node->getNode()->setRotation(CC_RADIANS_TO_DEGREES(body->getAngle()));
+		node->setPosition({ body->getPosition().x * PTM_RATIO, body->getPosition().y * PTM_RATIO });
+	   	node->setRotation(CC_RADIANS_TO_DEGREES(body->getAngle()));
+	}
 
-	    if (entity.has_component<Player>())
-		{
-			moveView(node->getNode()->getPosition());
-		}
+	if (player.valid())
+	{
+		updateView();
+		updateHealthBar();
 	}
 }
 
@@ -76,11 +79,16 @@ void GraphicsSystem::receive(const entityx::ComponentAddedEvent<ParticleComponen
 	entity.assign<NodeComponent>(event.component->getParticleSystem());
 }
 
+void GraphicsSystem::receive(const entityx::ComponentAddedEvent<Player>& event)
+{
+	player = event.entity;
+}
+
 void GraphicsSystem::receive(const SetPosition& event)
 {
 	if (auto node = event.entity.component<NodeComponent>())
 	{
-		node->getNode()->setPosition({ event.position.x * PTM_RATIO, event.position.y * PTM_RATIO });
+		node->setPosition({ event.position.x * PTM_RATIO, event.position.y * PTM_RATIO });
 	}
 }
 
@@ -88,7 +96,7 @@ void GraphicsSystem::receive(const SetRotation& event)
 {
 	if (auto node = event.entity.component<NodeComponent>())
 	{
-		node->getNode()->setRotation(CC_RADIANS_TO_DEGREES(event.angle));
+		node->setRotation(CC_RADIANS_TO_DEGREES(event.angle));
 	}
 }
 
@@ -99,8 +107,8 @@ void GraphicsSystem::receive(const CreateTransform& event)
 
 	if (childNode && parentNode)
 	{
-		childNode->getNode()->removeFromParent();
-		parentNode->getNode()->addChild(childNode->getNode());
+		childNode->removeFromParent();
+		parentNode->addChild(childNode->getNode());
 	}
 }
 
@@ -122,17 +130,28 @@ void GraphicsSystem::receive(const PlayAction& event)
 	}
 }
 
-void GraphicsSystem::moveView(const cocos2d::Vec2& focusPoint)
+void GraphicsSystem::updateView()
 {
-	const auto& worldPoint = gameNode->convertToWorldSpace(focusPoint);
-	const auto& windowSize = cocos2d::Director::getInstance()->getWinSize();
+	if (auto playerNode = player.component<NodeComponent>())
+	{
+		const auto& worldPoint = gameNode->convertToWorldSpace(playerNode->getPosition());
+		const auto& windowSize = cocos2d::Director::getInstance()->getWinSize();
 
-	if (std::abs(focusPoint.x) < map.getDimensions().x * PTM_RATIO / 2.f - windowSize.width / 2.f)
+		if (std::abs(playerNode->getPosition().x) < map.getDimensions().x * PTM_RATIO / 2.f - windowSize.width / 2.f)
+		{
+			gameNode->setPositionX(gameNode->getPosition().x - worldPoint.x + windowSize.width / 2.f);
+		}
+		if (std::abs(playerNode->getPosition().y) < map.getDimensions().y  * PTM_RATIO / 2.f - windowSize.height / 2.f)
+		{
+			gameNode->setPositionY(gameNode->getPosition().y - worldPoint.y + windowSize.height / 2.f);
+		}
+	}
+}
+
+void GraphicsSystem::updateHealthBar()
+{
+	if (auto health = player.component<HealthComponent>())
 	{
-		gameNode->setPositionX(gameNode->getPosition().x - worldPoint.x + windowSize.width / 2.f);
-    }
-	if (std::abs(focusPoint.y) < map.getDimensions().y  * PTM_RATIO / 2.f - windowSize.height / 2.f)
-	{
-		gameNode->setPositionY(gameNode->getPosition().y - worldPoint.y + windowSize.height / 2.f);
+		hudNode->getHealthBar()->setPercent(health->getCurrentHitpoints() / health->getMaxHitpoints() * 100.f);
 	}
 }

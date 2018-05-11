@@ -8,9 +8,9 @@ InversePalindrome.com
 #pragma once
 
 #include "Events.hpp"
-#include "PowerUpComponent.hpp"
+#include "EntityFactory.hpp"
 
-#include <entityx/System.h>
+#include <entityx/entityx.h>
 
 #include <cocos/2d/CCNode.h>
 
@@ -18,15 +18,20 @@ InversePalindrome.com
 class ItemSystem : public entityx::System<ItemSystem>, public entityx::Receiver<ItemSystem>
 {
 public:
-	explicit ItemSystem(cocos2d::Node* gameNode);
+	ItemSystem(cocos2d::Node* gameNode, EntityFactory& entityFactory);
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
-	virtual void receive(const TouchedPowerUp& event);
+	virtual void receive(const EntityDied& event);
+	virtual void receive(const PickedUpItem& event);
 
 private:
 	cocos2d::Node* gameNode;
 
-	void addRegenBoost(entityx::Entity entity, entityx::ComponentHandle<PowerUpComponent> powerUp);
-	void addSpeedBoost(entityx::Entity entity, entityx::ComponentHandle<PowerUpComponent> powerUp);
+	EntityFactory& entityFactory;
+	entityx::EventManager* eventManager;
+
+	void addWeapon(entityx::Entity entity, entityx::Entity itemEntity);
+	void addRegenBoost(entityx::Entity entity, entityx::Entity itemEntity);
+	void addSpeedBoost(entityx::Entity entity, entityx::Entity itemEntity);
 };

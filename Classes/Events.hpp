@@ -85,14 +85,14 @@ struct PlayAction
 	bool loop;
 };
 
-struct CombatOcurred
+struct ProjectileHit
 {
-	mutable entityx::Entity attacker;
+	mutable entityx::Entity projectile;
 	mutable entityx::Entity victim;
 };
 
-struct TouchedPowerUp
+struct PickedUpItem
 {
 	mutable entityx::Entity entity;
-	mutable entityx::Entity powerUp;
+	mutable entityx::Entity itemEntity;
 };

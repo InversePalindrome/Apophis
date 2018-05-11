@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - PowerUpType.hpp
+JATR66 - Item.hpp
 InversePalindrome.com
 */
 
@@ -10,4 +10,4 @@ InversePalindrome.com
 #include <enum.h>
 
 
-BETTER_ENUM(PowerUpType, int, Undefined, Regen, Speed)
+BETTER_ENUM(Item, int, Undefined, Weapon, RegenBoost, SpeedBoost)

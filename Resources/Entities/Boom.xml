@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
   <Sprite>Explosion1</Sprite>
-  <Body type="2" fixedRotation="true">
-    <Fixture shape="circle" radius="0.01" density="0.001"></Fixture>
-  </Body>
   <Sound>
     <Action name="Explosion" filename="Boom.mp3"></Action>
   </Sound>
+  <Body object="Explosion" type="2" bullet="true">
+    <Fixture shape="polygon" width="0.8" height="0.8" density="0.001"></Fixture>
+  </Body>
   <Animation>
-    <Action name="Explosion" delay="0.2">
+    <Action name="Explosion" delay="1.5">
       <Frame>Explosion1</Frame>
       <Frame>Explosion2</Frame>
       <Frame>Explosion3</Frame>

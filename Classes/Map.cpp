@@ -85,11 +85,11 @@ void Map::generateMap()
 {
 	for (std::size_t i = 0; i < maxEntityCount; ++i)
 	{
-		auto randomSpawnRate = cocos2d::rand_0_1();
+		auto randomChance = cocos2d::rand_0_1();
 
-		for (const auto& [rate, name] : entitySpawnRates)
+		for (const auto& [range, name] : entitySpawnRates)
 		{
-			if (randomSpawnRate <= rate)
+			if (randomChance <= range)
 			{
 				auto entity = entityFactory.createEntity(name);
 

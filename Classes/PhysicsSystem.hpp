@@ -15,13 +15,11 @@ InversePalindrome.com
 
 #include <Box2D/Dynamics/b2World.h>
 
-#include <cocos/2d/CCNode.h>
-
 
 class PhysicsSystem : public entityx::System<PhysicsSystem>, public entityx::Receiver<PhysicsSystem>
 {
 public:
-    PhysicsSystem(cocos2d::Node* gameNode, entityx::EventManager& eventManager);
+    explicit PhysicsSystem(entityx::EventManager& eventManager);
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;

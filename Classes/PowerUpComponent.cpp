@@ -11,14 +11,9 @@ InversePalindrome.com
 
 
 PowerUpComponent::PowerUpComponent(const tinyxml2::XMLElement* componentNode) :
-	powerUpType(PowerUpType::Undefined),
-	effectBoost(0.f),
+	effectBoost(5.f),
 	effectTime(1.f)
 {
-	if (const auto* powerUpType = componentNode->Attribute("type"))
-	{
-		this->powerUpType = PowerUpType::_from_string(powerUpType);
-	}
 	if (const auto* effectBoost = componentNode->Attribute("boost"))
 	{
 		this->effectBoost = std::stof(effectBoost);
@@ -27,16 +22,6 @@ PowerUpComponent::PowerUpComponent(const tinyxml2::XMLElement* componentNode) :
 	{
 		this->effectTime = std::stof(effectTime);
 	}
-}
-
-PowerUpType PowerUpComponent::getPowerUpType() const
-{
-	return powerUpType;
-}
-
-void PowerUpComponent::setPowerUpType(PowerUpType powerUpType)
-{
-	this->powerUpType = powerUpType;
 }
 
 float PowerUpComponent::getEffectBoost() const

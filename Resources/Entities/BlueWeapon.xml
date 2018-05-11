@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+  <Sprite>BlueCube</Sprite>
+  <Body object="Item" type="2" linearDamping="1" x="40" y="-40" fixedRotation="false">
+    <Fixture shape="circle" radius="1.0" density="0.3"></Fixture>
+  </Body>
+  <Weapon projectileName="BlueLaser" projectileVelocity="20" reloadTime="0.5"></Weapon>
+  <Item>Weapon</Item>
+</Entity>

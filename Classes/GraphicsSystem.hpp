@@ -8,7 +8,9 @@ InversePalindrome.com
 #pragma once
 
 #include "Map.hpp"
+#include "Tags.hpp"
 #include "Events.hpp" 
+#include "HudNode.hpp"
 #include "NodeComponent.hpp"
 #include "LabelComponent.hpp"
 #include "SpriteComponent.hpp"
@@ -22,7 +24,7 @@ InversePalindrome.com
 class GraphicsSystem : public entityx::System<GraphicsSystem>, public entityx::Receiver<GraphicsSystem>
 {
 public:
-	GraphicsSystem(cocos2d::Node* gameNode, cocos2d::Node* hudNode, Map& map);
+	GraphicsSystem(cocos2d::Node* gameNode, HudNode* hudNode, Map& map);
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
@@ -30,6 +32,7 @@ public:
 	virtual void receive(const entityx::ComponentAddedEvent<SpriteComponent>& event);
 	virtual void receive(const entityx::ComponentAddedEvent<LabelComponent>& event);
 	virtual void receive(const entityx::ComponentAddedEvent<ParticleComponent>& event);
+	virtual void receive(const entityx::ComponentAddedEvent<Player>& event);
 	virtual void receive(const SetPosition& event);
 	virtual void receive(const SetRotation& event);
 	virtual void receive(const CreateTransform& event);
@@ -37,9 +40,12 @@ public:
 	
 private:
 	cocos2d::Node* gameNode;
-	cocos2d::Node* hudNode;
+	HudNode* hudNode;
 
 	Map& map;
 
-	void moveView(const cocos2d::Vec2& focusPoint);
+	entityx::Entity player;
+
+	void updateView();
+	void updateHealthBar();
 };

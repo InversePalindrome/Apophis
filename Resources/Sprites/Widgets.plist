@@ -304,12 +304,12 @@
     <key>textureRotated</key>
     <false/>
    </dict>
-   <key>SliderColor</key>
+   <key>Bar</key>
    <dict>
     <key>aliases</key>
     <array/>
     <key>spriteOffset</key>
-    <string>{-129,0}</string>
+    <string>{0,0}</string>
     <key>spriteSize</key>
     <string>{334,24}</string>
     <key>spriteSourceSize</key>

@@ -18,6 +18,16 @@ public:
 	cocos2d::Node* getNode();
 	cocos2d::Node* getNode() const;
 
+	void addChild(cocos2d::Node* node);
+
+	void removeFromParent();
+
+	cocos2d::Vec2 getPosition() const;
+	void setPosition(const cocos2d::Vec2& position);
+
+	float getRotation() const;
+	void setRotation(float rotation);
+
 private:
 	cocos2d::Node* node;
 };

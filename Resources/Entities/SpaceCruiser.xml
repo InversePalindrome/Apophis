@@ -6,7 +6,10 @@
     <Fixture shape="circle" radius="1.6" density="0.3"></Fixture>
   </Body>
   <Speed>12</Speed>
-  <Explosion name="boom" time="2"></Explosion>
-  <Health>3</Health>
-  <Evade></Evade>
+  <Explosion name="Boom" time="8"></Explosion>
+  <Drop>
+    <Loot name="SpeedBoost" chance="0.5"></Loot>
+    <Loot name="RegenBoost" chance="0.5"></Loot>
+  </Drop>
+  <Health>50</Health>
 </Entity>

@@ -14,8 +14,6 @@ InversePalindrome.com
 #include <Box2D/Dynamics/b2WorldCallbacks.h>
 #include <Box2D/Dynamics/Contacts/b2Contact.h>
 
-#include <cocos/2d/CCNode.h>
-
 #include <utility>
 #include <optional>
 
@@ -23,12 +21,11 @@ InversePalindrome.com
 class CollisionManager : public b2ContactListener
 {
 public:
-	CollisionManager(cocos2d::Node* gameNode, entityx::EventManager& eventManager);
+	explicit CollisionManager(entityx::EventManager& eventManager);
 	CollisionManager(const CollisionManager&) = delete;
 	CollisionManager& operator= (const CollisionManager&) = delete;
 
 private:
-	cocos2d::Node* gameNode;
 	entityx::EventManager& eventManager;
 
 	virtual void BeginContact(b2Contact* contact) override;

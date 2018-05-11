@@ -78,7 +78,8 @@ bool GameScene::init()
 	entityFactory.createEntity("UFO");
 	entityFactory.createEntity("Coin");
 	entityFactory.createEntity("Star");
-	entityFactory.createEntity("SpeedBoost");
+	entityFactory.createEntity("BlueWeapon");
+	entityFactory.createEntity("SpaceCruiser");
 
 	return true;
 }
@@ -98,8 +99,8 @@ void GameScene::initSystems()
 {
 	systemManager.add<AudioSystem>();
 	systemManager.add<BehaviorSystem>();
-	systemManager.add<ItemSystem>(gameNode);
-	systemManager.add<PhysicsSystem>(gameNode, eventManager);
+	systemManager.add<ItemSystem>(gameNode, entityFactory);
+	systemManager.add<PhysicsSystem>(eventManager);
 	systemManager.add<CombatSystem>(gameNode, entityFactory);
 	systemManager.add<GraphicsSystem>(gameNode, hudNode, map);
 	systemManager.add<InputSystem>(keyboardManager, mouseManager);

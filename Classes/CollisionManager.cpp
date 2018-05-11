@@ -6,14 +6,13 @@ InversePalindrome.com
 
 
 #include "Events.hpp"
-#include "BodyComponent.hpp"
+#include "BodyData.hpp"
 #include "CollisionManager.hpp"
 
 #include <Box2D/Dynamics/b2Fixture.h>
 
 
-CollisionManager::CollisionManager(cocos2d::Node* gameNode, entityx::EventManager& eventManager) :
-	gameNode(gameNode),
+CollisionManager::CollisionManager(entityx::EventManager& eventManager) :
 	eventManager(eventManager)
 {
 }
@@ -28,19 +27,14 @@ void CollisionManager::BeginContact(b2Contact* contact)
 		return;
 	}
 
-	gameNode->scheduleOnce([this, bodyA, bodyB](auto dt) 
+	if (auto collisionPair = getCollisionPair(bodyA, bodyB, ObjectType::Projectile, ObjectType::Alive))
 	{
-		if (auto collisionPair = getCollisionPair(bodyA, bodyB, ObjectType::Projectile, ObjectType::Alive))
-		{
-			eventManager.emit(CombatOcurred{ collisionPair->first, collisionPair->second });
-			collisionPair->first.destroy();
-		}
-		else if (auto collisionPair = getCollisionPair(bodyA, bodyB, ObjectType::Player, ObjectType::PowerUp))
-		{
-			eventManager.emit(TouchedPowerUp{ collisionPair->first, collisionPair->second });
-			collisionPair->second.destroy();
-		}
-	}, 0.f, "CollisionStarted");
+		eventManager.emit(ProjectileHit{ collisionPair->first, collisionPair->second });
+	}
+	else if (auto collisionPair = getCollisionPair(bodyA, bodyB, ObjectType::Player, ObjectType::Item))
+	{
+		eventManager.emit(PickedUpItem{ collisionPair->first, collisionPair->second });
+	}
 }
 
 void CollisionManager::EndContact(b2Contact* contact)
@@ -68,11 +62,11 @@ CollisionManager::getCollisionPair(const b2Body* bodyA, const b2Body* bodyB, Obj
 	{
 		if (bodyDataA->objectType & objectTypeA && bodyDataB->objectType & objectTypeB)
 		{
-			return { {bodyDataA->entity, bodyDataB->entity} };
+			return { { bodyDataA->entity, bodyDataB->entity } };
 		}
 		else if (bodyDataA->objectType & objectTypeB && bodyDataB->objectType & objectTypeA)
 		{
-			return { {bodyDataB->entity, bodyDataA->entity} };
+			return { { bodyDataB->entity, bodyDataA->entity } };
 		}
 	}
 
