@@ -11,6 +11,8 @@ InversePalindrome.com
 
 #include <cocos/2d/CCParticleSystemQuad.h>
 
+#include <string>
+
 
 class ParticleComponent 
 {
@@ -18,6 +20,8 @@ public:
 	explicit ParticleComponent(const tinyxml2::XMLElement* componentNode);
 
 	~ParticleComponent();
+
+	void load(const std::string& filename);
 
 	cocos2d::ParticleSystemQuad* getParticleSystem();
 	cocos2d::ParticleSystemQuad* getParticleSystem() const;

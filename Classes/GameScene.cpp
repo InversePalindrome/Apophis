@@ -7,17 +7,18 @@ InversePalindrome.com
 
 #include "HudNode.hpp"
 #include "MenuNode.hpp"
+#include "AISystem.hpp"
 #include "PauseNode.hpp"
 #include "GameScene.hpp"
 #include "ItemSystem.hpp"
 #include "InputSystem.hpp"
 #include "AudioSystem.hpp"
-#include "Application.hpp"
 #include "SettingsNode.hpp"
 #include "CombatSystem.hpp"
+#include "ControlSystem.hpp"
 #include "PhysicsSystem.hpp"
 #include "EntityFactory.hpp"
-#include "BehaviorSystem.hpp"
+#include "SteeringSystem.hpp"
 #include "GraphicsSystem.hpp"
 
 #include <cocos/base/CCDirector.h>
@@ -77,8 +78,10 @@ bool GameScene::init()
 	map.load("Andromeda");
 	entityFactory.createEntity("UFO");
 	entityFactory.createEntity("Coin");
-	entityFactory.createEntity("Star");
+	entityFactory.createEntity("SpeedBoost");
 	entityFactory.createEntity("BlueWeapon");
+	entityFactory.createEntity("SpaceCruiser");
+	entityFactory.createEntity("SpaceCruiser");
 	entityFactory.createEntity("SpaceCruiser");
 
 	return true;
@@ -97,8 +100,10 @@ void GameScene::update(float dt)
 
 void GameScene::initSystems()
 {
+	systemManager.add<ControlSystem>(gameNode, entityFactory);
+	systemManager.add<AISystem>();
 	systemManager.add<AudioSystem>();
-	systemManager.add<BehaviorSystem>();
+	systemManager.add<SteeringSystem>();
 	systemManager.add<ItemSystem>(gameNode, entityFactory);
 	systemManager.add<PhysicsSystem>(eventManager);
 	systemManager.add<CombatSystem>(gameNode, entityFactory);

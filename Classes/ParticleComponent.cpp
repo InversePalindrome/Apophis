@@ -13,7 +13,7 @@ ParticleComponent::ParticleComponent(const tinyxml2::XMLElement* componentNode) 
 {
 	if (const auto* filename = componentNode->GetText())
 	{
-	    particleSystem->initWithFile(std::string(filename) + ".plist");
+	    load(filename);
 	}
 
 	particleSystem->retain();
@@ -23,6 +23,11 @@ ParticleComponent::~ParticleComponent()
 {
 	particleSystem->removeFromParentAndCleanup(true);
 	particleSystem->release();
+}
+
+void ParticleComponent::load(const std::string& filename)
+{
+	particleSystem->initWithFile(filename + ".plist");
 }
 
 cocos2d::ParticleSystemQuad* ParticleComponent::getParticleSystem()

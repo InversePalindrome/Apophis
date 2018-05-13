@@ -24,6 +24,18 @@ struct EntityDied
 	mutable entityx::Entity entity;
 };
 
+struct MoveEntity
+{
+	mutable entityx::Entity entity;
+	b2Vec2 direction;
+};
+
+struct RotateEntity
+{
+	mutable entityx::Entity entity;
+	b2Vec2 direction;
+};
+
 struct ShootProjectile
 {
 	mutable entityx::Entity entity;

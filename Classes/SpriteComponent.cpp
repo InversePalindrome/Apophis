@@ -13,9 +13,9 @@ SpriteComponent::SpriteComponent(const tinyxml2::XMLElement* componentNode) :
 {
 	if (const auto* name = componentNode->GetText())
 	{
-		sprite->initWithSpriteFrameName(name);
+		load(name);
 	}
-
+	
 	sprite->retain();
 }
 
@@ -23,6 +23,11 @@ SpriteComponent::~SpriteComponent()
 {
 	sprite->removeFromParentAndCleanup(true);
 	sprite->release();
+}
+
+void SpriteComponent::load(const std::string& filename)
+{
+	sprite->initWithSpriteFrameName(filename);
 }
 
 cocos2d::Sprite* SpriteComponent::getSprite()

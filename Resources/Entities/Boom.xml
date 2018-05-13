@@ -8,7 +8,7 @@
     <Fixture shape="polygon" width="0.8" height="0.8" density="0.001"></Fixture>
   </Body>
   <Animation>
-    <Action name="Explosion" delay="1.5">
+    <Action name="Explosion" delay="0.25">
       <Frame>Explosion1</Frame>
       <Frame>Explosion2</Frame>
       <Frame>Explosion3</Frame>

@@ -20,16 +20,19 @@ InversePalindrome.com
 #include "SpriteComponent.hpp"
 #include "WeaponComponent.hpp"
 #include "ArriveComponent.hpp"
+#include "VisionComponent.hpp"
 #include "WanderComponent.hpp"
 #include "PatrolComponent.hpp"
 #include "FollowComponent.hpp"
 #include "HealthComponent.hpp"
 #include "DamageComponent.hpp"
 #include "PredictComponent.hpp"
+#include "ImpulseComponent.hpp"
 #include "PowerUpComponent.hpp"
 #include "ParticleComponent.hpp"
 #include "AnimationComponent.hpp"
 #include "ExplosionComponent.hpp"
+#include "BehaviorTreeComponent.hpp"
 
 #include <cocos/platform/CCFileUtils.h>
 
@@ -45,6 +48,7 @@ EntityFactory::EntityFactory(entityx::EntityManager& entityManager, entityx::Eve
 	parsers["Align"] = [](auto entity, const auto* componentNode) { entity.assign<AlignComponent>(); };
 	parsers["Cohesion"] = [](auto entity, const auto* componentNode) { entity.assign<CohesionComponent>(); };
 	parsers["Separate"] = [](auto entity, const auto* componentNode) { entity.assign<SeparateComponent>(); };
+	parsers["Face"] = [](auto entity, const auto* componentNode) { entity.assign<FaceComponent>(); };
 	parsers["Pursue"] = [](auto entity, const auto* componentNode) { entity.assign<PursueComponent>(componentNode); };
 	parsers["Evade"] = [](auto entity, const auto* componentNode) { entity.assign<EvadeComponent>(componentNode); };
 	parsers["Avoid"] = [](auto entity, const auto* componentNode) { entity.assign<AvoidComponent>(componentNode); };
@@ -62,12 +66,15 @@ EntityFactory::EntityFactory(entityx::EntityManager& entityManager, entityx::Eve
 	parsers["Item"] = [](auto entity, const auto* componentNode) { entity.assign<ItemComponent>(componentNode); };
 	parsers["Health"] = [](auto entity, const auto* componentNode) { entity.assign<HealthComponent>(componentNode); };
 	parsers["Damage"] = [](auto entity, const auto* componentNode) { entity.assign<DamageComponent>(componentNode); };
+	parsers["Vision"] = [](auto entity, const auto* componentNode) { entity.assign<VisionComponent>(componentNode); };
 	parsers["Sound"] = [](auto entity, const auto* componentNode) { entity.assign<SoundComponent>(componentNode); };
 	parsers["Animation"] = [](auto entity, const auto* componentNode) { entity.assign<AnimationComponent>(componentNode); };
 	parsers["Weapon"] = [](auto entity, const auto* componentNode) { entity.assign<WeaponComponent>(componentNode); };
 	parsers["Explosion"] = [](auto entity, const auto* componentNode) { entity.assign<ExplosionComponent>(componentNode); };
 	parsers["Speed"] = [](auto entity, const auto* componentNode) { entity.assign<SpeedComponent>(componentNode); };
+	parsers["Impulse"] = [](auto entity, const auto* componentNode) { entity.assign<ImpulseComponent>(componentNode); };
 	parsers["PowerUp"] = [](auto entity, const auto* componentNode) { entity.assign<PowerUpComponent>(componentNode); };
+	parsers["BehaviorTree"] = [](auto entity, const auto* componentNode) { entity.assign<BehaviorTreeComponent>(); };
 }
 
 entityx::Entity EntityFactory::createEntity(const std::string& entityName)
@@ -87,7 +94,7 @@ entityx::Entity EntityFactory::createEntity(const std::string& entityName)
 		{
 			if (parsers.count(componentNode->Value()))
 			{
-				parsers[componentNode->Value()](entity, componentNode);
+				parsers.at(componentNode->Value())(entity, componentNode);
 			}
 		}
 	}

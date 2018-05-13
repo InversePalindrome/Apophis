@@ -8,7 +8,6 @@ InversePalindrome.com
 #include "Tags.hpp"
 #include "BodyComponent.hpp"
 #include "GraphicsSystem.hpp"
-#include "HealthComponent.hpp"
 #include "AnimationComponent.hpp"
 
 #include <cocos/base/CCDirector.h>
@@ -28,7 +27,7 @@ void GraphicsSystem::configure(entityx::EventManager& eventManager)
 	eventManager.subscribe<entityx::ComponentAddedEvent<SpriteComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<LabelComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<ParticleComponent>>(*this);
-	eventManager.subscribe<entityx::ComponentAddedEvent<Player>>(*this);
+	eventManager.subscribe<EntityCreated>(*this);
 	eventManager.subscribe<SetPosition>(*this);
 	eventManager.subscribe<SetRotation>(*this);
 	eventManager.subscribe<CreateTransform>(*this);
@@ -46,11 +45,8 @@ void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::Even
 	   	node->setRotation(CC_RADIANS_TO_DEGREES(body->getAngle()));
 	}
 
-	if (player.valid())
-	{
-		updateView();
-		updateHealthBar();
-	}
+	updateView();
+	updateHealthBar();
 }
 
 void GraphicsSystem::receive(const entityx::ComponentAddedEvent<NodeComponent>& event)
@@ -79,9 +75,19 @@ void GraphicsSystem::receive(const entityx::ComponentAddedEvent<ParticleComponen
 	entity.assign<NodeComponent>(event.component->getParticleSystem());
 }
 
-void GraphicsSystem::receive(const entityx::ComponentAddedEvent<Player>& event)
+void GraphicsSystem::receive(const EntityCreated& event)
 {
-	player = event.entity;
+	if (event.entity.has_component<Player>())
+	{
+		if (auto playerNode = event.entity.component<NodeComponent>())
+		{
+			this->playerNode = playerNode;
+		}
+		if (auto playerHealth = event.entity.component<HealthComponent>())
+		{
+			this->playerHealth = playerHealth;
+		}
+	}
 }
 
 void GraphicsSystem::receive(const SetPosition& event)
@@ -132,7 +138,7 @@ void GraphicsSystem::receive(const PlayAction& event)
 
 void GraphicsSystem::updateView()
 {
-	if (auto playerNode = player.component<NodeComponent>())
+	if (playerNode.valid())
 	{
 		const auto& worldPoint = gameNode->convertToWorldSpace(playerNode->getPosition());
 		const auto& windowSize = cocos2d::Director::getInstance()->getWinSize();
@@ -150,8 +156,8 @@ void GraphicsSystem::updateView()
 
 void GraphicsSystem::updateHealthBar()
 {
-	if (auto health = player.component<HealthComponent>())
+	if (playerHealth.valid())
 	{
-		hudNode->getHealthBar()->setPercent(health->getCurrentHitpoints() / health->getMaxHitpoints() * 100.f);
+		hudNode->getHealthBar()->setPercent(playerHealth->getCurrentHitpoints() / playerHealth->getMaxHitpoints() * 100.f);
 	}
 }

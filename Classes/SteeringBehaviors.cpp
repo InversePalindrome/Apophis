@@ -16,250 +16,266 @@ InversePalindrome.com
 #include <cocos/base/ccRandom.h>
 
 
-void SteeringBehaviors::seek(b2Body* body, const b2Vec2& targetPosition, float maxSpeed)
+b2Vec2 SteeringBehaviors::seek(const b2Vec2& bodyPosition, const b2Vec2& targetPosition, const b2Vec2& bodyVelocity, float impulse)
 {
-	body->ApplyLinearImpulse(desiredVelocity(body->GetPosition(), targetPosition, maxSpeed) - body->GetLinearVelocity(), body->GetWorldCenter(), true);
+	return desiredVelocity(bodyPosition, targetPosition, impulse) - bodyVelocity;
 }
 
-void SteeringBehaviors::pursue(b2Body* body, const b2Vec2& targetPosition, const b2Vec2& targetVelocity, float maxSpeed, float predictionTime)
+b2Vec2 SteeringBehaviors::pursue(const b2Vec2& bodyPosition, const b2Vec2& targetPosition, const b2Vec2& bodyVelocity, const b2Vec2& targetVelocity, float impulse, float predictionTime)
 {
-	auto distance = (targetPosition - body->GetPosition()).Length();
+	auto distance = (targetPosition - bodyPosition).Length();
 
-	if (body->GetLinearVelocity().Length() > distance / predictionTime)
+	if (bodyVelocity.Length() > distance / predictionTime)
 	{
-		predictionTime = distance / body->GetLinearVelocity().Length();
+		predictionTime = distance / bodyVelocity.Length();
 	}
 
 	const auto& futurePosition = targetPosition + predictionTime * targetVelocity;
 
-	seek(body, futurePosition, maxSpeed);
+	return seek(bodyPosition, futurePosition, bodyVelocity, impulse);
 }
 
-void SteeringBehaviors::arrive(b2Body* body, const b2Vec2& targetPosition,  float maxSpeed, float slowRadius)
+b2Vec2 SteeringBehaviors::arrive(const b2Vec2& bodyPosition, const b2Vec2& targetPosition, const b2Vec2& bodyVelocity, float impulse, float slowRadius)
 {
-	auto radius = (targetPosition - body->GetPosition()).Length();
+	auto radius = (targetPosition - bodyPosition).Length();
 	
 	if (radius < slowRadius)
 	{
-		seek(body, targetPosition, maxSpeed * radius / slowRadius);
+		return seek(bodyPosition, targetPosition, bodyVelocity, impulse * radius / slowRadius);
 	}
-	else
-	{
-		seek(body, targetPosition, maxSpeed);
-	}
+
+	return seek(bodyPosition, targetPosition, bodyVelocity, impulse);
 }
 
-void SteeringBehaviors::avoid(b2Body* body, float avoidanceDistance, float avoidanceForce)
+b2Vec2 SteeringBehaviors::avoid(const b2Body* body, float avoidanceDistance, float avoidanceForce)
 {
-	auto lookAhead = body->GetLinearVelocity();
-	lookAhead.Normalize();
-	lookAhead *= avoidanceDistance;
+	b2Vec2 steeringForce(0.f, 0.f);
 
-	RayCastQuery rayQuery;
+	auto ahead = body->GetLinearVelocity();
+	ahead.Normalize();
+	ahead *= avoidanceDistance;
+	ahead += body->GetPosition();
 
-	body->GetWorld()->RayCast(&rayQuery, body->GetPosition(), body->GetPosition() + lookAhead);
-
-	for (const auto *rayBody : rayQuery.queryBodies)
+	if ((body->GetPosition() - ahead).LengthSquared() > 0.0f)
 	{
-		if (const auto* rayBodyData = static_cast<BodyData*>(rayBody->GetUserData()))
+		RayCastQuery rayQuery;
+
+		body->GetWorld()->RayCast(&rayQuery, body->GetPosition(), ahead);
+
+		for (const auto& rayData : rayQuery.queryData)
 		{
-			if (rayBodyData->objectType & ObjectType::Obstacle)
+			if (const auto* rayBodyData = static_cast<BodyData*>(rayData.body->GetUserData()))
 			{
-				body->ApplyLinearImpulse(desiredVelocity(rayBody->GetPosition(), lookAhead, avoidanceForce), body->GetWorldCenter(), true);
+				if (rayBodyData->objectType & ObjectType::Obstacle)
+				{
+					steeringForce += desiredVelocity(rayData.body->GetPosition(), ahead, avoidanceForce);
+					break;
+				}
 			}
 		}
 	}
+
+	return steeringForce;
 }
 
-void SteeringBehaviors::wander(b2Body* body, float wanderDistance, float wanderRadius, float wanderRate, float& wanderAngle, float maxSpeed)
+b2Vec2 SteeringBehaviors::wander(const b2Vec2& bodyPosition, const b2Vec2& bodyVelocity, float wanderDistance, float wanderRadius, float wanderRate, float& wanderAngle, float impulse)
 {
-	auto wanderCenter = body->GetLinearVelocity();
+	auto wanderCenter = bodyVelocity;
 	wanderCenter.Normalize();
 	wanderCenter *= wanderDistance;
 	wanderCenter += { wanderRadius * std::cos(wanderAngle), wanderRadius * std::sin(wanderAngle) };
 
 	wanderAngle += cocos2d::random() * wanderRate;
 
-	seek(body, body->GetPosition() + wanderCenter, maxSpeed);
+	return seek(bodyPosition, bodyPosition + wanderCenter, bodyVelocity, impulse);
 }
 
-void SteeringBehaviors::align(b2Body* body, float groupRadius, float maxSpeed)
+b2Vec2 SteeringBehaviors::align(const b2Body* body, float groupRadius, float impulse, ObjectType groupType)
 {
-	if (const auto* bodyData = static_cast<BodyData*>(body->GetUserData()))
+	b2Vec2 steeringForce(0.f, 0.f);
+
+	AreaQuery areaQuery;
+
+	b2AABB groupArea;
+	groupArea.lowerBound = { body->GetPosition().x - groupRadius, body->GetPosition().y - groupRadius };
+	groupArea.upperBound = { body->GetPosition().x + groupRadius, body->GetPosition().y + groupRadius };
+
+	body->GetWorld()->QueryAABB(&areaQuery, groupArea);
+
+	b2Vec2 alignForce(0.f, 0.f);
+	std::size_t groupCount = 0u;
+
+	for (const auto* neighborBody : areaQuery.queryBodies)
 	{
-		AreaQuery areaQuery;
-
-		b2AABB groupArea;
-		groupArea.lowerBound = { body->GetPosition().x - groupRadius, body->GetPosition().y - groupRadius };
-		groupArea.upperBound = { body->GetPosition().x + groupRadius, body->GetPosition().y + groupRadius };
-
-		body->GetWorld()->QueryAABB(&areaQuery, groupArea);
-
-		b2Vec2 alignForce(0.f, 0.f);
-		std::size_t groupCount = 0u;
-
-		for (const auto* neighborBody : areaQuery.queryBodies)
+		if (body != neighborBody)
 		{
-			if (body != neighborBody)
+			if (const auto* neighborBodyData = static_cast<BodyData*>(neighborBody->GetUserData()))
 			{
-				if (const auto* neighborBodyData = static_cast<BodyData*>(neighborBody->GetUserData()))
+				if (neighborBodyData->objectType & groupType)
 				{
-					if (neighborBodyData->objectType & bodyData->objectType)
-					{
-						alignForce += neighborBody->GetLinearVelocity();
-						++groupCount;
-					}
+					alignForce += neighborBody->GetLinearVelocity();
+					++groupCount;
 				}
 			}
 		}
-
-		if (groupCount > 0u)
-		{
-			alignForce *= 1 / groupCount;
-			alignForce.Normalize();
-			alignForce *= maxSpeed;
-
-			body->ApplyLinearImpulse(alignForce, body->GetWorldCenter(), true);
-		}
 	}
+
+	if (groupCount > 0u)
+	{
+		alignForce *= 1 / groupCount;
+		alignForce.Normalize();
+		alignForce *= impulse;
+
+		steeringForce += alignForce;
+	}
+
+	return steeringForce;
 }
 
-void SteeringBehaviors::cohesion(b2Body* body, float groupRadius, float maxSpeed)
+b2Vec2 SteeringBehaviors::cohesion(const b2Body* body, float groupRadius, float impulse, ObjectType groupType)
 {
-	if (const auto* bodyData = static_cast<BodyData*>(body->GetUserData()))
+	b2Vec2 steeringForce(0.f, 0.f);
+
+	AreaQuery areaQuery;
+
+	b2AABB groupArea;
+	groupArea.lowerBound = { body->GetPosition().x - groupRadius, body->GetPosition().y - groupRadius };
+	groupArea.upperBound = { body->GetPosition().x + groupRadius, body->GetPosition().y + groupRadius };
+
+	body->GetWorld()->QueryAABB(&areaQuery, groupArea);
+
+	b2Vec2 cohesionForce(0.f, 0.f);
+	std::size_t groupCount = 0u;
+
+	for (const auto* neighborBody : areaQuery.queryBodies)
 	{
-		AreaQuery areaQuery;
-
-		b2AABB groupArea;
-		groupArea.lowerBound = { body->GetPosition().x - groupRadius, body->GetPosition().y - groupRadius };
-		groupArea.upperBound = { body->GetPosition().x + groupRadius, body->GetPosition().y + groupRadius };
-
-		body->GetWorld()->QueryAABB(&areaQuery, groupArea);
-
-		b2Vec2 cohesionForce(0.f, 0.f);
-		std::size_t groupCount = 0u;
-
-		for (const auto* neighborBody : areaQuery.queryBodies)
+		if (body != neighborBody)
 		{
-			if (body != neighborBody)
+			if (const auto* neighborBodyData = static_cast<BodyData*>(neighborBody->GetUserData()))
 			{
-				if (const auto* neighborBodyData = static_cast<BodyData*>(neighborBody->GetUserData()))
+				if (neighborBodyData->objectType & groupType)
 				{
-					if (neighborBodyData->objectType & bodyData->objectType)
-					{
-						cohesionForce += neighborBody->GetPosition();
-						++groupCount;
-					}
+					cohesionForce += neighborBody->GetPosition();
+					++groupCount;
 				}
 			}
 		}
-
-		if (groupCount > 0u)
-		{
-			cohesionForce *= 1 / groupCount;
-			cohesionForce -= body->GetPosition();
-			cohesionForce.Normalize();
-			cohesionForce *= maxSpeed;
-
-			body->ApplyLinearImpulse(cohesionForce, body->GetWorldCenter(), true);
-		}
 	}
+
+	if (groupCount > 0u)
+	{
+		cohesionForce *= 1 / groupCount;
+		cohesionForce -= body->GetPosition();
+		cohesionForce.Normalize();
+		cohesionForce *= impulse;
+
+		steeringForce += cohesionForce;
+	}
+
+	return steeringForce;
 }
 
-void SteeringBehaviors::separate(b2Body* body, float groupRadius, float maxSpeed)
+b2Vec2 SteeringBehaviors::separate(const b2Body* body, float groupRadius, float impulse, ObjectType groupType)
 {
-	if (const auto* bodyData = static_cast<BodyData*>(body->GetUserData()))
+	b2Vec2 steeringForce(0.f, 0.f);
+
+	AreaQuery areaQuery;
+
+	b2AABB groupArea;
+	groupArea.lowerBound = { body->GetPosition().x - groupRadius, body->GetPosition().y - groupRadius };
+	groupArea.upperBound = { body->GetPosition().x + groupRadius, body->GetPosition().y + groupRadius };
+
+	body->GetWorld()->QueryAABB(&areaQuery, groupArea);
+
+	b2Vec2 separationForce(0.f, 0.f);
+	std::size_t groupCount = 0u;
+
+	for (const auto* neighborBody : areaQuery.queryBodies)
 	{
-		AreaQuery areaQuery;
-
-		b2AABB groupArea;
-		groupArea.lowerBound = { body->GetPosition().x - groupRadius, body->GetPosition().y - groupRadius };
-		groupArea.upperBound = { body->GetPosition().x + groupRadius, body->GetPosition().y + groupRadius };
-
-		body->GetWorld()->QueryAABB(&areaQuery, groupArea);
-
-		b2Vec2 separationForce(0.f, 0.f);
-		std::size_t groupCount = 0u;
-
-		for (const auto* neighborBody : areaQuery.queryBodies)
+		if (body != neighborBody)
 		{
-			if (body != neighborBody)
+			if (const auto* neighborBodyData = static_cast<BodyData*>(neighborBody->GetUserData()))
 			{
-				if (const auto* neighborBodyData = static_cast<BodyData*>(neighborBody->GetUserData()))
+				if (neighborBodyData->objectType & groupType)
 				{
-					if (neighborBodyData->objectType & bodyData->objectType)
-					{
-						separationForce += body->GetPosition() - neighborBody->GetPosition();
-						++groupCount;
-					}
+					separationForce += body->GetPosition() - neighborBody->GetPosition();
+					++groupCount;
 				}
 			}
 		}
-
-		if (groupCount > 0u)
-		{
-			separationForce *= -1 / groupCount;
-			separationForce.Normalize();
-			separationForce *= maxSpeed;
-
-			body->ApplyLinearImpulse(separationForce, body->GetWorldCenter(), true);
-		}
 	}
+
+	if (groupCount > 0u)
+	{
+		separationForce *= -1 / groupCount;
+		separationForce.Normalize();
+		separationForce *= impulse;
+
+		steeringForce += separationForce;
+	}
+
+	return steeringForce;
 }
 
-void SteeringBehaviors::follow(b2Body* body, const b2Vec2& targetPosition, const b2Vec2& targetVelocity, float distanceFromLeader, float maxSpeed)
+b2Vec2 SteeringBehaviors::follow(const b2Vec2& bodyPosition, const b2Vec2& leaderPosition, const b2Vec2& bodyVelocity, const b2Vec2& leaderVelocity, float leaderSight, float distanceFromLeader, float impulse)
 {
-	auto leaderDirection = targetVelocity;
+	b2Vec2 steeringForce(0.f, 0.f);
+
+	auto leaderDirection = leaderVelocity;
 	leaderDirection.Normalize();
 	leaderDirection *= distanceFromLeader;
 
-	for (const auto* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
+	if ((bodyPosition - leaderPosition + leaderDirection).Length() <= leaderSight)
 	{
-		b2RayCastOutput output;
-
-		if (fixture->RayCast(&output, { targetPosition, targetPosition + leaderDirection, 1.f}, 0))
-		{
-			pursue(body, targetPosition, targetVelocity, -maxSpeed);
-		}
+		steeringForce += pursue(bodyPosition, leaderPosition, bodyVelocity, leaderVelocity, -impulse);
 	}
 
-	arrive(body, targetPosition - leaderDirection, maxSpeed, distanceFromLeader);
+	steeringForce += arrive(bodyPosition, leaderPosition - leaderDirection, bodyVelocity, impulse, distanceFromLeader);
+
+	return steeringForce;
 }
 
-void SteeringBehaviors::queue(b2Body* body, float groupRadius, float queueDistance, float shrinkFactor, float maxSpeed)
+b2Vec2 SteeringBehaviors::queue(b2Body* body, const b2Vec2& steeringForce, float groupRadius, float queueDistance, float shrinkFactor, float steeringBrakeFactor, float impulse, ObjectType groupType)
 {
-	if (const auto* bodyData = static_cast<BodyData*>(body->GetUserData()))
-	{
-		auto ahead = body->GetLinearVelocity();
-		ahead.Normalize();
-		ahead *= queueDistance;
+	b2Vec2 queueForce(0.f, 0.f);
 
+	auto ahead = body->GetLinearVelocity();
+	ahead.Normalize();
+	ahead *= queueDistance;
+	ahead += body->GetPosition();
+
+	if ((body->GetPosition() - ahead).LengthSquared() > 0.0f)
+	{
 		RayCastQuery rayQuery;
 
 		body->GetWorld()->RayCast(&rayQuery, body->GetPosition(), body->GetPosition() + ahead);
 
-		for (const auto *rayBody : rayQuery.queryBodies)
+		for (const auto& rayData : rayQuery.queryData)
 		{
-			if (const auto* rayBodyData = static_cast<BodyData*>(rayBody->GetUserData()))
+			if (const auto* rayBodyData = static_cast<BodyData*>(rayData.body->GetUserData()))
 			{
-				if (rayBodyData->objectType & bodyData->objectType)
+				if (rayBodyData->objectType & groupType)
 				{
-					body->SetLinearVelocity({ body->GetLinearVelocity().x * shrinkFactor, body->GetLinearVelocity().y * shrinkFactor });
+			     	queueForce = -steeringBrakeFactor * steeringForce;
+				    queueForce -= body->GetLinearVelocity();
+					queueForce += separate(body, groupRadius, impulse, groupType);
 
-					separate(body, groupRadius, maxSpeed);
+					body->SetLinearVelocity({ body->GetLinearVelocity().x * shrinkFactor, body->GetLinearVelocity().y * shrinkFactor });
 
 					break;
 				}
 			}
 		}
 	}
+
+	return queueForce;
 }
 
-b2Vec2 SteeringBehaviors::desiredVelocity(const b2Vec2& bodyPosition, const b2Vec2& targetPosition, float maxSpeed)
+b2Vec2 SteeringBehaviors::desiredVelocity(const b2Vec2& bodyPosition, const b2Vec2& targetPosition, float impulse)
 {
 	auto desiredVelocity = targetPosition - bodyPosition;
 	desiredVelocity.Normalize();
-	desiredVelocity *= maxSpeed;
+	desiredVelocity *= impulse;
 
 	return desiredVelocity;
 }

@@ -3,8 +3,9 @@
   <Type>Projectile</Type>
   <Sprite>YellowBlast06</Sprite>
   <Body object="Projectile" type="2" bullet="true">
-    <Fixture shape="polygon" width="0.8" height="0.8" density="0.001"></Fixture>
+    <Fixture shape="polygon" width="0.8" height="0.8"></Fixture>
   </Body>
-  <Speed>0.1</Speed>
+  <Speed>20</Speed>
+  <Impulse>10</Impulse>
   <Damage>10</Damage>
 </Entity>

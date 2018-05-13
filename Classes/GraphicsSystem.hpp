@@ -13,6 +13,7 @@ InversePalindrome.com
 #include "HudNode.hpp"
 #include "NodeComponent.hpp"
 #include "LabelComponent.hpp"
+#include "HealthComponent.hpp"
 #include "SpriteComponent.hpp"
 #include "ParticleComponent.hpp"
 
@@ -32,7 +33,7 @@ public:
 	virtual void receive(const entityx::ComponentAddedEvent<SpriteComponent>& event);
 	virtual void receive(const entityx::ComponentAddedEvent<LabelComponent>& event);
 	virtual void receive(const entityx::ComponentAddedEvent<ParticleComponent>& event);
-	virtual void receive(const entityx::ComponentAddedEvent<Player>& event);
+	virtual void receive(const EntityCreated& event);
 	virtual void receive(const SetPosition& event);
 	virtual void receive(const SetRotation& event);
 	virtual void receive(const CreateTransform& event);
@@ -44,7 +45,8 @@ private:
 
 	Map& map;
 
-	entityx::Entity player;
+	entityx::ComponentHandle<NodeComponent> playerNode;
+	entityx::ComponentHandle<HealthComponent> playerHealth;
 
 	void updateView();
 	void updateHealthBar();

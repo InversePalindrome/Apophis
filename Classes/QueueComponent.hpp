@@ -21,7 +21,11 @@ public:
 	float getShrinkingFactor() const;
 	void setShrinkingFactor(float shrinkingFactor);
 
+	float getSteeringBrakeFactor() const;
+	void setSteeringBrakeFactor(float steeringBreakFactor);
+
 private:
 	float queueDistance;
 	float shrinkFactor;
+	float steeringBrakeFactor;
 };

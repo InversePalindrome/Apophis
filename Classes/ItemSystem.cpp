@@ -82,6 +82,8 @@ void ItemSystem::receive(const PickedUpItem& event)
 		}
 	}
 
+	eventManager->emit(PlayAction{ event.itemEntity, "Pickup", false });
+
 	gameNode->scheduleOnce([event](auto dt) { event.itemEntity.destroy(); }, 0.f, "DestroyItem");
 }
 
@@ -113,7 +115,7 @@ void ItemSystem::addRegenBoost(entityx::Entity entity, entityx::Entity itemEntit
 					health->setCurrentHitpoints(regenHealth);
 				}
 			}
-		}, 1.f, static_cast<int>(powerUp->getEffectTime()), 0.f, "Regen");
+		}, 1.f, static_cast<int>(powerUp->getEffectTime()), 0.f, "RegenBoost");
 	}
 }
 
@@ -134,6 +136,6 @@ void ItemSystem::addSpeedBoost(entityx::Entity entity, entityx::Entity itemEntit
 			{
 				speed->setMaxSpeed(originalSpeed);
 			}
-		}, powerUp->getEffectTime(), "reload");
+		}, powerUp->getEffectTime(), "SpeedBoost");
 	}
 }

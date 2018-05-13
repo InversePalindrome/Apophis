@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
   <Body object="Projectile" type="2" bullet="true">
-    <Fixture shape="polygon" width="0.8" height="0.8" density="0.001"></Fixture>
+    <Fixture shape="polygon" width="0.8" height="0.8"></Fixture>
   </Body>
-  <Speed>0.1</Speed>
+  <Speed>40</Speed>
+  <Impulse>25</Impulse>
   <Sprite>BlueBlast06</Sprite>
   <Damage>20</Damage>
 </Entity>

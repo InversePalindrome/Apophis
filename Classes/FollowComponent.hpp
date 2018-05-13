@@ -15,9 +15,13 @@ class FollowComponent
 public:
 	explicit FollowComponent(const tinyxml2::XMLElement* componentNode);
 
+	float getLeaderSight() const;
+	void setLeaderSight(float leaderSight);
+
 	float getDistanceFromLeader() const;
 	void setDistanceFromLeader(float distanceFromLeader);
 
 private:
+	float leaderSight;
 	float distanceFromLeader;
 };
