@@ -10,11 +10,3 @@ InversePalindrome.com
 
 struct Player {};
 struct AI {};
-struct SeekComponent {};
-struct FleeComponent {};
-struct Pursue {};
-struct Evade {};
-struct FaceComponent{};
-struct AlignComponent {};
-struct CohesionComponent {};
-struct SeparateComponent {};

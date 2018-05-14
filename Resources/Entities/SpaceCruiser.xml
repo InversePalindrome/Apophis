@@ -2,7 +2,7 @@
 <Entity>
   <AI></AI>
   <Sprite>SpaceCruiser</Sprite>
-  <Body object="Enemy" type="2" linearDamping="0.3" x="10" y="10">
+  <Body object="Enemy" type="2" linearDamping="0.3" x="20" y="20">
     <Fixture shape="circle" radius="1.6" density="0.3"></Fixture>
   </Body>
   <Speed>12</Speed>
@@ -12,10 +12,9 @@
     <Loot name="RegenBoost" chance="0.5"></Loot>
   </Drop>
   <Health>50</Health>
-  <Vision>10</Vision>
-  <Seek></Seek>
-  <Queue></Queue>
-  <Flock></Flock>
+  <BehaviorTree></BehaviorTree>
+  <Vision>20</Vision>
   <Impulse>20</Impulse>
-  <Face></Face>
+  <Wander></Wander>
+  <Steer></Steer>
 </Entity>

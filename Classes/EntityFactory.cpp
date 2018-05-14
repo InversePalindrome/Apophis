@@ -17,6 +17,7 @@ InversePalindrome.com
 #include "AvoidComponent.hpp"
 #include "FlockComponent.hpp"
 #include "QueueComponent.hpp"
+#include "SteerComponent.hpp"
 #include "SpriteComponent.hpp"
 #include "WeaponComponent.hpp"
 #include "ArriveComponent.hpp"
@@ -43,12 +44,8 @@ EntityFactory::EntityFactory(entityx::EntityManager& entityManager, entityx::Eve
 {
 	parsers["Player"] = [](auto entity, const auto* componentNode) { entity.assign<Player>(); };
 	parsers["AI"] = [](auto entity, const auto* componentNode) { entity.assign<AI>(); };
-	parsers["Seek"] = [](auto entity, const auto* componentNode) { entity.assign<SeekComponent>(); };
-	parsers["Flee"] = [](auto entity, const auto* componentNode) { entity.assign<FleeComponent>(); };
-	parsers["Align"] = [](auto entity, const auto* componentNode) { entity.assign<AlignComponent>(); };
-	parsers["Cohesion"] = [](auto entity, const auto* componentNode) { entity.assign<CohesionComponent>(); };
-	parsers["Separate"] = [](auto entity, const auto* componentNode) { entity.assign<SeparateComponent>(); };
-	parsers["Face"] = [](auto entity, const auto* componentNode) { entity.assign<FaceComponent>(); };
+	parsers["BehaviorTree"] = [](auto entity, const auto* componentNode) { entity.assign<BehaviorTreeComponent>(); };
+	parsers["Steer"] = [](auto entity, const auto* componentNode) { entity.assign<SteerComponent>(); };
 	parsers["Pursue"] = [](auto entity, const auto* componentNode) { entity.assign<PursueComponent>(componentNode); };
 	parsers["Evade"] = [](auto entity, const auto* componentNode) { entity.assign<EvadeComponent>(componentNode); };
 	parsers["Avoid"] = [](auto entity, const auto* componentNode) { entity.assign<AvoidComponent>(componentNode); };
@@ -74,7 +71,6 @@ EntityFactory::EntityFactory(entityx::EntityManager& entityManager, entityx::Eve
 	parsers["Speed"] = [](auto entity, const auto* componentNode) { entity.assign<SpeedComponent>(componentNode); };
 	parsers["Impulse"] = [](auto entity, const auto* componentNode) { entity.assign<ImpulseComponent>(componentNode); };
 	parsers["PowerUp"] = [](auto entity, const auto* componentNode) { entity.assign<PowerUpComponent>(componentNode); };
-	parsers["BehaviorTree"] = [](auto entity, const auto* componentNode) { entity.assign<BehaviorTreeComponent>(); };
 }
 
 entityx::Entity EntityFactory::createEntity(const std::string& entityName)

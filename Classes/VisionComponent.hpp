@@ -15,9 +15,9 @@ class VisionComponent
 public:
 	explicit VisionComponent(const tinyxml2::XMLElement* componentNode);
 
-	float getVisionRadius() const;
-	void setVisionRadius(float visionRadius);
+	float getVisionDistance() const;
+	void setVisionDistance(float visionDistance);
 
 private:
-	float visionRadius;
+	float visionDistance;
 };

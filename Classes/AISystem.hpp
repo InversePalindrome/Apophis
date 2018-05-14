@@ -23,5 +23,6 @@ public:
 	virtual void receive(const entityx::ComponentAddedEvent<BehaviorTreeComponent>& event);
 
 private:
+	entityx::EventManager* eventManager;
 	entityx::ComponentHandle<BodyComponent> playerBody;
 };

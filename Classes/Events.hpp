@@ -108,3 +108,68 @@ struct PickedUpItem
 	mutable entityx::Entity entity;
 	mutable entityx::Entity itemEntity;
 };
+
+struct Seek
+{
+	mutable entityx::Entity entity;
+};
+
+struct Flee
+{
+	mutable entityx::Entity entity;
+};
+
+struct Pursue
+{
+	mutable entityx::Entity entity;
+};
+
+struct Evade
+{
+	mutable entityx::Entity entity;
+};
+
+struct Arrive
+{
+	mutable entityx::Entity entity;
+};
+
+struct Follow
+{
+	mutable entityx::Entity entity;
+};
+
+struct Wander
+{
+	mutable entityx::Entity entity;
+};
+
+struct Patrol
+{
+	mutable entityx::Entity entity;
+};
+
+struct Avoid
+{
+	mutable entityx::Entity entity;
+};
+
+struct Align
+{
+	mutable entityx::Entity entity;
+};
+
+struct Cohesion
+{
+	mutable entityx::Entity entity;
+};
+
+struct Separate
+{
+	mutable entityx::Entity entity;
+};
+
+struct Queue
+{
+	mutable entityx::Entity entity;
+};

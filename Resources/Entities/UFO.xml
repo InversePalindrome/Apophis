@@ -2,8 +2,8 @@
 <Entity>
   <Player></Player>
   <Weapon projectileName="Laser" projectileVelocity="16" reloadTime="0.5"></Weapon>
-  <Speed>35</Speed>
-  <Impulse>30</Impulse>
+  <Speed>25</Speed>
+  <Impulse>15</Impulse>
   <Sprite>UFO</Sprite>
   <Body object="Player" type="2" linearDamping="1" x="0" y="0" fixedRotation="false">
      <Fixture shape="circle" radius="1.6" density="0.3"></Fixture>

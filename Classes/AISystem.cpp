@@ -7,11 +7,14 @@ InversePalindrome.com
 
 #include "Tags.hpp"
 #include "AISystem.hpp"
+#include "HealthComponent.hpp"
 #include "VisionComponent.hpp"
 
 
 void AISystem::configure(entityx::EventManager& eventManager)
 {
+	this->eventManager = &eventManager;
+
 	eventManager.subscribe<EntityCreated>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<BehaviorTreeComponent>>(*this);
 }
@@ -44,28 +47,11 @@ void AISystem::receive(const EntityCreated& event)
 void AISystem::receive(const entityx::ComponentAddedEvent<BehaviorTreeComponent>& event)
 {
 	auto tree = event.component;
-
+	/*
 	tree->setTree(beehive::Builder<entityx::Entity>()
-	.sequence()
-	.leaf([this](auto& entity) 
+	.selector()
+		.leaf([](auto& entity)
 	{
-		auto vision = entity.component<VisionComponent>();
-		auto body = entity.component<BodyComponent>();
-		
-		if (vision && body)
-		{
-			auto radius = (playerBody->getPosition() - body->getPosition()).Length();
-
-			if (radius <= vision->getVisionRadius())
-			{
-				return beehive::Status::SUCCESS;
-			}
-		}
-
-		return beehive::Status::FAILURE; 
-	})
-	.void_leaf([](auto& entity)
-	{
-		
-	}).end().build());
+		return beehive::Status::FAILURE;
+	})*/
 }

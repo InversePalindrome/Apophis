@@ -81,8 +81,6 @@ bool GameScene::init()
 	entityFactory.createEntity("SpeedBoost");
 	entityFactory.createEntity("BlueWeapon");
 	entityFactory.createEntity("SpaceCruiser");
-	entityFactory.createEntity("SpaceCruiser");
-	entityFactory.createEntity("SpaceCruiser");
 
 	return true;
 }

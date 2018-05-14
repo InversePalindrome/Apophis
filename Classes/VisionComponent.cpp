@@ -11,20 +11,20 @@ InversePalindrome.com
 
 
 VisionComponent::VisionComponent(const tinyxml2::XMLElement* componentNode) :
-	visionRadius(5.f)
+	visionDistance(5.f)
 {
-	if (const auto* visionRadius = componentNode->GetText())
+	if (const auto* visionDistance = componentNode->GetText())
 	{
-		this->visionRadius = std::stof(visionRadius);
+		this->visionDistance = std::stof(visionDistance);
 	}
 }
 
-float VisionComponent::getVisionRadius() const
+float VisionComponent::getVisionDistance() const
 {
-	return visionRadius;
+	return visionDistance;
 }
 
-void VisionComponent::setVisionRadius(float visionRadius)
+void VisionComponent::setVisionDistance(float visionDistance)
 {
-	this->visionRadius = visionRadius;
+	this->visionDistance = visionDistance;
 }
