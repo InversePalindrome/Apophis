@@ -43,19 +43,19 @@ void InputSystem::handleKeyboard(entityx::EventManager& eventManager)
 {
 	const auto& appSettings = AppSettings::getInstance();
 
-	if (keyboardManager->isKeyPressed(appSettings.getKeyCode("Move Right")))
+	if (keyboardManager->isKeyPressed(appSettings.getKeyCode(KeyAction::MoveRight)))
 	{
 		eventManager.emit(MoveEntity{ player, {1.f, 0.f} });
 	}
-	else if (keyboardManager->isKeyPressed(appSettings.getKeyCode("Move Left")))
+	else if (keyboardManager->isKeyPressed(appSettings.getKeyCode(KeyAction::MoveLeft)))
 	{
 		eventManager.emit(MoveEntity{ player, {-1.f, 0.f} });
 	}
-	if (keyboardManager->isKeyPressed(appSettings.getKeyCode("Move Up")))
+	if (keyboardManager->isKeyPressed(appSettings.getKeyCode(KeyAction::MoveUp)))
 	{
 		eventManager.emit(MoveEntity{ player, {0.f, 1.f} });
 	}
-	else if (keyboardManager->isKeyPressed(appSettings.getKeyCode("Move Down")))
+	else if (keyboardManager->isKeyPressed(appSettings.getKeyCode(KeyAction::MoveDown)))
 	{
 		eventManager.emit(MoveEntity{ player, {0.f, -1.f} });
 	}

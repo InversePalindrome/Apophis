@@ -15,8 +15,8 @@ InversePalindrome.com
 AppSettings::AppSettings() :
 	soundVolume(1.f),
 	musicVolume(1.f),
-	keyBindings({ { "Move Right", cocos2d::EventKeyboard::KeyCode::KEY_D }, { "Move Left", cocos2d::EventKeyboard::KeyCode::KEY_A } ,
-				  { "Move Up", cocos2d::EventKeyboard::KeyCode::KEY_W }, { "Move Down", cocos2d::EventKeyboard::KeyCode::KEY_S } })
+	keyBindings({ { KeyAction::MoveRight, cocos2d::EventKeyboard::KeyCode::KEY_D }, { KeyAction::MoveLeft, cocos2d::EventKeyboard::KeyCode::KEY_A } ,
+				  { KeyAction::MoveUp, cocos2d::EventKeyboard::KeyCode::KEY_W }, { KeyAction::MoveDown, cocos2d::EventKeyboard::KeyCode::KEY_S } })
 {
 	load("Settings.xml");
 }
@@ -53,14 +53,14 @@ void AppSettings::setMusicVolume(float musicVolume)
 	this->musicVolume = musicVolume;
 }
 
-cocos2d::EventKeyboard::KeyCode AppSettings::getKeyCode(const std::string& action) const
+cocos2d::EventKeyboard::KeyCode AppSettings::getKeyCode(KeyAction keyAction) const
 {
-	return keyBindings.at(action);
+	return keyBindings.at(keyAction);
 }
 
-void AppSettings::setKeyBinding(const std::string& action, cocos2d::EventKeyboard::KeyCode keyCode)
+void AppSettings::setKeyBinding(KeyAction keyAction, cocos2d::EventKeyboard::KeyCode keyCode)
 {
-	keyBindings[action] = keyCode;
+	keyBindings[keyAction] = keyCode;
 }
 
 void AppSettings::load(const std::string& filename)
@@ -91,12 +91,12 @@ void AppSettings::load(const std::string& filename)
 
 		for (const auto* keyBindingNode = settingsNode->FirstChildElement("KeyBinding"); keyBindingNode; keyBindingNode = keyBindingNode->NextSiblingElement("KeyBinding"))
 		{
-			const auto* action = keyBindingNode->Attribute("action");
+			const auto* keyAction = keyBindingNode->Attribute("action");
 			const auto* keyCode = keyBindingNode->Attribute("keyCode");
 
-			if (action && keyCode)
+			if (keyAction && keyCode)
 			{
-				keyBindings[action] = cocos2d::EventKeyboard::KeyCode{ std::stoi(keyCode) };
+				keyBindings[KeyAction::_from_string(keyAction)] = cocos2d::EventKeyboard::KeyCode{ std::stoi(keyCode) };
 			}
 		}
 	}
@@ -120,10 +120,10 @@ void AppSettings::save(const std::string& filename)
 	settingsNode->LinkEndChild(soundNode);
 	settingsNode->LinkEndChild(musicNode);
 
-	for (const auto& [action, keyCode] : keyBindings)
+	for (const auto& [keyAction, keyCode] : keyBindings)
 	{
 		auto* keyBindingNode = doc.NewElement("KeyBinding");
-		keyBindingNode->SetAttribute("action", action.c_str());
+		keyBindingNode->SetAttribute("action", keyAction._to_string());
 		keyBindingNode->SetAttribute("keyCode", static_cast<int>(keyCode));
 
 		settingsNode->LinkEndChild(keyBindingNode);

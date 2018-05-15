@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
-  <AI></AI>
+  <AI>Striker</AI>
   <Sprite>SpaceCruiser</Sprite>
   <Body object="Enemy" type="2" linearDamping="0.3" x="20" y="20">
     <Fixture shape="circle" radius="1.6" density="0.3"></Fixture>
   </Body>
   <Speed>12</Speed>
+  <Weapon projectileName="Laser" projectileVelocity="16" reloadTime="0.5"></Weapon>
   <Explosion name="Boom" time="2"></Explosion>
   <Drop>
     <Loot name="SpeedBoost" chance="0.5"></Loot>
     <Loot name="RegenBoost" chance="0.5"></Loot>
   </Drop>
-  <Health>50</Health>
-  <BehaviorTree></BehaviorTree>
+  <Health>60</Health>
   <Vision>20</Vision>
   <Impulse>20</Impulse>
   <Wander></Wander>

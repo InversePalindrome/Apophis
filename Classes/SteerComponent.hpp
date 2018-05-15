@@ -13,11 +13,9 @@ InversePalindrome.com
 class SteerComponent
 {
 public:
-	SteerComponent();
-
 	b2Vec2 getSteeringForce() const;
 	void setSteeringForce(const b2Vec2& steeringForce);
 
 private:
-	b2Vec2 steeringForce;
+	b2Vec2 steeringForce{ 0.f, 0.f };
 };

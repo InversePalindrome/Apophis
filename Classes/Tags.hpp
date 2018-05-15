@@ -9,4 +9,3 @@ InversePalindrome.com
 
 
 struct Player {};
-struct AI {};

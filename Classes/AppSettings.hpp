@@ -7,9 +7,11 @@ InversePalindrome.com
 
 #pragma once
 
+#include "EnumHash.hpp"
+#include "KeyAction.hpp"
+
 #include <cocos/base/CCEventKeyboard.h>
 
-#include <string>
 #include <unordered_map>
 
 
@@ -30,13 +32,14 @@ public:
 	float getMusicVolume() const;
 	void setMusicVolume(float musicVolume);
 
-	cocos2d::EventKeyboard::KeyCode getKeyCode(const std::string& action) const;
-	void setKeyBinding(const std::string& action, cocos2d::EventKeyboard::KeyCode keyCode);
+	cocos2d::EventKeyboard::KeyCode getKeyCode(KeyAction keyAction) const;
+	void setKeyBinding(KeyAction keyAction, cocos2d::EventKeyboard::KeyCode keyCode);
 
 private:
 	float soundVolume;
 	float musicVolume;
-	std::unordered_map<std::string, cocos2d::EventKeyboard::KeyCode> keyBindings;
+
+	std::unordered_map<KeyAction, cocos2d::EventKeyboard::KeyCode, EnumHash<KeyAction>> keyBindings;
 
 	void load(const std::string& filename);
 	void save(const std::string& filename);

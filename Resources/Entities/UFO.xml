@@ -12,4 +12,5 @@
     <Action name="Shoot" filename="Laser.mp3"></Action>
   </Sound>
   <Health>100</Health>
+  <Vision>5</Vision>
 </Entity>

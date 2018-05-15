@@ -9,6 +9,7 @@ InversePalindrome.com
 
 #include "Events.hpp"
 #include "BodyComponent.hpp"
+#include "VisionComponent.hpp"
 
 #include <entityx/entityx.h>
 
@@ -35,4 +36,5 @@ public:
 
 private:
 	entityx::ComponentHandle<BodyComponent> playerBody;
+	entityx::ComponentHandle<VisionComponent> playerVision;
 };

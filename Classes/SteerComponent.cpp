@@ -8,11 +8,6 @@ InversePalindrome.com
 #include "SteerComponent.hpp"
 
 
-SteerComponent::SteerComponent() :
-	steeringForce(0.f, 0.f)
-{
-}
-
 b2Vec2 SteerComponent::getSteeringForce() const
 {
 	return steeringForce;

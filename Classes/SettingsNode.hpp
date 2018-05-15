@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #pragma once
 
+#include "KeyAction.hpp"
 #include "KeyboardManager.hpp"
 
 #include <cocos/2d/CCNode.h>
@@ -17,6 +18,7 @@ InversePalindrome.com
 class SettingsNode : public cocos2d::Node
 {
 public:
+	SettingsNode();
 	~SettingsNode();
 
 	virtual bool init() override;
@@ -29,4 +31,9 @@ public:
 private:
 	KeyboardManager* keyboardManager;
 	cocos2d::ui::RadioButtonGroup* controlButtons;
+
+	KeyAction moveRight;
+	KeyAction moveLeft;
+	KeyAction moveUp;
+	KeyAction moveDown;
 };

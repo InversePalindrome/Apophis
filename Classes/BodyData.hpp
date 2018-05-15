@@ -14,8 +14,6 @@ InversePalindrome.com
 
 struct BodyData
 {
-	BodyData();
-
-	ObjectType objectType;
+	ObjectType objectType{ ObjectType::Undefined };
 	entityx::Entity entity;
 };

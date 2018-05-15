@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #include "Tags.hpp"
 #include "Events.hpp"
+#include "AIComponent.hpp"
 #include "EntityFactory.hpp"
 #include "BodyComponent.hpp"
 #include "ItemComponent.hpp"
@@ -33,7 +34,6 @@ InversePalindrome.com
 #include "ParticleComponent.hpp"
 #include "AnimationComponent.hpp"
 #include "ExplosionComponent.hpp"
-#include "BehaviorTreeComponent.hpp"
 
 #include <cocos/platform/CCFileUtils.h>
 
@@ -43,9 +43,8 @@ EntityFactory::EntityFactory(entityx::EntityManager& entityManager, entityx::Eve
 	eventManager(eventManager)
 {
 	parsers["Player"] = [](auto entity, const auto* componentNode) { entity.assign<Player>(); };
-	parsers["AI"] = [](auto entity, const auto* componentNode) { entity.assign<AI>(); };
-	parsers["BehaviorTree"] = [](auto entity, const auto* componentNode) { entity.assign<BehaviorTreeComponent>(); };
 	parsers["Steer"] = [](auto entity, const auto* componentNode) { entity.assign<SteerComponent>(); };
+	parsers["AI"] = [](auto entity, const auto* componentNode) { entity.assign<AIComponent>(componentNode); };
 	parsers["Pursue"] = [](auto entity, const auto* componentNode) { entity.assign<PursueComponent>(componentNode); };
 	parsers["Evade"] = [](auto entity, const auto* componentNode) { entity.assign<EvadeComponent>(componentNode); };
 	parsers["Avoid"] = [](auto entity, const auto* componentNode) { entity.assign<AvoidComponent>(componentNode); };

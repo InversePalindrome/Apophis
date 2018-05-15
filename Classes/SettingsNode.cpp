@@ -17,6 +17,14 @@ InversePalindrome.com
 #include <cocos/base/CCDirector.h>
 
 
+SettingsNode::SettingsNode() :
+	moveRight(KeyAction::MoveRight),
+	moveLeft(KeyAction::MoveLeft),
+	moveUp(KeyAction::MoveUp),
+	moveDown(KeyAction::MoveDown)
+{
+}
+
 SettingsNode::~SettingsNode()
 {
 	keyboardManager->release();
@@ -39,31 +47,31 @@ bool SettingsNode::init()
 
 	auto* director = cocos2d::Director::getInstance();
 	const auto& windowSize = director->getVisibleSize();
-	
+
 	auto* background = cocos2d::Sprite::create("SpaceBackground.png");
 	background->setPosition(windowSize.width / 2.f, windowSize.height / 2.f);
-	
-	auto* backButton = cocos2d::ui::Button::create("RegularRectangleButton", "SelectedRectangleButton",  "", cocos2d::ui::Widget::TextureResType::PLIST);
-	backButton->setPosition({ backButton->getContentSize().width / 2.f, windowSize.height - backButton->getContentSize().height / 2.f }); 
+
+	auto* backButton = cocos2d::ui::Button::create("RegularRectangleButton", "SelectedRectangleButton", "", cocos2d::ui::Widget::TextureResType::PLIST);
+	backButton->setPosition({ backButton->getContentSize().width / 2.f, windowSize.height - backButton->getContentSize().height / 2.f });
 	backButton->addClickEventListener([director](auto* sender) { director->popScene(); });
 
 	auto* backLabel = cocos2d::Label::createWithTTF("back", "Zian.ttf", 60.f);
 	backLabel->setTextColor(cocos2d::Color4B(135, 206, 250, 255));
 	backLabel->setPosition(backButton->getContentSize().width / 2.f, backButton->getContentSize().height / 2.f);
 	backButton->addChild(backLabel);
-	
+
 	auto* soundLabel = cocos2d::Label::createWithTTF("sound volume", "Zian.ttf", 60.f);
 	soundLabel->setTextColor(cocos2d::Color4B(135, 206, 250, 255));
-    soundLabel->setPosition({ windowSize.width / 3.2f, windowSize.height / 1.4f });
+	soundLabel->setPosition({ windowSize.width / 3.2f, windowSize.height / 1.4f });
 
 	auto* soundVolumeSlider = cocos2d::ui::Slider::create("Slider", "Scroller", cocos2d::ui::Widget::TextureResType::PLIST);
 	soundVolumeSlider->setPosition({ windowSize.width / 1.5f, windowSize.height / 1.4f });
 	soundVolumeSlider->setPercent(static_cast<int>(appSettings.getSoundVolume() * 100));
 	soundVolumeSlider->addClickEventListener([soundVolumeSlider, &appSettings](auto* sender) { appSettings.setSoundVolume(soundVolumeSlider->getPercent() / 100.f); });
-	
+
 	auto* musicLabel = cocos2d::Label::createWithTTF("music volume", "Zian.ttf", 60.f);
-    musicLabel->setTextColor(cocos2d::Color4B(135, 206, 250, 255));
-    musicLabel->setPosition({ windowSize.width / 3.2f, windowSize.height / 1.8f });
+	musicLabel->setTextColor(cocos2d::Color4B(135, 206, 250, 255));
+	musicLabel->setPosition({ windowSize.width / 3.2f, windowSize.height / 1.8f });
 
 	auto* musicVolumeSlider = cocos2d::ui::Slider::create("Slider", "Scroller", cocos2d::ui::Widget::TextureResType::PLIST);
 	musicVolumeSlider->setPosition({ windowSize.width / 1.5f, windowSize.height / 1.8f });
@@ -75,7 +83,7 @@ bool SettingsNode::init()
 	moveRightLabel->setPosition({ windowSize.width / 6.f, windowSize.height / 2.5f });
 
 	auto* moveRightButton = cocos2d::ui::RadioButton::create();
-	moveRightButton->setUserData("Move Right");
+	moveRightButton->setUserData(&moveRight);
 	moveRightButton->setPosition({ windowSize.width / 6.f, windowSize.height / 3.f });
 	moveRightButton->loadTextureBackGround("BlueRadioButtonOff", cocos2d::ui::Widget::TextureResType::PLIST);
 	moveRightButton->loadTextureFrontCross("BlueRadioButtonOn", cocos2d::ui::Widget::TextureResType::PLIST);
@@ -85,7 +93,7 @@ bool SettingsNode::init()
 	moveLeftLabel->setPosition({ windowSize.width / 2.5f, windowSize.height / 2.5f });
 
 	auto* moveLeftButton = cocos2d::ui::RadioButton::create();
-	moveLeftButton->setUserData("Move Left");
+	moveLeftButton->setUserData(&moveLeft);
 	moveLeftButton->setPosition({ windowSize.width / 2.5f, windowSize.height / 3.f });
 	moveLeftButton->loadTextureBackGround("BlueRadioButtonOff", cocos2d::ui::Widget::TextureResType::PLIST);
 	moveLeftButton->loadTextureFrontCross("BlueRadioButtonOn", cocos2d::ui::Widget::TextureResType::PLIST);
@@ -95,7 +103,7 @@ bool SettingsNode::init()
 	moveUpLabel->setPosition({ windowSize.width / 1.65f, windowSize.height / 2.5f });
 
 	auto* moveUpButton = cocos2d::ui::RadioButton::create();
-	moveUpButton->setUserData("Move Up");
+	moveUpButton->setUserData(&moveUp);
 	moveUpButton->setPosition({ windowSize.width / 1.65f, windowSize.height / 3.f });
 	moveUpButton->loadTextureBackGround("BlueRadioButtonOff", cocos2d::ui::Widget::TextureResType::PLIST);
 	moveUpButton->loadTextureFrontCross("BlueRadioButtonOn", cocos2d::ui::Widget::TextureResType::PLIST);
@@ -105,7 +113,7 @@ bool SettingsNode::init()
 	moveDownLabel->setPosition({ windowSize.width / 1.25f, windowSize.height / 2.5f });
 
 	auto* moveDownButton = cocos2d::ui::RadioButton::create();
-	moveDownButton->setUserData("Move Down");
+	moveDownButton->setUserData(&moveDown);
 	moveDownButton->setPosition({ windowSize.width / 1.25f, windowSize.height / 3.f });
 	moveDownButton->loadTextureBackGround("BlueRadioButtonOff", cocos2d::ui::Widget::TextureResType::PLIST);
 	moveDownButton->loadTextureFrontCross("BlueRadioButtonOn", cocos2d::ui::Widget::TextureResType::PLIST);
@@ -145,10 +153,10 @@ void SettingsNode::update(float dt)
 	{
 		auto* selectedButton = controlButtons->getRadioButtonByIndex(controlButtons->getSelectedButtonIndex());
 
-		const auto* action = static_cast<const char*>(selectedButton->getUserData());
-		auto keyCode = *keyboardManager->getActiveKeys().begin();
-	
-		AppSettings::getInstance().setKeyBinding(action, keyCode);
+		auto keyAction = static_cast<KeyAction*>(selectedButton->getUserData());
+		auto keyCode = keyboardManager->getActiveKeys().begin();
+
+		AppSettings::getInstance().setKeyBinding(*keyAction, *keyCode);
 
 		selectedButton->setSelected(false);
 	}

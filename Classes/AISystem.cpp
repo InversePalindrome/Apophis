@@ -7,28 +7,34 @@ InversePalindrome.com
 
 #include "Tags.hpp"
 #include "AISystem.hpp"
+#include "AIComponent.hpp"
 #include "HealthComponent.hpp"
 #include "VisionComponent.hpp"
 
+
+AISystem::AISystem()
+{
+	initStrikerTree();
+}
 
 void AISystem::configure(entityx::EventManager& eventManager)
 {
 	this->eventManager = &eventManager;
 
 	eventManager.subscribe<EntityCreated>(*this);
-	eventManager.subscribe<entityx::ComponentAddedEvent<BehaviorTreeComponent>>(*this);
 }
 
 void AISystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
-	if (playerBody.valid())
-	{
-		entityx::ComponentHandle<AI> ai;
-		entityx::ComponentHandle<BehaviorTreeComponent> tree;
+	entityx::ComponentHandle<AIComponent> ai;
 
-		for (auto entity : entityManager.entities_with_components(ai, tree))
+	for (auto entity : entityManager.entities_with_components(ai))
+	{
+		switch (ai->getBehaviorType())
 		{
-			tree->update(entity);
+		case BehaviorType::Striker:
+			strikerTree.process(entity);
+			break;
 		}
 	}
 }
@@ -44,14 +50,53 @@ void AISystem::receive(const EntityCreated& event)
 	}
 }
 
-void AISystem::receive(const entityx::ComponentAddedEvent<BehaviorTreeComponent>& event)
+void AISystem::initStrikerTree()
 {
-	auto tree = event.component;
-	/*
-	tree->setTree(beehive::Builder<entityx::Entity>()
+	strikerTree = beehive::Builder<entityx::Entity>()
 	.selector()
-		.leaf([](auto& entity)
+	.sequence()
+	.leaf([this](auto& entity)
 	{
+		auto body = entity.component<BodyComponent>();
+		auto vision = entity.component<VisionComponent>();
+
+		if (body && vision && playerBody.valid())
+		{
+			auto distanceFromPlayer = (playerBody->getPosition() - body->getPosition()).Length();
+
+			if (distanceFromPlayer <= vision->getVisionDistance())
+			{
+				return beehive::Status::SUCCESS;
+			}
+		}
+
 		return beehive::Status::FAILURE;
-	})*/
+	})
+	.selector()
+	.leaf([this](auto& entity)
+	{
+		auto health = entity.component<HealthComponent>();
+
+		if (health && playerBody.valid())
+		{
+			if (health->getCurrentHitpoints() >= health->getMaxHitpoints() * 0.2)
+			{
+				eventManager->emit(Seek{ entity });
+				eventManager->emit(ShootProjectile{ entity, playerBody->getPosition() });
+
+				return beehive::Status::SUCCESS;
+			}
+		}
+
+		return beehive::Status::FAILURE;
+	})
+	.void_leaf([this](auto& entity)
+	{
+		eventManager->emit(Flee{ entity });
+	}).end().end()
+	.void_leaf([this](auto& entity)
+	{
+		eventManager->emit(Wander{ entity });
+	})
+	.end().build();
 }
