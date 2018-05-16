@@ -15,6 +15,7 @@ InversePalindrome.com
 AISystem::AISystem()
 {
 	initStrikerTree();
+	initPatrollerTree();
 }
 
 void AISystem::configure(entityx::EventManager& eventManager)
@@ -27,7 +28,7 @@ void AISystem::configure(entityx::EventManager& eventManager)
 void AISystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
 	entityx::ComponentHandle<AIComponent> ai;
-
+	
 	for (auto entity : entityManager.entities_with_components(ai))
 	{
 		switch (ai->getBehaviorType())
@@ -35,6 +36,8 @@ void AISystem::update(entityx::EntityManager& entityManager, entityx::EventManag
 		case BehaviorType::Striker:
 			strikerTree.process(entity);
 			break;
+		case BehaviorType::Patroller:
+			patrollerTree.process(entity);
 		}
 	}
 }
@@ -99,4 +102,9 @@ void AISystem::initStrikerTree()
 		eventManager->emit(Wander{ entity });
 	})
 	.end().build();
+}
+
+void AISystem::initPatrollerTree()
+{
+//	patrollerTree = beehive::Builder<entityx::Entity>().end().build();
 }

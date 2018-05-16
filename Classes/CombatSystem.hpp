@@ -12,13 +12,11 @@ InversePalindrome.com
 
 #include <entityx/entityx.h>
 
-#include <cocos/2d/CCNode.h>
-
 
 class CombatSystem : public entityx::System<CombatSystem>, public entityx::Receiver<CombatSystem>
 {
 public:
-	CombatSystem(cocos2d::Node* gameNode, EntityFactory& entityFactory);
+	explicit CombatSystem(EntityFactory& entityFactory);
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
@@ -26,8 +24,6 @@ public:
 	virtual void receive(const ProjectileHit& event);
 
 private:
-	cocos2d::Node* gameNode;
-
 	EntityFactory& entityFactory;
 	entityx::EventManager* eventManager;
 };

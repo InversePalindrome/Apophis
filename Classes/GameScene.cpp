@@ -98,13 +98,13 @@ void GameScene::update(float dt)
 
 void GameScene::initSystems()
 {
-	systemManager.add<ControlSystem>(gameNode, entityFactory);
+	systemManager.add<ControlSystem>(entityFactory);
 	systemManager.add<AISystem>();
 	systemManager.add<AudioSystem>();
 	systemManager.add<SteeringSystem>();
-	systemManager.add<ItemSystem>(gameNode, entityFactory);
+	systemManager.add<ItemSystem>(entityFactory);
 	systemManager.add<PhysicsSystem>(eventManager);
-	systemManager.add<CombatSystem>(gameNode, entityFactory);
+	systemManager.add<CombatSystem>(entityFactory);
 	systemManager.add<GraphicsSystem>(gameNode, hudNode, map);
 	systemManager.add<InputSystem>(keyboardManager, mouseManager);
 	

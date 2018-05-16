@@ -17,7 +17,7 @@ SoundComponent::SoundComponent(const tinyxml2::XMLElement* componentNode)
 		
 		if (name && filename)
 		{
-			sounds.insert({ name, filename });
+			sounds.emplace(name, filename);
 		}
 	}
 }

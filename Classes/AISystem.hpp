@@ -29,6 +29,8 @@ private:
 	entityx::ComponentHandle<BodyComponent> playerBody;
 
 	beehive::Tree<entityx::Entity> strikerTree;
+	beehive::Tree<entityx::Entity> patrollerTree;
 
 	void initStrikerTree();
+	void initPatrollerTree();
 };

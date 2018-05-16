@@ -20,7 +20,7 @@ int AudioManager::playSound(const std::string& filename, bool loop)
 {
 	auto soundID = cocos2d::experimental::AudioEngine::play2d(filename, loop, AppSettings::getInstance().getSoundVolume());
 
-	soundIDs.insert(soundID);
+	soundIDs.emplace(soundID);
 
 	cocos2d::experimental::AudioEngine::setFinishCallback(soundID, [this](auto id, const auto& filename) { soundIDs.erase(id); });
 
@@ -31,7 +31,7 @@ int AudioManager::playMusic(const std::string& filename, bool loop)
 {
 	auto musicID = cocos2d::experimental::AudioEngine::play2d(filename, loop, AppSettings::getInstance().getMusicVolume());
 
-	musicIDs.insert(musicID);
+	musicIDs.emplace(musicID);
 
 	cocos2d::experimental::AudioEngine::setFinishCallback(musicID, [this](auto id, const auto& filename) { musicIDs.erase(id); });
 

@@ -20,7 +20,7 @@ DropComponent::DropComponent(const tinyxml2::XMLElement* componentNode) :
 		{
 			totalRate += std::stof(rate);
 
-			dropChances.insert({ totalRate, name });
+			dropChances.emplace(totalRate, name);
 		}
 	}
 }
@@ -39,5 +39,5 @@ void DropComponent::addDropChance(const std::string& name, float chance)
 {
 	totalRate += chance;
 
-	dropChances.insert({ totalRate, name });
+	dropChances.emplace(totalRate, name);
 }

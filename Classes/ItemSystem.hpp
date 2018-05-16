@@ -12,13 +12,11 @@ InversePalindrome.com
 
 #include <entityx/entityx.h>
 
-#include <cocos/2d/CCNode.h>
-
 
 class ItemSystem : public entityx::System<ItemSystem>, public entityx::Receiver<ItemSystem>
 {
 public:
-	ItemSystem(cocos2d::Node* gameNode, EntityFactory& entityFactory);
+	explicit ItemSystem(EntityFactory& entityFactory);
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
@@ -26,8 +24,6 @@ public:
 	virtual void receive(const PickedUpItem& event);
 
 private:
-	cocos2d::Node* gameNode;
-
 	EntityFactory& entityFactory;
 	entityx::EventManager* eventManager;
 

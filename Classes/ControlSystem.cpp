@@ -7,14 +7,14 @@ InversePalindrome.com
 
 #include "ControlSystem.hpp"
 #include "BodyComponent.hpp"
+#include "NodeComponent.hpp"
 #include "SpeedComponent.hpp"
 #include "PhysicsUtility.hpp"
 #include "WeaponComponent.hpp"
 #include "ImpulseComponent.hpp"
 
 
-ControlSystem::ControlSystem(cocos2d::Node* gameNode, EntityFactory& entityFactory) :
-	gameNode(gameNode),
+ControlSystem::ControlSystem(EntityFactory& entityFactory) :
 	entityFactory(entityFactory)
 {
 }
@@ -63,37 +63,35 @@ void ControlSystem::receive(const RotateEntity& event)
 void ControlSystem::receive(const ShootProjectile& event)
 {
 	auto shooter = event.entity;
-	auto weapon = shooter.component<WeaponComponent>();
+	auto shooterNode = shooter.component<NodeComponent>();
+	auto shooterBody = shooter.component<BodyComponent>();
+	auto shooterWeapon = shooter.component<WeaponComponent>();
 
-	if (weapon && weapon->isReloaded())
+	if (shooterNode && shooterBody && shooterWeapon && shooterWeapon->isReloaded())
 	{
-		auto projectile = entityFactory.createEntity(weapon->getProjectileName());
+		auto projectile = entityFactory.createEntity(shooterWeapon->getProjectileName());
 
-		auto entityBody = shooter.component<BodyComponent>();
 		auto projectileBody = projectile.component<BodyComponent>();
 		auto projectileSpeed = projectile.component<SpeedComponent>();
 
-		if (entityBody && projectileBody && projectileSpeed)
+		if (projectileBody && projectileSpeed)
 		{
-			const auto& entityBodySize = entityBody->getAABB().upperBound - entityBody->getAABB().lowerBound;
+			const auto& shooterBodySize = shooterBody->getAABB().upperBound - shooterBody->getAABB().lowerBound;
 
-			auto direction = event.targetPosition - entityBody->getPosition();
+			auto direction = event.targetPosition - shooterBody->getPosition();
 			direction.Normalize();
 
-			eventManager->emit(SetPosition{ projectile, entityBody->getPosition() + b2Vec2(direction.x * entityBodySize.x, direction.y * entityBodySize.y) });
-			eventManager->emit(SetRotation{ projectile, entityBody->getAngle() });
+			eventManager->emit(SetPosition{ projectile, shooterBody->getPosition() + b2Vec2(direction.x * shooterBodySize.x, direction.y * shooterBodySize.y) });
+			eventManager->emit(SetRotation{ projectile, shooterBody->getAngle() });
 			eventManager->emit(MoveEntity{ projectile, direction });
 			eventManager->emit(PlayAction{ shooter, "Shoot", false });
-		}
 
-		weapon->setReloadStatus(false);
+			shooterWeapon->setReloadStatus(false);
 
-		gameNode->scheduleOnce([shooter, weapon](auto dt) mutable
-		{
-			if (shooter.valid())
+			shooterNode->scheduleOnce([shooterWeapon](auto dt) mutable
 			{
-				weapon->setReloadStatus(true);
-			}
-		}, weapon->getReloadTime(), "Reload");
+				shooterWeapon->setReloadStatus(true);
+			}, shooterWeapon->getReloadTime(), "Reload");
+		}
 	}
 }

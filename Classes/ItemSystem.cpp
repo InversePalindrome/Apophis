@@ -8,6 +8,7 @@ InversePalindrome.com
 #include "ItemSystem.hpp"
 #include "ItemComponent.hpp"
 #include "DropComponent.hpp"
+#include "NodeComponent.hpp"
 #include "BodyComponent.hpp"
 #include "SpeedComponent.hpp"
 #include "HealthComponent.hpp"
@@ -15,8 +16,7 @@ InversePalindrome.com
 #include "PowerUpComponent.hpp"
 
 
-ItemSystem::ItemSystem(cocos2d::Node* gameNode, EntityFactory& entityFactory) :
-	gameNode(gameNode),
+ItemSystem::ItemSystem(EntityFactory& entityFactory) :
 	entityFactory(entityFactory)
 {
 }
@@ -40,18 +40,19 @@ void ItemSystem::receive(const EntityDied& event)
 
 	auto drop = entity.component<DropComponent>();
 	auto body = entity.component<BodyComponent>();
+	auto node = entity.component<NodeComponent>();
 
-	if (drop && body)
+	if (drop && body && node)
 	{
 		auto randomChance = cocos2d::rand_0_1();
 
-		for (const auto&[range, name] : drop->getDropChances())
+		for (const auto& [range, name] : drop->getDropChances())
 		{
 			if (randomChance <= range)
 			{
 				const auto& bodyPosition = body->getPosition();
 
-				gameNode->scheduleOnce([this, name, bodyPosition](auto dt)
+				node->scheduleOnce([this, name, bodyPosition](auto dt)
 				{
 					auto dropEntity = entityFactory.createEntity(name);
 
@@ -84,7 +85,10 @@ void ItemSystem::receive(const PickedUpItem& event)
 
 	eventManager->emit(PlayAction{ event.itemEntity, "Pickup", false });
 
-	gameNode->scheduleOnce([event](auto dt) { event.itemEntity.destroy(); }, 0.f, "DestroyItem");
+	if (auto itemNode = event.itemEntity.component<NodeComponent>())
+	{
+		itemNode->scheduleOnce([event](auto dt) { event.itemEntity.destroy(); }, 0.f, "Destroy");
+	}
 }
 
 void ItemSystem::addWeapon(entityx::Entity entity, entityx::Entity itemEntity)
@@ -97,45 +101,41 @@ void ItemSystem::addWeapon(entityx::Entity entity, entityx::Entity itemEntity)
 
 void ItemSystem::addRegenBoost(entityx::Entity entity, entityx::Entity itemEntity)
 {
-	auto powerUp = itemEntity.component<PowerUpComponent>();
-	auto health = entity.component<HealthComponent>();
+	auto entityNode = entity.component<NodeComponent>();
+	auto entityHealth = entity.component<HealthComponent>();
+	auto itemPowerUp = itemEntity.component<PowerUpComponent>();
 
-	if (powerUp && health)
+	if (entityNode && entityHealth && itemPowerUp)
 	{
-		auto effectBoost = powerUp->getEffectBoost();
+		auto effectBoost = itemPowerUp->getEffectBoost();
 
-		gameNode->schedule([entity, health, effectBoost](auto dt) mutable
+		entityNode->schedule([entityHealth, effectBoost](auto dt) mutable
 		{
-			if (entity.valid())
-			{
-				auto regenHealth = health->getCurrentHitpoints() + effectBoost;
+			auto regenHealth = entityHealth->getCurrentHitpoints() + effectBoost;
 
-				if (regenHealth <= health->getMaxHitpoints())
-				{
-					health->setCurrentHitpoints(regenHealth);
-				}
+			if (regenHealth <= entityHealth->getMaxHitpoints())
+			{
+				entityHealth->setCurrentHitpoints(regenHealth);
 			}
-		}, 1.f, static_cast<int>(powerUp->getEffectTime()), 0.f, "RegenBoost");
+		}, 1.f, static_cast<int>(itemPowerUp->getEffectTime()), 0.f, "RegenBoost");
 	}
 }
 
 void ItemSystem::addSpeedBoost(entityx::Entity entity, entityx::Entity itemEntity)
 {
-	auto powerUp = itemEntity.component<PowerUpComponent>();
-	auto speed = entity.component<SpeedComponent>();
+	auto entityNode = entity.component<NodeComponent>();
+	auto entitySpeed = entity.component<SpeedComponent>();
+	auto itemPowerUp = itemEntity.component<PowerUpComponent>();
 
-	if (powerUp && speed)
+	if (entityNode && entitySpeed && itemPowerUp)
 	{
-		auto originalSpeed = speed->getMaxSpeed();
+		auto originalSpeed = entitySpeed->getMaxSpeed();
 
-		speed->setMaxSpeed(originalSpeed * (1 + powerUp->getEffectBoost()));
+		entitySpeed->setMaxSpeed(entitySpeed->getMaxSpeed() * (1 + itemPowerUp->getEffectBoost()));
 
-		gameNode->scheduleOnce([entity, speed, originalSpeed](auto dt) mutable
+		entityNode->scheduleOnce([entitySpeed, originalSpeed](auto dt) mutable
 		{
-			if (entity.valid())
-			{
-				speed->setMaxSpeed(originalSpeed);
-			}
-		}, powerUp->getEffectTime(), "SpeedBoost");
+			entitySpeed->setMaxSpeed(originalSpeed);
+		}, itemPowerUp->getEffectTime(), "SpeedBoost");
 	}
 }

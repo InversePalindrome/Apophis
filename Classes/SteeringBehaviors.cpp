@@ -225,7 +225,9 @@ b2Vec2 SteeringBehaviors::follow(const b2Vec2& bodyPosition, const b2Vec2& leade
 	leaderDirection.Normalize();
 	leaderDirection *= distanceFromLeader;
 
-	if ((bodyPosition - leaderPosition + leaderDirection).Length() <= leaderSight)
+	auto leaderAhead = leaderPosition + leaderDirection;
+
+	if ((bodyPosition - leaderAhead).Length() <= leaderSight || (bodyPosition - leaderPosition).Length() <= leaderSight)
 	{
 		steeringForce += pursue(bodyPosition, leaderPosition, bodyVelocity, leaderVelocity, -impulse);
 	}

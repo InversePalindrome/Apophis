@@ -24,18 +24,14 @@ AnimationComponent::AnimationComponent(const tinyxml2::XMLElement* componentNode
 			}
 		}
 
-		std::string actionName;
-
 		if (const auto* name = actionNode->Attribute("name"))
 		{
-			actionName = name;
+			animations.insert(name, animation);
 		}
 		if (const auto* delay = actionNode->Attribute("delay"))
 		{
 			animation->setDelayPerUnit(std::stof(delay));
 		}
-
-		animations.insert(actionName, animation);
 	}
 }
 

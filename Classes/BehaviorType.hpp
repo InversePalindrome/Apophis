@@ -12,4 +12,5 @@ InversePalindrome.com
 
 BETTER_ENUM(BehaviorType, int,
 	Undefined = 0,
-	Striker)
+	Striker,
+	Patroller)

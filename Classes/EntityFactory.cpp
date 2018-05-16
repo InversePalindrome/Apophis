@@ -42,34 +42,34 @@ EntityFactory::EntityFactory(entityx::EntityManager& entityManager, entityx::Eve
 	entityManager(entityManager),
 	eventManager(eventManager)
 {
-	parsers["Player"] = [](auto entity, const auto* componentNode) { entity.assign<Player>(); };
-	parsers["Steer"] = [](auto entity, const auto* componentNode) { entity.assign<SteerComponent>(); };
-	parsers["AI"] = [](auto entity, const auto* componentNode) { entity.assign<AIComponent>(componentNode); };
-	parsers["Pursue"] = [](auto entity, const auto* componentNode) { entity.assign<PursueComponent>(componentNode); };
-	parsers["Evade"] = [](auto entity, const auto* componentNode) { entity.assign<EvadeComponent>(componentNode); };
-	parsers["Avoid"] = [](auto entity, const auto* componentNode) { entity.assign<AvoidComponent>(componentNode); };
-	parsers["Arrive"] = [](auto entity, const auto* componentNode) { entity.assign<ArriveComponent>(componentNode); };
-	parsers["Wander"] = [](auto entity, const auto* componentNode) { entity.assign<WanderComponent>(componentNode); };
-	parsers["Patrol"] = [](auto entity, const auto* componentNode) { entity.assign<PatrolComponent>(componentNode); };
-	parsers["Flock"] = [](auto entity, const auto* componentNode) { entity.assign<FlockComponent>(componentNode); };
-	parsers["Follow"] = [](auto entity, const auto* componentNode) { entity.assign<FollowComponent>(componentNode); };
-	parsers["Queue"] = [](auto entity, const auto* componentNode) { entity.assign<QueueComponent>(componentNode); };
-	parsers["Body"] = [&eventManager](auto entity, const auto* componentNode) { eventManager.emit(CreateBody{ entity, componentNode }); };
-	parsers["Sprite"] = [](auto entity, const auto* componentNode) { entity.assign<SpriteComponent>(componentNode); };
-	parsers["Label"] = [](auto entity, const auto* componentNode) { entity.assign<LabelComponent>(componentNode); };
-	parsers["Particle"] = [](auto entity, const auto* componentNode) { entity.assign<ParticleComponent>(componentNode); };
-	parsers["Drop"] = [](auto entity, const auto* componentNode) { entity.assign<DropComponent>(componentNode); };
-	parsers["Item"] = [](auto entity, const auto* componentNode) { entity.assign<ItemComponent>(componentNode); };
-	parsers["Health"] = [](auto entity, const auto* componentNode) { entity.assign<HealthComponent>(componentNode); };
-	parsers["Damage"] = [](auto entity, const auto* componentNode) { entity.assign<DamageComponent>(componentNode); };
-	parsers["Vision"] = [](auto entity, const auto* componentNode) { entity.assign<VisionComponent>(componentNode); };
-	parsers["Sound"] = [](auto entity, const auto* componentNode) { entity.assign<SoundComponent>(componentNode); };
-	parsers["Animation"] = [](auto entity, const auto* componentNode) { entity.assign<AnimationComponent>(componentNode); };
-	parsers["Weapon"] = [](auto entity, const auto* componentNode) { entity.assign<WeaponComponent>(componentNode); };
-	parsers["Explosion"] = [](auto entity, const auto* componentNode) { entity.assign<ExplosionComponent>(componentNode); };
-	parsers["Speed"] = [](auto entity, const auto* componentNode) { entity.assign<SpeedComponent>(componentNode); };
-	parsers["Impulse"] = [](auto entity, const auto* componentNode) { entity.assign<ImpulseComponent>(componentNode); };
-	parsers["PowerUp"] = [](auto entity, const auto* componentNode) { entity.assign<PowerUpComponent>(componentNode); };
+	parsers.emplace("Player", [](auto entity, const auto* componentNode) { entity.assign<Player>(); });
+	parsers.emplace("Steer", [](auto entity, const auto* componentNode) { entity.assign<SteerComponent>(); });
+	parsers.emplace("AI", [](auto entity, const auto* componentNode) { entity.assign<AIComponent>(componentNode); });
+	parsers.emplace("Pursue", [](auto entity, const auto* componentNode) { entity.assign<PursueComponent>(componentNode); });
+	parsers.emplace("Evade", [](auto entity, const auto* componentNode) { entity.assign<EvadeComponent>(componentNode); });
+	parsers.emplace("Avoid", [](auto entity, const auto* componentNode) { entity.assign<AvoidComponent>(componentNode); });
+	parsers.emplace("Arrive", [](auto entity, const auto* componentNode) { entity.assign<ArriveComponent>(componentNode); });
+	parsers.emplace("Wander", [](auto entity, const auto* componentNode) { entity.assign<WanderComponent>(componentNode); });
+	parsers.emplace("Patrol", [](auto entity, const auto* componentNode) { entity.assign<PatrolComponent>(componentNode); });
+	parsers.emplace("Flock", [](auto entity, const auto* componentNode) { entity.assign<FlockComponent>(componentNode); });
+	parsers.emplace("Follow", [](auto entity, const auto* componentNode) { entity.assign<FollowComponent>(componentNode); });
+	parsers.emplace("Queue", [](auto entity, const auto* componentNode) { entity.assign<QueueComponent>(componentNode); });
+	parsers.emplace("Body", [&eventManager](auto entity, const auto* componentNode) { eventManager.emit(CreateBody{ entity, componentNode }); });
+	parsers.emplace("Sprite", [](auto entity, const auto* componentNode) { entity.assign<SpriteComponent>(componentNode); });
+	parsers.emplace("Label", [](auto entity, const auto* componentNode) { entity.assign<LabelComponent>(componentNode); });
+	parsers.emplace("Particle", [](auto entity, const auto* componentNode) { entity.assign<ParticleComponent>(componentNode); });
+	parsers.emplace("Drop", [](auto entity, const auto* componentNode) { entity.assign<DropComponent>(componentNode); });
+	parsers.emplace("Item", [](auto entity, const auto* componentNode) { entity.assign<ItemComponent>(componentNode); });
+	parsers.emplace("Health", [](auto entity, const auto* componentNode) { entity.assign<HealthComponent>(componentNode); });
+	parsers.emplace("Damage", [](auto entity, const auto* componentNode) { entity.assign<DamageComponent>(componentNode); });
+	parsers.emplace("Vision", [](auto entity, const auto* componentNode) { entity.assign<VisionComponent>(componentNode); });
+	parsers.emplace("Sound", [](auto entity, const auto* componentNode) { entity.assign<SoundComponent>(componentNode); });
+	parsers.emplace("Animation", [](auto entity, const auto* componentNode) { entity.assign<AnimationComponent>(componentNode); });
+	parsers.emplace("Weapon", [](auto entity, const auto* componentNode) { entity.assign<WeaponComponent>(componentNode); });
+	parsers.emplace("Explosion", [](auto entity, const auto* componentNode) { entity.assign<ExplosionComponent>(componentNode); });
+	parsers.emplace("Speed", [](auto entity, const auto* componentNode) { entity.assign<SpeedComponent>(componentNode); });
+	parsers.emplace("Impulse", [](auto entity, const auto* componentNode) { entity.assign<ImpulseComponent>(componentNode); });
+	parsers.emplace("PowerUp", [](auto entity, const auto* componentNode) { entity.assign<PowerUpComponent>(componentNode); });
 }
 
 entityx::Entity EntityFactory::createEntity(const std::string& entityName)

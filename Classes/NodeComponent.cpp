@@ -33,6 +33,16 @@ void NodeComponent::removeFromParent()
 	node->removeFromParent();
 }
 
+void NodeComponent::scheduleOnce(const std::function<void(float)>& callback, float delay, const std::string& key)
+{
+	node->scheduleOnce(callback, delay, key);
+}
+
+void NodeComponent::schedule(const std::function<void(float)>& callback, float interval, unsigned int repeat, float delay, const std::string& key)
+{
+	node->schedule(callback, interval, repeat, delay, key);
+}
+
 cocos2d::Vec2 NodeComponent::getPosition() const
 {
 	return node->getPosition();

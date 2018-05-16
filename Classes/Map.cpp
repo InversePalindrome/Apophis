@@ -63,7 +63,7 @@ void Map::load(const std::string& fileName)
 			{
 				totalSpawnRate += std::stof(spawnRate);
 
-				entitySpawnRates.insert({ totalSpawnRate, name });
+				entitySpawnRates.emplace(totalSpawnRate, name);
 			}
 		}
 	}
