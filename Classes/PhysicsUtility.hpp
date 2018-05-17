@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - PhysicsUtility.hpp
+Apophis - PhysicsUtility.hpp
 InversePalindrome.com
 */
 

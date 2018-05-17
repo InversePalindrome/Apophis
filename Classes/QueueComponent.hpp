@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - QueueComponent.hpp
+Apophis - QueueComponent.hpp
 InversePalindrome.com
 */
 

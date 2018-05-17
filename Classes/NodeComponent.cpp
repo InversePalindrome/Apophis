@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - NodeComponent.cpp
+Apophis - NodeComponent.cpp
 InversePalindrome.com
 */
 
@@ -41,6 +41,11 @@ void NodeComponent::scheduleOnce(const std::function<void(float)>& callback, flo
 void NodeComponent::schedule(const std::function<void(float)>& callback, float interval, unsigned int repeat, float delay, const std::string& key)
 {
 	node->schedule(callback, interval, repeat, delay, key);
+}
+
+void NodeComponent::unschedule(const std::string& key)
+{
+	node->unschedule(key);
 }
 
 cocos2d::Vec2 NodeComponent::getPosition() const

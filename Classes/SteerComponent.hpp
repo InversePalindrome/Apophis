@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - SteerComponent.hpp
+Apophis - SteerComponent.hpp
 InversePalindrome.com
 */
 

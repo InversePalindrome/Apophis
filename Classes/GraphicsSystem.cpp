@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - GraphicsSystem.cpp
+Apophis - GraphicsSystem.cpp
 InversePalindrome.com
 */
 
@@ -42,7 +42,7 @@ void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::Even
 	for (auto entity : entityManager.entities_with_components(node, body))
 	{
 		node->setPosition({ body->getPosition().x * PTM_RATIO, body->getPosition().y * PTM_RATIO });
-	   	node->setRotation(CC_RADIANS_TO_DEGREES(body->getAngle()));
+		node->setRotation(CC_RADIANS_TO_DEGREES(body->getAngle()));
 	}
 
 	updateView();

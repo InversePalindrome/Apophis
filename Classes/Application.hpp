@@ -1,13 +1,13 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - Application.hpp
+Apophis - Application.hpp
 InversePalindrome.com
 */
 
 
 #pragma once
 
-#include <CCApplication.h>
+#include <cocos/platform/CCApplication.h>
 
 
 class Application : public cocos2d::Application

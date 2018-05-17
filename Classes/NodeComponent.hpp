@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - NodeComponent.hpp
+Apophis - NodeComponent.hpp
 InversePalindrome.com
 */
 
@@ -24,6 +24,8 @@ public:
 
 	void scheduleOnce(const std::function<void(float)>& callback, float delay, const std::string& key);
 	void schedule(const std::function<void(float)>& callback, float interval, unsigned int repeat, float delay, const std::string& key);
+
+	void unschedule(const std::string& key);
 
 	cocos2d::Vec2 getPosition() const;
 	void setPosition(const cocos2d::Vec2& position);

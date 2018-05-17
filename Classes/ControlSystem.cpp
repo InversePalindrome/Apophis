@@ -1,13 +1,12 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - ControlSystem.cpp
+Apophis - ControlSystem.cpp
 InversePalindrome.com
 */
 
 
 #include "ControlSystem.hpp"
 #include "BodyComponent.hpp"
-#include "NodeComponent.hpp"
 #include "SpeedComponent.hpp"
 #include "PhysicsUtility.hpp"
 #include "WeaponComponent.hpp"
@@ -63,14 +62,12 @@ void ControlSystem::receive(const RotateEntity& event)
 void ControlSystem::receive(const ShootProjectile& event)
 {
 	auto shooter = event.entity;
-	auto shooterNode = shooter.component<NodeComponent>();
 	auto shooterBody = shooter.component<BodyComponent>();
 	auto shooterWeapon = shooter.component<WeaponComponent>();
 
-	if (shooterNode && shooterBody && shooterWeapon && shooterWeapon->isReloaded())
+	if (shooterBody && shooterWeapon && shooterWeapon->isReloaded())
 	{
 		auto projectile = entityFactory.createEntity(shooterWeapon->getProjectileName());
-
 		auto projectileBody = projectile.component<BodyComponent>();
 		auto projectileSpeed = projectile.component<SpeedComponent>();
 
@@ -88,10 +85,10 @@ void ControlSystem::receive(const ShootProjectile& event)
 
 			shooterWeapon->setReloadStatus(false);
 
-			shooterNode->scheduleOnce([shooterWeapon](auto dt) mutable
+			eventManager->emit(ScheduleOnce{shooter, [shooterWeapon](auto dt) mutable
 			{
 				shooterWeapon->setReloadStatus(true);
-			}, shooterWeapon->getReloadTime(), "Reload");
+			}, shooterWeapon->getReloadTime(), "Reload"	});
 		}
 	}
 }

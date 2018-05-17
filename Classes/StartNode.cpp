@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - StartNode.cpp
+Apophis - StartNode.cpp
 InversePalindrome.com
 */
 
@@ -40,7 +40,7 @@ bool StartNode::init()
 	auto* backgroundEffect = cocos2d::ParticleSystemQuad::create("StartEffect.plist");
 	backgroundEffect->setPosition(windowSize.width / 2.f, windowSize.height / 2.f);
 
-	auto* titleLabel = cocos2d::Label::createWithTTF("jatrgg", "Zian.ttf", 200.f);
+	auto* titleLabel = cocos2d::Label::createWithTTF("apophis", "Zian.ttf", 200.f);
 	titleLabel->enableOutline(cocos2d::Color4B(30.f, 144.f, 255.f, 255.f), 6);
     titleLabel->setTextColor(cocos2d::Color4B(135.f, 206.f, 250.f, 255.f));
 	titleLabel->setPosition(windowSize.width / 2.f, windowSize.height / 2.f);

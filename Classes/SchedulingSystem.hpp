@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-Apophis - AudioSystem.hpp
+Apophis - SchedulingSystem.hpp
 InversePalindrome.com
 */
 
@@ -9,15 +9,15 @@ InversePalindrome.com
 
 #include "Events.hpp"
 
-#include <entityx/entityx.h>
-
-#include <cocos/audio/include/SimpleAudioEngine.h>
+#include <entityx/System.h>
 
 
-class AudioSystem : public entityx::System<AudioSystem>, public entityx::Receiver<AudioSystem>
+class SchedulingSystem : public entityx::System<SchedulingSystem>, public entityx::Receiver<SchedulingSystem>
 {
 public:
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
-	virtual void receive(const PlayAction& event);
+	virtual void receive(const ScheduleOnce& event);
+	virtual void receive(const Schedule& event);
+	virtual void receive(const Unschedule& event);
 };

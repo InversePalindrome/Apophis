@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - AppSettings.hpp
+Apophis - AppSettings.hpp
 InversePalindrome.com
 */
 

@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - DropComponent.hpp
+Apophis - DropComponent.hpp
 InversePalindrome.com
 */
 
@@ -9,8 +9,9 @@ InversePalindrome.com
 
 #include <tinyxml2/tinyxml2.h>
 
-#include <map>
 #include <string>
+#include <vector>
+#include <random>
 
 
 class DropComponent
@@ -18,13 +19,14 @@ class DropComponent
 public:
 	explicit DropComponent(const tinyxml2::XMLElement* componentNode);
 
-	float getTotalRate() const;
-	const std::map<float, std::string>& getDropChances() const;
-	
-	void addDropChance(const std::string& name, float chance);
+	std::string getItem();
+
+	void addItem(const std::string& item, int weight);
+	void removeItem(const std::string& name);
 
 private:
-	float totalRate;
+	std::vector<std::string> items;
+	std::vector<int> weights;
 
-	std::map<float, std::string> dropChances;
+	std::mt19937 randomEngine;
 };

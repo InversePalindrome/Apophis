@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - EnumHash.hpp
+Apophis - EnumHash.hpp
 InversePalindrome.com
 */
 

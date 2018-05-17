@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - Events.hpp
+Apophis - Events.hpp
 InversePalindrome.com
 */
 
@@ -107,6 +107,30 @@ struct PickedUpItem
 {
 	mutable entityx::Entity entity;
 	mutable entityx::Entity itemEntity;
+};
+
+struct ScheduleOnce
+{
+	mutable entityx::Entity entity;
+	std::function<void(float)> callback;
+	float delay;
+	std::string key;
+};
+
+struct Schedule
+{
+	mutable entityx::Entity entity;
+	std::function<void(float)> callback;
+	float interval;
+	unsigned int repeat;
+	float delay;
+	std::string key;
+};
+
+struct Unschedule
+{
+	mutable entityx::Entity entity;
+	std::string key;
 };
 
 struct Seek

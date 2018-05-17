@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - RayCastData.hpp
+Apophis - RayCastData.hpp
 InversePalindrome.com
 */
 

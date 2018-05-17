@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66  - InputSystem.cpp
+Apophis  - InputSystem.cpp
 InversePalindrome.com
 */
 
@@ -42,7 +42,7 @@ void InputSystem::receive(const entityx::ComponentAddedEvent<Player>& event)
 void InputSystem::handleKeyboard(entityx::EventManager& eventManager)
 {
 	const auto& appSettings = AppSettings::getInstance();
-
+	
 	if (keyboardManager->isKeyPressed(appSettings.getKeyCode(KeyAction::MoveRight)))
 	{
 		eventManager.emit(MoveEntity{ player, {1.f, 0.f} });

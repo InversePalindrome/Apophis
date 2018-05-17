@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - SpriteComponent.cpp
+Apophis - SpriteComponent.cpp
 InversePalindrome.com
 */
 
@@ -21,8 +21,8 @@ SpriteComponent::SpriteComponent(const tinyxml2::XMLElement* componentNode) :
 
 SpriteComponent::~SpriteComponent()
 {
-	//sprite->removeFromParentAndCleanup(true);
-	//sprite->release();
+	sprite->removeFromParentAndCleanup(true);
+	sprite->release();
 }
 
 void SpriteComponent::load(const std::string& filename)

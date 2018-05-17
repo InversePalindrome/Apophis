@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - Application.cpp
+Apophis - Application.cpp
 InversePalindrome.com
 */
 
@@ -24,7 +24,7 @@ bool Application::applicationDidFinishLaunching()
 
 	if (!view)
 	{
-		view = cocos2d::GLViewImpl::create("JATR66");
+		view = cocos2d::GLViewImpl::create("Apophis");
 		view->setFrameSize(2048.f, 1536.f);
      	view->setDesignResolutionSize(2048.f, 1536.f, ResolutionPolicy::EXACT_FIT);
 	

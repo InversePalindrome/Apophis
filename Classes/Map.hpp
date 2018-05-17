@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - Map.hpp
+Apophis - Map.hpp
 InversePalindrome.com
 */
 
@@ -37,7 +37,6 @@ private:
 
 	b2Vec2 dimensions;
 	std::size_t maxEntityCount;
-	std::map<float, std::string> entitySpawnRates;
 
-	void generateMap();
+	void generateMap(const std::vector<std::string>& entities, const std::vector<int>& weights);
 };

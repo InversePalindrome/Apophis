@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - DropComponent.cpp
+Apophis - DropComponent.cpp
 InversePalindrome.com
 */
 
@@ -9,35 +9,32 @@ InversePalindrome.com
 
 
 DropComponent::DropComponent(const tinyxml2::XMLElement* componentNode) :
-	totalRate(0.f)
+	randomEngine(std::random_device()())
 {
-	for (const auto* lootNode = componentNode->FirstChildElement("Loot"); lootNode; lootNode = lootNode->NextSiblingElement("Loot"))
+	for (const auto* itemNode = componentNode->FirstChildElement(); itemNode; itemNode = itemNode->NextSiblingElement())
 	{
-		const auto* name = lootNode->Attribute("name");
-		const auto* rate = lootNode->Attribute("chance");
-
-		if (name && rate)
-		{
-			totalRate += std::stof(rate);
-
-			dropChances.emplace(totalRate, name);
-		}
+		items.push_back(itemNode->Value());
+		weights.push_back(std::stoi(itemNode->GetText()));
 	}
 }
 
-float DropComponent::getTotalRate() const
+std::string DropComponent::getItem() 
 {
-	return totalRate;
+	std::discrete_distribution<> distribution(std::cbegin(weights), std::cend(weights));
+	
+	return items.at(distribution(randomEngine));
 }
 
-const std::map<float, std::string>& DropComponent::getDropChances() const
+void DropComponent::addItem(const std::string& item, int weight)
 {
-	return dropChances;
+	items.push_back(item);
+	weights.push_back(weight);
 }
 
-void DropComponent::addDropChance(const std::string& name, float chance)
+void DropComponent::removeItem(const std::string& name)
 {
-	totalRate += chance;
+	auto position = std::find(std::cbegin(items), std::cend(items), name) - std::begin(items);
 
-	dropChances.emplace(totalRate, name);
+	items.erase(std::cbegin(items) + position);
+	weights.erase(std::cbegin(weights) + position);
 }

@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - Map.cpp
+Apophis - Map.cpp
 InversePalindrome.com
 */
 
@@ -51,24 +51,20 @@ void Map::load(const std::string& fileName)
 		{
 			this->maxEntityCount = std::stoull(maxEntityCount);
 		}
-		
-		float totalSpawnRate = 0.f;
-
-		for (const auto* entityNode = mapNode->FirstChildElement("Entity"); entityNode; entityNode = entityNode->NextSiblingElement("Entity"))
+		if (const auto* entitiesNode = mapNode->FirstChildElement("Entities"))
 		{
-			const auto* name = entityNode->Attribute("name");
-			const auto* spawnRate = entityNode->Attribute("spawnRate");
+			std::vector<std::string> entities;
+			std::vector<int> weights;
 
-			if (name && spawnRate)
+			for (const auto* entityNode = entitiesNode->FirstChildElement(); entityNode; entityNode = entityNode->NextSiblingElement())
 			{
-				totalSpawnRate += std::stof(spawnRate);
-
-				entitySpawnRates.emplace(totalSpawnRate, name);
+				entities.push_back(entityNode->Value());
+				weights.push_back(std::stoi(entityNode->GetText()));
 			}
+
+			generateMap(entities, weights);
 		}
 	}
-
-	generateMap();
 }
 
 void Map::setMainNode(cocos2d::Node* mainNode)
@@ -81,23 +77,17 @@ b2Vec2 Map::getDimensions() const
 	return dimensions;
 }
 
-void Map::generateMap()
+void Map::generateMap(const std::vector<std::string>& entities, const std::vector<int>& weights)
 {
+	std::random_device rd;
+	std::mt19937 randomEngine(rd());
+	std::discrete_distribution<> distribution(std::cbegin(weights), std::cend(weights));
+
 	for (std::size_t i = 0; i < maxEntityCount; ++i)
-	{
-		auto randomChance = cocos2d::rand_0_1();
+	{ 
+		auto entity = entityFactory.createEntity(entities.at(distribution(randomEngine)));
 
-		for (const auto& [range, name] : entitySpawnRates)
-		{
-			if (randomChance <= range)
-			{
-				auto entity = entityFactory.createEntity(name);
-
-				eventManager.emit(SetPosition{ entity, { cocos2d::rand_minus1_1() * dimensions.x / 2.f, cocos2d::rand_minus1_1() * dimensions.y / 2.f } });
-				eventManager.emit(SetRotation{ entity, cocos2d::RandomHelper::random_real(0.f, 2.f * PI) });
-
-				break;
-			}
-		}
+		eventManager.emit(SetPosition{ entity, { cocos2d::rand_minus1_1() * dimensions.x / 2.f, cocos2d::rand_minus1_1() * dimensions.y / 2.f } });
+		eventManager.emit(SetRotation{ entity, cocos2d::RandomHelper::random_real(0.f, 2.f * PI) });
 	}
 }

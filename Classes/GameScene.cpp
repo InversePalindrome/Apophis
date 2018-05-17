@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - GameScene.cpp
+Apophis - GameScene.cpp
 InversePalindrome.com
 */
 
@@ -20,6 +20,7 @@ InversePalindrome.com
 #include "EntityFactory.hpp"
 #include "SteeringSystem.hpp"
 #include "GraphicsSystem.hpp"
+#include "SchedulingSystem.hpp"
 
 #include <cocos/base/CCDirector.h>
 
@@ -81,6 +82,7 @@ bool GameScene::init()
 	entityFactory.createEntity("SpeedBoost");
 	entityFactory.createEntity("BlueWeapon");
 	entityFactory.createEntity("SpaceCruiser");
+	entityFactory.createEntity("SpaceCruiser");
 
 	return true;
 }
@@ -102,6 +104,7 @@ void GameScene::initSystems()
 	systemManager.add<AISystem>();
 	systemManager.add<AudioSystem>();
 	systemManager.add<SteeringSystem>();
+	systemManager.add<SchedulingSystem>();
 	systemManager.add<ItemSystem>(entityFactory);
 	systemManager.add<PhysicsSystem>(eventManager);
 	systemManager.add<CombatSystem>(entityFactory);

@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - EntityFactory.cpp
+Apophis - EntityFactory.cpp
 InversePalindrome.com
 */
 
@@ -85,7 +85,7 @@ entityx::Entity EntityFactory::createEntity(const std::string& entityName)
 
 	if (const auto* entityNode = doc.RootElement())
 	{
-		for (auto componentNode = entityNode->FirstChildElement(); componentNode; componentNode = componentNode->NextSiblingElement())
+		for (const auto* componentNode = entityNode->FirstChildElement(); componentNode; componentNode = componentNode->NextSiblingElement())
 		{
 			if (parsers.count(componentNode->Value()))
 			{

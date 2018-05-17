@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - ItemSystem.cpp
+Apophis - ItemSystem.cpp
 InversePalindrome.com
 */
 
@@ -8,7 +8,6 @@ InversePalindrome.com
 #include "ItemSystem.hpp"
 #include "ItemComponent.hpp"
 #include "DropComponent.hpp"
-#include "NodeComponent.hpp"
 #include "BodyComponent.hpp"
 #include "SpeedComponent.hpp"
 #include "HealthComponent.hpp"
@@ -40,28 +39,18 @@ void ItemSystem::receive(const EntityDied& event)
 
 	auto drop = entity.component<DropComponent>();
 	auto body = entity.component<BodyComponent>();
-	auto node = entity.component<NodeComponent>();
 
-	if (drop && body && node)
+	if (drop && body)
 	{
-		auto randomChance = cocos2d::rand_0_1();
+		const auto& item = drop->getItem();
+		const auto& bodyPosition = body->getPosition();
 
-		for (const auto& [range, name] : drop->getDropChances())
+		eventManager->emit(ScheduleOnce{ entity, [this, item, bodyPosition](auto dt)
 		{
-			if (randomChance <= range)
-			{
-				const auto& bodyPosition = body->getPosition();
+			auto dropEntity = entityFactory.createEntity(item);
 
-				node->scheduleOnce([this, name, bodyPosition](auto dt)
-				{
-					auto dropEntity = entityFactory.createEntity(name);
-
-					eventManager->emit(SetPosition{ dropEntity, bodyPosition });
-				}, 0.f, "CreateDrop");
-
-				break;
-			}
-		}
+			eventManager->emit(SetPosition{ dropEntity, bodyPosition });
+		}, 0.f, "CreateDrop" });
 	}
 }
 
@@ -84,11 +73,7 @@ void ItemSystem::receive(const PickedUpItem& event)
 	}
 
 	eventManager->emit(PlayAction{ event.itemEntity, "Pickup", false });
-
-	if (auto itemNode = event.itemEntity.component<NodeComponent>())
-	{
-		itemNode->scheduleOnce([event](auto dt) { event.itemEntity.destroy(); }, 0.f, "Destroy");
-	}
+	eventManager->emit(ScheduleOnce{ event.itemEntity, [event](auto dt) { event.itemEntity.destroy(); }, 0.f, "Destroy"});
 }
 
 void ItemSystem::addWeapon(entityx::Entity entity, entityx::Entity itemEntity)
@@ -101,15 +86,14 @@ void ItemSystem::addWeapon(entityx::Entity entity, entityx::Entity itemEntity)
 
 void ItemSystem::addRegenBoost(entityx::Entity entity, entityx::Entity itemEntity)
 {
-	auto entityNode = entity.component<NodeComponent>();
 	auto entityHealth = entity.component<HealthComponent>();
 	auto itemPowerUp = itemEntity.component<PowerUpComponent>();
 
-	if (entityNode && entityHealth && itemPowerUp)
+	if (entityHealth && itemPowerUp)
 	{
 		auto effectBoost = itemPowerUp->getEffectBoost();
 
-		entityNode->schedule([entityHealth, effectBoost](auto dt) mutable
+		eventManager->emit(Schedule{ entity, [entityHealth, effectBoost](auto dt) mutable
 		{
 			auto regenHealth = entityHealth->getCurrentHitpoints() + effectBoost;
 
@@ -117,25 +101,24 @@ void ItemSystem::addRegenBoost(entityx::Entity entity, entityx::Entity itemEntit
 			{
 				entityHealth->setCurrentHitpoints(regenHealth);
 			}
-		}, 1.f, static_cast<int>(itemPowerUp->getEffectTime()), 0.f, "RegenBoost");
+		}, 1.f, static_cast<unsigned int>(itemPowerUp->getEffectTime()), 0.f, "RegenBoost" });
 	}
 }
 
 void ItemSystem::addSpeedBoost(entityx::Entity entity, entityx::Entity itemEntity)
 {
-	auto entityNode = entity.component<NodeComponent>();
 	auto entitySpeed = entity.component<SpeedComponent>();
 	auto itemPowerUp = itemEntity.component<PowerUpComponent>();
 
-	if (entityNode && entitySpeed && itemPowerUp)
+	if (entitySpeed && itemPowerUp)
 	{
 		auto originalSpeed = entitySpeed->getMaxSpeed();
 
 		entitySpeed->setMaxSpeed(entitySpeed->getMaxSpeed() * (1 + itemPowerUp->getEffectBoost()));
 
-		entityNode->scheduleOnce([entitySpeed, originalSpeed](auto dt) mutable
+		eventManager->emit(ScheduleOnce{ entity, [entitySpeed, originalSpeed](auto dt) mutable
 		{
 			entitySpeed->setMaxSpeed(originalSpeed);
-		}, itemPowerUp->getEffectTime(), "SpeedBoost");
+		}, itemPowerUp->getEffectTime(), "SpeedBoost" });
 	}
 }

@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-JATR66 - PredictComponent.hpp
+Apophis - PredictComponent.hpp
 InversePalindrome.com
 */
 
