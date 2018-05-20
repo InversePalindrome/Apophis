@@ -49,7 +49,8 @@ void ItemSystem::receive(const EntityDied& event)
 		{
 			auto dropEntity = entityFactory.createEntity(item);
 
-			eventManager->emit(SetPosition{ dropEntity, bodyPosition });
+			eventManager->emit(SetNodePosition{ dropEntity, cocos2d::Vec2(bodyPosition.x * PTM_RATIO, bodyPosition.y * PTM_RATIO) });
+			eventManager->emit(SetBodyPosition{ dropEntity, bodyPosition });
 		}, 0.f, "CreateDrop" });
 	}
 }

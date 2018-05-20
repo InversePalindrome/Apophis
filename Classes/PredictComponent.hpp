@@ -47,5 +47,5 @@ void PredictComponent<T>::setPredictionTime(float predictionTime)
 	this->predictionTime = predictionTime;
 }
 
-using PursueComponent = PredictComponent<struct Pursue>;
-using EvadeComponent = PredictComponent<struct Evade>;
+using PursueComponent = PredictComponent<struct PursueBehavior>;
+using EvadeComponent = PredictComponent<struct EvadeBehavior>;

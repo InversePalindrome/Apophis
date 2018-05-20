@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
   <Sprite>RockAsteroid</Sprite>
-  <Body object="Asteroid" type="0">
-    <Fixture shape="circle" radius="2"></Fixture>
+  <Body object="Asteroid" type="2" x="10" y="10">
+    <Fixture shape="circle" radius="2" density="0.3"></Fixture>
   </Body>
+  <Satellite></Satellite>
+  <Impulse>3</Impulse>
+  <Speed>10</Speed>
+  <Steer></Steer>
 </Entity>

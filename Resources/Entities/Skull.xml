@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+  <Sprite>Skeleton</Sprite>
+  <Body object="Item" type="2" linearDamping="1" fixedRotation="false" x="-5" y="-5">
+    <Fixture shape="circle" radius="1.0" density="0.3"></Fixture>
+  </Body>
+</Entity>

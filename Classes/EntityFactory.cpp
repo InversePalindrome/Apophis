@@ -43,6 +43,7 @@ EntityFactory::EntityFactory(entityx::EntityManager& entityManager, entityx::Eve
 	eventManager(eventManager)
 {
 	parsers.emplace("Player", [](auto entity, const auto* componentNode) { entity.assign<Player>(); });
+	parsers.emplace("Satellite", [](auto entity, const auto* componentNode) { entity.assign<Satellite>(); });
 	parsers.emplace("Steer", [](auto entity, const auto* componentNode) { entity.assign<SteerComponent>(); });
 	parsers.emplace("AI", [](auto entity, const auto* componentNode) { entity.assign<AIComponent>(componentNode); });
 	parsers.emplace("Pursue", [](auto entity, const auto* componentNode) { entity.assign<PursueComponent>(componentNode); });
@@ -72,12 +73,12 @@ EntityFactory::EntityFactory(entityx::EntityManager& entityManager, entityx::Eve
 	parsers.emplace("PowerUp", [](auto entity, const auto* componentNode) { entity.assign<PowerUpComponent>(componentNode); });
 }
 
-entityx::Entity EntityFactory::createEntity(const std::string& entityName)
+entityx::Entity EntityFactory::createEntity(const std::string& filename) 
 {
 	auto entity = entityManager.create();
-
+	
 	auto* fileUtils = cocos2d::FileUtils::getInstance();
-	const auto& path = fileUtils->fullPathForFilename(entityName + ".xml");
+	const auto& path = fileUtils->fullPathForFilename(filename + ".xml");
 	const auto& data = fileUtils->getStringFromFile(path);
 
 	tinyxml2::XMLDocument doc;
@@ -94,7 +95,40 @@ entityx::Entity EntityFactory::createEntity(const std::string& entityName)
 		}
 	}
 
-	eventManager.emit(EntityCreated{ entity });
+	eventManager.emit(EntityParsed{ entity });
 
 	return entity;
+}
+
+void EntityFactory::createEntities(const std::string& filename)
+{
+	auto* fileUtils = cocos2d::FileUtils::getInstance();
+	const auto& path = fileUtils->fullPathForFilename(filename + ".xml");
+	const auto& data = fileUtils->getStringFromFile(path);
+
+	tinyxml2::XMLDocument doc;
+	doc.Parse(data.c_str());
+
+	if (const auto* entitiesNode = doc.RootElement())
+	{
+		for (const auto* entityNode = entitiesNode->FirstChildElement(); entityNode; entityNode = entityNode->NextSiblingElement())
+		{
+			auto entity = createEntity(entityNode->Value());
+			
+			const auto* x = entityNode->Attribute("x");
+			const auto* y = entityNode->Attribute("y");
+
+			if (x && y)
+			{
+				eventManager.emit(SetNodePosition{ entity, {std::stof(x) * PTM_RATIO, std::stof(y) * PTM_RATIO} });
+				eventManager.emit(SetBodyPosition{ entity, {std::stof(x), std::stof(y)} });
+			}
+
+			if (const auto* angle = entityNode->Attribute("angle"))
+			{
+				eventManager.emit(SetNodeRotation{ entity, std::stof(angle) });
+				eventManager.emit(SetBodyAngle{ entity, DegreesToRadians * std::stof(angle) });
+			}
+		}
+	}
 }

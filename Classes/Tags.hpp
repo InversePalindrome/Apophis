@@ -9,3 +9,4 @@ InversePalindrome.com
 
 
 struct Player {};
+struct Satellite{};

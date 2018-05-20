@@ -5,10 +5,8 @@ InversePalindrome.com
 */
 
 
-#include "HudNode.hpp"
 #include "MenuNode.hpp"
 #include "AISystem.hpp"
-#include "PauseNode.hpp"
 #include "GameScene.hpp"
 #include "ItemSystem.hpp"
 #include "InputSystem.hpp"
@@ -20,6 +18,7 @@ InversePalindrome.com
 #include "EntityFactory.hpp"
 #include "SteeringSystem.hpp"
 #include "GraphicsSystem.hpp"
+#include "SatelliteSystem.hpp"
 #include "SchedulingSystem.hpp"
 
 #include <cocos/base/CCDirector.h>
@@ -77,12 +76,7 @@ bool GameScene::init()
 	initSystems();
 
 	map.load("Andromeda");
-	entityFactory.createEntity("UFO");
-	entityFactory.createEntity("Coin");
-	entityFactory.createEntity("SpeedBoost");
-	entityFactory.createEntity("BlueWeapon");
-	entityFactory.createEntity("SpaceCruiser");
-	entityFactory.createEntity("SpaceCruiser");
+	entityFactory.createEntities("LevelEntities");
 
 	return true;
 }
@@ -105,6 +99,7 @@ void GameScene::initSystems()
 	systemManager.add<AudioSystem>();
 	systemManager.add<SteeringSystem>();
 	systemManager.add<SchedulingSystem>();
+	systemManager.add<SatelliteSystem>();
 	systemManager.add<ItemSystem>(entityFactory);
 	systemManager.add<PhysicsSystem>(eventManager);
 	systemManager.add<CombatSystem>(entityFactory);

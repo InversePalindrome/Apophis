@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
+  <AI>Striker</AI>
   <Sprite>SpaceCruiser</Sprite>
   <Body object="Enemy" type="2" linearDamping="0.3" x="20" y="20">
     <Fixture shape="circle" radius="1.6" density="0.3"></Fixture>
@@ -16,4 +17,11 @@
   <Impulse>20</Impulse>
   <Wander></Wander>
   <Steer></Steer>
+  <Pursue></Pursue>
+  <Patrol>
+    <Point x="15" y="15"></Point>
+    <Point x="15" y="-15"></Point>
+    <Point x="0" y="-15"></Point>
+    <Point x="0" y="15"></Point>
+  </Patrol>
 </Entity>

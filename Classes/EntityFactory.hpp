@@ -11,6 +11,7 @@ InversePalindrome.com
 
 #include <tinyxml2/tinyxml2.h>
 
+#include <string>
 #include <functional>
 #include <unordered_map>
 
@@ -22,7 +23,9 @@ public:
 	EntityFactory(const EntityFactory&) = delete;
 	EntityFactory& operator= (const EntityFactory&) = delete;
 
-	entityx::Entity createEntity(const std::string& entityName);
+	entityx::Entity createEntity(const std::string& filename);
+
+	void createEntities(const std::string& filename);
 
 private:
 	entityx::EntityManager& entityManager;

@@ -17,9 +17,9 @@ InversePalindrome.com
 #include "SpriteComponent.hpp"
 #include "ParticleComponent.hpp"
 
-#include <entityx/System.h>
-
 #include <cocos/2d/CCNode.h>
+
+#include <entityx/System.h>
 
 
 class GraphicsSystem : public entityx::System<GraphicsSystem>, public entityx::Receiver<GraphicsSystem>
@@ -33,9 +33,9 @@ public:
 	virtual void receive(const entityx::ComponentAddedEvent<SpriteComponent>& event);
 	virtual void receive(const entityx::ComponentAddedEvent<LabelComponent>& event);
 	virtual void receive(const entityx::ComponentAddedEvent<ParticleComponent>& event);
-	virtual void receive(const EntityCreated& event);
-	virtual void receive(const SetPosition& event);
-	virtual void receive(const SetRotation& event);
+	virtual void receive(const EntityParsed& event);
+	virtual void receive(const SetNodePosition& event);
+	virtual void receive(const SetNodeRotation& event);
 	virtual void receive(const CreateTransform& event);
 	virtual void receive(const PlayAction& event);
 	

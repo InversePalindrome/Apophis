@@ -7,8 +7,6 @@ InversePalindrome.com
 
 #include "PhysicsUtility.hpp"
 
-#include <cocos/base/ccMacros.h>
-
 #include <cmath>
 
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+  <Sprite>Planet_D</Sprite>
+  <Body object="Asteroid" type="0" x="-10" y="-10">
+    <Fixture shape="circle" radius="13"></Fixture>
+  </Body>
+</Entity>

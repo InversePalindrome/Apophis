@@ -27,9 +27,9 @@ void GraphicsSystem::configure(entityx::EventManager& eventManager)
 	eventManager.subscribe<entityx::ComponentAddedEvent<SpriteComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<LabelComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<ParticleComponent>>(*this);
-	eventManager.subscribe<EntityCreated>(*this);
-	eventManager.subscribe<SetPosition>(*this);
-	eventManager.subscribe<SetRotation>(*this);
+	eventManager.subscribe<EntityParsed>(*this);
+	eventManager.subscribe<SetNodePosition>(*this);
+	eventManager.subscribe<SetNodeRotation>(*this);
 	eventManager.subscribe<CreateTransform>(*this);
 	eventManager.subscribe<PlayAction>(*this);
 }
@@ -75,7 +75,7 @@ void GraphicsSystem::receive(const entityx::ComponentAddedEvent<ParticleComponen
 	entity.assign<NodeComponent>(event.component->getParticleSystem());
 }
 
-void GraphicsSystem::receive(const EntityCreated& event)
+void GraphicsSystem::receive(const EntityParsed& event)
 {
 	if (event.entity.has_component<Player>())
 	{
@@ -90,19 +90,19 @@ void GraphicsSystem::receive(const EntityCreated& event)
 	}
 }
 
-void GraphicsSystem::receive(const SetPosition& event)
+void GraphicsSystem::receive(const SetNodePosition& event)
 {
 	if (auto node = event.entity.component<NodeComponent>())
 	{
-		node->setPosition({ event.position.x * PTM_RATIO, event.position.y * PTM_RATIO });
+		node->setPosition(event.position);
 	}
 }
 
-void GraphicsSystem::receive(const SetRotation& event)
+void GraphicsSystem::receive(const SetNodeRotation& event)
 {
 	if (auto node = event.entity.component<NodeComponent>())
 	{
-		node->setRotation(CC_RADIANS_TO_DEGREES(event.angle));
+		node->setRotation(event.rotation);
 	}
 }
 

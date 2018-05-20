@@ -13,8 +13,10 @@ InversePalindrome.com
 
 #include <Box2D/Common/b2Math.h>
 
+#include <cocos/math/Vec2.h>
 
-struct EntityCreated
+
+struct EntityParsed
 {
 	mutable entityx::Entity entity;
 };
@@ -72,22 +74,40 @@ struct ApplyAngularImpulse
 	float impulse;
 };
 
-struct SetPosition
+struct SetBodyPosition
 {
 	mutable entityx::Entity entity;
 	b2Vec2 position;
 };
 
-struct SetVelocity
+struct SetNodePosition
+{
+	mutable entityx::Entity entity;
+	cocos2d::Vec2 position;
+};
+
+struct SetBodyAngle
+{
+	mutable entityx::Entity entity;
+	float angle;
+};
+
+struct SetNodeRotation
+{
+	mutable entityx::Entity entity;
+	float rotation;
+};
+
+struct SetLinearVelocity
 {
 	mutable entityx::Entity entity;
 	b2Vec2 velocity;
 };
 
-struct SetRotation
+struct SetAngularVelocity
 {
 	mutable entityx::Entity entity;
-	float angle;
+	float velocity;
 };
 
 struct PlayAction
@@ -133,67 +153,22 @@ struct Unschedule
 	std::string key;
 };
 
-struct Seek
+template<typename T>
+struct Steer
 {
 	mutable entityx::Entity entity;
 };
 
-struct Flee
-{
-	mutable entityx::Entity entity;
-};
-
-struct Pursue
-{
-	mutable entityx::Entity entity;
-};
-
-struct Evade
-{
-	mutable entityx::Entity entity;
-};
-
-struct Arrive
-{
-	mutable entityx::Entity entity;
-};
-
-struct Follow
-{
-	mutable entityx::Entity entity;
-};
-
-struct Wander
-{
-	mutable entityx::Entity entity;
-};
-
-struct Patrol
-{
-	mutable entityx::Entity entity;
-};
-
-struct Avoid
-{
-	mutable entityx::Entity entity;
-};
-
-struct Align
-{
-	mutable entityx::Entity entity;
-};
-
-struct Cohesion
-{
-	mutable entityx::Entity entity;
-};
-
-struct Separate
-{
-	mutable entityx::Entity entity;
-};
-
-struct Queue
-{
-	mutable entityx::Entity entity;
-};
+using Seek = Steer<struct SeekBehavior>;
+using Flee = Steer<struct FleeBehavior>;
+using Pursue = Steer<struct PursueBehavior>;
+using Evade = Steer<struct EvadeBehavior>;
+using Arrive = Steer<struct ArriveBehavior>;
+using Follow = Steer<struct FollowBehavior>;
+using Wander = Steer<struct WanderBehavior>;
+using Patrol = Steer<struct PatrolBehavior>;
+using Avoid = Steer<struct AvoidBehavior>;
+using Align = Steer<struct AlignBehavior>;
+using Cohesion = Steer<struct CohesionBehavior>;
+using Separate = Steer<struct SeparateBehavior>;
+using Queue = Steer<struct QueueBehavior>;

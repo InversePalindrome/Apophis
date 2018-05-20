@@ -11,7 +11,6 @@ InversePalindrome.com
 #include "InputSystem.hpp"
 #include "AppSettings.hpp"
 #include "BodyComponent.hpp"
-#include "PhysicsUtility.hpp"
 
 
 InputSystem::InputSystem(KeyboardManager* keyboardManager, MouseManager* mouseManager) :

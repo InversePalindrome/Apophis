@@ -12,6 +12,8 @@ InversePalindrome.com
 #include "WeaponComponent.hpp"
 #include "ImpulseComponent.hpp"
 
+#include <cocos/math/Vec2.h>
+
 
 ControlSystem::ControlSystem(EntityFactory& entityFactory) :
 	entityFactory(entityFactory)
@@ -73,14 +75,18 @@ void ControlSystem::receive(const ShootProjectile& event)
 
 		if (projectileBody && projectileSpeed)
 		{
-			const auto& shooterBodySize = shooterBody->getAABB().upperBound - shooterBody->getAABB().lowerBound;
+			auto shooterBodySize = shooterBody->getAABB().upperBound - shooterBody->getAABB().lowerBound;
 
-			auto direction = event.targetPosition - shooterBody->getPosition();
-			direction.Normalize();
+			auto projectileDirection = event.targetPosition - shooterBody->getPosition();
+			projectileDirection.Normalize();
 
-			eventManager->emit(SetPosition{ projectile, shooterBody->getPosition() + b2Vec2(direction.x * shooterBodySize.x, direction.y * shooterBodySize.y) });
-			eventManager->emit(SetRotation{ projectile, shooterBody->getAngle() });
-			eventManager->emit(MoveEntity{ projectile, direction });
+			b2Vec2 projectilePosition(projectileDirection.x * shooterBodySize.x, projectileDirection.y * shooterBodySize.y);
+			projectilePosition += shooterBody->getPosition();
+
+			eventManager->emit(SetNodePosition{ projectile, cocos2d::Vec2(projectilePosition.x * PTM_RATIO, projectilePosition.y * PTM_RATIO) });
+			eventManager->emit(SetBodyPosition{ projectile, projectilePosition });
+			eventManager->emit(SetBodyAngle{ projectile, shooterBody->getAngle() });
+			eventManager->emit(MoveEntity{ projectile, projectileDirection });
 			eventManager->emit(PlayAction{ shooter, "Shoot", false });
 
 			shooterWeapon->setReloadStatus(false);

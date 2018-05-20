@@ -11,14 +11,10 @@ InversePalindrome.com
 
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2World.h>
-#include <Box2D/Dynamics/b2Fixture.h>
 
 #include <entityx/Entity.h>
 
 #include <tinyxml2/tinyxml2.h>
-
-#include <list>
-#include <vector>
 
 
 class BodyComponent

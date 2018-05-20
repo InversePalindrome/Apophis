@@ -22,7 +22,7 @@ void AISystem::configure(entityx::EventManager& eventManager)
 {
 	this->eventManager = &eventManager;
 
-	eventManager.subscribe<EntityCreated>(*this);
+	eventManager.subscribe<EntityParsed>(*this);
 }
 
 void AISystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
@@ -42,7 +42,7 @@ void AISystem::update(entityx::EntityManager& entityManager, entityx::EventManag
 	}
 }
 
-void AISystem::receive(const EntityCreated& event)
+void AISystem::receive(const EntityParsed& event)
 {
 	if (event.entity.has_component<Player>())
 	{
@@ -63,14 +63,9 @@ void AISystem::initStrikerTree()
 		auto body = entity.component<BodyComponent>();
 		auto vision = entity.component<VisionComponent>();
 
-		if (body && vision && playerBody.valid())
+		if (playerBody.valid() && body && vision && (playerBody->getPosition() - body->getPosition()).Length() <= vision->getVisionDistance())
 		{
-			auto distanceFromPlayer = (playerBody->getPosition() - body->getPosition()).Length();
-
-			if (distanceFromPlayer <= vision->getVisionDistance())
-			{
-				return beehive::Status::SUCCESS;
-			}
+			return beehive::Status::SUCCESS;
 		}
 
 		return beehive::Status::FAILURE;
@@ -80,7 +75,7 @@ void AISystem::initStrikerTree()
 	{
 		auto health = entity.component<HealthComponent>();
 
-		if (health && playerBody.valid())
+		if (playerBody.valid() && health)
 		{
 			if (health->getCurrentHitpoints() >= health->getMaxHitpoints() * 0.2)
 			{
@@ -106,5 +101,27 @@ void AISystem::initStrikerTree()
 
 void AISystem::initPatrollerTree()
 {
-//	patrollerTree = beehive::Builder<entityx::Entity>().end().build();
+	patrollerTree = beehive::Builder<entityx::Entity>()
+	.selector()
+	.sequence()
+	.leaf([this](auto& entity)
+	{
+		auto body = entity.component<BodyComponent>();
+		auto vision = entity.component<VisionComponent>();
+
+		if (playerBody.valid() && body && vision && (playerBody->getPosition() - body->getPosition()).Length() <= vision->getVisionDistance())
+		{
+			return beehive::Status::SUCCESS;
+		}
+
+		return beehive::Status::FAILURE;
+	})
+	.void_leaf([this](auto& entity)
+	{
+		eventManager->emit(Pursue{ entity });
+	}).end()
+	.void_leaf([this](auto& entity)
+	{
+		eventManager->emit(Patrol{ entity });
+	}).end().build();
 }

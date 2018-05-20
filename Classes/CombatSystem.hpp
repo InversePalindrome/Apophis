@@ -10,7 +10,7 @@ InversePalindrome.com
 #include "Events.hpp"
 #include "EntityFactory.hpp"
 
-#include <entityx/entityx.h>
+#include <entityx/System.h>
 
 
 class CombatSystem : public entityx::System<CombatSystem>, public entityx::Receiver<CombatSystem>

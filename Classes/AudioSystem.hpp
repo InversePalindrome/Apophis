@@ -9,9 +9,9 @@ InversePalindrome.com
 
 #include "Events.hpp"
 
-#include <entityx/entityx.h>
-
 #include <cocos/audio/include/SimpleAudioEngine.h>
+
+#include <entityx/System.h>
 
 
 class AudioSystem : public entityx::System<AudioSystem>, public entityx::Receiver<AudioSystem>

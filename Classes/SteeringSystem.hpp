@@ -11,7 +11,7 @@ InversePalindrome.com
 #include "BodyComponent.hpp"
 #include "VisionComponent.hpp"
 
-#include <entityx/entityx.h>
+#include <entityx/System.h>
 
 
 class SteeringSystem : public entityx::System<SteeringSystem>, public entityx::Receiver<SteeringSystem>
@@ -19,7 +19,7 @@ class SteeringSystem : public entityx::System<SteeringSystem>, public entityx::R
 public:
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
-	virtual void receive(const EntityCreated& event);
+	virtual void receive(const EntityParsed& event);
 	virtual void receive(const Seek& event);
 	virtual void receive(const Flee& event);
 	virtual void receive(const Pursue& event);

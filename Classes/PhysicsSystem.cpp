@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "PhysicsSystem.hpp"
+#include "BodyComponent.hpp"
 
 
 PhysicsSystem::PhysicsSystem(entityx::EventManager& eventManager) :
@@ -19,9 +20,10 @@ void PhysicsSystem::configure(entityx::EventManager& eventManager)
 {
 	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
 	eventManager.subscribe<CreateBody>(*this);
-	eventManager.subscribe<SetPosition>(*this);
-	eventManager.subscribe<SetRotation>(*this);
-	eventManager.subscribe<SetVelocity>(*this);
+	eventManager.subscribe<SetBodyPosition>(*this);
+	eventManager.subscribe<SetBodyAngle>(*this);
+	eventManager.subscribe<SetLinearVelocity>(*this);
+	eventManager.subscribe<SetAngularVelocity>(*this);
 	eventManager.subscribe<ApplyForce>(*this);
 	eventManager.subscribe<ApplyLinearImpulse>(*this);
 	eventManager.subscribe<ApplyAngularImpulse>(*this);
@@ -39,7 +41,7 @@ void PhysicsSystem::update(entityx::EntityManager& entityManager, entityx::Event
 void PhysicsSystem::receive(const entityx::EntityDestroyedEvent& event)
 {
 	auto entity = event.entity;
-
+	
 	if (auto body = entity.component<BodyComponent>())
 	{
         world.DestroyBody(body->getBody());
@@ -51,7 +53,7 @@ void PhysicsSystem::receive(const CreateBody& event)
 	event.entity.assign<BodyComponent>(event.bodyData, world, event.entity);
 }
 
-void PhysicsSystem::receive(const SetPosition& event)
+void PhysicsSystem::receive(const SetBodyPosition& event)
 {
 	if (auto body = event.entity.component<BodyComponent>())
 	{
@@ -59,7 +61,7 @@ void PhysicsSystem::receive(const SetPosition& event)
 	}
 }
 
-void PhysicsSystem::receive(const SetRotation& event)
+void PhysicsSystem::receive(const SetBodyAngle& event)
 {
 	if (auto body = event.entity.component<BodyComponent>())
 	{
@@ -67,11 +69,19 @@ void PhysicsSystem::receive(const SetRotation& event)
 	}
 }
 
-void PhysicsSystem::receive(const SetVelocity& event)
+void PhysicsSystem::receive(const SetLinearVelocity& event)
 {
 	if (auto body = event.entity.component<BodyComponent>())
 	{
 		body->setLinearVelocity(event.velocity);
+	}
+}
+
+void PhysicsSystem::receive(const SetAngularVelocity& event)
+{
+	if (auto body = event.entity.component<BodyComponent>())
+	{
+		body->setAngularVelocity(event.velocity);
 	}
 }
 

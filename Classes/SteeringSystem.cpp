@@ -24,7 +24,7 @@ InversePalindrome.com
 
 void SteeringSystem::configure(entityx::EventManager& eventManager)
 {
-	eventManager.subscribe<EntityCreated>(*this);
+	eventManager.subscribe<EntityParsed>(*this);
 	eventManager.subscribe<Seek>(*this);
 	eventManager.subscribe<Flee>(*this);
 	eventManager.subscribe<Pursue>(*this);
@@ -55,7 +55,7 @@ void SteeringSystem::update(entityx::EntityManager& entityManager, entityx::Even
 	}
 }
 
-void SteeringSystem::receive(const EntityCreated& event)
+void SteeringSystem::receive(const EntityParsed& event)
 {
 	if (event.entity.has_component<Player>())
 	{

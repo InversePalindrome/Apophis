@@ -10,7 +10,7 @@ InversePalindrome.com
 #include "Events.hpp"
 #include "EntityFactory.hpp"
 
-#include <entityx/entityx.h>
+#include <entityx/System.h>
 
 
 class ItemSystem : public entityx::System<ItemSystem>, public entityx::Receiver<ItemSystem>
