@@ -1,15 +1,15 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-Apophis - SatelliteSystem.cpp
+Apophis - OrbitalSystem.cpp
 InversePalindrome.com
 */
 
 
 #include "Tags.hpp"
-#include "SatelliteSystem.hpp"
+#include "OrbitalSystem.hpp"
 
 
-void SatelliteSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
+void OrbitalSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
 	entityx::ComponentHandle<Satellite> satellite;
 	

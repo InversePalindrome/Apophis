@@ -6,12 +6,20 @@ InversePalindrome.com
 
 
 #include "PhysicsSystem.hpp"
-#include "BodyComponent.hpp"
+#include "AnchorPointComponent.hpp"
+#include "DistanceJointComponent.hpp"
+
+#include <Box2D/Collision/Shapes/b2CircleShape.h>
+#include <Box2D/Collision/Shapes/b2PolygonShape.h>
+
+#include <sstream>
+#include <variant>
 
 
-PhysicsSystem::PhysicsSystem(entityx::EventManager& eventManager) :
+PhysicsSystem::PhysicsSystem(entityx::EntityManager& entityManager, entityx::EventManager& eventManager) :
 	world({ 0.f, 0.f }),
-	collisionManager(eventManager)
+	collisionManager(eventManager),
+	entityManager(entityManager)
 {
 	world.SetContactListener(&collisionManager);
 }
@@ -19,7 +27,9 @@ PhysicsSystem::PhysicsSystem(entityx::EventManager& eventManager) :
 void PhysicsSystem::configure(entityx::EventManager& eventManager)
 {
 	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
+	eventManager.subscribe<entityx::ComponentRemovedEvent<BodyComponent>>(*this);
 	eventManager.subscribe<CreateBody>(*this);
+	eventManager.subscribe<CreateDistanceJoint>(*this);
 	eventManager.subscribe<SetBodyPosition>(*this);
 	eventManager.subscribe<SetBodyAngle>(*this);
 	eventManager.subscribe<SetLinearVelocity>(*this);
@@ -41,16 +51,38 @@ void PhysicsSystem::update(entityx::EntityManager& entityManager, entityx::Event
 void PhysicsSystem::receive(const entityx::EntityDestroyedEvent& event)
 {
 	auto entity = event.entity;
-	
+
 	if (auto body = entity.component<BodyComponent>())
 	{
-        world.DestroyBody(body->getBody());
+		delete static_cast<entityx::Entity*>(body->getUserData());
+
+		world.DestroyBody(body->getBody());
 	}
+}
+
+void PhysicsSystem::receive(const entityx::ComponentRemovedEvent<BodyComponent>& event)
+{
+	delete static_cast<entityx::Entity*>(event.component->getUserData());
+
+    world.DestroyBody(event.component->getBody());
 }
 
 void PhysicsSystem::receive(const CreateBody& event)
 {
-	event.entity.assign<BodyComponent>(event.bodyData, world, event.entity);
+	event.entity.assign<BodyComponent>(event.bodyNode, world)->setUserData(new entityx::Entity(event.entity));
+}
+
+void PhysicsSystem::receive(const CreateDistanceJoint& event)
+{
+	auto bodyA = event.entityA.component<BodyComponent>();
+	auto bodyB = event.entityB.component<BodyComponent>();
+	auto anchorA = event.entityA.component<AnchorPointComponent>();
+	auto anchorB = event.entityB.component<AnchorPointComponent>();
+
+	if (bodyA && bodyB && anchorA && anchorB)
+	{
+		entityManager.create().assign<DistanceJointComponent>(world, bodyA->getBody(), bodyB->getBody(), anchorA->getAnchorPoint(), anchorB->getAnchorPoint());
+	}
 }
 
 void PhysicsSystem::receive(const SetBodyPosition& event)

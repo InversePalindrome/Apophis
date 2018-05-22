@@ -15,20 +15,17 @@ InversePalindrome.com
 #include "CombatSystem.hpp"
 #include "ControlSystem.hpp"
 #include "PhysicsSystem.hpp"
-#include "EntityFactory.hpp"
+#include "OrbitalSystem.hpp"
 #include "SteeringSystem.hpp"
 #include "GraphicsSystem.hpp"
-#include "SatelliteSystem.hpp"
 #include "SchedulingSystem.hpp"
-
-#include <cocos/base/CCDirector.h>
 
 
 GameScene::GameScene() :
 	entityManager(eventManager),
 	systemManager(entityManager, eventManager),
-	entityFactory(entityManager, eventManager),
-	map(entityFactory, eventManager)
+	entityParser(entityManager, eventManager),
+	map(entityParser, eventManager)
 {
 }
 
@@ -76,7 +73,11 @@ bool GameScene::init()
 	initSystems();
 
 	map.load("Andromeda");
-	entityFactory.createEntities("LevelEntities");
+	entityParser.createEntity("UFO");
+	auto planet = entityParser.createEntity("Planet");
+	auto asteroid = entityParser.createEntity("RockAsteroid");
+
+	eventManager.emit(CreateDistanceJoint{ planet, asteroid });
 
 	return true;
 }
@@ -94,15 +95,15 @@ void GameScene::update(float dt)
 
 void GameScene::initSystems()
 {
-	systemManager.add<ControlSystem>(entityFactory);
+	systemManager.add<ControlSystem>(entityParser);
 	systemManager.add<AISystem>();
 	systemManager.add<AudioSystem>();
 	systemManager.add<SteeringSystem>();
 	systemManager.add<SchedulingSystem>();
-	systemManager.add<SatelliteSystem>();
-	systemManager.add<ItemSystem>(entityFactory);
-	systemManager.add<PhysicsSystem>(eventManager);
-	systemManager.add<CombatSystem>(entityFactory);
+	systemManager.add<OrbitalSystem>();
+	systemManager.add<ItemSystem>(entityParser);
+	systemManager.add<PhysicsSystem>(entityManager, eventManager);
+	systemManager.add<CombatSystem>(entityParser);
 	systemManager.add<GraphicsSystem>(gameNode, hudNode, map);
 	systemManager.add<InputSystem>(keyboardManager, mouseManager);
 	

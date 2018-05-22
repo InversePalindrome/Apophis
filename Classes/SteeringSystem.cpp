@@ -7,7 +7,7 @@ InversePalindrome.com
 
 #include "Tags.hpp"
 #include "AreaQuery.hpp"
-#include "SteerComponent.hpp"
+#include "SteerForce.hpp"
 #include "FlockComponent.hpp"
 #include "SteeringSystem.hpp"
 #include "AvoidComponent.hpp"
@@ -17,6 +17,7 @@ InversePalindrome.com
 #include "WanderComponent.hpp"
 #include "PatrolComponent.hpp"
 #include "FollowComponent.hpp"
+#include "ObjectComponent.hpp"
 #include "ImpulseComponent.hpp"
 #include "PredictComponent.hpp"
 #include "SteeringBehaviors.hpp"
@@ -42,7 +43,7 @@ void SteeringSystem::configure(entityx::EventManager& eventManager)
 
 void SteeringSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 { 
-	entityx::ComponentHandle<SteerComponent> steer;
+	entityx::ComponentHandle<SteerForce> steer;
 	entityx::ComponentHandle<BodyComponent> body;
 
 	for (auto entity : entityManager.entities_with_components(steer, body))
@@ -72,7 +73,7 @@ void SteeringSystem::receive(const EntityParsed& event)
 
 void SteeringSystem::receive(const Seek& event)
 {
-	auto steer = event.entity.component<SteerComponent>();
+	auto steer = event.entity.component<SteerForce>();
 	auto body = event.entity.component<BodyComponent>();
 	auto impulse = event.entity.component<ImpulseComponent>();
 
@@ -84,7 +85,7 @@ void SteeringSystem::receive(const Seek& event)
 
 void SteeringSystem::receive(const Flee& event)
 {
-	auto steer = event.entity.component<SteerComponent>();
+	auto steer = event.entity.component<SteerForce>();
 	auto body = event.entity.component<BodyComponent>();
 	auto impulse = event.entity.component<ImpulseComponent>();
 
@@ -96,7 +97,7 @@ void SteeringSystem::receive(const Flee& event)
 
 void SteeringSystem::receive(const Pursue& event)
 {
-	auto steer = event.entity.component<SteerComponent>();
+	auto steer = event.entity.component<SteerForce>();
 	auto body = event.entity.component<BodyComponent>();
 	auto impulse = event.entity.component<ImpulseComponent>();
 	auto pursue = event.entity.component<PursueComponent>();
@@ -109,7 +110,7 @@ void SteeringSystem::receive(const Pursue& event)
 
 void SteeringSystem::receive(const Evade& event)
 {
-	auto steer = event.entity.component<SteerComponent>();
+	auto steer = event.entity.component<SteerForce>();
 	auto body = event.entity.component<BodyComponent>();
 	auto impulse = event.entity.component<ImpulseComponent>();
 	auto evade = event.entity.component<EvadeComponent>();
@@ -122,7 +123,7 @@ void SteeringSystem::receive(const Evade& event)
 
 void SteeringSystem::receive(const Arrive& event)
 {
-	auto steer = event.entity.component<SteerComponent>();
+	auto steer = event.entity.component<SteerForce>();
 	auto body = event.entity.component<BodyComponent>();
 	auto impulse = event.entity.component<ImpulseComponent>();
 	auto arrive = event.entity.component<ArriveComponent>();
@@ -135,7 +136,7 @@ void SteeringSystem::receive(const Arrive& event)
 
 void SteeringSystem::receive(const Follow& event)
 {
-	auto steer = event.entity.component<SteerComponent>();
+	auto steer = event.entity.component<SteerForce>();
 	auto body = event.entity.component<BodyComponent>();
 	auto impulse = event.entity.component<ImpulseComponent>();
 	auto follow = event.entity.component<FollowComponent>();
@@ -148,7 +149,7 @@ void SteeringSystem::receive(const Follow& event)
 
 void SteeringSystem::receive(const Wander& event)
 {
-	auto steer = event.entity.component<SteerComponent>();
+	auto steer = event.entity.component<SteerForce>();
 	auto body = event.entity.component<BodyComponent>();
 	auto impulse = event.entity.component<ImpulseComponent>();
 	auto wander = event.entity.component<WanderComponent>();
@@ -161,7 +162,7 @@ void SteeringSystem::receive(const Wander& event)
 
 void SteeringSystem::receive(const Patrol& event)
 {
-	auto steer = event.entity.component<SteerComponent>();
+	auto steer = event.entity.component<SteerForce>();
 	auto body = event.entity.component<BodyComponent>();
 	auto impulse = event.entity.component<ImpulseComponent>();
 	auto patrol = event.entity.component<PatrolComponent>();
@@ -179,7 +180,7 @@ void SteeringSystem::receive(const Patrol& event)
 
 void SteeringSystem::receive(const Avoid& event)
 {
-	auto steer = event.entity.component<SteerComponent>();
+	auto steer = event.entity.component<SteerForce>();
 	auto body = event.entity.component<BodyComponent>();
 	auto avoid = event.entity.component<AvoidComponent>();
 
@@ -191,53 +192,57 @@ void SteeringSystem::receive(const Avoid& event)
 
 void SteeringSystem::receive(const Align& event)
 {
-	auto steer = event.entity.component<SteerComponent>();
+	auto steer = event.entity.component<SteerForce>();
 	auto body = event.entity.component<BodyComponent>();
+	auto object = event.entity.component<ObjectComponent>();
 	auto impulse = event.entity.component<ImpulseComponent>();
 	auto flock = event.entity.component<FlockComponent>();
 
-	if (steer && body && impulse && flock)
+	if (steer && body && object && impulse && flock)
 	{
-		steer->setSteeringForce(steer->getSteeringForce() + SteeringBehaviors::align(body->getBody(), flock->getGroupRadius(), impulse->getImpulse(), body->getBodyData().objectType));
+		steer->setSteeringForce(steer->getSteeringForce() + SteeringBehaviors::align(body->getBody(), flock->getGroupRadius(), impulse->getImpulse(), object->getObjectType()));
 	}
 }
 
 void SteeringSystem::receive(const Cohesion& event)
 {
-	auto steer = event.entity.component<SteerComponent>();
+	auto steer = event.entity.component<SteerForce>();
 	auto body = event.entity.component<BodyComponent>();
+	auto object = event.entity.component<ObjectComponent>();
 	auto impulse = event.entity.component<ImpulseComponent>();
 	auto flock = event.entity.component<FlockComponent>();
 
-	if (steer && body && impulse && flock)
+	if (steer && body && object && impulse && flock)
 	{
-		steer->setSteeringForce(steer->getSteeringForce() + SteeringBehaviors::cohesion(body->getBody(), flock->getGroupRadius(), impulse->getImpulse(), body->getBodyData().objectType));
+		steer->setSteeringForce(steer->getSteeringForce() + SteeringBehaviors::cohesion(body->getBody(), flock->getGroupRadius(), impulse->getImpulse(), object->getObjectType()));
 	}
 }
 
 void SteeringSystem::receive(const Separate& event)
 {
-	auto steer = event.entity.component<SteerComponent>();
+	auto steer = event.entity.component<SteerForce>();
 	auto body = event.entity.component<BodyComponent>();
+	auto object = event.entity.component<ObjectComponent>();
 	auto impulse = event.entity.component<ImpulseComponent>();
 	auto flock = event.entity.component<FlockComponent>();
 
-	if (steer && body && impulse && flock)
+	if (steer && body && object && impulse && flock)
 	{
-		steer->setSteeringForce(steer->getSteeringForce() + SteeringBehaviors::separate(body->getBody(), flock->getGroupRadius(), impulse->getImpulse(), body->getBodyData().objectType));
+		steer->setSteeringForce(steer->getSteeringForce() + SteeringBehaviors::separate(body->getBody(), flock->getGroupRadius(), impulse->getImpulse(), object->getObjectType()));
 	}
 }
 
 void SteeringSystem::receive(const Queue& event)
 {
-	auto steer = event.entity.component<SteerComponent>();
+	auto steer = event.entity.component<SteerForce>();
 	auto body = event.entity.component<BodyComponent>();
+	auto object = event.entity.component<ObjectComponent>();
 	auto impulse = event.entity.component<ImpulseComponent>();
 	auto flock = event.entity.component<FlockComponent>();
 	auto queue = event.entity.component<QueueComponent>();
 
-	if (steer && body && impulse && flock && queue)
+	if (steer && body && object && impulse && flock && queue)
 	{
-		steer->setSteeringForce(steer->getSteeringForce() + SteeringBehaviors::queue(body->getBody(), steer->getSteeringForce(), flock->getGroupRadius(), queue->getQueueDistance(), queue->getShrinkingFactor(), queue->getSteeringBrakeFactor(), impulse->getImpulse(), body->getBodyData().objectType));
+		steer->setSteeringForce(steer->getSteeringForce() + SteeringBehaviors::queue(body->getBody(), steer->getSteeringForce(), flock->getGroupRadius(), queue->getQueueDistance(), queue->getShrinkingFactor(), queue->getSteeringBrakeFactor(), impulse->getImpulse(), object->getObjectType()));
 	}
 }

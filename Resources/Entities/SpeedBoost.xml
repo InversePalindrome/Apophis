@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
-  <PowerUp boost="1.5" time="5"></PowerUp>
-  <Item>SpeedBoost</Item>
-  <Sprite>Energy</Sprite>
-  <Body object="Item" type="2" linearDamping="1" fixedRotation="false" x="-5" y="-5">
-    <Fixture shape="circle" radius="1.0" density="0.3"></Fixture>
-  </Body>
+  <Components>
+    <PowerUp boost="1.5" time="5"></PowerUp>
+    <Item>SpeedBoost</Item>
+    <Object>Item</Object>
+    <Sprite>Energy</Sprite>
+    <Body type="2" linearDamping="1" fixedRotation="false" x="-5" y="-5">
+      <Fixture shape="circle" radius="1.0" density="0.3"></Fixture>
+    </Body>
+  </Components>
 </Entity>

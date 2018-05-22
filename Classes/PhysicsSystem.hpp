@@ -8,6 +8,7 @@ InversePalindrome.com
 #pragma once
 
 #include "Events.hpp"
+#include "BodyComponent.hpp"
 #include "CollisionManager.hpp"
 
 #include <Box2D/Dynamics/b2World.h>
@@ -18,12 +19,14 @@ InversePalindrome.com
 class PhysicsSystem : public entityx::System<PhysicsSystem>, public entityx::Receiver<PhysicsSystem>
 {
 public:
-    explicit PhysicsSystem(entityx::EventManager& eventManager);
+    PhysicsSystem(entityx::EntityManager& entityManager, entityx::EventManager& eventManager);
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
 	virtual void receive(const entityx::EntityDestroyedEvent& event);
+	virtual void receive(const entityx::ComponentRemovedEvent<BodyComponent>& event);
 	virtual void receive(const CreateBody& event);
+	virtual void receive(const CreateDistanceJoint& event);
 	virtual void receive(const SetBodyPosition& event);
 	virtual void receive(const SetBodyAngle& event);
 	virtual void receive(const SetLinearVelocity& event);
@@ -35,4 +38,6 @@ public:
 private:
 	b2World world;
 	CollisionManager collisionManager;
+	
+	entityx::EntityManager& entityManager;
 };

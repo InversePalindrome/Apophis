@@ -2,7 +2,8 @@
 <Entity>
   <Type>Enemy</Type>
   <Sprite>Coin3</Sprite>
-   <Body object="Item" type="2" linearDamping="1" x="50" y="50" fixedRotation="false">
+  <Object>Item</Object>
+   <Body type="2" linearDamping="1" x="50" y="50" fixedRotation="false">
      <Fixture shape="circle" radius="1.0" density="0.3"></Fixture>
   </Body>
   <Animation>

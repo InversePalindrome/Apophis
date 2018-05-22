@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-Apophis - SatelliteSystem.hpp
+Apophis - OrbitalSystem.hpp
 InversePalindrome.com
 */
 
@@ -10,7 +10,7 @@ InversePalindrome.com
 #include <entityx/System.h>
 
 
-class SatelliteSystem : public entityx::System<SatelliteSystem>
+class OrbitalSystem : public entityx::System<OrbitalSystem>
 {
 public:
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;

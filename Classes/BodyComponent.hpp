@@ -7,12 +7,8 @@ InversePalindrome.com
 
 #pragma once
 
-#include "BodyData.hpp"
-
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2World.h>
-
-#include <entityx/Entity.h>
 
 #include <tinyxml2/tinyxml2.h>
 
@@ -20,7 +16,7 @@ InversePalindrome.com
 class BodyComponent
 {
 public:
-	BodyComponent(const tinyxml2::XMLElement* componentNode, b2World& world, entityx::Entity entity);
+	BodyComponent(const tinyxml2::XMLElement* componentNode, b2World& world);
 
 	b2Body* getBody();
 	b2Body* getBody() const;
@@ -28,7 +24,8 @@ public:
 	b2World* getWorld();
 	b2World* getWorld() const;
 
-	BodyData& getBodyData();
+	void* getUserData() const;
+	void setUserData(void* userData);
 
 	b2Vec2 getPosition() const;
 	void setPosition(const b2Vec2& position);
@@ -56,10 +53,7 @@ public:
 
 private:
 	b2Body* body;
-    BodyData bodyData;
-	b2AABB aabb;
 
-	void createBody(const tinyxml2::XMLElement* bodyNode, b2World& world, entityx::Entity entity);
+	void createBody(const tinyxml2::XMLElement* bodyNode, b2World& world);
 	void createFixture(const tinyxml2::XMLElement* fixtureNode);
-	void createAABB();
 };

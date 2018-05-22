@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-Apophis - SteerComponent.hpp
+Apophis - SteerForce.hpp
 InversePalindrome.com
 */
 
@@ -10,7 +10,7 @@ InversePalindrome.com
 #include <Box2D/Common/b2Math.h>
 
 
-class SteerComponent
+class SteerForce
 {
 public:
 	b2Vec2 getSteeringForce() const;

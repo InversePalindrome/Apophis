@@ -15,8 +15,8 @@ InversePalindrome.com
 #include "PowerUpComponent.hpp"
 
 
-ItemSystem::ItemSystem(EntityFactory& entityFactory) :
-	entityFactory(entityFactory)
+ItemSystem::ItemSystem(EntityParser& entityParser) :
+	entityParser(entityParser)
 {
 }
 
@@ -47,9 +47,9 @@ void ItemSystem::receive(const EntityDied& event)
 
 		eventManager->emit(ScheduleOnce{ entity, [this, item, bodyPosition](auto dt)
 		{
-			auto dropEntity = entityFactory.createEntity(item);
+			auto dropEntity = entityParser.createEntity(item);
 
-			eventManager->emit(SetNodePosition{ dropEntity, cocos2d::Vec2(bodyPosition.x * PTM_RATIO, bodyPosition.y * PTM_RATIO) });
+			eventManager->emit(SetNodePosition{ dropEntity, {bodyPosition.x * PTM_RATIO, bodyPosition.y * PTM_RATIO} });
 			eventManager->emit(SetBodyPosition{ dropEntity, bodyPosition });
 		}, 0.f, "CreateDrop" });
 	}

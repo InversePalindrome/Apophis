@@ -30,7 +30,6 @@ void GraphicsSystem::configure(entityx::EventManager& eventManager)
 	eventManager.subscribe<EntityParsed>(*this);
 	eventManager.subscribe<SetNodePosition>(*this);
 	eventManager.subscribe<SetNodeRotation>(*this);
-	eventManager.subscribe<CreateTransform>(*this);
 	eventManager.subscribe<PlayAction>(*this);
 }
 
@@ -42,7 +41,7 @@ void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::Even
 	for (auto entity : entityManager.entities_with_components(node, body))
 	{
 		node->setPosition({ body->getPosition().x * PTM_RATIO, body->getPosition().y * PTM_RATIO });
-		node->setRotation(CC_RADIANS_TO_DEGREES(body->getAngle()));
+		node->setRotation(body->getAngle() * RadiansToDegrees);
 	}
 
 	updateView();
@@ -64,7 +63,7 @@ void GraphicsSystem::receive(const entityx::ComponentAddedEvent<SpriteComponent>
 void GraphicsSystem::receive(const entityx::ComponentAddedEvent<LabelComponent>& event)
 {
 	auto entity = event.entity;
-
+	
 	entity.assign<NodeComponent>(event.component->getLabel());
 }
 
@@ -103,18 +102,6 @@ void GraphicsSystem::receive(const SetNodeRotation& event)
 	if (auto node = event.entity.component<NodeComponent>())
 	{
 		node->setRotation(event.rotation);
-	}
-}
-
-void GraphicsSystem::receive(const CreateTransform& event)
-{
-	auto childNode = event.childEntity.component<NodeComponent>();
-	auto parentNode = event.parentEntity.component<NodeComponent>();
-
-	if (childNode && parentNode)
-	{
-		childNode->removeFromParent();
-		parentNode->addChild(childNode->getNode());
 	}
 }
 

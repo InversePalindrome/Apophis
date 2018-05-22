@@ -12,7 +12,7 @@ InversePalindrome.com
 #include "HudNode.hpp"
 #include "PauseNode.hpp"
 #include "MouseManager.hpp"
-#include "EntityFactory.hpp"
+#include "EntityParser.hpp"
 #include "KeyboardManager.hpp"
 
 #include <entityx/entityx.h>
@@ -44,7 +44,7 @@ private:
 	entityx::EntityManager entityManager;
 	entityx::SystemManager systemManager;
 
-	EntityFactory entityFactory;
+	EntityParser entityParser;
 
 	Map map;
 

@@ -8,7 +8,7 @@ InversePalindrome.com
 #pragma once
 
 #include "Events.hpp"
-#include "EntityFactory.hpp"
+#include "EntityParser.hpp"
 
 #include <entityx/System.h>
 
@@ -16,7 +16,7 @@ InversePalindrome.com
 class ControlSystem : public entityx::System<ControlSystem>, public entityx::Receiver<ControlSystem>
 {
 public:
-	explicit ControlSystem(EntityFactory& enityFactory);
+	explicit ControlSystem(EntityParser& entityParser);
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
@@ -25,6 +25,6 @@ public:
 	virtual void receive(const ShootProjectile& event);
 
 private:
-	EntityFactory& entityFactory;
+	EntityParser& entityParser;
 	entityx::EventManager* eventManager;
 };

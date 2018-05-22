@@ -6,7 +6,7 @@ InversePalindrome.com
 
 
 #include "Events.hpp"
-#include "BodyData.hpp"
+#include "ObjectComponent.hpp"
 #include "CollisionManager.hpp"
 
 #include <Box2D/Dynamics/b2Fixture.h>
@@ -55,18 +55,21 @@ void CollisionManager::PostSolve(b2Contact* contact, const b2ContactImpulse* imp
 std::optional<std::pair<entityx::Entity, entityx::Entity>>
 CollisionManager::getCollisionPair(const b2Body* bodyA, const b2Body* bodyB, ObjectType objectTypeA, ObjectType objectTypeB)
 {
-	const auto* bodyDataA = static_cast<BodyData*>(bodyA->GetUserData());
-	const auto* bodyDataB = static_cast<BodyData*>(bodyB->GetUserData());
+	auto* entityA = static_cast<entityx::Entity*>(bodyA->GetUserData());
+	auto* entityB = static_cast<entityx::Entity*>(bodyB->GetUserData());
 
-	if (bodyDataA && bodyDataB)
+	auto objectA = entityA->component<ObjectComponent>();
+	auto objectB = entityB->component<ObjectComponent>();
+		
+	if (objectA && objectB)
 	{
-		if (bodyDataA->objectType & objectTypeA && bodyDataB->objectType & objectTypeB)
+		if (objectA->getObjectType() & objectTypeA && objectB->getObjectType() & objectTypeB)
 		{
-			return { { bodyDataA->entity, bodyDataB->entity } };
+			return { { *entityA, *entityB } };
 		}
-		else if (bodyDataA->objectType & objectTypeB && bodyDataB->objectType & objectTypeA)
+		else if (objectA->getObjectType() & objectTypeB && objectB->getObjectType() & objectTypeA)
 		{
-			return { { bodyDataB->entity, bodyDataA->entity } };
+			return { { *entityB, *entityA } };
 		}
 	}
 

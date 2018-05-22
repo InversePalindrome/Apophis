@@ -14,8 +14,8 @@ InversePalindrome.com
 #include <cocos/platform/CCFileUtils.h>
 
 
-Map::Map(EntityFactory& entityFactory, entityx::EventManager& eventManager) :
-	entityFactory(entityFactory),
+Map::Map(EntityParser& entityParser, entityx::EventManager& eventManager) :
+	entityParser(entityParser),
 	eventManager(eventManager),
 	maxEntityCount(0u)
 {
@@ -86,7 +86,7 @@ void Map::generateMap(const std::vector<std::string>& entities, const std::vecto
 	for (std::size_t i = 0; i < maxEntityCount; ++i)
 	{ 
 		/*
-		auto entity = entityFactory.createEntity(entities.at(distribution(randomEngine)));
+		auto entity = entityParser.createEntity(entities.at(distribution(randomEngine)));
 
 		eventManager.emit(SetPosition{ entity, { cocos2d::rand_minus1_1() * dimensions.x / 2.f, cocos2d::rand_minus1_1() * dimensions.y / 2.f } });
 		eventManager.emit(SetRotation{ entity, cocos2d::RandomHelper::random_real(0.f, 2.f * PI) });*/

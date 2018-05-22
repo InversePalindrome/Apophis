@@ -1,27 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
-  <AI>Striker</AI>
-  <Sprite>SpaceCruiser</Sprite>
-  <Body object="Enemy" type="2" linearDamping="0.3" x="20" y="20">
-    <Fixture shape="circle" radius="1.6" density="0.3"></Fixture>
-  </Body>
-  <Speed>12</Speed>
-  <Weapon projectileName="Laser" projectileVelocity="16" reloadTime="0.5"></Weapon>
-  <Explosion name="Boom" time="2"></Explosion>
-  <Drop>
-    <SpeedBoost>1</SpeedBoost>
-    <RegenBoost>1</RegenBoost>
-  </Drop>
-  <Health>60</Health>
-  <Vision>20</Vision>
-  <Impulse>20</Impulse>
-  <Wander></Wander>
-  <Steer></Steer>
-  <Pursue></Pursue>
-  <Patrol>
-    <Point x="15" y="15"></Point>
-    <Point x="15" y="-15"></Point>
-    <Point x="0" y="-15"></Point>
-    <Point x="0" y="15"></Point>
-  </Patrol>
+  <Tags>
+    <Steer></Steer>
+  </Tags>
+  <Components>
+    <AI>Striker</AI>
+    <Sprite>SpaceCruiser</Sprite>
+    <Object>Enemy</Object>
+    <Body type="2" linearDamping="0.3" x="20" y="20">
+      <Fixture shape="circle" radius="1.6" density="0.3"></Fixture>
+    </Body>
+    <Speed>12</Speed>
+    <Weapon projectileName="Laser" projectileVelocity="16" reloadTime="0.5"></Weapon>
+    <Explosion name="Boom" time="2"></Explosion>
+    <Drop>
+      <SpeedBoost>1</SpeedBoost>
+      <RegenBoost>1</RegenBoost>
+    </Drop>
+    <Health>60</Health>
+    <Vision>20</Vision>
+    <Impulse>20</Impulse>
+    <Wander></Wander>
+    <Pursue></Pursue>
+    <Patrol>
+      <Point x="15" y="15"></Point>
+      <Point x="15" y="-15"></Point>
+      <Point x="0" y="-15"></Point>
+      <Point x="0" y="15"></Point>
+    </Patrol>
+  </Components>
 </Entity>

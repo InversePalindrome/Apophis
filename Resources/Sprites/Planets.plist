@@ -4,21 +4,6 @@
  <dict>
   <key>frames</key>
   <dict>
-   <key>Meteor_1</key>
-   <dict>
-    <key>aliases</key>
-    <array/>
-    <key>spriteOffset</key>
-    <string>{0,0}</string>
-    <key>spriteSize</key>
-    <string>{544,393}</string>
-    <key>spriteSourceSize</key>
-    <string>{544,393}</string>
-    <key>textureRect</key>
-    <string>{{1874,0},{544,393}}</string>
-    <key>textureRotated</key>
-    <false/>
-   </dict>
    <key>Planet_D</key>
    <dict>
     <key>aliases</key>
@@ -26,11 +11,11 @@
     <key>spriteOffset</key>
     <string>{0,0}</string>
     <key>spriteSize</key>
-    <string>{846,846}</string>
+    <string>{550,550}</string>
     <key>spriteSourceSize</key>
-    <string>{846,846}</string>
+    <string>{550,550}</string>
     <key>textureRect</key>
-    <string>{{1026,0},{846,846}}</string>
+    <string>{{668,0},{550,550}}</string>
     <key>textureRotated</key>
     <false/>
    </dict>
@@ -41,11 +26,11 @@
     <key>spriteOffset</key>
     <string>{0,0}</string>
     <key>spriteSize</key>
-    <string>{846,846}</string>
+    <string>{550,550}</string>
     <key>spriteSourceSize</key>
-    <string>{846,846}</string>
+    <string>{550,550}</string>
     <key>textureRect</key>
-    <string>{{0,1026},{846,846}}</string>
+    <string>{{0,668},{550,550}}</string>
     <key>textureRotated</key>
     <false/>
    </dict>
@@ -56,11 +41,11 @@
     <key>spriteOffset</key>
     <string>{0,0}</string>
     <key>spriteSize</key>
-    <string>{846,846}</string>
+    <string>{550,550}</string>
     <key>spriteSourceSize</key>
-    <string>{846,846}</string>
+    <string>{550,550}</string>
     <key>textureRect</key>
-    <string>{{848,1026},{846,846}}</string>
+    <string>{{552,668},{550,550}}</string>
     <key>textureRotated</key>
     <false/>
    </dict>
@@ -71,11 +56,11 @@
     <key>spriteOffset</key>
     <string>{0,0}</string>
     <key>spriteSize</key>
-    <string>{846,846}</string>
+    <string>{550,550}</string>
     <key>spriteSourceSize</key>
-    <string>{846,846}</string>
+    <string>{550,550}</string>
     <key>textureRect</key>
-    <string>{{1696,1026},{846,846}}</string>
+    <string>{{1104,668},{550,550}}</string>
     <key>textureRotated</key>
     <false/>
    </dict>
@@ -86,11 +71,11 @@
     <key>spriteOffset</key>
     <string>{0,0}</string>
     <key>spriteSize</key>
-    <string>{1024,1024}</string>
+    <string>{666,666}</string>
     <key>spriteSourceSize</key>
-    <string>{1024,1024}</string>
+    <string>{666,666}</string>
     <key>textureRect</key>
-    <string>{{0,0},{1024,1024}}</string>
+    <string>{{0,0},{666,666}}</string>
     <key>textureRotated</key>
     <false/>
    </dict>
@@ -100,7 +85,7 @@
    <key>format</key>
    <integer>3</integer>
    <key>size</key>
-   <string>{2544,1874}</string>
+   <string>{1656,1220}</string>
    <key>textureFileName</key>
    <string>Planets.png</string>
   </dict>

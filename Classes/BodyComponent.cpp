@@ -11,25 +11,18 @@ InversePalindrome.com
 #include <Box2D/Collision/Shapes/b2CircleShape.h>
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
-#include <cocos/platform/CCFileUtils.h>
-
 #include <sstream>
 #include <variant>
 
 
-BodyComponent::BodyComponent(const tinyxml2::XMLElement* componentNode, b2World& world, entityx::Entity entity)
+BodyComponent::BodyComponent(const tinyxml2::XMLElement* componentNode, b2World& world)
 {
-	aabb.lowerBound = { FLT_MAX, FLT_MAX };
-	aabb.upperBound = { -FLT_MAX, -FLT_MAX };
-
-	createBody(componentNode, world, entity);
+	createBody(componentNode, world);
 
 	for (const auto* fixtureNode = componentNode->FirstChildElement("Fixture"); fixtureNode; fixtureNode = fixtureNode->NextSiblingElement("Fixture"))
 	{
 		createFixture(fixtureNode);
 	}
-	
-	createAABB();
 }
 
 b2Body* BodyComponent::getBody()
@@ -52,9 +45,14 @@ b2World* BodyComponent::getWorld() const
 	return body->GetWorld();
 }
 
-BodyData& BodyComponent::getBodyData() 
+void* BodyComponent::getUserData() const
 {
-	return bodyData;
+	return body->GetUserData();
+}
+
+void BodyComponent::setUserData(void* userData)
+{
+	body->SetUserData(userData);
 }
 
 b2Vec2 BodyComponent::getPosition() const
@@ -69,6 +67,26 @@ void BodyComponent::setPosition(const b2Vec2& position)
 
 b2AABB BodyComponent::getAABB() const
 {
+	b2AABB aabb{ {0.f, 0.f}, {0.f, 0.f} };
+
+	b2Transform transform;
+	transform.SetIdentity();
+
+	for (const auto* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
+	{
+		const auto* shape = fixture->GetShape();
+
+		for (int child = 0; child < shape->GetChildCount(); ++child)
+		{
+			b2AABB shapeAABB;
+			shape->ComputeAABB(&shapeAABB, transform, child);
+			shapeAABB.lowerBound = shapeAABB.lowerBound;
+			shapeAABB.upperBound = shapeAABB.upperBound;
+
+			aabb.Combine(shapeAABB);
+		}
+	}
+
 	return aabb;
 }
 
@@ -153,17 +171,13 @@ bool BodyComponent::raycast(b2RayCastOutput& output, const b2RayCastInput& input
 	return false;
 }
 
-void BodyComponent::createBody(const tinyxml2::XMLElement* bodyNode, b2World& world, entityx::Entity entity)
+void BodyComponent::createBody(const tinyxml2::XMLElement* bodyNode, b2World& world)
 {
 	b2BodyDef bodyDef;
-	
+
 	if (const auto* bodyType = bodyNode->Attribute("type"))
 	{
 		bodyDef.type = static_cast<b2BodyType>(std::stoi(bodyType));
-	}
-	if (const auto* object = bodyNode->Attribute("object"))
-	{
-		bodyData.objectType = ObjectType::_from_string(object);
 	}
 	if (const auto* linearDamping = bodyNode->Attribute("linearDamping"))
 	{
@@ -185,7 +199,7 @@ void BodyComponent::createBody(const tinyxml2::XMLElement* bodyNode, b2World& wo
 
 		iStream >> std::boolalpha >> bodyDef.bullet;
 	}
-	
+
 	const auto* xPosition = bodyNode->Attribute("x");
 	const auto* yPosition = bodyNode->Attribute("y");
 
@@ -194,24 +208,21 @@ void BodyComponent::createBody(const tinyxml2::XMLElement* bodyNode, b2World& wo
 		bodyDef.position = { std::stof(xPosition), std::stof(yPosition) };
 	}
 
-	bodyData.entity = entity;
-	bodyDef.userData = &bodyData;
-
 	body = world.CreateBody(&bodyDef);
 }
 
 void BodyComponent::createFixture(const tinyxml2::XMLElement* fixtureNode)
 {
 	b2FixtureDef fixtureDef;
-	
+
 	std::variant<b2CircleShape, b2PolygonShape> fixtureShape;
 
 	if (const auto* shape = fixtureNode->Attribute("shape"))
 	{
-        if (std::strcmp(shape, "circle") == 0)
-	    {
+		if (std::strcmp(shape, "circle") == 0)
+		{
 			b2CircleShape circleShape;
-			
+
 			const auto* xPosition = fixtureNode->Attribute("x");
 			const auto* yPosition = fixtureNode->Attribute("y");
 
@@ -219,33 +230,35 @@ void BodyComponent::createFixture(const tinyxml2::XMLElement* fixtureNode)
 			{
 				circleShape.m_p = { std::stof(xPosition), std::stof(yPosition) };
 			}
-		    if (const auto* radius = fixtureNode->Attribute("radius"))
-		    {
-		     	circleShape.m_radius = std::stof(radius);
-		    }
-			
+			if (const auto* radius = fixtureNode->Attribute("radius"))
+			{
+				circleShape.m_radius = std::stof(radius);
+			}
+
 			fixtureShape = circleShape;
 
 			fixtureDef.shape = &std::get<0>(fixtureShape);
-	    }
+		}
 		else if (std::strcmp(shape, "polygon") == 0)
 		{
 			b2PolygonShape polyShape;
-			
+
 			const auto* xPosition = fixtureNode->Attribute("x");
 			const auto* yPosition = fixtureNode->Attribute("y");
-			const auto* width = fixtureNode->Attribute("width");
-			const auto* height = fixtureNode->Attribute("height");
-			
+
 			if (xPosition && yPosition)
 			{
 				polyShape.m_centroid = { std::stof(xPosition), std::stof(yPosition) };
 			}
+
+			const auto* width = fixtureNode->Attribute("width");
+			const auto* height = fixtureNode->Attribute("height");
+
 			if (width && height)
 			{
 				polyShape.SetAsBox(std::stof(width), std::stof(height));
 			}
-			
+
 			fixtureShape = polyShape;
 			fixtureDef.shape = &std::get<1>(fixtureShape);
 		}
@@ -265,26 +278,5 @@ void BodyComponent::createFixture(const tinyxml2::XMLElement* fixtureNode)
 		iStream >> std::boolalpha >> fixtureDef.isSensor;
 	}
 
-    body->CreateFixture(&fixtureDef);
-}
-
-void BodyComponent::createAABB()
-{
-	b2Transform transform;
-	transform.SetIdentity();
-
-	for (const auto* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
-	{
-		const auto* shape = fixture->GetShape();
-
-		for (int child = 0; child < shape->GetChildCount(); ++child)
-		{
-			b2AABB shapeAABB;
-			shape->ComputeAABB(&shapeAABB, transform, child);
-			shapeAABB.lowerBound = shapeAABB.lowerBound;
-			shapeAABB.upperBound = shapeAABB.upperBound;
-
-			aabb.Combine(shapeAABB);
-		}
-	}
+	body->CreateFixture(&fixtureDef);
 }

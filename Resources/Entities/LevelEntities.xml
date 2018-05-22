@@ -3,5 +3,5 @@
   <UFO></UFO>
   <RockAsteroid x="10" y="10" angle="90"></RockAsteroid>
   <Skull x="-10" y="-10" angle="270"></Skull>
-  <SpaceCruiser x="-10" y="10"></SpaceCruiser>
+  <PlanetJoint></PlanetJoint>
 </Entities>

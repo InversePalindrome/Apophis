@@ -9,11 +9,11 @@ InversePalindrome.com
 
 #include <entityx/Entity.h>
 
-#include <tinyxml2/tinyxml2.h>
-
 #include <Box2D/Common/b2Math.h>
 
 #include <cocos/math/Vec2.h>
+
+#include <tinyxml2/tinyxml2.h>
 
 
 struct EntityParsed
@@ -47,13 +47,13 @@ struct ShootProjectile
 struct CreateBody
 {
 	mutable entityx::Entity entity;
-	const tinyxml2::XMLElement* bodyData;
+	const tinyxml2::XMLElement* bodyNode;
 };
 
-struct CreateTransform
+struct CreateDistanceJoint
 {
-	mutable entityx::Entity parentEntity;
-	mutable entityx::Entity childEntity;
+	mutable entityx::Entity entityA;
+	mutable entityx::Entity entityB;	
 };
 
 struct ApplyForce

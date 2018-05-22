@@ -11,11 +11,9 @@ InversePalindrome.com
 #include "DamageComponent.hpp"
 #include "ExplosionComponent.hpp"
 
-#include <cocos/math/Vec2.h>
 
-
-CombatSystem::CombatSystem(EntityFactory& entityFactory) :
-	entityFactory(entityFactory)
+CombatSystem::CombatSystem(EntityParser& entityParser) :
+	entityParser(entityParser)
 {
 }
 
@@ -47,9 +45,9 @@ void CombatSystem::receive(const EntityDied& event)
 
 		eventManager->emit(ScheduleOnce{ entity, [this, bodyPosition, explosionName, explosionTime](auto dt)
 		{
-			auto explosionEntity = entityFactory.createEntity(explosionName);
+			auto explosionEntity = entityParser.createEntity(explosionName);
 
-			eventManager->emit(SetNodePosition{ explosionEntity, cocos2d::Vec2(bodyPosition.x * PTM_RATIO, bodyPosition.y * PTM_RATIO) });
+			eventManager->emit(SetNodePosition{ explosionEntity, { bodyPosition.x * PTM_RATIO, bodyPosition.y * PTM_RATIO } });
 			eventManager->emit(SetBodyPosition{ explosionEntity, bodyPosition });
 			eventManager->emit(PlayAction{ explosionEntity, "Explosion", false });
 

@@ -36,7 +36,6 @@ public:
 	virtual void receive(const EntityParsed& event);
 	virtual void receive(const SetNodePosition& event);
 	virtual void receive(const SetNodeRotation& event);
-	virtual void receive(const CreateTransform& event);
 	virtual void receive(const PlayAction& event);
 	
 private:
