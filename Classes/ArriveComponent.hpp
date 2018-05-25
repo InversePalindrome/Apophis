@@ -15,9 +15,9 @@ class ArriveComponent
 public:
 	explicit ArriveComponent(const tinyxml2::XMLElement* componentNode);
 
-	float getSlowingRadius() const;
-	void setSlowingRadius(float slowingRadius);
+	float getSlowRadius() const;
+	void setSlowRadius(float slowRadius);
 
 private:
-	float slowingRadius;
+	float slowRadius;
 };

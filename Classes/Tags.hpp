@@ -9,4 +9,4 @@ InversePalindrome.com
 
 
 struct Player {};
-struct Satellite{};
+struct Striker{};

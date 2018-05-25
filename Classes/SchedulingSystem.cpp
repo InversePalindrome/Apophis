@@ -6,8 +6,7 @@ InversePalindrome.com
 
 
 #include "NodeComponent.hpp"
-
-#include <SchedulingSystem.hpp>
+#include "SchedulingSystem.hpp"
 
 
 void SchedulingSystem::configure(entityx::EventManager& eventManager)

@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #include "Map.hpp"
 #include "Events.hpp"
+#include "Constants.hpp"
 
 #include <tinyxml2/tinyxml2.h>
 
@@ -43,7 +44,7 @@ void Map::load(const std::string& fileName)
 		{
 			auto* sprite = cocos2d::Sprite::createWithSpriteFrameName(background);
 			sprite->getTexture()->setTexParameters({ GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT });
-			sprite->setTextureRect({ 0.f, 0.f, dimensions.x * PTM_RATIO, dimensions.y * PTM_RATIO });
+			sprite->setTextureRect({ 0.f, 0.f, dimensions.x * Constants::PTM_RATIO, dimensions.y * Constants::PTM_RATIO });
 
 			mainNode->addChild(sprite);
 		}

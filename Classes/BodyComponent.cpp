@@ -102,7 +102,7 @@ void BodyComponent::setLinearVelocity(const b2Vec2& velocity)
 
 float BodyComponent::getAngularVelocity() const
 {
-	return body->GetAngularVelocity();
+return body->GetAngularVelocity();
 }
 
 void BodyComponent::setAngularVelocity(float velocity)
@@ -130,19 +130,24 @@ float BodyComponent::getInertia() const
 	return body->GetInertia();
 }
 
-void BodyComponent::applyForce(const b2Vec2& force)
+void BodyComponent::applyLinearImpulse(const b2Vec2& linearImpulse)
 {
-	body->ApplyForceToCenter(force, true);
+	body->ApplyLinearImpulse(linearImpulse, body->GetWorldCenter(), true);
 }
 
-void BodyComponent::applyLinearImpulse(const b2Vec2& impulse)
+void BodyComponent::applyAngularImpulse(float angularImpulse)
 {
-	body->ApplyLinearImpulse(impulse, body->GetWorldCenter(), true);
+	body->ApplyAngularImpulse(angularImpulse, true);
 }
 
-void BodyComponent::applyAngularImpulse(float impulse)
+void BodyComponent::applyLinearForce(const b2Vec2& linearForce)
 {
-	body->ApplyAngularImpulse(impulse, true);
+	body->ApplyForceToCenter(linearForce, true);
+}
+
+void BodyComponent::applyRotationalForce(float rotationalForce)
+{
+	body->ApplyTorque(rotationalForce, true);
 }
 
 bool BodyComponent::contains(const b2Vec2& point) const
@@ -199,13 +204,13 @@ void BodyComponent::createBody(const tinyxml2::XMLElement* bodyNode, b2World& wo
 
 		iStream >> std::boolalpha >> bodyDef.bullet;
 	}
-
-	const auto* xPosition = bodyNode->Attribute("x");
-	const auto* yPosition = bodyNode->Attribute("y");
-
-	if (xPosition && yPosition)
+	if (const auto* x = bodyNode->Attribute("x"))
 	{
-		bodyDef.position = { std::stof(xPosition), std::stof(yPosition) };
+		bodyDef.position.x = std::stof(x);
+	}
+	if (const auto* y = bodyNode->Attribute("y"))
+	{
+		bodyDef.position.y = std::stof(y);
 	}
 
 	body = world.CreateBody(&bodyDef);
@@ -223,18 +228,19 @@ void BodyComponent::createFixture(const tinyxml2::XMLElement* fixtureNode)
 		{
 			b2CircleShape circleShape;
 
-			const auto* xPosition = fixtureNode->Attribute("x");
-			const auto* yPosition = fixtureNode->Attribute("y");
-
-			if (xPosition && yPosition)
+			if (const auto* x = fixtureNode->Attribute("x"))
 			{
-				circleShape.m_p = { std::stof(xPosition), std::stof(yPosition) };
+				circleShape.m_p.x = std::stof(x);
+			}
+			if (const auto* y = fixtureNode->Attribute("y"))
+			{
+				circleShape.m_p.y = std::stof(y);
 			}
 			if (const auto* radius = fixtureNode->Attribute("radius"))
 			{
 				circleShape.m_radius = std::stof(radius);
 			}
-
+			
 			fixtureShape = circleShape;
 
 			fixtureDef.shape = &std::get<0>(fixtureShape);
@@ -243,12 +249,13 @@ void BodyComponent::createFixture(const tinyxml2::XMLElement* fixtureNode)
 		{
 			b2PolygonShape polyShape;
 
-			const auto* xPosition = fixtureNode->Attribute("x");
-			const auto* yPosition = fixtureNode->Attribute("y");
-
-			if (xPosition && yPosition)
+			if (const auto* x = fixtureNode->Attribute("x"))
 			{
-				polyShape.m_centroid = { std::stof(xPosition), std::stof(yPosition) };
+			    polyShape.m_centroid.x = std::stof(x);
+			}
+			if (const auto* y = fixtureNode->Attribute("y"))
+			{
+				polyShape.m_centroid.y = std::stof(y);
 			}
 
 			const auto* width = fixtureNode->Attribute("width");
@@ -260,6 +267,7 @@ void BodyComponent::createFixture(const tinyxml2::XMLElement* fixtureNode)
 			}
 
 			fixtureShape = polyShape;
+
 			fixtureDef.shape = &std::get<1>(fixtureShape);
 		}
 	}

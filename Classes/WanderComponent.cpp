@@ -9,6 +9,8 @@ InversePalindrome.com
 
 #include <cocos/base/ccRandom.h>
 
+#include <boost/math/constants/constants.hpp>
+
 #include <string>
 
 
@@ -16,7 +18,7 @@ WanderComponent::WanderComponent(const tinyxml2::XMLElement* componentNode) :
 	wanderDistance(5.f),
 	wanderRadius(1.f),
 	wanderRate(0.1f),
-	wanderAngle(cocos2d::RandomHelper::random_real(0.f, 2.f * PI))
+	wanderAngle(cocos2d::RandomHelper::random_real(0.f, 2.f * boost::math::constants::pi<float>()))
 {
 	if (const auto* wanderDistance = componentNode->Attribute("distance"))
 	{

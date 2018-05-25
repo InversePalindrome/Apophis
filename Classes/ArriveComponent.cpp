@@ -11,20 +11,20 @@ InversePalindrome.com
 
 
 ArriveComponent::ArriveComponent(const tinyxml2::XMLElement* componentNode) :
-	slowingRadius(5.f)
+	slowRadius(5.f)
 {
-	if (const auto* slowingRadius = componentNode->GetText())
+	if (const auto* slowRadius = componentNode->GetText())
 	{
-		this->slowingRadius = std::stof(slowingRadius);
+		this->slowRadius = std::stof(slowRadius);
 	}
 }
 
-float ArriveComponent::getSlowingRadius() const
+float ArriveComponent::getSlowRadius() const
 {
-	return slowingRadius;
+	return slowRadius;
 }
 
-void ArriveComponent::setSlowingRadius(float slowingRadius)
+void ArriveComponent::setSlowRadius(float slowRadius)
 {
-	this->slowingRadius = slowingRadius;
+	this->slowRadius = slowRadius;
 }

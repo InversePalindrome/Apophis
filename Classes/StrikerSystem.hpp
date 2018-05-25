@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-Apophis - AISystem.hpp
+Apophis - StrikerSystem.hpp
 InversePalindrome.com
 */
 
@@ -15,10 +15,10 @@ InversePalindrome.com
 #include <entityx/System.h>
 
 
-class AISystem : public entityx::System<AISystem>, public entityx::Receiver<AISystem>
+class StrikerSystem : public entityx::System<StrikerSystem>, public entityx::Receiver<StrikerSystem>
 {
 public:
-	AISystem();
+	StrikerSystem();
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
@@ -29,8 +29,6 @@ private:
 	entityx::ComponentHandle<BodyComponent> playerBody;
 
 	beehive::Tree<entityx::Entity> strikerTree;
-	beehive::Tree<entityx::Entity> patrollerTree;
 
 	void initStrikerTree();
-	void initPatrollerTree();
 };

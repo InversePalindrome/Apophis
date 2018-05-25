@@ -7,6 +7,9 @@ InversePalindrome.com
 
 #pragma once
 
+#include "AreaQuery.hpp"
+#include "RayCastQuery.hpp"
+
 #include <entityx/Entity.h>
 
 #include <Box2D/Common/b2Math.h>
@@ -26,21 +29,9 @@ struct EntityDied
 	mutable entityx::Entity entity;
 };
 
-struct MoveEntity
-{
-	mutable entityx::Entity entity;
-	b2Vec2 direction;
-};
-
-struct RotateEntity
-{
-	mutable entityx::Entity entity;
-	b2Vec2 direction;
-};
-
 struct ShootProjectile
 {
-	mutable entityx::Entity entity;
+	mutable entityx::Entity shooter;
 	b2Vec2 targetPosition;
 };
 
@@ -56,22 +47,29 @@ struct CreateDistanceJoint
 	mutable entityx::Entity entityB;	
 };
 
-struct ApplyForce
+struct SetNodePosition
 {
 	mutable entityx::Entity entity;
-	b2Vec2 force;
+	cocos2d::Vec2 position;
 };
 
-struct ApplyLinearImpulse
+struct SetNodeRotation
 {
 	mutable entityx::Entity entity;
-	b2Vec2 impulse;
+	float rotation;
 };
 
-struct ApplyAngularImpulse
+struct RayCast
 {
-	mutable entityx::Entity entity;
-	float impulse;
+	RayCastQuery& rayCastQuery;
+	b2Vec2 p1;
+	b2Vec2 p2;
+};
+
+struct QueryAABB
+{
+	AreaQuery& areaQuery;
+	b2AABB aabb;
 };
 
 struct SetBodyPosition
@@ -80,22 +78,10 @@ struct SetBodyPosition
 	b2Vec2 position;
 };
 
-struct SetNodePosition
-{
-	mutable entityx::Entity entity;
-	cocos2d::Vec2 position;
-};
-
 struct SetBodyAngle
 {
 	mutable entityx::Entity entity;
 	float angle;
-};
-
-struct SetNodeRotation
-{
-	mutable entityx::Entity entity;
-	float rotation;
 };
 
 struct SetLinearVelocity
@@ -108,6 +94,30 @@ struct SetAngularVelocity
 {
 	mutable entityx::Entity entity;
 	float velocity;
+};
+
+struct ApplyLinearImpulse
+{
+	mutable entityx::Entity entity;
+	b2Vec2 direction;
+};
+
+struct ApplyAngularImpulse
+{
+	mutable entityx::Entity entity;
+	int direction;
+};
+
+struct ApplyLinearForce
+{
+	mutable entityx::Entity entity;
+	b2Vec2 direction;
+};
+
+struct ApplyRotationalForce
+{
+	mutable entityx::Entity entity;
+	int direction;
 };
 
 struct PlayAction
@@ -153,22 +163,71 @@ struct Unschedule
 	std::string key;
 };
 
-template<typename T>
-struct Steer
+struct Seek
+{
+	mutable entityx::Entity entity;
+	b2Vec2 targetPosition;
+};
+
+struct Pursue
+{
+	mutable entityx::Entity entity;
+	b2Vec2 targetPosition;
+	b2Vec2 targetVelocity;
+};
+
+struct Arrive
+{
+	mutable entityx::Entity entity;
+	b2Vec2 targetPosition;
+};
+
+struct Follow
+{
+	mutable entityx::Entity entity;
+	float targetVision;
+	b2Vec2 targetPosition;
+	b2Vec2 targetVelocity;
+};
+
+struct Wander
 {
 	mutable entityx::Entity entity;
 };
 
-using Seek = Steer<struct SeekBehavior>;
-using Flee = Steer<struct FleeBehavior>;
-using Pursue = Steer<struct PursueBehavior>;
-using Evade = Steer<struct EvadeBehavior>;
-using Arrive = Steer<struct ArriveBehavior>;
-using Follow = Steer<struct FollowBehavior>;
-using Wander = Steer<struct WanderBehavior>;
-using Patrol = Steer<struct PatrolBehavior>;
-using Avoid = Steer<struct AvoidBehavior>;
-using Align = Steer<struct AlignBehavior>;
-using Cohesion = Steer<struct CohesionBehavior>;
-using Separate = Steer<struct SeparateBehavior>;
-using Queue = Steer<struct QueueBehavior>;
+struct Avoid
+{
+	mutable entityx::Entity entity;
+};
+
+struct Orbit
+{
+	mutable entityx::Entity entity;
+	b2Vec2 primaryPosition;
+};
+
+struct Align
+{
+
+};
+
+struct Cohesion
+{
+
+};
+
+struct Separate
+{
+
+};
+
+struct Queue
+{
+
+};
+
+struct Face
+{
+	mutable entityx::Entity entity;
+	b2Vec2 targetPosition;
+};

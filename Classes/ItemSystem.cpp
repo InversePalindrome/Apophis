@@ -8,6 +8,7 @@ InversePalindrome.com
 #include "ItemSystem.hpp"
 #include "ItemComponent.hpp"
 #include "DropComponent.hpp"
+#include "NodeComponent.hpp"
 #include "BodyComponent.hpp"
 #include "SpeedComponent.hpp"
 #include "HealthComponent.hpp"
@@ -35,22 +36,22 @@ void ItemSystem::update(entityx::EntityManager& entityManager, entityx::EventMan
 
 void ItemSystem::receive(const EntityDied& event)
 {
-	auto entity = event.entity;
+	auto drop = event.entity.component<DropComponent>();
+	auto node = event.entity.component<NodeComponent>();
+	auto body = event.entity.component<BodyComponent>();
 
-	auto drop = entity.component<DropComponent>();
-	auto body = entity.component<BodyComponent>();
-
-	if (drop && body)
+	if (drop && node && body)
 	{
 		const auto& item = drop->getItem();
+		const auto& nodePosition = node->getPosition();
 		const auto& bodyPosition = body->getPosition();
 
-		eventManager->emit(ScheduleOnce{ entity, [this, item, bodyPosition](auto dt)
+		eventManager->emit(ScheduleOnce{ event.entity, [this, item, nodePosition, bodyPosition](auto dt)
 		{
-			auto dropEntity = entityParser.createEntity(item);
+			auto itemEntity = entityParser.createEntity(item);
 
-			eventManager->emit(SetNodePosition{ dropEntity, {bodyPosition.x * PTM_RATIO, bodyPosition.y * PTM_RATIO} });
-			eventManager->emit(SetBodyPosition{ dropEntity, bodyPosition });
+			eventManager->emit(SetNodePosition{ itemEntity, nodePosition });
+			eventManager->emit(SetBodyPosition{ itemEntity, bodyPosition });
 		}, 0.f, "CreateDrop" });
 	}
 }
@@ -113,13 +114,13 @@ void ItemSystem::addSpeedBoost(entityx::Entity entity, entityx::Entity itemEntit
 
 	if (entitySpeed && itemPowerUp)
 	{
-		auto originalSpeed = entitySpeed->getMaxSpeed();
+		auto originalSpeed = entitySpeed->getMaxLinearSpeed();
 
-		entitySpeed->setMaxSpeed(entitySpeed->getMaxSpeed() * (1 + itemPowerUp->getEffectBoost()));
+		entitySpeed->setMaxLinearSpeed(entitySpeed->getMaxLinearSpeed() * (1 + itemPowerUp->getEffectBoost()));
 
 		eventManager->emit(ScheduleOnce{ entity, [entitySpeed, originalSpeed](auto dt) mutable
 		{
-			entitySpeed->setMaxSpeed(originalSpeed);
+			entitySpeed->setMaxLinearSpeed(originalSpeed);
 		}, itemPowerUp->getEffectTime(), "SpeedBoost" });
 	}
 }

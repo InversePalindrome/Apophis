@@ -44,9 +44,11 @@ public:
 	float getMass() const;
 	float getInertia() const;
 
-	void applyForce(const b2Vec2& force);
-	void applyLinearImpulse(const b2Vec2& impulse);
-	void applyAngularImpulse(float impulse);
+	void applyLinearImpulse(const b2Vec2& linearImpulse);
+	void applyAngularImpulse(float angularImpulse);
+
+	void applyLinearForce(const b2Vec2& linearForce);
+	void applyRotationalForce(float rotationalForce);
 
 	bool contains(const b2Vec2& point) const;
 	bool raycast(b2RayCastOutput& output, const b2RayCastInput& input) const;

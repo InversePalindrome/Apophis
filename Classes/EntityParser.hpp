@@ -10,6 +10,8 @@ InversePalindrome.com
 #include <entityx/Event.h>
 #include <entityx/Entity.h>
 
+#include <Box2D/Common/b2Math.h>
+
 #include <tinyxml2/tinyxml2.h>
 
 #include <string>

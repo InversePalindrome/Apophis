@@ -6,6 +6,8 @@ InversePalindrome.com
 
 
 #include "Tags.hpp"
+#include "Constants.hpp"
+#include "MathUtility.hpp"
 #include "BodyComponent.hpp"
 #include "GraphicsSystem.hpp"
 #include "AnimationComponent.hpp"
@@ -27,9 +29,9 @@ void GraphicsSystem::configure(entityx::EventManager& eventManager)
 	eventManager.subscribe<entityx::ComponentAddedEvent<SpriteComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<LabelComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<ParticleComponent>>(*this);
-	eventManager.subscribe<EntityParsed>(*this);
 	eventManager.subscribe<SetNodePosition>(*this);
 	eventManager.subscribe<SetNodeRotation>(*this);
+	eventManager.subscribe<EntityParsed>(*this);
 	eventManager.subscribe<PlayAction>(*this);
 }
 
@@ -40,8 +42,8 @@ void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::Even
 
 	for (auto entity : entityManager.entities_with_components(node, body))
 	{
-		node->setPosition({ body->getPosition().x * PTM_RATIO, body->getPosition().y * PTM_RATIO });
-		node->setRotation(body->getAngle() * RadiansToDegrees);
+		node->setPosition({ body->getPosition().x * Constants::PTM_RATIO, body->getPosition().y * Constants::PTM_RATIO });
+		node->setRotation(Utility::radiansToDegrees(body->getAngle()));
 	}
 
 	updateView();
@@ -78,14 +80,8 @@ void GraphicsSystem::receive(const EntityParsed& event)
 {
 	if (event.entity.has_component<Player>())
 	{
-		if (auto playerNode = event.entity.component<NodeComponent>())
-		{
-			this->playerNode = playerNode;
-		}
-		if (auto playerHealth = event.entity.component<HealthComponent>())
-		{
-			this->playerHealth = playerHealth;
-		}
+		playerNode = event.entity.component<NodeComponent>();
+		playerHealth = event.entity.component<HealthComponent>();
 	}
 }
 
@@ -129,12 +125,12 @@ void GraphicsSystem::updateView()
 	{
 		const auto& worldPoint = gameNode->convertToWorldSpace(playerNode->getPosition());
 		const auto& windowSize = cocos2d::Director::getInstance()->getWinSize();
-
-		if (std::abs(playerNode->getPosition().x) < map.getDimensions().x * PTM_RATIO / 2.f - windowSize.width / 2.f)
+	
+		if (std::abs(playerNode->getPosition().x) < map.getDimensions().x * Constants::PTM_RATIO / 2.f - windowSize.width / 2.f)
 		{
 			gameNode->setPositionX(gameNode->getPosition().x - worldPoint.x + windowSize.width / 2.f);
 		}
-		if (std::abs(playerNode->getPosition().y) < map.getDimensions().y  * PTM_RATIO / 2.f - windowSize.height / 2.f)
+		if (std::abs(playerNode->getPosition().y) < map.getDimensions().y * Constants::PTM_RATIO / 2.f - windowSize.height / 2.f)
 		{
 			gameNode->setPositionY(gameNode->getPosition().y - worldPoint.y + windowSize.height / 2.f);
 		}

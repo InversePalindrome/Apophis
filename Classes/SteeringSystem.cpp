@@ -5,244 +5,310 @@ InversePalindrome.com
 */
 
 
-#include "Tags.hpp"
+#include "Constants.hpp"
 #include "AreaQuery.hpp"
-#include "SteerForce.hpp"
+#include "RayCastQuery.hpp"
+#include "BodyComponent.hpp"
 #include "FlockComponent.hpp"
 #include "SteeringSystem.hpp"
 #include "AvoidComponent.hpp"
 #include "QueueComponent.hpp"
-#include "PhysicsUtility.hpp"
+#include "ForceComponent.hpp"
+#include "PursueComponent.hpp"
 #include "ArriveComponent.hpp"
 #include "WanderComponent.hpp"
 #include "PatrolComponent.hpp"
 #include "FollowComponent.hpp"
 #include "ObjectComponent.hpp"
-#include "ImpulseComponent.hpp"
-#include "PredictComponent.hpp"
-#include "SteeringBehaviors.hpp"
+
+#include <cocos/base/ccRandom.h>
+
+#include <boost/math/constants/constants.hpp>
 
 
 void SteeringSystem::configure(entityx::EventManager& eventManager)
 {
-	eventManager.subscribe<EntityParsed>(*this);
+	this->eventManager = &eventManager;
+
 	eventManager.subscribe<Seek>(*this);
-	eventManager.subscribe<Flee>(*this);
 	eventManager.subscribe<Pursue>(*this);
-	eventManager.subscribe<Evade>(*this);
 	eventManager.subscribe<Arrive>(*this);
 	eventManager.subscribe<Follow>(*this);
 	eventManager.subscribe<Wander>(*this);
-	eventManager.subscribe<Patrol>(*this);
 	eventManager.subscribe<Avoid>(*this);
+	eventManager.subscribe<Orbit>(*this);
 	eventManager.subscribe<Align>(*this);
 	eventManager.subscribe<Cohesion>(*this);
 	eventManager.subscribe<Separate>(*this);
 	eventManager.subscribe<Queue>(*this);
+	eventManager.subscribe<Face>(*this);
 }
 
 void SteeringSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 { 
-	entityx::ComponentHandle<SteerForce> steer;
-	entityx::ComponentHandle<BodyComponent> body;
-
-	for (auto entity : entityManager.entities_with_components(steer, body))
-	{
-		body->applyLinearImpulse(steer->getSteeringForce());
-
-		eventManager.emit(RotateEntity{ entity, body->getLinearVelocity() });
-
-		steer->setSteeringForce({ 0.f, 0.f });
-	}
-}
-
-void SteeringSystem::receive(const EntityParsed& event)
-{
-	if (event.entity.has_component<Player>())
-	{
-		if (auto playerBody = event.entity.component<BodyComponent>())
-		{
-			this->playerBody = playerBody;
-		}
-		if (auto playerVision = event.entity.component<VisionComponent>())
-		{
-			this->playerVision = playerVision;
-		}
-	}
+	
 }
 
 void SteeringSystem::receive(const Seek& event)
 {
-	auto steer = event.entity.component<SteerForce>();
 	auto body = event.entity.component<BodyComponent>();
-	auto impulse = event.entity.component<ImpulseComponent>();
+	auto force = event.entity.component<ForceComponent>();
 
-	if (steer && body && impulse && playerBody.valid())
+	if (body && force)
 	{
-		steer->setSteeringForce(steer->getSteeringForce() + SteeringBehaviors::seek(body->getPosition(), playerBody->getPosition(), body->getLinearVelocity(), impulse->getImpulse()));
-	}
-}
-
-void SteeringSystem::receive(const Flee& event)
-{
-	auto steer = event.entity.component<SteerForce>();
-	auto body = event.entity.component<BodyComponent>();
-	auto impulse = event.entity.component<ImpulseComponent>();
-
-	if (steer && body && impulse && playerBody.valid())
-	{
-		steer->setSteeringForce(steer->getSteeringForce() + SteeringBehaviors::seek(body->getPosition(), playerBody->getPosition(), body->getLinearVelocity(), -impulse->getImpulse()));
+		body->applyLinearForce(seekForce(body->getPosition(), event.targetPosition, body->getLinearVelocity(), force->getLinearForce()));
 	}
 }
 
 void SteeringSystem::receive(const Pursue& event)
 {
-	auto steer = event.entity.component<SteerForce>();
 	auto body = event.entity.component<BodyComponent>();
-	auto impulse = event.entity.component<ImpulseComponent>();
+	auto force = event.entity.component<ForceComponent>();
 	auto pursue = event.entity.component<PursueComponent>();
 
-	if (steer && body && impulse && pursue && playerBody.valid())
+	if (body && force && pursue)
 	{
-		steer->setSteeringForce(steer->getSteeringForce() + SteeringBehaviors::pursue(body->getPosition(), playerBody->getPosition(), body->getLinearVelocity(), playerBody->getLinearVelocity(), impulse->getImpulse(), pursue->getPredictionTime()));
-	}
-}
-
-void SteeringSystem::receive(const Evade& event)
-{
-	auto steer = event.entity.component<SteerForce>();
-	auto body = event.entity.component<BodyComponent>();
-	auto impulse = event.entity.component<ImpulseComponent>();
-	auto evade = event.entity.component<EvadeComponent>();
-
-	if (steer && body && impulse && evade && playerBody.valid())
-	{
-		steer->setSteeringForce(steer->getSteeringForce() + SteeringBehaviors::pursue(body->getPosition(), playerBody->getPosition(), body->getLinearVelocity(), playerBody->getLinearVelocity(), -impulse->getImpulse(), evade->getPredictionTime()));
+		body->applyLinearForce(pursueForce(body->getPosition(), event.targetPosition, body->getLinearVelocity(), event.targetVelocity, pursue->getPredictionTime(), force->getLinearForce()));
 	}
 }
 
 void SteeringSystem::receive(const Arrive& event)
 {
-	auto steer = event.entity.component<SteerForce>();
 	auto body = event.entity.component<BodyComponent>();
-	auto impulse = event.entity.component<ImpulseComponent>();
+	auto force = event.entity.component<ForceComponent>();
 	auto arrive = event.entity.component<ArriveComponent>();
 
-	if (steer && body && impulse && arrive && playerBody.valid())
+	if (body && force && arrive)
 	{
-		steer->setSteeringForce(steer->getSteeringForce() + SteeringBehaviors::arrive(body->getPosition(), playerBody->getPosition(), body->getLinearVelocity(), impulse->getImpulse(), arrive->getSlowingRadius()));
+		body->applyLinearForce(arriveForce(body->getPosition(), event.targetPosition, body->getLinearVelocity(), arrive->getSlowRadius(), force->getLinearForce()));
 	}
 }
 
 void SteeringSystem::receive(const Follow& event)
 {
-	auto steer = event.entity.component<SteerForce>();
 	auto body = event.entity.component<BodyComponent>();
-	auto impulse = event.entity.component<ImpulseComponent>();
+	auto force = event.entity.component<ForceComponent>();
 	auto follow = event.entity.component<FollowComponent>();
+	auto pursue = event.entity.component<PursueComponent>();
 
-	if (steer && body && impulse && follow && playerBody.valid() && playerVision.valid())
+	if (body && force && follow && pursue)
 	{
-		steer->setSteeringForce(steer->getSteeringForce() + SteeringBehaviors::follow(body->getPosition(), playerBody->getPosition(), body->getLinearVelocity(), playerBody->getLinearVelocity(), playerVision->getVisionDistance(), follow->getDistanceFromLeader(), impulse->getImpulse()));
+		body->applyLinearForce(followForce(body->getPosition(), event.targetPosition, body->getLinearVelocity(), event.targetVelocity, event.targetVision, follow->getDistanceFromLeader(), pursue->getPredictionTime(), force->getLinearForce()));
 	}
 }
 
 void SteeringSystem::receive(const Wander& event)
 {
-	auto steer = event.entity.component<SteerForce>();
 	auto body = event.entity.component<BodyComponent>();
-	auto impulse = event.entity.component<ImpulseComponent>();
+	auto force = event.entity.component<ForceComponent>();
 	auto wander = event.entity.component<WanderComponent>();
-	
-	if (steer && body && impulse && wander)
+
+	if (body && force && wander)
 	{
-		steer->setSteeringForce(steer->getSteeringForce() + SteeringBehaviors::wander(body->getPosition(), body->getLinearVelocity(), wander->getWanderDistance(), wander->getWanderRadius(), wander->getWanderRate(), wander->getWanderAngle(), impulse->getImpulse()));
-	}
-}
-
-void SteeringSystem::receive(const Patrol& event)
-{
-	auto steer = event.entity.component<SteerForce>();
-	auto body = event.entity.component<BodyComponent>();
-	auto impulse = event.entity.component<ImpulseComponent>();
-	auto patrol = event.entity.component<PatrolComponent>();
-
-	if (steer && body && impulse && patrol)
-	{
-		steer->setSteeringForce(steer->getSteeringForce() + SteeringBehaviors::seek(body->getPosition(), patrol->getCurrentPoint(), body->getLinearVelocity(), impulse->getImpulse()));
-
-		if (body->contains(patrol->getCurrentPoint()))
-		{
-			patrol->nextPoint();
-		}
+		body->applyLinearForce(wanderForce(body->getPosition(), body->getLinearVelocity(), wander->getWanderDistance(), wander->getWanderRadius(), wander->getWanderRate(), wander->getWanderAngle(), force->getLinearForce()));
 	}
 }
 
 void SteeringSystem::receive(const Avoid& event)
 {
-	auto steer = event.entity.component<SteerForce>();
 	auto body = event.entity.component<BodyComponent>();
 	auto avoid = event.entity.component<AvoidComponent>();
 
-	if (steer && body && avoid)
+	if (body && avoid)
 	{
-		steer->setSteeringForce(steer->getSteeringForce() + SteeringBehaviors::avoid(body->getBody(), avoid->getAvoidanceDistance(), avoid->getAvoidanceForce()));
+		body->applyLinearForce(avoidForce(body->getPosition(), body->getLinearVelocity(), avoid->getAvoidanceDistance(), avoid->getAvoidanceForce()));
+	}
+}
+
+void SteeringSystem::receive(const Orbit& event)
+{
+	auto body = event.entity.component<BodyComponent>();
+	auto force = event.entity.component<ForceComponent>();
+
+	if (body && force)
+	{
+		body->applyLinearForce(orbitForce(body->getPosition(), event.primaryPosition, force->getLinearForce()));
 	}
 }
 
 void SteeringSystem::receive(const Align& event)
 {
-	auto steer = event.entity.component<SteerForce>();
-	auto body = event.entity.component<BodyComponent>();
-	auto object = event.entity.component<ObjectComponent>();
-	auto impulse = event.entity.component<ImpulseComponent>();
-	auto flock = event.entity.component<FlockComponent>();
-
-	if (steer && body && object && impulse && flock)
-	{
-		steer->setSteeringForce(steer->getSteeringForce() + SteeringBehaviors::align(body->getBody(), flock->getGroupRadius(), impulse->getImpulse(), object->getObjectType()));
-	}
+	
 }
 
 void SteeringSystem::receive(const Cohesion& event)
 {
-	auto steer = event.entity.component<SteerForce>();
-	auto body = event.entity.component<BodyComponent>();
-	auto object = event.entity.component<ObjectComponent>();
-	auto impulse = event.entity.component<ImpulseComponent>();
-	auto flock = event.entity.component<FlockComponent>();
-
-	if (steer && body && object && impulse && flock)
-	{
-		steer->setSteeringForce(steer->getSteeringForce() + SteeringBehaviors::cohesion(body->getBody(), flock->getGroupRadius(), impulse->getImpulse(), object->getObjectType()));
-	}
+	
 }
 
 void SteeringSystem::receive(const Separate& event)
 {
-	auto steer = event.entity.component<SteerForce>();
-	auto body = event.entity.component<BodyComponent>();
-	auto object = event.entity.component<ObjectComponent>();
-	auto impulse = event.entity.component<ImpulseComponent>();
-	auto flock = event.entity.component<FlockComponent>();
 
-	if (steer && body && object && impulse && flock)
-	{
-		steer->setSteeringForce(steer->getSteeringForce() + SteeringBehaviors::separate(body->getBody(), flock->getGroupRadius(), impulse->getImpulse(), object->getObjectType()));
-	}
 }
 
 void SteeringSystem::receive(const Queue& event)
 {
-	auto steer = event.entity.component<SteerForce>();
-	auto body = event.entity.component<BodyComponent>();
-	auto object = event.entity.component<ObjectComponent>();
-	auto impulse = event.entity.component<ImpulseComponent>();
-	auto flock = event.entity.component<FlockComponent>();
-	auto queue = event.entity.component<QueueComponent>();
+	
+}
 
-	if (steer && body && object && impulse && flock && queue)
+void SteeringSystem::receive(const Face& event)
+{
+	if (auto body = event.entity.component<BodyComponent>())
 	{
-		steer->setSteeringForce(steer->getSteeringForce() + SteeringBehaviors::queue(body->getBody(), steer->getSteeringForce(), flock->getGroupRadius(), queue->getQueueDistance(), queue->getShrinkingFactor(), queue->getSteeringBrakeFactor(), impulse->getImpulse(), object->getObjectType()));
+		body->applyAngularImpulse(faceForce(body->getPosition(), event.targetPosition, body->getAngle(), body->getAngularVelocity(), body->getInertia()));
 	}
+}
+
+b2Vec2 SteeringSystem::seekForce(const b2Vec2& bodyPosition, const b2Vec2& targetPosition, const b2Vec2& bodyVelocity, float force)
+{
+	return desiredVelocity(bodyPosition, targetPosition, force) - bodyVelocity;
+}
+
+b2Vec2 SteeringSystem::pursueForce(const b2Vec2& bodyPosition, const b2Vec2& targetPosition, const b2Vec2& bodyVelocity, const b2Vec2& targetVelocity, float predictionTime, float force)
+{
+	auto distance = (targetPosition - bodyPosition).Length();
+
+	if (bodyVelocity.Length() > distance / predictionTime)
+	{
+		predictionTime = distance / bodyVelocity.Length();
+	}
+
+	const auto& futurePosition = targetPosition + predictionTime * targetVelocity;
+
+	return seekForce(bodyPosition, futurePosition, bodyVelocity, force);
+}
+
+b2Vec2 SteeringSystem::arriveForce(const b2Vec2& bodyPosition, const b2Vec2& targetPosition, const b2Vec2& bodyVelocity, float force, float slowRadius)
+{
+	auto radius = (targetPosition - bodyPosition).Length();
+
+	if (radius < slowRadius)
+	{
+		return seekForce(bodyPosition, targetPosition, bodyVelocity, force * radius / slowRadius);
+	}
+
+	return seekForce(bodyPosition, targetPosition, bodyVelocity, force);
+}
+
+b2Vec2 SteeringSystem::followForce(const b2Vec2& bodyPosition, const b2Vec2& leaderPosition, const b2Vec2& bodyVelocity, const b2Vec2& leaderVelocity, float leaderSight, float distanceFromLeader, float predictionTime, float force)
+{
+	b2Vec2 steeringForce(0.f, 0.f);
+
+	auto leaderDirection = leaderVelocity;
+	leaderDirection.Normalize();
+	leaderDirection *= distanceFromLeader;
+
+	auto leaderAhead = leaderPosition + leaderDirection;
+
+	if ((bodyPosition - leaderAhead).Length() <= leaderSight || (bodyPosition - leaderPosition).Length() <= leaderSight)
+	{
+		steeringForce += pursueForce(bodyPosition, leaderPosition, bodyVelocity, leaderVelocity, predictionTime, -force);
+	}
+
+	steeringForce += arriveForce(bodyPosition, leaderPosition - leaderDirection, bodyVelocity, distanceFromLeader, force);
+
+	return steeringForce;
+}
+
+b2Vec2 SteeringSystem::wanderForce(const b2Vec2& bodyPosition, const b2Vec2& bodyVelocity, float wanderDistance, float wanderRadius, float wanderRate, float& wanderAngle, float force)
+{
+	auto wanderCenter = bodyVelocity;
+	wanderCenter.Normalize();
+	wanderCenter *= wanderDistance;
+	wanderCenter += { wanderRadius * std::cos(wanderAngle), wanderRadius * std::sin(wanderAngle) };
+
+	wanderAngle += cocos2d::random() * wanderRate;
+
+	return seekForce(bodyPosition, bodyPosition + wanderCenter, bodyVelocity, force);
+}
+
+b2Vec2 SteeringSystem::avoidForce(const b2Vec2& bodyPosition, const b2Vec2& bodyVelocity, float avoidanceDistance, float avoidanceForce)
+{
+	b2Vec2 steeringForce(0.f, 0.f);
+
+	auto ahead = bodyVelocity;
+	ahead.Normalize();
+	ahead *= avoidanceDistance;
+	ahead += bodyPosition;
+
+	if ((bodyPosition - ahead).LengthSquared() > 0.0f)
+	{
+		RayCastQuery rayQuery;
+
+		eventManager->emit(RayCast{ rayQuery, bodyPosition, ahead });
+
+		for (const auto& rayData : rayQuery.queryData)
+		{
+			if (auto object = static_cast<entityx::Entity*>(rayData.body->GetUserData())->component<ObjectComponent>())
+			{
+				if (object->getObjectType() & ObjectType::Obstacle)
+				{
+					steeringForce += desiredVelocity(rayData.body->GetPosition(), ahead, avoidanceForce);
+					break;
+				}
+			}
+		}
+	}
+
+	return steeringForce;
+}
+
+b2Vec2 SteeringSystem::orbitForce(const b2Vec2& satellitePosition, const b2Vec2& primaryPosition, float force)
+{
+	auto radius = primaryPosition - satellitePosition;
+
+	auto steeringForce = radius.Skew();
+	steeringForce.Normalize();
+	steeringForce *= force;
+
+	return steeringForce;
+}
+
+b2Vec2 SteeringSystem::alignForce(float groupRadius, float force)
+{
+	b2Vec2 steeringForce(0.f, 0.f);
+
+	return steeringForce;
+}
+
+b2Vec2 SteeringSystem::cohesionForce(float groupRadius, float force)
+{
+	b2Vec2 steeringForce(0.f, 0.f);
+
+	return steeringForce;
+}
+
+b2Vec2 SteeringSystem::separateForce(float groupRadius, float force)
+{
+	b2Vec2 steeringForce(0.f, 0.f);
+
+	return steeringForce;
+}
+
+b2Vec2 SteeringSystem::queueForce(float groupRadius, float queueDistance, float shrinkFactor, float steeringBrakeFactor, float force)
+{
+	b2Vec2 steeringForce(0.f, 0.f);
+
+	return steeringForce;
+}
+
+float SteeringSystem::faceForce(const b2Vec2& bodyPosition, const b2Vec2& targetPosition, float bodyAngle, float bodyAngularVelocity, float bodyInertia)
+{
+	auto desiredAngle = std::atan2f(targetPosition.x - bodyPosition.x, targetPosition.y - bodyPosition.y);
+	auto nextAngle = bodyAngle + bodyAngularVelocity / Constants::FPS;
+
+	auto totalRotation = std::remainderf(desiredAngle - nextAngle, 2 * boost::math::constants::pi<float>());
+	
+	auto desiredAngularVelocity = totalRotation * Constants::FPS;
+
+	return bodyInertia * desiredAngularVelocity;
+}
+
+b2Vec2 SteeringSystem::desiredVelocity(const b2Vec2& bodyPosition, const b2Vec2& targetPosition, float force)
+{
+	auto desiredVelocity = targetPosition - bodyPosition;
+	desiredVelocity.Normalize();
+	desiredVelocity *= force;
+
+	return desiredVelocity;
 }

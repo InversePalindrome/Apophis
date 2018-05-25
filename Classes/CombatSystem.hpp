@@ -20,6 +20,7 @@ public:
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
+	virtual void receive(const ShootProjectile& event);
 	virtual void receive(const EntityDied& event);
 	virtual void receive(const ProjectileHit& event);
 

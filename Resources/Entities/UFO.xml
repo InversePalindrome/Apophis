@@ -5,8 +5,8 @@
   </Tags>
   <Components>
     <Weapon projectileName="Laser" projectileVelocity="16" reloadTime="0.5"></Weapon>
-    <Speed>25</Speed>
-    <Impulse>15</Impulse>
+    <Speed linear="25" angular="100"></Speed>
+    <Impulse linear="15" angular="25"></Impulse>
     <Sprite>UFO</Sprite>
     <Object>Player</Object>
     <Body type="2" linearDamping="1" x="-20" y="-20" fixedRotation="false">

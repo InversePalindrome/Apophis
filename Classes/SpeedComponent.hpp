@@ -15,9 +15,13 @@ class SpeedComponent
 public:
 	explicit SpeedComponent(const tinyxml2::XMLElement* componentNode);
 
-	float getMaxSpeed() const;
-	void setMaxSpeed(float maxSpeed);
+	float getMaxLinearSpeed() const;
+	void setMaxLinearSpeed(float maxLinearSpeed);
+
+	float getMaxAngularSpeed() const;
+	void setMaxAngularSpeed(float maxAngularSpeed);
 
 private:
-	float maxSpeed;
+	float maxLinearSpeed;
+	float maxAngularSpeed;
 };

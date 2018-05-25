@@ -6,16 +6,15 @@ InversePalindrome.com
 
 
 #include "MenuNode.hpp"
-#include "AISystem.hpp"
 #include "GameScene.hpp"
 #include "ItemSystem.hpp"
-#include "InputSystem.hpp"
 #include "AudioSystem.hpp"
+#include "PlayerSystem.hpp"
 #include "SettingsNode.hpp"
 #include "CombatSystem.hpp"
-#include "ControlSystem.hpp"
 #include "PhysicsSystem.hpp"
 #include "OrbitalSystem.hpp"
+#include "StrikerSystem.hpp"
 #include "SteeringSystem.hpp"
 #include "GraphicsSystem.hpp"
 #include "SchedulingSystem.hpp"
@@ -95,17 +94,16 @@ void GameScene::update(float dt)
 
 void GameScene::initSystems()
 {
-	systemManager.add<ControlSystem>(entityParser);
-	systemManager.add<AISystem>();
+	systemManager.add<StrikerSystem>();
 	systemManager.add<AudioSystem>();
 	systemManager.add<SteeringSystem>();
 	systemManager.add<SchedulingSystem>();
-	systemManager.add<OrbitalSystem>();
+	systemManager.add<OrbitalSystem>(entityManager);
 	systemManager.add<ItemSystem>(entityParser);
 	systemManager.add<PhysicsSystem>(entityManager, eventManager);
 	systemManager.add<CombatSystem>(entityParser);
 	systemManager.add<GraphicsSystem>(gameNode, hudNode, map);
-	systemManager.add<InputSystem>(keyboardManager, mouseManager);
+	systemManager.add<PlayerSystem>(keyboardManager, mouseManager);
 	
 	systemManager.configure();
 }

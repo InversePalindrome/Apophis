@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-Apophis - InputSystem.hpp
+Apophis - PlayerSystem.hpp
 InversePalindrome.com
 */
 
@@ -14,10 +14,10 @@ InversePalindrome.com
 #include <entityx/System.h>
 
 
-class InputSystem : public entityx::System<InputSystem>, public entityx::Receiver<InputSystem>
+class PlayerSystem : public entityx::System<PlayerSystem>, public entityx::Receiver<PlayerSystem>
 {
 public:
-	InputSystem(KeyboardManager* keyboardManager, MouseManager* mouseManager);
+	PlayerSystem(KeyboardManager* keyboardManager, MouseManager* mouseManager);
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
@@ -29,6 +29,6 @@ private:
 
 	entityx::Entity player;
 
-	void handleKeyboard(entityx::EventManager& eventManager);
-	void handleMouse(entityx::EventManager& eventManager);
+	void handleMovement(entityx::EventManager& eventManager);
+	void handleRotation(entityx::EventManager& eventManager);
 };

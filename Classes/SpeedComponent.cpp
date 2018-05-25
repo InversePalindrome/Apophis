@@ -11,20 +11,35 @@ InversePalindrome.com
 
 
 SpeedComponent::SpeedComponent(const tinyxml2::XMLElement* componentNode) :
-	maxSpeed(10.f)
+	maxLinearSpeed(10.f),
+	maxAngularSpeed(10.f)
 {
-	if (const auto* maxSpeed = componentNode->GetText())
+	if (const auto* maxLinearSpeed = componentNode->Attribute("linear"))
 	{
-		this->maxSpeed = std::stof(maxSpeed);
+		this->maxLinearSpeed = std::stof(maxLinearSpeed);
+	}
+	if (const auto* maxAngularSpeed = componentNode->Attribute("angular"))
+	{
+		this->maxAngularSpeed = std::stof(maxAngularSpeed);
 	}
 }
 
-float SpeedComponent::getMaxSpeed() const
+float SpeedComponent::getMaxLinearSpeed() const
 {
-	return maxSpeed;
+	return maxLinearSpeed;
 }
 
-void SpeedComponent::setMaxSpeed(float maxSpeed)
+void SpeedComponent::setMaxLinearSpeed(float maxLinearSpeed)
 {
-	this->maxSpeed = maxSpeed;
+	this->maxLinearSpeed = maxLinearSpeed;
+}
+
+float SpeedComponent::getMaxAngularSpeed() const
+{
+	return maxAngularSpeed;
+}
+
+void SpeedComponent::setMaxAngularSpeed(float maxAngularSpeed)
+{
+	this->maxAngularSpeed = maxAngularSpeed;
 }

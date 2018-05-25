@@ -15,9 +15,13 @@ class ImpulseComponent
 public:
 	explicit ImpulseComponent(const tinyxml2::XMLElement* componentNode);
 
-	float getImpulse() const;
-	void setImpulse(float impulse);
+	float getLinearImpulse() const;
+	void setLinearImpulse(float linearImpulse);
+
+	float getAngularImpulse() const;
+	void setAngularImpulse(float angularImpulse);
 
 private:
-	float impulse;
+	float linearImpulse;
+	float angularImpulse;
 };

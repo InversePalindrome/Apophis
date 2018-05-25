@@ -11,20 +11,35 @@ InversePalindrome.com
 
 
 ImpulseComponent::ImpulseComponent(const tinyxml2::XMLElement* componentNode) :
-	impulse(10.f)
+	linearImpulse(10.f),
+	angularImpulse(10.f)
 {
-	if (const auto* impulse = componentNode->GetText())
+	if (const auto* linearImpulse = componentNode->Attribute("linear"))
 	{
-		this->impulse = std::stof(impulse);
+		this->linearImpulse = std::stof(linearImpulse);
+	}
+	if (const auto* angularImpulse = componentNode->Attribute("angular"))
+	{
+		this->angularImpulse = std::stof(angularImpulse);
 	}
 }
 
-float ImpulseComponent::getImpulse() const
+float ImpulseComponent::getLinearImpulse() const
 {
-	return impulse;
+	return linearImpulse;
 }
 
-void ImpulseComponent::setImpulse(float impulse)
+void ImpulseComponent::setLinearImpulse(float linearImpulse)
 {
-	this->impulse = impulse;
+	this->linearImpulse = linearImpulse;
+}
+
+float ImpulseComponent::getAngularImpulse() const
+{
+	return angularImpulse;
+}
+
+void ImpulseComponent::setAngularImpulse(float angularImpulse)
+{
+	this->angularImpulse = angularImpulse;
 }
