@@ -12,7 +12,7 @@ InversePalindrome.com
 
 ForceComponent::ForceComponent(const tinyxml2::XMLElement* componentNode) :
 	linearForce(10.f),
-	rotationalForce(1.f)
+	rotationalForce(10.f)
 {
 	if (const auto* linearForce = componentNode->Attribute("linear"))
 	{

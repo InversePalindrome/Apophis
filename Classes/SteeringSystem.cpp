@@ -31,7 +31,9 @@ void SteeringSystem::configure(entityx::EventManager& eventManager)
 	this->eventManager = &eventManager;
 
 	eventManager.subscribe<Seek>(*this);
+	eventManager.subscribe<Flee>(*this);
 	eventManager.subscribe<Pursue>(*this);
+	eventManager.subscribe<Evade>(*this);
 	eventManager.subscribe<Arrive>(*this);
 	eventManager.subscribe<Follow>(*this);
 	eventManager.subscribe<Wander>(*this);
@@ -60,6 +62,17 @@ void SteeringSystem::receive(const Seek& event)
 	}
 }
 
+void SteeringSystem::receive(const Flee& event)
+{
+	auto body = event.entity.component<BodyComponent>();
+	auto force = event.entity.component<ForceComponent>();
+
+	if (body && force)
+	{
+		body->applyLinearForce(seekForce(body->getPosition(), event.targetPosition, body->getLinearVelocity(), -force->getLinearForce()));
+	}
+}
+
 void SteeringSystem::receive(const Pursue& event)
 {
 	auto body = event.entity.component<BodyComponent>();
@@ -69,6 +82,18 @@ void SteeringSystem::receive(const Pursue& event)
 	if (body && force && pursue)
 	{
 		body->applyLinearForce(pursueForce(body->getPosition(), event.targetPosition, body->getLinearVelocity(), event.targetVelocity, pursue->getPredictionTime(), force->getLinearForce()));
+	}
+}
+
+void SteeringSystem::receive(const Evade& event)
+{
+	auto body = event.entity.component<BodyComponent>();
+	auto force = event.entity.component<ForceComponent>();
+	auto pursue = event.entity.component<PursueComponent>();
+
+	if (body && force && pursue)
+	{
+		body->applyLinearForce(pursueForce(body->getPosition(), event.targetPosition, body->getLinearVelocity(), event.targetVelocity, pursue->getPredictionTime(), -force->getLinearForce()));
 	}
 }
 

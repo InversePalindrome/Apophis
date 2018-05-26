@@ -9,11 +9,21 @@ InversePalindrome.com
 
 #include "Events.hpp"
 #include "BodyComponent.hpp"
+#include "HealthComponent.hpp"
+#include "VisionComponent.hpp"
 
 #include <beehive/beehive.hpp>
 
 #include <entityx/System.h>
 
+
+struct StrikerContext
+{
+	entityx::Entity striker;
+	entityx::ComponentHandle<BodyComponent> body;
+	entityx::ComponentHandle<VisionComponent> vision;
+	entityx::ComponentHandle<HealthComponent> health;
+};
 
 class StrikerSystem : public entityx::System<StrikerSystem>, public entityx::Receiver<StrikerSystem>
 {
@@ -28,7 +38,5 @@ private:
 	entityx::EventManager* eventManager;
 	entityx::ComponentHandle<BodyComponent> playerBody;
 
-	beehive::Tree<entityx::Entity> strikerTree;
-
-	void initStrikerTree();
+	beehive::Tree<StrikerContext> strikerTree;
 };

@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-Apophis - HudNode.hpp
+Apophis - GameOverNode.hpp
 InversePalindrome.com
 */
 
@@ -10,10 +10,10 @@ InversePalindrome.com
 #include <cocos/2d/CCNode.h>
 
 
-class HudNode : public cocos2d::Node
+class GameOverNode : public cocos2d::Node
 {
 public:
 	virtual bool init() override;
-	
-	CREATE_FUNC(HudNode);
+
+	CREATE_FUNC(GameOverNode);
 };

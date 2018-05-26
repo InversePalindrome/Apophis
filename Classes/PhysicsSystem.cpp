@@ -56,7 +56,7 @@ void PhysicsSystem::update(entityx::EntityManager& entityManager, entityx::Event
 		limitLinearSpeed(body, speed);
 		limitAngularSpeed(body, speed);
 	}
-
+	
 	updateWorld();
 }
 

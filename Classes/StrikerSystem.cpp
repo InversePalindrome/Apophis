@@ -7,13 +7,44 @@ InversePalindrome.com
 
 #include "Tags.hpp"
 #include "StrikerSystem.hpp"
-#include "HealthComponent.hpp"
-#include "VisionComponent.hpp"
 
 
-StrikerSystem::StrikerSystem()
+StrikerSystem::StrikerSystem() :
+	strikerTree(beehive::Builder<StrikerContext>()
+		.selector()
+		.sequence()
+		.leaf([this](auto& context)
+        {
+	       if ((playerBody->getPosition() - context.body->getPosition()).Length() <= context.vision->getVisionDistance())
+	         {
+		        return beehive::Status::SUCCESS;
+	         }
+
+        	return beehive::Status::FAILURE;
+       })
+       .selector()
+       .leaf([this](auto& context)
+       {
+	       if (context.health->getCurrentHitpoints() >= context.health->getMaxHitpoints() * 0.2)
+	         {
+	         	eventManager->emit(Seek{ context.striker, playerBody->getPosition() });
+	        	eventManager->emit(ShootProjectile{ context.striker, playerBody->getPosition() });
+
+		        return beehive::Status::SUCCESS;
+	         }
+
+	     return beehive::Status::FAILURE;
+      })
+      .void_leaf([this](auto& context)
+      {
+	      eventManager->emit(Flee{ context.striker, playerBody->getPosition() });
+      }).end().end()
+     .void_leaf([this](auto& context)
+      {
+	     eventManager->emit(Wander{ context.striker });
+      })
+      .end().build())
 {
-	initStrikerTree();
 }
 
 void StrikerSystem::configure(entityx::EventManager& eventManager)
@@ -26,10 +57,15 @@ void StrikerSystem::configure(entityx::EventManager& eventManager)
 void StrikerSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
 	entityx::ComponentHandle<Striker> striker;
+	entityx::ComponentHandle<BodyComponent> body;
+	entityx::ComponentHandle<VisionComponent> vision;
+	entityx::ComponentHandle<HealthComponent> health;
 
-	for (auto entity : entityManager.entities_with_components(striker))
+	for (auto entity : entityManager.entities_with_components(striker, body, vision, health))
 	{
+		//strikerTree.process(StrikerContext{ entity, body, vision, health });
 		
+		//eventManager.emit(Face{ entity, body->getLinearVelocity() });
 	}
 }
 
@@ -39,50 +75,4 @@ void StrikerSystem::receive(const EntityParsed& event)
 	{
 		playerBody = event.entity.component<BodyComponent>();
 	}
-}
-
-void StrikerSystem::initStrikerTree()
-{
-	strikerTree = beehive::Builder<entityx::Entity>()
-	.selector()
-	.sequence()
-	.leaf([this](auto& entity)
-	{
-		auto body = entity.component<BodyComponent>();
-		auto vision = entity.component<VisionComponent>();
-
-		if (playerBody.valid() && body && vision && (playerBody->getPosition() - body->getPosition()).Length() <= vision->getVisionDistance())
-		{
-			return beehive::Status::SUCCESS;
-		}
-
-		return beehive::Status::FAILURE;
-	})
-	.selector()
-	.leaf([this](auto& entity)
-	{
-		auto health = entity.component<HealthComponent>();
-
-		if (playerBody.valid() && health)
-		{
-			if (health->getCurrentHitpoints() >= health->getMaxHitpoints() * 0.2)
-			{
-			//	eventManager->emit(Seek{ entity });
-				eventManager->emit(ShootProjectile{ entity, playerBody->getPosition() });
-
-				return beehive::Status::SUCCESS;
-			}
-		}
-
-		return beehive::Status::FAILURE;
-	})
-	.void_leaf([this](auto& entity)
-	{
-		//eventManager->emit(Flee{ entity });
-	}).end().end()
-	.void_leaf([this](auto& entity)
-	{
-		//eventManager->emit(Wander{ entity });
-	})
-	.end().build();
 }

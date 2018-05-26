@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
   <Tags>
-    <Steer></Steer>
+    <Striker></Striker>
   </Tags>
   <Components>
     <AI>Striker</AI>
@@ -19,7 +19,7 @@
     </Drop>
     <Health>60</Health>
     <Vision>20</Vision>
-    <Impulse>20</Impulse>
+    <Force linear="20"></Force>
     <Wander></Wander>
     <Pursue></Pursue>
     <Patrol>

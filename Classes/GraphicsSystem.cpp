@@ -14,11 +14,11 @@ InversePalindrome.com
 
 #include <cocos/base/CCDirector.h>
 #include <cocos/2d/CCActionInterval.h>
+#include <cocos/base/CCEventDispatcher.h>
 
 
-GraphicsSystem::GraphicsSystem(cocos2d::Node* gameNode, HudNode* hudNode, Map& map) :
+GraphicsSystem::GraphicsSystem(cocos2d::Node* gameNode, Map& map) :
 	gameNode(gameNode),
-	hudNode(hudNode),
 	map(map)
 {
 }
@@ -29,9 +29,10 @@ void GraphicsSystem::configure(entityx::EventManager& eventManager)
 	eventManager.subscribe<entityx::ComponentAddedEvent<SpriteComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<LabelComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<ParticleComponent>>(*this);
+	eventManager.subscribe<EntityParsed>(*this);
+	eventManager.subscribe<EntityDied>(*this);
 	eventManager.subscribe<SetNodePosition>(*this);
 	eventManager.subscribe<SetNodeRotation>(*this);
-	eventManager.subscribe<EntityParsed>(*this);
 	eventManager.subscribe<PlayAction>(*this);
 }
 
@@ -82,6 +83,14 @@ void GraphicsSystem::receive(const EntityParsed& event)
 	{
 		playerNode = event.entity.component<NodeComponent>();
 		playerHealth = event.entity.component<HealthComponent>();
+	}
+}
+
+void GraphicsSystem::receive(const EntityDied& event)
+{
+	if (event.entity.has_component<Player>())
+	{
+		gameNode->getEventDispatcher()->dispatchCustomEvent("gameOver");
 	}
 }
 
@@ -141,6 +150,8 @@ void GraphicsSystem::updateHealthBar()
 {
 	if (playerHealth.valid())
 	{
-		hudNode->getHealthBar()->setPercent(playerHealth->getCurrentHitpoints() / playerHealth->getMaxHitpoints() * 100.f);
+		float healthPercent = playerHealth->getCurrentHitpoints() / playerHealth->getMaxHitpoints() * 100.f;
+
+		gameNode->getEventDispatcher()->dispatchCustomEvent("setHealthBar", &healthPercent);
 	}
 }

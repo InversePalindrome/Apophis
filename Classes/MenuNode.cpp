@@ -6,7 +6,7 @@ InversePalindrome.com
 
 
 #include "MenuNode.hpp"
-#include "GameScene.hpp"
+#include "GameNode.hpp"
 #include "SettingsNode.hpp"
 
 #include <cocos/2d/CCMenu.h>
@@ -29,7 +29,7 @@ bool MenuNode::init()
 	background->setPosition(director->getWinSize().width / 2.f, director->getWinSize().height / 2.f);
 
 	auto* playItem = cocos2d::MenuItemSprite::create(cocos2d::Sprite::createWithSpriteFrameName("RegularRectangleButton"), cocos2d::Sprite::createWithSpriteFrameName("SelectedRectangleButton"),
-		[director](auto* sender) { director->replaceScene(GameScene::create()); });
+		[director](auto* sender) { director->replaceScene(GameNode::scene()); });
 
 	auto* playLabel = cocos2d::Label::createWithTTF("play", "Zian.ttf", 60.f);
 	playLabel->setTextColor(cocos2d::Color4B(135, 206, 250, 255));

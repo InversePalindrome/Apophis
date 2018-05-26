@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-Apophis - GameScene.hpp
+Apophis - GameNode.hpp
 InversePalindrome.com
 */
 
@@ -9,8 +9,6 @@ InversePalindrome.com
 
 #include "Map.hpp"
 #include "Events.hpp"
-#include "HudNode.hpp"
-#include "PauseNode.hpp"
 #include "MouseManager.hpp"
 #include "EntityParser.hpp"
 #include "KeyboardManager.hpp"
@@ -21,24 +19,22 @@ InversePalindrome.com
 #include <cocos/2d/CCScene.h>
 
 
-class GameScene : public cocos2d::Scene
+class GameNode : public cocos2d::Node
 {
 public:
-	GameScene();
-	~GameScene();
+	GameNode();
+	~GameNode();
 
 	virtual bool init() override;
 	virtual void update(float dt) override;
 	
-	CREATE_FUNC(GameScene);
+	CREATE_FUNC(GameNode);
+
+	static cocos2d::Scene* scene();
 
 private:
 	KeyboardManager* keyboardManager;
 	MouseManager* mouseManager;
-
-	cocos2d::Node* gameNode;
-	HudNode* hudNode;
-	PauseNode* pauseNode;
 
 	entityx::EventManager eventManager;
 	entityx::EntityManager entityManager;

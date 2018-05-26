@@ -169,7 +169,20 @@ struct Seek
 	b2Vec2 targetPosition;
 };
 
+struct Flee
+{
+	mutable entityx::Entity entity;
+	b2Vec2 targetPosition;
+};
+
 struct Pursue
+{
+	mutable entityx::Entity entity;
+	b2Vec2 targetPosition;
+	b2Vec2 targetVelocity;
+};
+
+struct Evade
 {
 	mutable entityx::Entity entity;
 	b2Vec2 targetPosition;

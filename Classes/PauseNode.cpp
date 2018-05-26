@@ -6,7 +6,6 @@ InversePalindrome.com
 
 
 #include "MenuNode.hpp"
-#include "GameScene.hpp"
 #include "PauseNode.hpp"
 #include "SettingsNode.hpp"
 
@@ -15,7 +14,9 @@ InversePalindrome.com
 #include <cocos/2d/CCSprite.h>
 #include <cocos/2d/CCMenuItem.h>
 #include <cocos/base/CCDirector.h>
-
+#include <cocos/base/CCEventDispatcher.h>
+#include <cocos/base/CCEventListenerCustom.h>
+#
 
 bool PauseNode::init()
 {
@@ -27,12 +28,12 @@ bool PauseNode::init()
 	auto* director = cocos2d::Director::getInstance();
 
 	auto* resumeItem = cocos2d::MenuItemSprite::create(cocos2d::Sprite::createWithSpriteFrameName("RegularRectangleButton"), cocos2d::Sprite::createWithSpriteFrameName("SelectedRectangleButton"),
-		[this, director](auto* sender)
+		[this](auto* sender)
 	{
-		director->getRunningScene()->scheduleUpdate();
 		setVisible(false);
+		getEventDispatcher()->dispatchCustomEvent("resume");
 	});
-
+	
 	auto* resumeLabel = cocos2d::Label::createWithTTF("resume", "Zian.ttf", 60.f);
 	resumeLabel->setTextColor(cocos2d::Color4B(135, 206, 250, 255));
 	resumeLabel->setPosition(resumeItem->getContentSize().width / 2.f, resumeItem->getContentSize().height / 2.f);
@@ -59,6 +60,8 @@ bool PauseNode::init()
 	menu->setPosition(director->getWinSize().width / 2.f, director->getWinSize().height / 2.f);
 
 	addChild(menu);
+
+	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("pause", [this](auto* event) { setVisible(true); }), this);
 
 	setVisible(false);
 

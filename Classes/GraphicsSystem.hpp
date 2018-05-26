@@ -25,7 +25,7 @@ InversePalindrome.com
 class GraphicsSystem : public entityx::System<GraphicsSystem>, public entityx::Receiver<GraphicsSystem>
 {
 public:
-	GraphicsSystem(cocos2d::Node* gameNode, HudNode* hudNode, Map& map);
+	GraphicsSystem(cocos2d::Node* gameNode, Map& map);
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
@@ -34,13 +34,13 @@ public:
 	virtual void receive(const entityx::ComponentAddedEvent<LabelComponent>& event);
 	virtual void receive(const entityx::ComponentAddedEvent<ParticleComponent>& event);
 	virtual void receive(const EntityParsed& event);
+	virtual void receive(const EntityDied& event);
 	virtual void receive(const SetNodePosition& event);
 	virtual void receive(const SetNodeRotation& event);
 	virtual void receive(const PlayAction& event);
 	
 private:
 	cocos2d::Node* gameNode;
-	HudNode* hudNode;
 
 	Map& map;
 

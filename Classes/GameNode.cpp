@@ -1,17 +1,20 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-Apophis - GameScene.cpp
+Apophis - GameNode.cpp
 InversePalindrome.com
 */
 
 
+#include "HudNode.hpp"
 #include "MenuNode.hpp"
-#include "GameScene.hpp"
+#include "GameNode.hpp"
+#include "PauseNode.hpp"
 #include "ItemSystem.hpp"
 #include "AudioSystem.hpp"
 #include "PlayerSystem.hpp"
 #include "SettingsNode.hpp"
 #include "CombatSystem.hpp"
+#include "GameOverNode.hpp"
 #include "PhysicsSystem.hpp"
 #include "OrbitalSystem.hpp"
 #include "StrikerSystem.hpp"
@@ -19,8 +22,11 @@ InversePalindrome.com
 #include "GraphicsSystem.hpp"
 #include "SchedulingSystem.hpp"
 
+#include <cocos/base/CCEventDispatcher.h>
+#include <cocos/base/CCEventListenerCustom.h>
 
-GameScene::GameScene() :
+
+GameNode::GameNode() :
 	entityManager(eventManager),
 	systemManager(entityManager, eventManager),
 	entityParser(entityManager, eventManager),
@@ -28,16 +34,13 @@ GameScene::GameScene() :
 {
 }
 
-GameScene::~GameScene()
+GameNode::~GameNode()
 {
 	keyboardManager->release();
 	mouseManager->release();
-	gameNode->release();
-	hudNode->release();
-	pauseNode->release();
 }
 
-bool GameScene::init()
+bool GameNode::init()
 {
 	if (!Node::init())
 	{
@@ -48,51 +51,58 @@ bool GameScene::init()
 
 	keyboardManager = KeyboardManager::create();
 	keyboardManager->retain();
-
+	
 	mouseManager = MouseManager::create();
 	mouseManager->retain();
 
-	gameNode = cocos2d::Node::create();
-	gameNode->addChild(keyboardManager);
-	gameNode->addChild(mouseManager);
-	gameNode->retain();
+	addChild(keyboardManager);
+	addChild(mouseManager);
 
-	hudNode = HudNode::create();
-	hudNode->retain();
+	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("resume", [this](auto* event) { scheduleUpdate(); }), this);
+	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("gameOver", [this](auto* event)
+	{
+		scheduleOnce([this](auto dt) { entityManager.reset(); }, 0.f, "Reset");
+	}), this);
 
-	pauseNode = PauseNode::create();
-	pauseNode->retain();
-
-	addChild(gameNode);
-	addChild(hudNode);
-	addChild(pauseNode);
-
-	map.setMainNode(gameNode);
+	map.setMainNode(this);
 	
 	initSystems();
 
 	map.load("Andromeda");
 	entityParser.createEntity("UFO");
+	entityParser.createEntity("SpaceCruiser");
 	auto planet = entityParser.createEntity("Planet");
 	auto asteroid = entityParser.createEntity("RockAsteroid");
-
+	
 	eventManager.emit(CreateDistanceJoint{ planet, asteroid });
 
 	return true;
 }
 
-void GameScene::update(float dt)
+void GameNode::update(float dt)
 {
 	if (keyboardManager->isKeyPressed(cocos2d::EventKeyboard::KeyCode::KEY_ESCAPE))
 	{
 		unscheduleUpdate();
-		pauseNode->setVisible(true);
+		getEventDispatcher()->dispatchCustomEvent("pause");
 	}
 	
 	systemManager.update_all(dt);
 }
 
-void GameScene::initSystems()
+cocos2d::Scene* GameNode::scene()
+{
+	auto* scene = cocos2d::Scene::create();
+
+	scene->addChild(GameNode::create());
+	scene->addChild(HudNode::create());
+	scene->addChild(PauseNode::create());
+	scene->addChild(GameOverNode::create());
+
+	return scene;
+}
+
+void GameNode::initSystems()
 {
 	systemManager.add<StrikerSystem>();
 	systemManager.add<AudioSystem>();
@@ -102,7 +112,7 @@ void GameScene::initSystems()
 	systemManager.add<ItemSystem>(entityParser);
 	systemManager.add<PhysicsSystem>(entityManager, eventManager);
 	systemManager.add<CombatSystem>(entityParser);
-	systemManager.add<GraphicsSystem>(gameNode, hudNode, map);
+	systemManager.add<GraphicsSystem>(this, map);
 	systemManager.add<PlayerSystem>(keyboardManager, mouseManager);
 	
 	systemManager.configure();
