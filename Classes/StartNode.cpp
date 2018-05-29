@@ -1,4 +1,4 @@
-/*
+ /*
 Copyright (c) 2018 Inverse Palindrome
 Apophis - StartNode.cpp
 InversePalindrome.com

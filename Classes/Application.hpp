@@ -20,9 +20,4 @@ public:
 	virtual bool applicationDidFinishLaunching() override;
 	virtual void applicationDidEnterBackground() override;
 	virtual void applicationWillEnterForeground() override;
-
-private:
-	void createSearchPaths();
-
-	void initSpriteFrames();
 };

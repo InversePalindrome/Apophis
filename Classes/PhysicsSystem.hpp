@@ -28,8 +28,6 @@ public:
 	virtual void receive(const entityx::ComponentRemovedEvent<BodyComponent>& event);
 	virtual void receive(const CreateBody& event);
 	virtual void receive(const CreateDistanceJoint& event);
-	virtual void receive(const RayCast& event);
-	virtual void receive(const QueryAABB& event);
 	virtual void receive(const SetBodyPosition& event);
 	virtual void receive(const SetBodyAngle& event);
 	virtual void receive(const SetLinearVelocity& event);
@@ -37,7 +35,7 @@ public:
 	virtual void receive(const ApplyLinearImpulse& event);
 	virtual void receive(const ApplyAngularImpulse& event);
 	virtual void receive(const ApplyLinearForce& event);
-	virtual void receive(const ApplyRotationalForce& event);
+	virtual void receive(const ApplyAngularForce& event);
 
 private:
 	b2World world;
@@ -47,6 +45,6 @@ private:
 
 	void updateWorld();
 
-	void limitLinearSpeed(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<SpeedComponent> speed);
-	void limitAngularSpeed(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<SpeedComponent> speed);
+	static void limitLinearSpeed(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<SpeedComponent> speed);
+	static void limitAngularSpeed(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<SpeedComponent> speed);
 };

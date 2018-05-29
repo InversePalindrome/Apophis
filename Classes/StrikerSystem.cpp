@@ -15,7 +15,7 @@ StrikerSystem::StrikerSystem() :
 		.sequence()
 		.leaf([this](auto& context)
         {
-	       if ((playerBody->getPosition() - context.body->getPosition()).Length() <= context.vision->getVisionDistance())
+	       if (playerBody.valid() && (playerBody->getPosition() - context.body->getPosition()).Length() <= context.vision->getVisionDistance())
 	         {
 		        return beehive::Status::SUCCESS;
 	         }
@@ -25,23 +25,26 @@ StrikerSystem::StrikerSystem() :
        .selector()
        .leaf([this](auto& context)
        {
-	       if (context.health->getCurrentHitpoints() >= context.health->getMaxHitpoints() * 0.2)
-	         {
-	         	eventManager->emit(Seek{ context.striker, playerBody->getPosition() });
-	        	eventManager->emit(ShootProjectile{ context.striker, playerBody->getPosition() });
+		   if (context.health->getCurrentHitpoints() >= context.health->getMaxHitpoints() * 0.2)
+		   {
+			   eventManager->emit(Seek{ context.striker, playerBody->getPosition() });
+			   eventManager->emit(Face{ context.striker, playerBody->getPosition() });
+	          eventManager->emit(ShootProjectile{ context.striker, playerBody->getPosition() });
 
-		        return beehive::Status::SUCCESS;
-	         }
+		       return beehive::Status::SUCCESS;
+	       }
 
 	     return beehive::Status::FAILURE;
       })
       .void_leaf([this](auto& context)
       {
 	      eventManager->emit(Flee{ context.striker, playerBody->getPosition() });
+		  eventManager->emit(Face{ context.striker, -playerBody->getPosition() });
       }).end().end()
      .void_leaf([this](auto& context)
       {
 	     eventManager->emit(Wander{ context.striker });
+		 eventManager->emit(Face{ context.striker, context.body->getPosition() + context.body->getLinearVelocity() });
       })
       .end().build())
 {
@@ -63,9 +66,7 @@ void StrikerSystem::update(entityx::EntityManager& entityManager, entityx::Event
 
 	for (auto entity : entityManager.entities_with_components(striker, body, vision, health))
 	{
-		//strikerTree.process(StrikerContext{ entity, body, vision, health });
-		
-		//eventManager.emit(Face{ entity, body->getLinearVelocity() });
+		strikerTree.process(StrikerContext{ entity, body, vision, health });
 	}
 }
 

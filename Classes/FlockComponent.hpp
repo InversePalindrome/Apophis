@@ -9,6 +9,8 @@ InversePalindrome.com
 
 #include "tinyxml2/tinyxml2.h"
 
+#include <vector>
+
 
 class FlockComponent
 {
@@ -18,6 +20,9 @@ public:
 	float getGroupRadius() const;
 	void setGroupRadius(float groupRadius);
 
+	const std::vector<int>& getGroupIDs();
+
 private:
 	float groupRadius;
+	std::vector<int> groupIDs;
 };

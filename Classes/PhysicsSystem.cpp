@@ -34,8 +34,6 @@ void PhysicsSystem::configure(entityx::EventManager& eventManager)
 	eventManager.subscribe<entityx::ComponentRemovedEvent<BodyComponent>>(*this);
 	eventManager.subscribe<CreateBody>(*this);
 	eventManager.subscribe<CreateDistanceJoint>(*this);
-	eventManager.subscribe<RayCast>(*this);
-	eventManager.subscribe<QueryAABB>(*this);
 	eventManager.subscribe<SetBodyPosition>(*this);
 	eventManager.subscribe<SetBodyAngle>(*this);
 	eventManager.subscribe<SetLinearVelocity>(*this);
@@ -43,7 +41,7 @@ void PhysicsSystem::configure(entityx::EventManager& eventManager)
 	eventManager.subscribe<ApplyLinearImpulse>(*this);
 	eventManager.subscribe<ApplyAngularImpulse>(*this);
 	eventManager.subscribe<ApplyLinearForce>(*this);
-	eventManager.subscribe<ApplyRotationalForce>(*this);
+	eventManager.subscribe<ApplyAngularForce>(*this);
 }
 
 void PhysicsSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
@@ -95,16 +93,6 @@ void PhysicsSystem::receive(const CreateDistanceJoint& event)
 	{
 		entityManager.create().assign<DistanceJointComponent>(world, bodyA->getBody(), bodyB->getBody(), anchorA->getAnchorPoint(), anchorB->getAnchorPoint());
 	}
-}
-
-void PhysicsSystem::receive(const RayCast& event)
-{
-	world.RayCast(&event.rayCastQuery, event.p1, event.p2);
-}
-
-void PhysicsSystem::receive(const QueryAABB& event)
-{
-	world.QueryAABB(&event.areaQuery, event.aabb);
 }
 
 void PhysicsSystem::receive(const SetBodyPosition& event)
@@ -172,14 +160,14 @@ void PhysicsSystem::receive(const ApplyLinearForce& event)
 	}
 }
 
-void PhysicsSystem::receive(const ApplyRotationalForce& event)
+void PhysicsSystem::receive(const ApplyAngularForce& event)
 {
 	auto body = event.entity.component<BodyComponent>();
 	auto force = event.entity.component<ForceComponent>();
 
 	if (body && force)
 	{
-		body->applyRotationalForce(force->getRotationalForce() * event.direction);
+		body->applyRotationalForce(force->getAngularForce() * event.direction);
 	}
 }
 

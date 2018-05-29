@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Resources>
-  <Sprite>Spaceships</Sprite>
-  <Sprite>Widgets</Sprite>
-  <Sprite>Coin</Sprite>
-  <Sprite>Explosions</Sprite>
-  <Sprite>Asteroids</Sprite>
-  <Sprite>Backgrounds</Sprite>
-  <Sprite>Icons</Sprite>
-  <Sprite>BlueProjectiles</Sprite>
-  <Sprite>RedProjectiles</Sprite>
-  <Sprite>YellowProjectiles</Sprite>
-  <Sprite>GreenProjectiles</Sprite>
-  <Sprite>Planets</Sprite>
+  <Spaceships></Spaceships>
+  <Widgets></Widgets>
+  <Backgrounds></Backgrounds>
+  <Coin></Coin>
+  <Explosions></Explosions>
+  <Asteroids></Asteroids>
+  <Icons></Icons>
+  <BlueProjectiles></BlueProjectiles>
+  <RedProjectiles></RedProjectiles>
+  <GreenProjectiles></GreenProjectiles>
+  <YellowProjectiles></YellowProjectiles>
+  <Planets></Planets>
 </Resources>

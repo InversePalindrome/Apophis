@@ -17,7 +17,7 @@ InversePalindrome.com
 WanderComponent::WanderComponent(const tinyxml2::XMLElement* componentNode) :
 	wanderDistance(5.f),
 	wanderRadius(1.f),
-	wanderRate(0.1f),
+	wanderRate(1.f),
 	wanderAngle(cocos2d::RandomHelper::random_real(0.f, 2.f * boost::math::constants::pi<float>()))
 {
 	if (const auto* wanderDistance = componentNode->Attribute("distance"))
@@ -62,11 +62,6 @@ float WanderComponent::getWanderRate() const
 void WanderComponent::setWanderRate(float wanderRate)
 {
 	this->wanderRate = wanderRate;
-}
-
-float WanderComponent::getWanderAngle() const
-{
-	return wanderAngle;
 }
 
 float& WanderComponent::getWanderAngle()

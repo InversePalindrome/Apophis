@@ -145,9 +145,9 @@ void BodyComponent::applyLinearForce(const b2Vec2& linearForce)
 	body->ApplyForceToCenter(linearForce, true);
 }
 
-void BodyComponent::applyRotationalForce(float rotationalForce)
+void BodyComponent::applyRotationalForce(float angularForce)
 {
-	body->ApplyTorque(rotationalForce, true);
+	body->ApplyTorque(angularForce, true);
 }
 
 bool BodyComponent::contains(const b2Vec2& point) const

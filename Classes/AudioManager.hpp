@@ -25,11 +25,11 @@ public:
 	int playSound(const std::string& filename, bool loop = false);
 	int playMusic(const std::string& filename, bool loop = false);
 
-	void resumeAudio(int audioID);
+	static void resumeAudio(int audioID);
 	void resumeSounds();
 	void resumeMusic();
 
-	void pauseAudio(int audioID);
+	static void pauseAudio(int audioID);
 	void pauseSounds();
 	void pauseMusic();
 

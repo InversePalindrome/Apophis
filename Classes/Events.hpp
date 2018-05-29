@@ -59,19 +59,6 @@ struct SetNodeRotation
 	float rotation;
 };
 
-struct RayCast
-{
-	RayCastQuery& rayCastQuery;
-	b2Vec2 p1;
-	b2Vec2 p2;
-};
-
-struct QueryAABB
-{
-	AreaQuery& areaQuery;
-	b2AABB aabb;
-};
-
 struct SetBodyPosition
 {
 	mutable entityx::Entity entity;
@@ -114,7 +101,7 @@ struct ApplyLinearForce
 	b2Vec2 direction;
 };
 
-struct ApplyRotationalForce
+struct ApplyAngularForce
 {
 	mutable entityx::Entity entity;
 	int direction;

@@ -7,13 +7,10 @@ InversePalindrome.com
 
 #include "SplashNode.hpp"
 #include "Application.hpp"
-#include "AudioManager.hpp"
-
-#include <tinyxml2/tinyxml2.h>
+#include "CocosUtility.hpp"
 
 #include <cocos/base/CCDirector.h>
 #include <cocos/platform/CCFileUtils.h>
-#include <cocos/2d/CCSpriteFrameCache.h>
 #include <cocos/platform/desktop/CCGLViewImpl-desktop.h>
 
 
@@ -32,9 +29,11 @@ bool Application::applicationDidFinishLaunching()
 		director->setClearColor(cocos2d::Color4F::WHITE);
 	}
 
-	createSearchPaths();
+	auto* files = cocos2d::FileUtils::getInstance();
+	files->addSearchPath(files->getWritablePath());
 
-	initSpriteFrames();
+	CocosUtility::createSearchPaths("SearchPaths");
+	CocosUtility::initSpriteFrames("SpriteFrames");
 
 	director->runWithScene(SplashNode::scene());
 
@@ -49,36 +48,4 @@ void Application::applicationDidEnterBackground()
 void Application::applicationWillEnterForeground()
 {
 	cocos2d::Director::getInstance()->startAnimation();
-}
-
-void Application::createSearchPaths()
-{
-	auto* files = cocos2d::FileUtils::getInstance();
-
-	files->addSearchPath(files->getWritablePath());
-	files->addSearchPath("Fonts/");
-	files->addSearchPath("Sprites/");
-	files->addSearchPath("Sounds/");
-	files->addSearchPath("Music/");
-	files->addSearchPath("Entities/");
-	files->addSearchPath("Particles/");
-	files->addSearchPath("Maps/");
-}
-
-void Application::initSpriteFrames()
-{
-	auto* files = cocos2d::FileUtils::getInstance();
-	const auto& path = files->fullPathForFilename("SpriteFrames.xml");
-	const auto& data = files->getStringFromFile(path);
-
-	tinyxml2::XMLDocument doc;
-	doc.Parse(data.c_str());
-
-	if (const auto* resourcesNode = doc.RootElement())
-	{
-		for (const auto* resourceNode = resourcesNode->FirstChildElement("Sprite"); resourceNode; resourceNode = resourceNode->NextSiblingElement("Sprite"))
-		{
-			cocos2d::SpriteFrameCache::getInstance()->addSpriteFramesWithFile(std::string(resourceNode->GetText()) + ".plist");
-		}
-	}
 }

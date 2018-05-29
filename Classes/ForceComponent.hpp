@@ -18,10 +18,10 @@ public:
 	float getLinearForce() const;
 	void setLinearForce(float linearForce);
 
-	float getRotationalForce() const;
-	void setRotationalForce(float rotationalForce);
+	float getAngularForce() const;
+	void setAngularForce(float angularForce);
 
 private:
 	float linearForce;
-	float rotationalForce;
+	float angularForce;
 };

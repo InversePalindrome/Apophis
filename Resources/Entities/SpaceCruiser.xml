@@ -17,9 +17,10 @@
       <SpeedBoost>1</SpeedBoost>
       <RegenBoost>1</RegenBoost>
     </Drop>
-    <Health>60</Health>
+    <Health>80</Health>
     <Vision>20</Vision>
     <Force linear="20"></Force>
+    <Impulse linear="20"></Impulse>
     <Wander></Wander>
     <Pursue></Pursue>
     <Patrol>

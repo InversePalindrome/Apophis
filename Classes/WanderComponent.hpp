@@ -24,7 +24,6 @@ public:
 	float getWanderRate() const;
 	void setWanderRate(float wanderRate);
 
-	float getWanderAngle() const;
 	float& getWanderAngle();
 
 private:

@@ -26,6 +26,12 @@ bool GameOverNode::init()
 	}
 
 	auto* director = cocos2d::Director::getInstance();
+	const auto& windowSize = director->getWinSize();
+	
+	auto* gameOverLabel = cocos2d::Label::createWithTTF("game over", "Zian.ttf", 80.f);
+	gameOverLabel->enableOutline(cocos2d::Color4B(30.f, 144.f, 255.f, 255.f), 6);
+	gameOverLabel->setTextColor(cocos2d::Color4B(135.f, 206.f, 250.f, 255.f));
+	gameOverLabel->setPosition(windowSize.width / 2.f, windowSize.height / 1.5f);
 
 	auto* playAgainItem = cocos2d::MenuItemSprite::create(cocos2d::Sprite::createWithSpriteFrameName("RegularRectangleButton"), cocos2d::Sprite::createWithSpriteFrameName("SelectedRectangleButton"),
 		[this](auto* sender)
@@ -57,8 +63,9 @@ bool GameOverNode::init()
 
 	auto* menu = cocos2d::Menu::create(playAgainItem, settingsItem, menuItem, nullptr);
 	menu->alignItemsVertically();
-	menu->setPosition(director->getWinSize().width / 2.f, director->getWinSize().height / 2.f);
-
+	menu->setPosition(windowSize.width / 2.f, windowSize.height / 2.2f);
+	
+	addChild(gameOverLabel);
 	addChild(menu);
 
 	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("gameOver", [this](auto* event) { setVisible(true); }), this);

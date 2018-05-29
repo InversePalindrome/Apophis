@@ -12,7 +12,7 @@ InversePalindrome.com
 
 AnimationComponent::AnimationComponent(const tinyxml2::XMLElement* componentNode)
 {
-	for (const auto* actionNode = componentNode->FirstChildElement("Action"); actionNode; actionNode = actionNode->NextSiblingElement("Action"))
+	for (const auto* actionNode = componentNode->FirstChildElement(); actionNode; actionNode = actionNode->NextSiblingElement())
 	{
 		auto* animation = cocos2d::Animation::create();
  	
@@ -24,14 +24,12 @@ AnimationComponent::AnimationComponent(const tinyxml2::XMLElement* componentNode
 			}
 		}
 
-		if (const auto* name = actionNode->Attribute("name"))
-		{
-			animations.insert(name, animation);
-		}
 		if (const auto* delay = actionNode->Attribute("delay"))
 		{
 			animation->setDelayPerUnit(std::stof(delay));
 		}
+
+		animations.insert(actionNode->Value(), animation);
 	}
 }
 

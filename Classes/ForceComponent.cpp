@@ -12,15 +12,15 @@ InversePalindrome.com
 
 ForceComponent::ForceComponent(const tinyxml2::XMLElement* componentNode) :
 	linearForce(10.f),
-	rotationalForce(10.f)
+	angularForce(10.f)
 {
 	if (const auto* linearForce = componentNode->Attribute("linear"))
 	{
 		this->linearForce = std::stof(linearForce);
 	}
-	if (const auto* rotationalForce = componentNode->Attribute("rotational"))
+	if (const auto* angularForce = componentNode->Attribute("angular"))
 	{
-		this->rotationalForce = std::stof(rotationalForce);
+		this->angularForce = std::stof(angularForce);
 	}
 }
 
@@ -34,12 +34,12 @@ void ForceComponent::setLinearForce(float linearForce)
 	this->linearForce = linearForce;
 }
 
-float ForceComponent::getRotationalForce() const
+float ForceComponent::getAngularForce() const
 {
-	return rotationalForce;
+	return angularForce;
 }
 
-void ForceComponent::setRotationalForce(float rotationalForce)
+void ForceComponent::setAngularForce(float angularForce)
 {
-	this->rotationalForce = rotationalForce;
+	this->angularForce = angularForce;
 }
