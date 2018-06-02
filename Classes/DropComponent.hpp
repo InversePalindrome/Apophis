@@ -22,7 +22,7 @@ public:
 	std::string getItem();
 
 	void addItem(const std::string& item, int weight);
-	void removeItem(const std::string& name);
+	void removeItem(const std::string& item);
 
 private:
 	std::vector<std::string> items;

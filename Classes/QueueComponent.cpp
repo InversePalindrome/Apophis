@@ -11,50 +11,65 @@ InversePalindrome.com
 
 
 QueueComponent::QueueComponent(const tinyxml2::XMLElement* componentNode) :
-	queueDistance(5.f),
-	shrinkFactor(0.3f),
-	steeringBrakeFactor(0.8f)
+	queueAheadDistance(5.f),
+	queueRadius(1.f),
+	brakeFactor(0.8f),
+	velocityShrinkFactor(0.3f)
 {
-	if (const auto* queueDistance = componentNode->Attribute("distance"))
+	if (const auto* queueAheadDistance = componentNode->Attribute("distance"))
 	{
-		this->queueDistance = std::stof(queueDistance);
+		this->queueAheadDistance = std::stof(queueAheadDistance);
 	}
-	if (const auto* shrinkFactor = componentNode->Attribute("shrinkFactor"))
+	if (const auto* queueRadius = componentNode->Attribute("radius"))
 	{
-		this->shrinkFactor = std::stof(shrinkFactor);
+		this->queueRadius = std::stof(queueRadius);
 	}
-	if (const auto* steeringBrakeFactor = componentNode->Attribute("brakeFactor"))
+	if (const auto* brakeFactor = componentNode->Attribute("brake"))
 	{
-		this->steeringBrakeFactor = std::stof(steeringBrakeFactor);
+		this->brakeFactor = std::stof(brakeFactor);
+	}
+	if (const auto* velocityShrinkFactor = componentNode->Attribute("shrink"))
+	{
+		this->velocityShrinkFactor = std::stof(velocityShrinkFactor);
 	}
 }
 
-float QueueComponent::getQueueDistance() const
+float QueueComponent::getQueueAheadDistance() const
 {
-	return queueDistance;
+	return queueAheadDistance;
 }
 
-void QueueComponent::setQueueDistance(float queueDistance)
+void QueueComponent::setQueueAheadDistance(float queueAheadDistance)
 {
-	this->queueDistance = queueDistance;
+	this->queueAheadDistance = queueAheadDistance;
 }
 
-float QueueComponent::getShrinkingFactor() const
+float QueueComponent::getQueueRadius() const
 {
-	return shrinkFactor;
+	return queueRadius;
 }
 
-void QueueComponent::setShrinkingFactor(float shrinkFactor)
+void QueueComponent::setQueueRadius(float queueRadius)
 {
-	this->shrinkFactor = shrinkFactor;
+	this->queueRadius = queueRadius;
 }
 
-float QueueComponent::getSteeringBrakeFactor() const
+float QueueComponent::getBrakeFactor() const
 {
-	return steeringBrakeFactor;
+	return brakeFactor;
 }
 
-void QueueComponent::setSteeringBrakeFactor(float steeringBrakeFactor)
+void QueueComponent::setBrakeFactor(float brakeFactor)
 {
-	this->steeringBrakeFactor = steeringBrakeFactor;
+	this->brakeFactor = brakeFactor;
+}
+
+float QueueComponent::getVelocityShrinkFactor() const
+{
+	return velocityShrinkFactor;
+}
+
+void QueueComponent::setVelocityShrinkFactor(float velocityShrinkFactor)
+{
+	this->velocityShrinkFactor = velocityShrinkFactor;
 }

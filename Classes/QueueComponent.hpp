@@ -15,17 +15,21 @@ class QueueComponent
 public:
 	explicit QueueComponent(const tinyxml2::XMLElement* componentNode);
 
-	float getQueueDistance() const;
-	void setQueueDistance(float queueDistance);
+	float getQueueAheadDistance() const;
+	void setQueueAheadDistance(float queueAheadDistance);
 
-	float getShrinkingFactor() const;
-	void setShrinkingFactor(float shrinkingFactor);
+	float getQueueRadius() const;
+	void setQueueRadius(float queueRadius);
 
-	float getSteeringBrakeFactor() const;
-	void setSteeringBrakeFactor(float steeringBreakFactor);
+	float getBrakeFactor() const;
+	void setBrakeFactor(float brakeFactor);
+
+	float getVelocityShrinkFactor() const;
+	void setVelocityShrinkFactor(float velocityShrinkFactor);
 
 private:
-	float queueDistance;
-	float shrinkFactor;
-	float steeringBrakeFactor;
+	float queueAheadDistance;
+	float queueRadius;
+	float brakeFactor;
+	float velocityShrinkFactor;
 };

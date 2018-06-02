@@ -6,13 +6,14 @@ InversePalindrome.com
 
 
 #include "Constants.hpp"
-#include "MathUtility.hpp"
 #include "CombatSystem.hpp"
 #include "NodeComponent.hpp"
 #include "BodyComponent.hpp"
+#include "SpeedComponent.hpp"
 #include "HealthComponent.hpp"
 #include "DamageComponent.hpp"
 #include "WeaponComponent.hpp"
+#include "ConversionUtility.hpp"
 #include "ExplosionComponent.hpp"
 
 
@@ -36,30 +37,35 @@ void CombatSystem::update(entityx::EntityManager& entityManager, entityx::EventM
 
 void CombatSystem::receive(const ShootProjectile& event)
 {
-	auto shooterBody = event.shooter.component<BodyComponent>();
 	auto shooterWeapon = event.shooter.component<WeaponComponent>();
 
-	if (shooterBody && shooterWeapon && shooterWeapon->isReloaded())
+	if (shooterWeapon && shooterWeapon->isReloaded())
 	{
-		shooterWeapon->setReloadStatus(false);
-
-		const auto& shooterBodySize = shooterBody->getAABB().upperBound - shooterBody->getAABB().lowerBound;
-
-		auto projectileDirection = event.targetPosition - shooterBody->getPosition();
-		projectileDirection.Normalize();
-
-		b2Vec2 projectilePosition(projectileDirection.x * shooterBodySize.x, projectileDirection.y * shooterBodySize.y);
-		projectilePosition += shooterBody->getPosition();
+		auto shooterBody = event.shooter.component<BodyComponent>();
 
 		auto projectileEntity = entityParser.createEntity(shooterWeapon->getProjectileName());
+		auto projectileNode = projectileEntity.component<NodeComponent>();
+		auto projectileBody = projectileEntity.component<BodyComponent>();
+		auto projectileSpeed = projectileEntity.component<SpeedComponent>();
 
-		eventManager->emit(SetNodePosition{ projectileEntity,{ projectilePosition.x * Constants::PTM_RATIO, projectilePosition.y * Constants::PTM_RATIO } });
-		eventManager->emit(SetNodeRotation{ projectileEntity, Utility::radiansToDegrees(shooterBody->getAngle()) });
-		eventManager->emit(SetBodyPosition{ projectileEntity, projectilePosition });
-		eventManager->emit(SetBodyAngle{ projectileEntity, shooterBody->getAngle() });
-		eventManager->emit(ApplyLinearImpulse{ projectileEntity, projectileDirection });
-		eventManager->emit(PlayAction{ event.shooter, "Shoot", false });
-		eventManager->emit(ScheduleOnce{ event.shooter, [shooterWeapon](auto dt) mutable { shooterWeapon->setReloadStatus(true); }, shooterWeapon->getReloadTime(), "Reload" });
+		if (shooterBody && projectileNode && projectileBody && projectileSpeed)
+		{
+			shooterWeapon->setReloadStatus(false);
+
+			const auto& shooterBodySize = shooterBody->getAABB().upperBound - shooterBody->getAABB().lowerBound;
+
+			auto projectileDirection = event.targetPosition - shooterBody->getPosition();
+			projectileDirection.Normalize();
+
+			b2Vec2 projectilePosition(projectileDirection.x * shooterBodySize.x, projectileDirection.y * shooterBodySize.y);
+			projectilePosition += shooterBody->getPosition();
+
+			projectileNode->setPosition(Utility::worldToScreenCoordinates(projectilePosition));
+			projectileNode->setRotation(Utility::radiansToDegrees(shooterBody->getAngle()));
+			projectileBody->setPosition(projectilePosition);
+			projectileBody->setAngle(shooterBody->getAngle());
+			projectileBody->applyLinearImpulse(projectileSpeed->getMaxLinearSpeed() * projectileDirection);
+		}
 	}
 }
 
@@ -71,20 +77,9 @@ void CombatSystem::receive(const EntityDied& event)
 
 	if (node && body && explosion)
 	{
-		const auto& nodePosition = node->getPosition();
-		const auto& bodyPosition = body->getPosition();
-		const auto& explosionName = explosion->getExplosionName();
-		auto explosionTime = explosion->getExplosionTime();
 
-		eventManager->emit(ScheduleOnce{ event.entity, [this, nodePosition, bodyPosition, explosionName, explosionTime](auto dt)
-		{
-			auto explosionEntity = entityParser.createEntity(explosionName);
 
-			eventManager->emit(SetNodePosition{ explosionEntity, nodePosition });
-			eventManager->emit(SetBodyPosition{ explosionEntity, bodyPosition });
-			eventManager->emit(PlayAction{ explosionEntity, "Explosion", false });
-			eventManager->emit(ScheduleOnce{ explosionEntity, [explosionEntity](auto dt) mutable { explosionEntity.destroy(); }, explosionTime, "Destroy" });
-		}, 0.f, "Create" });
+	
 	}
 }
 
@@ -100,9 +95,6 @@ void CombatSystem::receive(const ProjectileHit& event)
 		if (victimHealth->getCurrentHitpoints() <= 0.f)
 		{
 			eventManager->emit(EntityDied{ event.victim });
-			eventManager->emit(ScheduleOnce{ event.victim, [event](auto dt) { event.victim.destroy(); }, 0.f, "Destroy"});
 		}
-
-		eventManager->emit(ScheduleOnce{ event.projectile, [event](auto dt){ event.projectile.destroy(); }, 0.f, "Destroy" });
 	}
 }

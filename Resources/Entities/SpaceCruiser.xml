@@ -4,13 +4,12 @@
     <Striker></Striker>
   </Tags>
   <Components>
-    <AI>Striker</AI>
     <Sprite>SpaceCruiser</Sprite>
     <Object>Enemy</Object>
-    <Body type="2" linearDamping="0.3" x="20" y="20">
+    <Body type="2" x="-5" y="-18" fixedRotation="false">
       <Fixture shape="circle" radius="1.6" density="0.3"></Fixture>
     </Body>
-    <Speed>12</Speed>
+    <Speed angular="10"></Speed>
     <Weapon projectileName="Laser" projectileVelocity="16" reloadTime="0.5"></Weapon>
     <Explosion name="Boom" time="2"></Explosion>
     <Drop>
@@ -18,16 +17,17 @@
       <RegenBoost>1</RegenBoost>
     </Drop>
     <Health>80</Health>
-    <Vision>20</Vision>
-    <Force linear="20"></Force>
-    <Impulse linear="20"></Impulse>
+    <Vision>5</Vision>
+    <Avoid distance="5" force="30"></Avoid>
     <Wander></Wander>
-    <Pursue></Pursue>
+    <Queue></Queue>
+    <Flock id="1"></Flock>
     <Patrol>
       <Point x="15" y="15"></Point>
       <Point x="15" y="-15"></Point>
       <Point x="0" y="-15"></Point>
       <Point x="0" y="15"></Point>
     </Patrol>
+    <Movement>20</Movement>
   </Components>
 </Entity>

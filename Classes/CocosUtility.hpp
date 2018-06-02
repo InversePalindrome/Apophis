@@ -13,6 +13,5 @@ InversePalindrome.com
 namespace CocosUtility
 {
 	void createSearchPaths(const std::string& filename);
-
 	void initSpriteFrames(const std::string& filename);
 }

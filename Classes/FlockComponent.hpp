@@ -9,20 +9,19 @@ InversePalindrome.com
 
 #include "tinyxml2/tinyxml2.h"
 
-#include <vector>
-
 
 class FlockComponent
 {
 public:
 	explicit FlockComponent(const tinyxml2::XMLElement* componentNode);
 
+	int getGroupID() const;
+	void setGroupID(int groupID);
+
 	float getGroupRadius() const;
 	void setGroupRadius(float groupRadius);
 
-	const std::vector<int>& getGroupIDs();
-
 private:
+	int groupID;
 	float groupRadius;
-	std::vector<int> groupIDs;
 };

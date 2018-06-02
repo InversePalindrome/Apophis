@@ -28,14 +28,6 @@ public:
 	virtual void receive(const entityx::ComponentRemovedEvent<BodyComponent>& event);
 	virtual void receive(const CreateBody& event);
 	virtual void receive(const CreateDistanceJoint& event);
-	virtual void receive(const SetBodyPosition& event);
-	virtual void receive(const SetBodyAngle& event);
-	virtual void receive(const SetLinearVelocity& event);
-	virtual void receive(const SetAngularVelocity& event);
-	virtual void receive(const ApplyLinearImpulse& event);
-	virtual void receive(const ApplyAngularImpulse& event);
-	virtual void receive(const ApplyLinearForce& event);
-	virtual void receive(const ApplyAngularForce& event);
 
 private:
 	b2World world;

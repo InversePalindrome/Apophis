@@ -7,12 +7,14 @@ InversePalindrome.com
 
 #pragma once
 
-#include <Box2D/Dynamics/b2Body.h>
+#include <Box2D/Common/b2Math.h>
+
+#include <entityx/Entity.h>
 
 
 struct RayCastData
 {
-	b2Body* body;
+	mutable entityx::Entity* entity;
 	b2Vec2 point;
 	b2Vec2 normal;
 	float fraction;

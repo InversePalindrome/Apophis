@@ -15,7 +15,7 @@ InversePalindrome.com
 #include <variant>
 
 
-BodyComponent::BodyComponent(const tinyxml2::XMLElement* componentNode, b2World& world)
+BodyComponent::BodyComponent(const tinyxml2::XMLElement* componentNode, b2World& world) 
 {
 	createBody(componentNode, world);
 
@@ -145,7 +145,7 @@ void BodyComponent::applyLinearForce(const b2Vec2& linearForce)
 	body->ApplyForceToCenter(linearForce, true);
 }
 
-void BodyComponent::applyRotationalForce(float angularForce)
+void BodyComponent::applyAngularForce(float angularForce)
 {
 	body->ApplyTorque(angularForce, true);
 }
@@ -212,7 +212,11 @@ void BodyComponent::createBody(const tinyxml2::XMLElement* bodyNode, b2World& wo
 	{
 		bodyDef.position.y = std::stof(y);
 	}
-
+	if (const auto* angle = bodyNode->Attribute("angle"))
+	{
+		bodyDef.angle = std::stof(angle);
+	}
+	
 	body = world.CreateBody(&bodyDef);
 }
 
@@ -285,6 +289,6 @@ void BodyComponent::createFixture(const tinyxml2::XMLElement* fixtureNode)
 
 		iStream >> std::boolalpha >> fixtureDef.isSensor;
 	}
-
+	
 	body->CreateFixture(&fixtureDef);
 }

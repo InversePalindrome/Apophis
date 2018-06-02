@@ -13,10 +13,5 @@ InversePalindrome.com
 class OrbitalSystem : public entityx::System<OrbitalSystem>
 {
 public:
-	explicit OrbitalSystem(entityx::EntityManager& entityManager);
-
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
-
-private:
-	entityx::EntityManager& entityManager;
 };

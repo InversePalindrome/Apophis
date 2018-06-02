@@ -31,9 +31,9 @@ void DropComponent::addItem(const std::string& item, int weight)
 	weights.push_back(weight);
 }
 
-void DropComponent::removeItem(const std::string& name)
+void DropComponent::removeItem(const std::string& item)
 {
-	auto index = std::find(std::cbegin(items), std::cend(items), name) - std::cbegin(items);
+	auto index = std::find(std::cbegin(items), std::cend(items), item) - std::cbegin(items);
 
 	items.erase(std::cbegin(items) + index);
 	weights.erase(std::cbegin(weights) + index);

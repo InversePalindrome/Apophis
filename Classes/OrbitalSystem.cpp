@@ -5,29 +5,26 @@ InversePalindrome.com
 */
 
 
-#include "Events.hpp"
 #include "OrbitalSystem.hpp"
 #include "BodyComponent.hpp"
+#include "SpeedComponent.hpp"
+#include "SteeringBehaviors.hpp"
 #include "SatelliteComponent.hpp"
 
 
-OrbitalSystem::OrbitalSystem(entityx::EntityManager& entityManager) :
-	entityManager(entityManager)
-{
-}
-
 void OrbitalSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
-	entityx::ComponentHandle<BodyComponent> body;
 	entityx::ComponentHandle<SatelliteComponent> satellite;
+	entityx::ComponentHandle<BodyComponent> body;
+	entityx::ComponentHandle<SpeedComponent> speed;
 	
-	for (auto entity : entityManager.entities_with_components(body, satellite))
+	for (auto entity : entityManager.entities_with_components(satellite, body, speed))
 	{
 		if (auto primaryEntity = entityManager.get(entityManager.create_id(satellite->getPrimaryID())))
 		{
 			if (auto primaryBody = primaryEntity.component<BodyComponent>())
 			{
-				eventManager.emit(Orbit{ entity, primaryBody->getPosition() });
+				body->applyLinearImpulse(SteeringBehaviors::orbit(body->getPosition(), primaryBody->getPosition(), speed->getMaxLinearSpeed()));
 			}
 		}
 	}

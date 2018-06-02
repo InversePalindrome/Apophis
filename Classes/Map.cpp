@@ -14,6 +14,8 @@ InversePalindrome.com
 #include <cocos/2d/CCSprite.h>
 #include <cocos/platform/CCFileUtils.h>
 
+#include <boost/math/constants/constants.hpp>
+
 
 Map::Map(EntityParser& entityParser, entityx::EventManager& eventManager) :
 	entityParser(entityParser),
@@ -86,10 +88,8 @@ void Map::generateMap(const std::vector<std::string>& entities, const std::vecto
 
 	for (std::size_t i = 0; i < maxEntityCount; ++i)
 	{ 
-		/*
-		auto entity = entityParser.createEntity(entities.at(distribution(randomEngine)));
+		//auto entity = entityParser.createEntity(entities.at(distribution(randomEngine)));
 
-		eventManager.emit(SetPosition{ entity, { cocos2d::rand_minus1_1() * dimensions.x / 2.f, cocos2d::rand_minus1_1() * dimensions.y / 2.f } });
-		eventManager.emit(SetRotation{ entity, cocos2d::RandomHelper::random_real(0.f, 2.f * PI) });*/
+
 	}
 }

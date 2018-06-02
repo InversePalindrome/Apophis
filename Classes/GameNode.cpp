@@ -18,9 +18,10 @@ InversePalindrome.com
 #include "PhysicsSystem.hpp"
 #include "OrbitalSystem.hpp"
 #include "StrikerSystem.hpp"
-#include "SteeringSystem.hpp"
 #include "GraphicsSystem.hpp"
 #include "SchedulingSystem.hpp"
+
+#include <entityx/deps/Dependencies.h>
 
 #include <cocos/base/CCEventDispatcher.h>
 #include <cocos/base/CCEventListenerCustom.h>
@@ -73,8 +74,8 @@ bool GameNode::init()
 	entityParser.createEntity("SpaceCruiser");
 	auto planet = entityParser.createEntity("Planet");
 	auto asteroid = entityParser.createEntity("RockAsteroid");
-	
-	eventManager.emit(CreateDistanceJoint{ planet, asteroid });
+
+    eventManager.emit(CreateDistanceJoint{ planet, asteroid });
 
 	return true;
 }
@@ -105,15 +106,14 @@ cocos2d::Scene* GameNode::scene()
 void GameNode::initSystems()
 {
 	systemManager.add<StrikerSystem>();
+	systemManager.add<PlayerSystem>(keyboardManager, mouseManager);
 	systemManager.add<AudioSystem>();
-	systemManager.add<SteeringSystem>();
 	systemManager.add<SchedulingSystem>();
-	systemManager.add<OrbitalSystem>(entityManager);
+	systemManager.add<OrbitalSystem>();
 	systemManager.add<ItemSystem>(entityParser);
 	systemManager.add<PhysicsSystem>(entityManager, eventManager);
 	systemManager.add<CombatSystem>(entityParser);
 	systemManager.add<GraphicsSystem>(this, map);
-	systemManager.add<PlayerSystem>(keyboardManager, mouseManager);
-	
+
 	systemManager.configure();
 }

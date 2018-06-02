@@ -12,6 +12,8 @@ InversePalindrome.com
 #include "Constants.hpp"
 #include "AppSettings.hpp"
 #include "PlayerSystem.hpp"
+#include "SteeringBehaviors.hpp"
+#include "ConversionUtility.hpp"
 
 
 PlayerSystem::PlayerSystem(KeyboardManager* keyboardManager, MouseManager* mouseManager) :
@@ -22,54 +24,53 @@ PlayerSystem::PlayerSystem(KeyboardManager* keyboardManager, MouseManager* mouse
 
 void PlayerSystem::configure(entityx::EventManager& eventManager)
 {
-	eventManager.subscribe<entityx::ComponentAddedEvent<Player>>(*this);
 }
 
 void PlayerSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
-	if (player.valid())
+	entityx::ComponentHandle<Player> player;
+	entityx::ComponentHandle<BodyComponent> body;
+	entityx::ComponentHandle<SpeedComponent> speed;
+
+	for (auto entity : entityManager.entities_with_components(player, body, speed))
 	{
-		handleMovement(eventManager);
-		handleRotation(eventManager);
+		updateMovement(body, speed);
+		updateRotation(body);
+		updateShooting(eventManager, entity);
 	}
 }
 
-void PlayerSystem::receive(const entityx::ComponentAddedEvent<Player>& event)
-{
-	player = event.entity;
-}
-
-void PlayerSystem::handleMovement(entityx::EventManager& eventManager)
+void PlayerSystem::updateMovement(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<SpeedComponent> speed)
 {
 	const auto& appSettings = AppSettings::getInstance();
 
 	if (keyboardManager->isKeyPressed(appSettings.getKeyCode(KeyAction::MoveRight)))
 	{
-		eventManager.emit(ApplyLinearImpulse{ player, {1.f, 0.f} });
+		body->applyLinearImpulse(speed->getMaxLinearSpeed() * b2Vec2(1.f, 0.f));
 	}
 	else if (keyboardManager->isKeyPressed(appSettings.getKeyCode(KeyAction::MoveLeft)))
 	{
-		eventManager.emit(ApplyLinearImpulse{ player, {-1.f, 0.f } });
+		body->applyLinearImpulse(speed->getMaxLinearSpeed() * b2Vec2(-1.f, 0.f));
 	}
 	if (keyboardManager->isKeyPressed(appSettings.getKeyCode(KeyAction::MoveUp)))
 	{
-		eventManager.emit(ApplyLinearImpulse{ player, {0.f, 1.f} });
+		body->applyLinearImpulse(speed->getMaxLinearSpeed() * b2Vec2(0.f, 1.f));
 	}
 	else if (keyboardManager->isKeyPressed(appSettings.getKeyCode(KeyAction::MoveDown)))
 	{
-		eventManager.emit(ApplyLinearImpulse{ player, {0.f, -1.f} });
+		body->applyLinearImpulse(speed->getMaxLinearSpeed() * b2Vec2(0.f, -1.f));
 	}
 }
 
-void PlayerSystem::handleRotation(entityx::EventManager& eventManager)
+void PlayerSystem::updateRotation(entityx::ComponentHandle<BodyComponent> body)
 {
-	cocos2d::Vec2 nodeMousePosition(mouseManager->convertToNodeSpace(mouseManager->getMousePosition()));
-	b2Vec2 worldMousePosition(nodeMousePosition.x / Constants::PTM_RATIO, nodeMousePosition.y / Constants::PTM_RATIO);
+	body->applyAngularImpulse(SteeringBehaviors::face(body->getPosition(), Utility::screenToWorldCoordinates(mouseManager->getMousePosition()), body->getAngle(), body->getAngularVelocity(), body->getInertia()));
+}
 
-	eventManager.emit(Face{ player, worldMousePosition });
-
+void PlayerSystem::updateShooting(entityx::EventManager& eventManager, entityx::Entity player)
+{
 	if (mouseManager->isMousePressed())
 	{
-		eventManager.emit(ShootProjectile{ player, worldMousePosition });
+		eventManager.emit(ShootProjectile{ player,  Utility::screenToWorldCoordinates(mouseManager->getPosition()) });
 	}
 }

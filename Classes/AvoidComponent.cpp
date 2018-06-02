@@ -11,12 +11,12 @@ InversePalindrome.com
 
 
 AvoidComponent::AvoidComponent(const tinyxml2::XMLElement* componentNode) :
-	avoidanceDistance(5.f),
-	avoidanceForce(10.f)
+	avoidanceAheadDistance(10.f),
+	avoidanceForce(50.f)
 {
-	if (const auto* avoidanceDistance = componentNode->Attribute("distance"))
+	if (const auto* avoidanceAheadDistance = componentNode->Attribute("distance"))
 	{
-		this->avoidanceDistance = std::stof(avoidanceDistance);
+		this->avoidanceAheadDistance = std::stof(avoidanceAheadDistance);
 	}
 	if (const auto* avoidanceForce = componentNode->Attribute("force"))
 	{
@@ -24,14 +24,14 @@ AvoidComponent::AvoidComponent(const tinyxml2::XMLElement* componentNode) :
 	}
 }
 
-float AvoidComponent::getAvoidanceDistance() const
+float AvoidComponent::getAvoidanceAheadDistance() const
 {
-	return avoidanceDistance;
+	return avoidanceAheadDistance;
 }
 
-void AvoidComponent::setAvoidanceDistance(float avoidanceDistance)
+void AvoidComponent::setAvoidanceAheadDistance(float avoidanceAheadDistance)
 {
-	this->avoidanceDistance = avoidanceDistance;
+	this->avoidanceAheadDistance = avoidanceAheadDistance;
 }
 
 float AvoidComponent::getAvoidanceForce() const

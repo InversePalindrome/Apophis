@@ -8,6 +8,7 @@ InversePalindrome.com
 #pragma once
 
 #include "AreaQuery.hpp"
+#include "ObjectType.hpp"
 #include "RayCastQuery.hpp"
 
 #include <entityx/Entity.h>
@@ -45,66 +46,6 @@ struct CreateDistanceJoint
 {
 	mutable entityx::Entity entityA;
 	mutable entityx::Entity entityB;	
-};
-
-struct SetNodePosition
-{
-	mutable entityx::Entity entity;
-	cocos2d::Vec2 position;
-};
-
-struct SetNodeRotation
-{
-	mutable entityx::Entity entity;
-	float rotation;
-};
-
-struct SetBodyPosition
-{
-	mutable entityx::Entity entity;
-	b2Vec2 position;
-};
-
-struct SetBodyAngle
-{
-	mutable entityx::Entity entity;
-	float angle;
-};
-
-struct SetLinearVelocity
-{
-	mutable entityx::Entity entity;
-	b2Vec2 velocity;
-};
-
-struct SetAngularVelocity
-{
-	mutable entityx::Entity entity;
-	float velocity;
-};
-
-struct ApplyLinearImpulse
-{
-	mutable entityx::Entity entity;
-	b2Vec2 direction;
-};
-
-struct ApplyAngularImpulse
-{
-	mutable entityx::Entity entity;
-	int direction;
-};
-
-struct ApplyLinearForce
-{
-	mutable entityx::Entity entity;
-	b2Vec2 direction;
-};
-
-struct ApplyAngularForce
-{
-	mutable entityx::Entity entity;
-	int direction;
 };
 
 struct PlayAction
@@ -150,84 +91,28 @@ struct Unschedule
 	std::string key;
 };
 
-struct Seek
-{
-	mutable entityx::Entity entity;
-	b2Vec2 targetPosition;
-};
-
-struct Flee
-{
-	mutable entityx::Entity entity;
-	b2Vec2 targetPosition;
-};
-
-struct Pursue
-{
-	mutable entityx::Entity entity;
-	b2Vec2 targetPosition;
-	b2Vec2 targetVelocity;
-};
-
-struct Evade
-{
-	mutable entityx::Entity entity;
-	b2Vec2 targetPosition;
-	b2Vec2 targetVelocity;
-};
-
-struct Arrive
-{
-	mutable entityx::Entity entity;
-	b2Vec2 targetPosition;
-};
-
-struct Follow
-{
-	mutable entityx::Entity entity;
-	float targetVision;
-	b2Vec2 targetPosition;
-	b2Vec2 targetVelocity;
-};
-
-struct Wander
-{
-	mutable entityx::Entity entity;
-};
-
 struct Avoid
 {
 	mutable entityx::Entity entity;
-};
-
-struct Orbit
-{
-	mutable entityx::Entity entity;
-	b2Vec2 primaryPosition;
+	ObjectType object;
 };
 
 struct Align
 {
-
+	mutable entityx::Entity entity;
 };
 
 struct Cohesion
 {
-
+	mutable entityx::Entity entity;
 };
 
 struct Separate
 {
-
+	mutable entityx::Entity entity;
 };
 
 struct Queue
 {
-
-};
-
-struct Face
-{
 	mutable entityx::Entity entity;
-	b2Vec2 targetPosition;
 };

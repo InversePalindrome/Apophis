@@ -35,8 +35,6 @@ public:
 	virtual void receive(const entityx::ComponentAddedEvent<ParticleComponent>& event);
 	virtual void receive(const EntityParsed& event);
 	virtual void receive(const EntityDied& event);
-	virtual void receive(const SetNodePosition& event);
-	virtual void receive(const SetNodeRotation& event);
 	virtual void receive(const PlayAction& event);
 	
 private:

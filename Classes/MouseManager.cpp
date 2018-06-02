@@ -22,8 +22,7 @@ bool MouseManager::init()
 
 	mouseListener->onMouseMove = [this](auto* event)
 	{
-		mousePosition.x = event->getCursorX();
-		mousePosition.y = event->getCursorY();
+		mousePosition = convertToNodeSpace({ event->getCursorX(), event->getCursorY() });
 	};
 	mouseListener->onMouseDown = [this](auto* event)
 	{

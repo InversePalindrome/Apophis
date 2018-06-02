@@ -5,11 +5,10 @@
   </Tags>
   <Components>
     <Weapon projectileName="Laser" projectileVelocity="16" reloadTime="0.5"></Weapon>
-    <Speed linear="25" angular="100"></Speed>
-    <Impulse linear="15" angular="25"></Impulse>
+    <Speed angular="100" linear="35"></Speed>
     <Sprite>UFO</Sprite>
     <Object>Player</Object>
-    <Body type="2" linearDamping="1" x="-20" y="-20" fixedRotation="false">
+    <Body type="2" x="-20" y="-20" fixedRotation="false" linearDamping="0.4">
       <Fixture shape="circle" radius="1.6" density="0.3"></Fixture>
     </Body>
     <Sound>

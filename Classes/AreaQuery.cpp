@@ -10,7 +10,7 @@ InversePalindrome.com
 
 bool AreaQuery::ReportFixture(b2Fixture* fixture)
 {
-	queryBodies.push_back(fixture->GetBody());
+	queryEntities.push_back(static_cast<entityx::Entity*>(fixture->GetBody()->GetUserData()));
 
 	return true;
 }

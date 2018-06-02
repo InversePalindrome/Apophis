@@ -9,6 +9,8 @@ InversePalindrome.com
 
 #include "Events.hpp"
 #include "BodyComponent.hpp"
+#include "SpeedComponent.hpp"
+#include "WanderComponent.hpp"
 #include "HealthComponent.hpp"
 #include "VisionComponent.hpp"
 
@@ -21,6 +23,8 @@ struct StrikerContext
 {
 	entityx::Entity striker;
 	entityx::ComponentHandle<BodyComponent> body;
+	entityx::ComponentHandle<SpeedComponent> speed;
+	entityx::ComponentHandle<WanderComponent> wander;
 	entityx::ComponentHandle<VisionComponent> vision;
 	entityx::ComponentHandle<HealthComponent> health;
 };

@@ -11,17 +11,27 @@ InversePalindrome.com
 
 
 FlockComponent::FlockComponent(const tinyxml2::XMLElement* componentNode) :
-	groupRadius(5.f)
+	groupID(-1),
+	groupRadius(25.f)
 {
-	for (const auto* groupIDNode = componentNode->FirstChildElement("ID"); groupIDNode; groupIDNode = groupIDNode->NextSiblingElement("ID"))
+	if (const auto* groupID = componentNode->Attribute("id"))
 	{
-		groupIDs.push_back(std::stoi(groupIDNode->GetText()));
+		this->groupID = std::stof(groupID);
 	}
-
 	if (const auto* groupRadius = componentNode->Attribute("radius"))
 	{
 		this->groupRadius = std::stof(groupRadius);
 	}
+}
+
+int FlockComponent::getGroupID() const
+{
+	return groupID;
+}
+
+void FlockComponent::setGroupID(int groupID)
+{
+	this->groupID = groupID;
 }
 
 float FlockComponent::getGroupRadius() const
@@ -32,9 +42,4 @@ float FlockComponent::getGroupRadius() const
 void FlockComponent::setGroupRadius(float groupRadius)
 {
 	this->groupRadius = groupRadius;
-}
-
-const std::vector<int>& FlockComponent::getGroupIDs() 
-{
-	return groupIDs;
 }

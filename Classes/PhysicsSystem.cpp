@@ -6,15 +6,11 @@ InversePalindrome.com
 
 
 #include "PhysicsSystem.hpp"
-#include "ForceComponent.hpp"
-#include "ImpulseComponent.hpp"
 #include "AnchorPointComponent.hpp"
 #include "DistanceJointComponent.hpp"
 
 #include <Box2D/Collision/Shapes/b2CircleShape.h>
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
-
-#include <boost/math/constants/constants.hpp>
 
 #include <sstream>
 #include <variant>
@@ -34,14 +30,6 @@ void PhysicsSystem::configure(entityx::EventManager& eventManager)
 	eventManager.subscribe<entityx::ComponentRemovedEvent<BodyComponent>>(*this);
 	eventManager.subscribe<CreateBody>(*this);
 	eventManager.subscribe<CreateDistanceJoint>(*this);
-	eventManager.subscribe<SetBodyPosition>(*this);
-	eventManager.subscribe<SetBodyAngle>(*this);
-	eventManager.subscribe<SetLinearVelocity>(*this);
-	eventManager.subscribe<SetAngularVelocity>(*this);
-	eventManager.subscribe<ApplyLinearImpulse>(*this);
-	eventManager.subscribe<ApplyAngularImpulse>(*this);
-	eventManager.subscribe<ApplyLinearForce>(*this);
-	eventManager.subscribe<ApplyAngularForce>(*this);
 }
 
 void PhysicsSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
@@ -50,7 +38,7 @@ void PhysicsSystem::update(entityx::EntityManager& entityManager, entityx::Event
 	entityx::ComponentHandle<SpeedComponent> speed;
 
 	for (auto entity : entityManager.entities_with_components(body, speed))
-	{
+	{       
 		limitLinearSpeed(body, speed);
 		limitAngularSpeed(body, speed);
 	}
@@ -95,82 +83,6 @@ void PhysicsSystem::receive(const CreateDistanceJoint& event)
 	}
 }
 
-void PhysicsSystem::receive(const SetBodyPosition& event)
-{
-	if (auto body = event.entity.component<BodyComponent>())
-	{
-		body->setPosition(event.position);
-	}
-}
-
-void PhysicsSystem::receive(const SetBodyAngle& event)
-{
-	if (auto body = event.entity.component<BodyComponent>())
-	{
-		body->setAngle(event.angle);
-	}
-}
-
-void PhysicsSystem::receive(const SetLinearVelocity& event)
-{
-	if (auto body = event.entity.component<BodyComponent>())
-	{
-		body->setLinearVelocity(event.velocity);
-	}
-}
-
-void PhysicsSystem::receive(const SetAngularVelocity& event)
-{
-	if (auto body = event.entity.component<BodyComponent>())
-	{
-		body->setAngularVelocity(event.velocity);
-	}
-}
-
-void PhysicsSystem::receive(const ApplyLinearImpulse& event)
-{
-	auto body = event.entity.component<BodyComponent>();
-	auto impulse = event.entity.component<ImpulseComponent>();
-
-	if (body && impulse)
-	{
-		body->applyLinearImpulse(impulse->getLinearImpulse() * event.direction);
-	}
-}
-
-void PhysicsSystem::receive(const ApplyAngularImpulse& event)
-{
-	auto body = event.entity.component<BodyComponent>();
-	auto impulse = event.entity.component<ImpulseComponent>();
-
-	if (body && impulse)
-	{
-		body->applyAngularImpulse(impulse->getAngularImpulse() * event.direction);
-	}
-}
-
-void PhysicsSystem::receive(const ApplyLinearForce& event)
-{
-	auto body = event.entity.component<BodyComponent>();
-	auto force = event.entity.component<ForceComponent>();
-
-	if (body && force)
-	{
-		body->applyLinearForce(force->getLinearForce() * event.direction);
-	}
-}
-
-void PhysicsSystem::receive(const ApplyAngularForce& event)
-{
-	auto body = event.entity.component<BodyComponent>();
-	auto force = event.entity.component<ForceComponent>();
-
-	if (body && force)
-	{
-		body->applyRotationalForce(force->getAngularForce() * event.direction);
-	}
-}
-
 void PhysicsSystem::updateWorld()
 {
 	const float timeStep = 1.f / 60.f;
@@ -192,6 +104,6 @@ void PhysicsSystem::limitAngularSpeed(entityx::ComponentHandle<BodyComponent> bo
 {
 	if (std::fabs(body->getAngularVelocity()) > speed->getMaxAngularSpeed())
 	{
-		body->setAngularVelocity(speed->getMaxAngularSpeed() / body->getAngularVelocity());
+		body->setAngularVelocity(speed->getMaxAngularSpeed());
 	}
 }

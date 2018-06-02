@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #include "Tags.hpp"
 #include "StrikerSystem.hpp"
+#include "SteeringBehaviors.hpp"
 
 
 StrikerSystem::StrikerSystem() :
@@ -27,10 +28,11 @@ StrikerSystem::StrikerSystem() :
        {
 		   if (context.health->getCurrentHitpoints() >= context.health->getMaxHitpoints() * 0.2)
 		   {
-			   eventManager->emit(Seek{ context.striker, playerBody->getPosition() });
-			   eventManager->emit(Face{ context.striker, playerBody->getPosition() });
-	          eventManager->emit(ShootProjectile{ context.striker, playerBody->getPosition() });
-
+	           context.body->applyLinearImpulse(SteeringBehaviors::seek(context.body->getPosition(), playerBody->getPosition(), context.body->getLinearVelocity(), context.speed->getMaxLinearSpeed()));
+			   context.body->applyAngularImpulse(SteeringBehaviors::face(context.body->getPosition(), playerBody->getPosition(), context.body->getAngle(), context.body->getAngularVelocity(), context.body->getInertia()));
+			   
+			   //eventManager->emit(ShootProjectile{ context.striker, playerBody->getPosition() });
+			
 		       return beehive::Status::SUCCESS;
 	       }
 
@@ -38,18 +40,18 @@ StrikerSystem::StrikerSystem() :
       })
       .void_leaf([this](auto& context)
       {
-	      eventManager->emit(Flee{ context.striker, playerBody->getPosition() });
-		  eventManager->emit(Face{ context.striker, -playerBody->getPosition() });
+		  context.body->applyLinearImpulse(SteeringBehaviors::seek(context.body->getPosition(), -playerBody->getPosition(), context.body->getLinearVelocity(), context.speed->getMaxLinearSpeed()));
+	      context.body->applyAngularImpulse(SteeringBehaviors::face(context.body->getPosition(), -playerBody->getPosition(), context.body->getAngle(), context.body->getAngularVelocity(), context.body->getInertia()));
       }).end().end()
      .void_leaf([this](auto& context)
       {
-	     eventManager->emit(Wander{ context.striker });
-		 eventManager->emit(Face{ context.striker, context.body->getPosition() + context.body->getLinearVelocity() });
+		  context.body->applyLinearImpulse(SteeringBehaviors::wander(context.body->getPosition(), context.body->getLinearVelocity(), context.wander->getWanderDistance(), context.wander->getWanderRadius(), context.wander->getWanderRate(), context.wander->getWanderAngle(), context.speed->getMaxLinearSpeed()));
+		  context.body->applyAngularImpulse(SteeringBehaviors::face(context.body->getPosition(), context.body->getPosition() + context.body->getLinearVelocity(), context.body->getAngle(), context.body->getAngularVelocity(), context.body->getInertia()));
       })
       .end().build())
 {
 }
-
+	  
 void StrikerSystem::configure(entityx::EventManager& eventManager)
 {
 	this->eventManager = &eventManager;
@@ -61,12 +63,14 @@ void StrikerSystem::update(entityx::EntityManager& entityManager, entityx::Event
 {
 	entityx::ComponentHandle<Striker> striker;
 	entityx::ComponentHandle<BodyComponent> body;
+	entityx::ComponentHandle<SpeedComponent> speed;
+	entityx::ComponentHandle<WanderComponent> wander;
 	entityx::ComponentHandle<VisionComponent> vision;
 	entityx::ComponentHandle<HealthComponent> health;
 
-	for (auto entity : entityManager.entities_with_components(striker, body, vision, health))
+	for (auto entity : entityManager.entities_with_components(striker, body, speed, wander, vision, health))
 	{
-		strikerTree.process(StrikerContext{ entity, body, vision, health });
+		strikerTree.process(StrikerContext{ entity, body, speed, wander, vision, health });
 	}
 }
 

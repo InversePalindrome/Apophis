@@ -48,7 +48,7 @@ public:
 	void applyAngularImpulse(float angularImpulse);
 
 	void applyLinearForce(const b2Vec2& linearForce);
-	void applyRotationalForce(float angularForce);
+	void applyAngularForce(float angularForce);
 
 	bool contains(const b2Vec2& point) const;
 	bool raycast(b2RayCastOutput& output, const b2RayCastInput& input) const;

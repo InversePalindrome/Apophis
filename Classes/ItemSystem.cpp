@@ -14,6 +14,7 @@ InversePalindrome.com
 #include "HealthComponent.hpp"
 #include "WeaponComponent.hpp"
 #include "PowerUpComponent.hpp"
+#include "ConversionUtility.hpp"
 
 
 ItemSystem::ItemSystem(EntityParser& entityParser) :
@@ -37,21 +38,25 @@ void ItemSystem::update(entityx::EntityManager& entityManager, entityx::EventMan
 void ItemSystem::receive(const EntityDied& event)
 {
 	auto drop = event.entity.component<DropComponent>();
-	auto node = event.entity.component<NodeComponent>();
 	auto body = event.entity.component<BodyComponent>();
 
-	if (drop && node && body)
+	if (drop && body)
 	{
 		const auto& item = drop->getItem();
-		const auto& nodePosition = node->getPosition();
 		const auto& bodyPosition = body->getPosition();
 
-		eventManager->emit(ScheduleOnce{ event.entity, [this, item, nodePosition, bodyPosition](auto dt)
+		eventManager->emit(ScheduleOnce{ event.entity, [this, item, bodyPosition](auto dt)
 		{
 			auto itemEntity = entityParser.createEntity(item);
 
-			eventManager->emit(SetNodePosition{ itemEntity, nodePosition });
-			eventManager->emit(SetBodyPosition{ itemEntity, bodyPosition });
+			if (auto itemNode = itemEntity.assign<NodeComponent>())
+			{
+				itemNode->setPosition(Utility::worldToScreenCoordinates(bodyPosition);
+			}
+			if (auto itemBody = itemEntity.assign<BodyComponent>())
+			{
+				itemBody->setPosition(bodyPosition);
+			}
 		}, 0.f, "CreateDrop" });
 	}
 }

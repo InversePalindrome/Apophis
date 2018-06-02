@@ -7,9 +7,9 @@ InversePalindrome.com
 
 #include "Tags.hpp"
 #include "Constants.hpp"
-#include "MathUtility.hpp"
 #include "BodyComponent.hpp"
 #include "GraphicsSystem.hpp"
+#include "ConversionUtility.hpp"
 #include "AnimationComponent.hpp"
 
 #include <cocos/base/CCDirector.h>
@@ -31,8 +31,6 @@ void GraphicsSystem::configure(entityx::EventManager& eventManager)
 	eventManager.subscribe<entityx::ComponentAddedEvent<ParticleComponent>>(*this);
 	eventManager.subscribe<EntityParsed>(*this);
 	eventManager.subscribe<EntityDied>(*this);
-	eventManager.subscribe<SetNodePosition>(*this);
-	eventManager.subscribe<SetNodeRotation>(*this);
 	eventManager.subscribe<PlayAction>(*this);
 }
 
@@ -43,7 +41,7 @@ void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::Even
 
 	for (auto entity : entityManager.entities_with_components(node, body))
 	{
-		node->setPosition({ body->getPosition().x * Constants::PTM_RATIO, body->getPosition().y * Constants::PTM_RATIO });
+		node->setPosition(Utility::worldToScreenCoordinates(body->getPosition()));
 		node->setRotation(Utility::radiansToDegrees(body->getAngle()));
 	}
 
@@ -91,22 +89,6 @@ void GraphicsSystem::receive(const EntityDied& event)
 	if (event.entity.has_component<Player>())
 	{
 		gameNode->getEventDispatcher()->dispatchCustomEvent("gameOver");
-	}
-}
-
-void GraphicsSystem::receive(const SetNodePosition& event)
-{
-	if (auto node = event.entity.component<NodeComponent>())
-	{
-		node->setPosition(event.position);
-	}
-}
-
-void GraphicsSystem::receive(const SetNodeRotation& event)
-{
-	if (auto node = event.entity.component<NodeComponent>())
-	{
-		node->setRotation(event.rotation);
 	}
 }
 
