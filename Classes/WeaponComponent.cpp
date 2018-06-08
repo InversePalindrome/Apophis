@@ -9,7 +9,7 @@ InversePalindrome.com
 
 
 WeaponComponent::WeaponComponent(const tinyxml2::XMLElement* componentNode) :
-	reloadTime(1.f),
+	reloadTime(1000),
 	reloadStatus(true)
 {
 	if (const auto* projectileName = componentNode->Attribute("projectileName"))
@@ -18,7 +18,7 @@ WeaponComponent::WeaponComponent(const tinyxml2::XMLElement* componentNode) :
 	}
 	if (const auto* reloadTime = componentNode->Attribute("reloadTime"))
 	{
-		this->reloadTime = std::stof(reloadTime);
+		this->reloadTime = std::chrono::milliseconds(std::stoi(reloadTime));
 	}
 }
 
@@ -32,12 +32,12 @@ void WeaponComponent::setProjectileName(const std::string& projectileName)
 	this->projectileName = projectileName;
 }
 
-float WeaponComponent::getReloadTime() const
+std::chrono::milliseconds WeaponComponent::getReloadTime() const
 {
 	return reloadTime;
 }
 
-void WeaponComponent::setReloadTime(float reloadTime)
+void WeaponComponent::setReloadTime(std::chrono::milliseconds reloadTime)
 {
 	this->reloadTime = reloadTime;
 }

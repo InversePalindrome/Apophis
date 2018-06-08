@@ -9,6 +9,8 @@ InversePalindrome.com
 
 #include <tinyxml2/tinyxml2.h>
 
+#include <chrono>
+
 
 class PowerUpComponent
 {
@@ -18,10 +20,10 @@ public:
 	float getEffectBoost() const;
 	void setEffectBoost(float effectBoost);
 
-	float getEffectTime() const;
-	void setEffectTime(float effectTime);
+	std::chrono::milliseconds getEffectTime() const;
+	void setEffectTime(std::chrono::milliseconds effectTime);
 
 private:
 	float effectBoost;
-	float effectTime;
+	std::chrono::milliseconds effectTime;
 };

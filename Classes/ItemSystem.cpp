@@ -42,22 +42,16 @@ void ItemSystem::receive(const EntityDied& event)
 
 	if (drop && body)
 	{
-		const auto& item = drop->getItem();
-		const auto& bodyPosition = body->getPosition();
+		auto dropEntity = entityParser.createEntity(drop->getItem());
 
-		eventManager->emit(ScheduleOnce{ event.entity, [this, item, bodyPosition](auto dt)
+		if (auto dropNode = dropEntity.component<NodeComponent>())
 		{
-			auto itemEntity = entityParser.createEntity(item);
-
-			if (auto itemNode = itemEntity.assign<NodeComponent>())
-			{
-				itemNode->setPosition(Utility::worldToScreenCoordinates(bodyPosition);
-			}
-			if (auto itemBody = itemEntity.assign<BodyComponent>())
-			{
-				itemBody->setPosition(bodyPosition);
-			}
-		}, 0.f, "CreateDrop" });
+		    dropNode->setPosition(Utility::worldToScreenCoordinates(body->getPosition()));
+		}
+		if (auto dropBody = dropEntity.component<BodyComponent>())
+		{
+			dropBody->setPosition(body->getPosition());
+		}
 	}
 }
 
@@ -80,7 +74,6 @@ void ItemSystem::receive(const PickedUpItem& event)
 	}
 
 	eventManager->emit(PlayAction{ event.itemEntity, "Pickup", false });
-	eventManager->emit(ScheduleOnce{ event.itemEntity, [event](auto dt) { event.itemEntity.destroy(); }, 0.f, "Destroy"});
 }
 
 void ItemSystem::addWeapon(entityx::Entity entity, entityx::Entity itemEntity)
@@ -97,18 +90,21 @@ void ItemSystem::addRegenBoost(entityx::Entity entity, entityx::Entity itemEntit
 	auto itemPowerUp = itemEntity.component<PowerUpComponent>();
 
 	if (entityHealth && itemPowerUp)
-	{
+	{ 
 		auto effectBoost = itemPowerUp->getEffectBoost();
-
-		eventManager->emit(Schedule{ entity, [entityHealth, effectBoost](auto dt) mutable
+		
+		timer.add(itemPowerUp->getEffectTime(), [entityHealth, effectBoost](auto id) mutable
 		{
-			auto regenHealth = entityHealth->getCurrentHitpoints() + effectBoost;
-
-			if (regenHealth <= entityHealth->getMaxHitpoints())
+			if (entityHealth)
 			{
-				entityHealth->setCurrentHitpoints(regenHealth);
+				auto regenHealth = entityHealth->getCurrentHitpoints() + effectBoost;
+
+				if (regenHealth <= entityHealth->getMaxHitpoints())
+				{
+					entityHealth->setCurrentHitpoints(regenHealth);
+				}
 			}
-		}, 1.f, static_cast<unsigned int>(itemPowerUp->getEffectTime()), 0.f, "RegenBoost" });
+		});
 	}
 }
 
@@ -123,9 +119,12 @@ void ItemSystem::addSpeedBoost(entityx::Entity entity, entityx::Entity itemEntit
 
 		entitySpeed->setMaxLinearSpeed(entitySpeed->getMaxLinearSpeed() * (1 + itemPowerUp->getEffectBoost()));
 
-		eventManager->emit(ScheduleOnce{ entity, [entitySpeed, originalSpeed](auto dt) mutable
+		timer.add(itemPowerUp->getEffectTime(), [entitySpeed, originalSpeed](auto id) mutable
 		{
-			entitySpeed->setMaxLinearSpeed(originalSpeed);
-		}, itemPowerUp->getEffectTime(), "SpeedBoost" });
+			if (entitySpeed)
+			{
+				entitySpeed->setMaxLinearSpeed(originalSpeed);
+			}
+		});
 	}
 }

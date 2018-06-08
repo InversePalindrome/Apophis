@@ -38,8 +38,8 @@ struct ShootProjectile
 
 struct CreateBody
 {
-	mutable entityx::Entity entity;
 	const tinyxml2::XMLElement* bodyNode;
+	entityx::Entity entity;
 };
 
 struct CreateDistanceJoint
@@ -65,30 +65,6 @@ struct PickedUpItem
 {
 	mutable entityx::Entity entity;
 	mutable entityx::Entity itemEntity;
-};
-
-struct ScheduleOnce
-{
-	mutable entityx::Entity entity;
-	std::function<void(float)> callback;
-	float delay;
-	std::string key;
-};
-
-struct Schedule
-{
-	mutable entityx::Entity entity;
-	std::function<void(float)> callback;
-	float interval;
-	unsigned int repeat;
-	float delay;
-	std::string key;
-};
-
-struct Unschedule
-{
-	mutable entityx::Entity entity;
-	std::string key;
 };
 
 struct Avoid

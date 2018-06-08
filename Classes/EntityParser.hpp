@@ -34,6 +34,6 @@ private:
 	entityx::EntityManager& entityManager;
 	entityx::EventManager& eventManager;
 	
-	std::unordered_map<std::string, std::function<void(entityx::Entity)>> tagParsers;
 	std::unordered_map<std::string, std::function<void(entityx::Entity, const tinyxml2::XMLElement*)>> componentParsers;
+	std::unordered_map<std::string, std::function<void(entityx::Entity)>> tagParsers;
 };

@@ -32,7 +32,7 @@ bool StartNode::init()
 	keyboardManager = KeyboardManager::create();
 	keyboardManager->retain();
 
-	const auto& windowSize = cocos2d::Director::getInstance()->getVisibleSize();
+	auto windowSize = cocos2d::Director::getInstance()->getVisibleSize();
 
 	auto* background = cocos2d::Sprite::create("SpaceBackground.png");
 	background->setPosition(windowSize.width / 2.f, windowSize.height / 2.f);

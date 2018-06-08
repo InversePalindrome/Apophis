@@ -27,8 +27,8 @@ Map::Map(EntityParser& entityParser, entityx::EventManager& eventManager) :
 void Map::load(const std::string& fileName)
 {
 	auto* fileUtils = cocos2d::FileUtils::getInstance();
-	const auto& path = fileUtils->fullPathForFilename(fileName + ".xml");
-	const auto& data = fileUtils->getStringFromFile(path);
+	auto path = fileUtils->fullPathForFilename(fileName + ".xml");
+	auto data = fileUtils->getStringFromFile(path);
 
 	tinyxml2::XMLDocument doc;
 	doc.Parse(data.c_str());

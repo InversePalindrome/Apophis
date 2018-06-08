@@ -5,15 +5,10 @@ InversePalindrome.com
 */
 
 
+#include "BodyParser.hpp"
 #include "PhysicsSystem.hpp"
 #include "AnchorPointComponent.hpp"
 #include "DistanceJointComponent.hpp"
-
-#include <Box2D/Collision/Shapes/b2CircleShape.h>
-#include <Box2D/Collision/Shapes/b2PolygonShape.h>
-
-#include <sstream>
-#include <variant>
 
 
 PhysicsSystem::PhysicsSystem(entityx::EntityManager& entityManager, entityx::EventManager& eventManager) :
@@ -38,11 +33,13 @@ void PhysicsSystem::update(entityx::EntityManager& entityManager, entityx::Event
 	entityx::ComponentHandle<SpeedComponent> speed;
 
 	for (auto entity : entityManager.entities_with_components(body, speed))
-	{       
+	{        
 		limitLinearSpeed(body, speed);
 		limitAngularSpeed(body, speed);
 	}
-	
+
+	createBodies();
+	removeBodies();
 	updateWorld();
 }
 
@@ -52,22 +49,39 @@ void PhysicsSystem::receive(const entityx::EntityDestroyedEvent& event)
 
 	if (auto body = entity.component<BodyComponent>())
 	{
-		delete static_cast<entityx::Entity*>(body->getUserData());
-
-		world.DestroyBody(body->getBody());
+		deletionBodies.push_back(body->getBody());
 	}
 }
 
 void PhysicsSystem::receive(const entityx::ComponentRemovedEvent<BodyComponent>& event)
 {
-	delete static_cast<entityx::Entity*>(event.component->getUserData());
-
-    world.DestroyBody(event.component->getBody());
+	deletionBodies.push_back(event.component->getBody());
 }
 
 void PhysicsSystem::receive(const CreateBody& event)
 {
-	event.entity.assign<BodyComponent>(event.bodyNode, world)->setUserData(new entityx::Entity(event.entity));
+	auto bodyDef = BodyParser::createBodyDef(event.bodyNode);
+	bodyDef.userData = new entityx::Entity(event.entity);
+
+	std::vector<std::pair<b2FixtureDef, std::variant<b2CircleShape, b2PolygonShape>>> fixtureDefs;
+
+	for (const auto* fixtureNode = event.bodyNode->FirstChildElement(); fixtureNode; fixtureNode = fixtureNode->NextSiblingElement())
+	{
+		std::variant<b2CircleShape, b2PolygonShape> shape;
+
+		if (std::strcmp(fixtureNode->Value(), "Circle") == 0)
+		{
+			shape = BodyParser::createCircle(fixtureNode);
+		}
+		else if (std::strcmp(fixtureNode->Value(), "Polygon") == 0)
+		{
+			shape = BodyParser::createPolygon(fixtureNode);
+		}
+		
+		fixtureDefs.push_back({BodyParser::createFixtureDef(fixtureNode), shape });
+	}
+
+	bodiesDefinitions.push_back({ bodyDef, fixtureDefs });
 }
 
 void PhysicsSystem::receive(const CreateDistanceJoint& event)
@@ -90,6 +104,39 @@ void PhysicsSystem::updateWorld()
 	const int positionIterations = 2;
 
 	world.Step(timeStep, velocityIterations, positionIterations);
+}
+
+void PhysicsSystem::createBodies()
+{
+	for (auto& bodyDefinition : bodiesDefinitions)
+	{
+		auto* body = world.CreateBody(&bodyDefinition.bodyDef);
+
+		for (auto& [fixtureDef, shape] : bodyDefinition.fixtureDefs)
+		{
+			std::visit([&body, &fixtureDef](auto& shapeValue) 
+			{
+				fixtureDef.shape = &shapeValue;
+				body->CreateFixture(&fixtureDef);
+			}, shape);
+		}
+
+		static_cast<entityx::Entity*>(bodyDefinition.bodyDef.userData)->assign<BodyComponent>(body);
+	}
+
+	bodiesDefinitions.clear();
+}
+
+void PhysicsSystem::removeBodies()
+{
+	for (const auto& body : deletionBodies)
+	{
+		delete static_cast<entityx::Entity*>(body->GetUserData());
+
+		world.DestroyBody(body);
+	}
+
+	deletionBodies.clear();
 }
 
 void PhysicsSystem::limitLinearSpeed(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<SpeedComponent> speed)

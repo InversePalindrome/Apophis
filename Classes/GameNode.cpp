@@ -19,7 +19,6 @@ InversePalindrome.com
 #include "OrbitalSystem.hpp"
 #include "StrikerSystem.hpp"
 #include "GraphicsSystem.hpp"
-#include "SchedulingSystem.hpp"
 
 #include <entityx/deps/Dependencies.h>
 
@@ -72,10 +71,10 @@ bool GameNode::init()
 	map.load("Andromeda");
 	entityParser.createEntity("UFO");
 	entityParser.createEntity("SpaceCruiser");
-	auto planet = entityParser.createEntity("Planet");
-	auto asteroid = entityParser.createEntity("RockAsteroid");
+	//auto planet = entityParser.createEntity("Planet");
+	//auto asteroid = entityParser.createEntity("BlueAsteroid");
 
-    eventManager.emit(CreateDistanceJoint{ planet, asteroid });
+   // eventManager.emit(CreateDistanceJoint{ planet, asteroid });
 
 	return true;
 }
@@ -108,7 +107,6 @@ void GameNode::initSystems()
 	systemManager.add<StrikerSystem>();
 	systemManager.add<PlayerSystem>(keyboardManager, mouseManager);
 	systemManager.add<AudioSystem>();
-	systemManager.add<SchedulingSystem>();
 	systemManager.add<OrbitalSystem>();
 	systemManager.add<ItemSystem>(entityParser);
 	systemManager.add<PhysicsSystem>(entityManager, eventManager);

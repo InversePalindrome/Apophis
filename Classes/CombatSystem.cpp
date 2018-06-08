@@ -52,19 +52,27 @@ void CombatSystem::receive(const ShootProjectile& event)
 		{
 			shooterWeapon->setReloadStatus(false);
 
-			const auto& shooterBodySize = shooterBody->getAABB().upperBound - shooterBody->getAABB().lowerBound;
-
+			auto shooterBodySize = shooterBody->getAABB().upperBound - shooterBody->getAABB().lowerBound;
+	
 			auto projectileDirection = event.targetPosition - shooterBody->getPosition();
 			projectileDirection.Normalize();
 
 			b2Vec2 projectilePosition(projectileDirection.x * shooterBodySize.x, projectileDirection.y * shooterBodySize.y);
 			projectilePosition += shooterBody->getPosition();
-
+	
 			projectileNode->setPosition(Utility::worldToScreenCoordinates(projectilePosition));
 			projectileNode->setRotation(Utility::radiansToDegrees(shooterBody->getAngle()));
 			projectileBody->setPosition(projectilePosition);
 			projectileBody->setAngle(shooterBody->getAngle());
 			projectileBody->applyLinearImpulse(projectileSpeed->getMaxLinearSpeed() * projectileDirection);
+			
+			timer.add(shooterWeapon->getReloadTime(), [shooterWeapon](auto id) mutable
+			{
+				if (shooterWeapon)
+				{
+					shooterWeapon->setReloadStatus(true);
+				}
+			});
 		}
 	}
 }
@@ -95,6 +103,10 @@ void CombatSystem::receive(const ProjectileHit& event)
 		if (victimHealth->getCurrentHitpoints() <= 0.f)
 		{
 			eventManager->emit(EntityDied{ event.victim });
+
+			event.victim.destroy();
 		}
+		
+		event.projectile.destroy();
 	}
 }

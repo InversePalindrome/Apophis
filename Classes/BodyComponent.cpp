@@ -8,21 +8,11 @@ InversePalindrome.com
 #include "BodyComponent.hpp"
 
 #include <Box2D/Dynamics/b2Fixture.h>
-#include <Box2D/Collision/Shapes/b2CircleShape.h>
-#include <Box2D/Collision/Shapes/b2PolygonShape.h>
-
-#include <sstream>
-#include <variant>
 
 
-BodyComponent::BodyComponent(const tinyxml2::XMLElement* componentNode, b2World& world) 
+BodyComponent::BodyComponent(b2Body* body) :
+	body(body)
 {
-	createBody(componentNode, world);
-
-	for (const auto* fixtureNode = componentNode->FirstChildElement("Fixture"); fixtureNode; fixtureNode = fixtureNode->NextSiblingElement("Fixture"))
-	{
-		createFixture(fixtureNode);
-	}
 }
 
 b2Body* BodyComponent::getBody()
@@ -174,121 +164,4 @@ bool BodyComponent::raycast(b2RayCastOutput& output, const b2RayCastInput& input
 	}
 
 	return false;
-}
-
-void BodyComponent::createBody(const tinyxml2::XMLElement* bodyNode, b2World& world)
-{
-	b2BodyDef bodyDef;
-
-	if (const auto* bodyType = bodyNode->Attribute("type"))
-	{
-		bodyDef.type = static_cast<b2BodyType>(std::stoi(bodyType));
-	}
-	if (const auto* linearDamping = bodyNode->Attribute("linearDamping"))
-	{
-		bodyDef.linearDamping = std::stof(linearDamping);
-	}
-	if (const auto* angularDamping = bodyNode->Attribute("angularDamping"))
-	{
-		bodyDef.angularDamping = std::stof(angularDamping);
-	}
-	if (const auto* fixedRotation = bodyNode->Attribute("fixedRotation"))
-	{
-		std::istringstream iStream(fixedRotation);
-
-		iStream >> std::boolalpha >> bodyDef.fixedRotation;
-	}
-	if (const auto* bullet = bodyNode->Attribute("bullet"))
-	{
-		std::istringstream iStream(bullet);
-
-		iStream >> std::boolalpha >> bodyDef.bullet;
-	}
-	if (const auto* x = bodyNode->Attribute("x"))
-	{
-		bodyDef.position.x = std::stof(x);
-	}
-	if (const auto* y = bodyNode->Attribute("y"))
-	{
-		bodyDef.position.y = std::stof(y);
-	}
-	if (const auto* angle = bodyNode->Attribute("angle"))
-	{
-		bodyDef.angle = std::stof(angle);
-	}
-	
-	body = world.CreateBody(&bodyDef);
-}
-
-void BodyComponent::createFixture(const tinyxml2::XMLElement* fixtureNode)
-{
-	b2FixtureDef fixtureDef;
-
-	std::variant<b2CircleShape, b2PolygonShape> fixtureShape;
-
-	if (const auto* shape = fixtureNode->Attribute("shape"))
-	{
-		if (std::strcmp(shape, "circle") == 0)
-		{
-			b2CircleShape circleShape;
-
-			if (const auto* x = fixtureNode->Attribute("x"))
-			{
-				circleShape.m_p.x = std::stof(x);
-			}
-			if (const auto* y = fixtureNode->Attribute("y"))
-			{
-				circleShape.m_p.y = std::stof(y);
-			}
-			if (const auto* radius = fixtureNode->Attribute("radius"))
-			{
-				circleShape.m_radius = std::stof(radius);
-			}
-			
-			fixtureShape = circleShape;
-
-			fixtureDef.shape = &std::get<0>(fixtureShape);
-		}
-		else if (std::strcmp(shape, "polygon") == 0)
-		{
-			b2PolygonShape polyShape;
-
-			if (const auto* x = fixtureNode->Attribute("x"))
-			{
-			    polyShape.m_centroid.x = std::stof(x);
-			}
-			if (const auto* y = fixtureNode->Attribute("y"))
-			{
-				polyShape.m_centroid.y = std::stof(y);
-			}
-
-			const auto* width = fixtureNode->Attribute("width");
-			const auto* height = fixtureNode->Attribute("height");
-
-			if (width && height)
-			{
-				polyShape.SetAsBox(std::stof(width), std::stof(height));
-			}
-
-			fixtureShape = polyShape;
-
-			fixtureDef.shape = &std::get<1>(fixtureShape);
-		}
-	}
-	if (const auto* density = fixtureNode->Attribute("density"))
-	{
-		fixtureDef.density = std::stof(density);
-	}
-	if (const auto* restitution = fixtureNode->Attribute("restitution"))
-	{
-		fixtureDef.restitution = std::stof(restitution);
-	}
-	if (const auto* sensor = fixtureNode->Attribute("sensor"))
-	{
-		std::istringstream iStream(sensor);
-
-		iStream >> std::boolalpha >> fixtureDef.isSensor;
-	}
-	
-	body->CreateFixture(&fixtureDef);
 }

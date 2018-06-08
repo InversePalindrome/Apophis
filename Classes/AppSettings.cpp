@@ -66,8 +66,8 @@ void AppSettings::setKeyBinding(KeyAction keyAction, cocos2d::EventKeyboard::Key
 void AppSettings::load(const std::string& filename)
 {
 	auto* fileUtils = cocos2d::FileUtils::getInstance();
-	const auto& path = fileUtils->fullPathForFilename(filename);
-	const auto& data = fileUtils->getStringFromFile(path);
+	auto path = fileUtils->fullPathForFilename(filename);
+    auto data = fileUtils->getStringFromFile(path);
 
 	tinyxml2::XMLDocument doc;
 	doc.Parse(data.c_str());
@@ -131,7 +131,7 @@ void AppSettings::save(const std::string& filename)
 
 	doc.LinkEndChild(settingsNode);
 
-	const auto& path = cocos2d::FileUtils::getInstance()->getWritablePath() + filename;
+	auto path = cocos2d::FileUtils::getInstance()->getWritablePath() + filename;
 
 	doc.SaveFile(path.c_str());
 }

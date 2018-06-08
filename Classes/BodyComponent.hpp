@@ -10,13 +10,11 @@ InversePalindrome.com
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2World.h>
 
-#include <tinyxml2/tinyxml2.h>
-
 
 class BodyComponent
 {
 public:
-	BodyComponent(const tinyxml2::XMLElement* componentNode, b2World& world);
+	explicit BodyComponent(b2Body* body);
 
 	b2Body* getBody();
 	b2Body* getBody() const;
@@ -55,7 +53,4 @@ public:
 
 private:
 	b2Body* body;
-
-	void createBody(const tinyxml2::XMLElement* bodyNode, b2World& world);
-	void createFixture(const tinyxml2::XMLElement* fixtureNode);
 };

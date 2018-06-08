@@ -41,9 +41,6 @@ EntityParser::EntityParser(entityx::EntityManager& entityManager, entityx::Event
 	entityManager(entityManager),
 	eventManager(eventManager)
 {
-	tagParsers.emplace("Player", [](auto entity) { entity.assign<Player>(); });
-	tagParsers.emplace("Striker", [](auto entity) { entity.assign<Striker>(); });
-
 	componentParsers.emplace("Object", [](auto entity, const auto* componentNode) { entity.assign<ObjectComponent>(componentNode); });
 	componentParsers.emplace("Pursue", [](auto entity, const auto* componentNode) { entity.assign<PursueComponent>(componentNode); });
 	componentParsers.emplace("Avoid", [](auto entity, const auto* componentNode) { entity.assign<AvoidComponent>(componentNode); });
@@ -52,7 +49,7 @@ EntityParser::EntityParser(entityx::EntityManager& entityManager, entityx::Event
 	componentParsers.emplace("Flock", [](auto entity, const auto* componentNode) { entity.assign<FlockComponent>(componentNode); });
 	componentParsers.emplace("Follow", [](auto entity, const auto* componentNode) { entity.assign<FollowComponent>(componentNode); });
 	componentParsers.emplace("Queue", [](auto entity, const auto* componentNode) { entity.assign<QueueComponent>(componentNode); });
-	componentParsers.emplace("Body", [&eventManager](auto entity, const auto* componentNode) { eventManager.emit(CreateBody{ entity, componentNode }); });
+	componentParsers.emplace("Body", [&eventManager](auto entity, const auto* componentNode) { eventManager.emit(CreateBody{ componentNode, entity }); });
 	componentParsers.emplace("Sprite", [](auto entity, const auto* componentNode) { entity.assign<SpriteComponent>(componentNode); });
 	componentParsers.emplace("Label", [](auto entity, const auto* componentNode) { entity.assign<LabelComponent>(componentNode); });
 	componentParsers.emplace("Particle", [](auto entity, const auto* componentNode) { entity.assign<ParticleComponent>(componentNode); });
@@ -69,6 +66,9 @@ EntityParser::EntityParser(entityx::EntityManager& entityManager, entityx::Event
 	componentParsers.emplace("Speed", [](auto entity, const auto* componentNode) { entity.assign<SpeedComponent>(componentNode); });
 	componentParsers.emplace("AnchorPoint", [](auto entity, const auto* componentNode) { entity.assign<AnchorPointComponent>(componentNode); });
 	componentParsers.emplace("PowerUp", [](auto entity, const auto* componentNode) { entity.assign<PowerUpComponent>(componentNode); });
+
+	tagParsers.emplace("Player", [](auto entity) { entity.assign<Player>(); });
+	tagParsers.emplace("Striker", [](auto entity) { entity.assign<Striker>(); });
 }
 
 entityx::Entity EntityParser::createEntity(const std::string& filename)
@@ -76,31 +76,31 @@ entityx::Entity EntityParser::createEntity(const std::string& filename)
 	auto entity = entityManager.create();
 
 	auto* fileUtils = cocos2d::FileUtils::getInstance();
-	const auto& path = fileUtils->fullPathForFilename(filename + ".xml");
-	const auto& data = fileUtils->getStringFromFile(path);
+	auto path = fileUtils->fullPathForFilename(filename + ".xml");
+	auto data = fileUtils->getStringFromFile(path);
 
 	tinyxml2::XMLDocument doc;
 	doc.Parse(data.c_str());
 
 	if (const auto* entityNode = doc.RootElement())
 	{
-		if (const auto* tagsNode = entityNode->FirstChildElement("Tags"))
-		{
-			for (const auto* tagNode = tagsNode->FirstChildElement(); tagNode; tagNode = tagNode->NextSiblingElement())
-			{
-				if (tagParsers.count(tagNode->Value()))
-				{
-					tagParsers.at(tagNode->Value())(entity);
-				}
-			}
-		}
-		if (const auto* componentsNode = entityNode->FirstChildElement("Components"))
+		for (const auto* componentsNode = entityNode->FirstChildElement("Components"); componentsNode; componentsNode = componentsNode->NextSiblingElement("Components"))
 		{
 			for (const auto* componentNode = componentsNode->FirstChildElement(); componentNode; componentNode = componentNode->NextSiblingElement())
 			{
 				if (componentParsers.count(componentNode->Value()))
 				{
 					componentParsers.at(componentNode->Value())(entity, componentNode);
+				}
+			}
+		}
+		for(const auto* tagsNode = entityNode->FirstChildElement("Tags"); tagsNode; tagsNode = tagsNode->NextSiblingElement("Tags"))
+		{
+			for (const auto* tagNode = tagsNode->FirstChildElement(); tagNode; tagNode = tagNode->NextSiblingElement())
+			{
+				if (tagParsers.count(tagNode->Value()))
+				{
+					tagParsers.at(tagNode->Value())(entity);
 				}
 			}
 		}

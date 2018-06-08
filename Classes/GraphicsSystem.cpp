@@ -29,7 +29,7 @@ void GraphicsSystem::configure(entityx::EventManager& eventManager)
 	eventManager.subscribe<entityx::ComponentAddedEvent<SpriteComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<LabelComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<ParticleComponent>>(*this);
-	eventManager.subscribe<EntityParsed>(*this);
+	eventManager.subscribe<entityx::ComponentAddedEvent<Player>>(*this);
 	eventManager.subscribe<EntityDied>(*this);
 	eventManager.subscribe<PlayAction>(*this);
 }
@@ -75,13 +75,12 @@ void GraphicsSystem::receive(const entityx::ComponentAddedEvent<ParticleComponen
 	entity.assign<NodeComponent>(event.component->getParticleSystem());
 }
 
-void GraphicsSystem::receive(const EntityParsed& event)
+void GraphicsSystem::receive(const entityx::ComponentAddedEvent<Player>& event)
 {
-	if (event.entity.has_component<Player>())
-	{
-		playerNode = event.entity.component<NodeComponent>();
-		playerHealth = event.entity.component<HealthComponent>();
-	}
+	auto player = event.entity;
+
+	playerNode = player.component<NodeComponent>();
+	playerHealth = player.component<HealthComponent>();
 }
 
 void GraphicsSystem::receive(const EntityDied& event)
@@ -114,8 +113,8 @@ void GraphicsSystem::updateView()
 {
 	if (playerNode.valid())
 	{
-		const auto& worldPoint = gameNode->convertToWorldSpace(playerNode->getPosition());
-		const auto& windowSize = cocos2d::Director::getInstance()->getWinSize();
+		auto worldPoint = gameNode->convertToWorldSpace(playerNode->getPosition());
+		auto windowSize = cocos2d::Director::getInstance()->getWinSize();
 	
 		if (std::abs(playerNode->getPosition().x) < map.getDimensions().x * Constants::PTM_RATIO / 2.f - windowSize.width / 2.f)
 		{
@@ -132,7 +131,7 @@ void GraphicsSystem::updateHealthBar()
 {
 	if (playerHealth.valid())
 	{
-		float healthPercent = playerHealth->getCurrentHitpoints() / playerHealth->getMaxHitpoints() * 100.f;
+		auto healthPercent = playerHealth->getCurrentHitpoints() / playerHealth->getMaxHitpoints() * 100.f;
 
 		gameNode->getEventDispatcher()->dispatchCustomEvent("setHealthBar", &healthPercent);
 	}

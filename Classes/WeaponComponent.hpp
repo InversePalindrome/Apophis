@@ -10,6 +10,7 @@ InversePalindrome.com
 #include <tinyxml2/tinyxml2.h>
 
 #include <string>
+#include <chrono>
 
 
 class WeaponComponent
@@ -20,14 +21,14 @@ public:
 	std::string getProjectileName() const;
 	void setProjectileName(const std::string& projectileName);
 
-	float getReloadTime() const;
-	void setReloadTime(float reloadTime);
+	std::chrono::milliseconds getReloadTime() const;
+	void setReloadTime(std::chrono::milliseconds reloadTime);
 
 	bool isReloaded() const;
 	void setReloadStatus(bool reloadStatus);
 
 private:
 	std::string projectileName;
-	float reloadTime;
+	std::chrono::milliseconds reloadTime;
 	bool reloadStatus;
 };

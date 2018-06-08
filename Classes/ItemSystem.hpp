@@ -12,6 +12,8 @@ InversePalindrome.com
 
 #include <entityx/System.h>
 
+#include <cpptime.h>
+
 
 class ItemSystem : public entityx::System<ItemSystem>, public entityx::Receiver<ItemSystem>
 {
@@ -26,6 +28,8 @@ public:
 private:
 	EntityParser& entityParser;
 	entityx::EventManager* eventManager;
+
+	CppTime::Timer timer;
 
 	void addWeapon(entityx::Entity entity, entityx::Entity itemEntity);
 	void addRegenBoost(entityx::Entity entity, entityx::Entity itemEntity);

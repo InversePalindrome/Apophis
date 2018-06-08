@@ -71,6 +71,6 @@ void PlayerSystem::updateShooting(entityx::EventManager& eventManager, entityx::
 {
 	if (mouseManager->isMousePressed())
 	{
-		eventManager.emit(ShootProjectile{ player,  Utility::screenToWorldCoordinates(mouseManager->getPosition()) });
+		eventManager.emit(ShootProjectile{ player,  Utility::screenToWorldCoordinates(mouseManager->getMousePosition()) });
 	}
 }

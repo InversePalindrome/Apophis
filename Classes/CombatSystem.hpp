@@ -12,6 +12,8 @@ InversePalindrome.com
 
 #include <entityx/System.h>
 
+#include <cpptime.h>
+
 
 class CombatSystem : public entityx::System<CombatSystem>, public entityx::Receiver<CombatSystem>
 {
@@ -27,4 +29,6 @@ public:
 private:
 	EntityParser& entityParser;
 	entityx::EventManager* eventManager;
+
+	CppTime::Timer timer;
 };

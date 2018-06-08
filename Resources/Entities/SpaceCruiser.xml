@@ -7,7 +7,7 @@
     <Sprite>SpaceCruiser</Sprite>
     <Object>Enemy</Object>
     <Body type="2" x="-5" y="-18" fixedRotation="false">
-      <Fixture shape="circle" radius="1.6" density="0.3"></Fixture>
+      <Circle radius="1.6" density="0.3"></Circle>
     </Body>
     <Speed angular="10"></Speed>
     <Weapon projectileName="Laser" projectileVelocity="16" reloadTime="0.5"></Weapon>

@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
+  <Tags>
+  </Tags>
   <Components>
     <Sprite>BlueAsteroid</Sprite>
-    <Object Asteroid=""></Object>
-    <Body type="0">
-      <Fixture shape="circle" radius="1.8"></Fixture>
+    <Object>Asteroid</Object>
+    <Body type="2" x="30" y="0">
+      <Fixture shape="circle" radius="1.8" density="0.3"></Fixture>
     </Body>
+    <Impulse>5</Impulse>
+    <Speed linear="15"></Speed>
+    <AnchorPoint></AnchorPoint>
+    <Satellite>2</Satellite>
   </Components>
 </Entity>

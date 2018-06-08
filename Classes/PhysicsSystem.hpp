@@ -9,12 +9,16 @@ InversePalindrome.com
 
 #include "Events.hpp"
 #include "BodyComponent.hpp"
+#include "BodyDefinition.hpp"
 #include "SpeedComponent.hpp"
 #include "CollisionManager.hpp"
 
 #include <Box2D/Dynamics/b2World.h>
 
 #include <entityx/System.h>
+
+#include <vector>
+#include <memory>
 
 
 class PhysicsSystem : public entityx::System<PhysicsSystem>, public entityx::Receiver<PhysicsSystem>
@@ -35,7 +39,12 @@ private:
 	
 	entityx::EntityManager& entityManager;
 
+	std::vector<BodyDefinition> bodiesDefinitions;
+	std::vector<b2Body*> deletionBodies;
+
 	void updateWorld();
+	void createBodies();
+	void removeBodies();
 
 	static void limitLinearSpeed(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<SpeedComponent> speed);
 	static void limitAngularSpeed(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<SpeedComponent> speed);

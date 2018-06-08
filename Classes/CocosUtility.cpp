@@ -16,8 +16,8 @@ InversePalindrome.com
 void CocosUtility::createSearchPaths(const std::string& filename)
 {
     auto* files = cocos2d::FileUtils::getInstance();
-	const auto& path = files->fullPathForFilename(filename + ".xml");
-	const auto& data = files->getStringFromFile(path);
+	auto path = files->fullPathForFilename(filename + ".xml");
+	auto data = files->getStringFromFile(path);
 
 	tinyxml2::XMLDocument doc;
 	doc.Parse(data.c_str());
@@ -34,8 +34,8 @@ void CocosUtility::createSearchPaths(const std::string& filename)
 void CocosUtility::initSpriteFrames(const std::string& filename)
 {
 	auto* files = cocos2d::FileUtils::getInstance();
-	const auto& path = files->fullPathForFilename(filename + ".xml");
-	const auto& data = files->getStringFromFile(path);
+	auto path = files->fullPathForFilename(filename + ".xml");
+	auto data = files->getStringFromFile(path);
 
 	tinyxml2::XMLDocument doc;
 	doc.Parse(data.c_str());

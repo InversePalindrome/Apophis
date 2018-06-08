@@ -46,7 +46,7 @@ bool SettingsNode::init()
 	auto& appSettings = AppSettings::getInstance();
 
 	auto* director = cocos2d::Director::getInstance();
-	const auto& windowSize = director->getVisibleSize();
+	auto windowSize = director->getVisibleSize();
 
 	auto* background = cocos2d::Sprite::create("SpaceBackground.png");
 	background->setPosition(windowSize.width / 2.f, windowSize.height / 2.f);

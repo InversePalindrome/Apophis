@@ -21,7 +21,7 @@ bool HudNode::init()
 		return false;
 	}
 
-	const auto& windowSize = cocos2d::Director::getInstance()->getVisibleSize();
+    auto windowSize = cocos2d::Director::getInstance()->getVisibleSize();
 
     auto* healthBar = cocos2d::ui::LoadingBar::create("Bar", cocos2d::ui::Widget::TextureResType::PLIST, 100.f);
 	healthBar->setPosition({ windowSize.width / 6.f, windowSize.height / 1.025f });

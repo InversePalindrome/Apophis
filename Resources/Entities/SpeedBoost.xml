@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
   <Components>
-    <PowerUp boost="1.5" time="5"></PowerUp>
+    <PowerUp boost="1500" time="5"></PowerUp>
     <Item>SpeedBoost</Item>
     <Object>Item</Object>
     <Sprite>Energy</Sprite>

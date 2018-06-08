@@ -12,7 +12,7 @@ InversePalindrome.com
 
 PowerUpComponent::PowerUpComponent(const tinyxml2::XMLElement* componentNode) :
 	effectBoost(5.f),
-	effectTime(1.f)
+	effectTime(1000)
 {
 	if (const auto* effectBoost = componentNode->Attribute("boost"))
 	{
@@ -20,7 +20,7 @@ PowerUpComponent::PowerUpComponent(const tinyxml2::XMLElement* componentNode) :
 	}
 	if (const auto* effectTime = componentNode->Attribute("time"))
 	{
-		this->effectTime = std::stof(effectTime);
+		this->effectTime = std::chrono::milliseconds(std::stoi(effectTime));
 	}
 }
 
@@ -34,12 +34,12 @@ void PowerUpComponent::setEffectBoost(float effectBoost)
 	this->effectBoost = effectBoost;
 }
 
-float PowerUpComponent::getEffectTime() const
+std::chrono::milliseconds PowerUpComponent::getEffectTime() const
 {
 	return effectTime;
 }
 
-void PowerUpComponent::setEffectTime(float effectTime)
+void PowerUpComponent::setEffectTime(std::chrono::milliseconds effectTime)
 {
 	this->effectTime = effectTime;
 }
