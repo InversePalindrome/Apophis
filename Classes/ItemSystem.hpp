@@ -9,6 +9,9 @@ InversePalindrome.com
 
 #include "Events.hpp"
 #include "EntityParser.hpp"
+#include "WeaponComponent.hpp"
+#include "SpeedBoostComponent.hpp"
+#include "RegenBoostComponent.hpp"
 
 #include <entityx/System.h>
 
@@ -31,7 +34,7 @@ private:
 
 	CppTime::Timer timer;
 
-	void addWeapon(entityx::Entity entity, entityx::Entity itemEntity);
-	void addRegenBoost(entityx::Entity entity, entityx::Entity itemEntity);
-	void addSpeedBoost(entityx::Entity entity, entityx::Entity itemEntity);
+	void addWeapon(entityx::Entity entity, entityx::ComponentHandle<WeaponComponent> weapon);
+	void addRegenBoost(entityx::Entity entity, entityx::ComponentHandle<RegenBoostComponent> regenBoost);
+	void addSpeedBoost(entityx::Entity entity, entityx::ComponentHandle<SpeedBoostComponent> speedBoost);
 };

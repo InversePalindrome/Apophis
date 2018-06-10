@@ -33,10 +33,10 @@ public:
 	b2AABB getAABB() const;
 
 	b2Vec2 getLinearVelocity() const;
-	void setLinearVelocity(const b2Vec2& velocity);
+	void setLinearVelocity(const b2Vec2& linearVelocity);
 
 	float getAngularVelocity() const;
-	void setAngularVelocity(float velocity);
+	void setAngularVelocity(float angularVelocity);
 
 	float getAngle() const;
 	void setAngle(float angle);

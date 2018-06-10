@@ -13,21 +13,10 @@ InversePalindrome.com
 #include <cocos/ui/UIButton.h>
 #include <cocos/ui/UISlider.h>
 #include <cocos/base/CCDirector.h>
+#include <cocos/ui/UIRadioButton.h>
+#include <cocos/base/CCEventDispatcher.h>
+#include <cocos/base/CCEventListenerKeyboard.h>
 
-
-SettingsNode::SettingsNode() :
-	moveRight(KeyAction::MoveRight),
-	moveLeft(KeyAction::MoveLeft),
-	moveUp(KeyAction::MoveUp),
-	moveDown(KeyAction::MoveDown)
-{
-}
-
-SettingsNode::~SettingsNode()
-{
-	keyboardManager->release();
-	controlButtons->release();
-}
 
 bool SettingsNode::init()
 {
@@ -36,15 +25,10 @@ bool SettingsNode::init()
 		return false;
 	}
 
-	scheduleUpdate();
-
-	keyboardManager = KeyboardManager::create();
-	keyboardManager->retain();
-
 	auto& appSettings = AppSettings::getInstance();
 
 	auto* director = cocos2d::Director::getInstance();
-	auto windowSize = director->getVisibleSize();
+	const auto windowSize = director->getVisibleSize();
 
 	auto* background = cocos2d::Sprite::create("SpaceBackground.png");
 	background->setPosition(windowSize.width / 2.f, windowSize.height / 2.f);
@@ -81,7 +65,6 @@ bool SettingsNode::init()
 	moveRightLabel->setPosition({ windowSize.width / 6.f, windowSize.height / 2.5f });
 
 	auto* moveRightButton = cocos2d::ui::RadioButton::create();
-	moveRightButton->setUserData(&moveRight);
 	moveRightButton->setPosition({ windowSize.width / 6.f, windowSize.height / 3.f });
 	moveRightButton->loadTextureBackGround("BlueRadioButtonOff", cocos2d::ui::Widget::TextureResType::PLIST);
 	moveRightButton->loadTextureFrontCross("BlueRadioButtonOn", cocos2d::ui::Widget::TextureResType::PLIST);
@@ -91,7 +74,6 @@ bool SettingsNode::init()
 	moveLeftLabel->setPosition({ windowSize.width / 2.5f, windowSize.height / 2.5f });
 
 	auto* moveLeftButton = cocos2d::ui::RadioButton::create();
-	moveLeftButton->setUserData(&moveLeft);
 	moveLeftButton->setPosition({ windowSize.width / 2.5f, windowSize.height / 3.f });
 	moveLeftButton->loadTextureBackGround("BlueRadioButtonOff", cocos2d::ui::Widget::TextureResType::PLIST);
 	moveLeftButton->loadTextureFrontCross("BlueRadioButtonOn", cocos2d::ui::Widget::TextureResType::PLIST);
@@ -101,7 +83,6 @@ bool SettingsNode::init()
 	moveUpLabel->setPosition({ windowSize.width / 1.65f, windowSize.height / 2.5f });
 
 	auto* moveUpButton = cocos2d::ui::RadioButton::create();
-	moveUpButton->setUserData(&moveUp);
 	moveUpButton->setPosition({ windowSize.width / 1.65f, windowSize.height / 3.f });
 	moveUpButton->loadTextureBackGround("BlueRadioButtonOff", cocos2d::ui::Widget::TextureResType::PLIST);
 	moveUpButton->loadTextureFrontCross("BlueRadioButtonOn", cocos2d::ui::Widget::TextureResType::PLIST);
@@ -111,21 +92,42 @@ bool SettingsNode::init()
 	moveDownLabel->setPosition({ windowSize.width / 1.25f, windowSize.height / 2.5f });
 
 	auto* moveDownButton = cocos2d::ui::RadioButton::create();
-	moveDownButton->setUserData(&moveDown);
 	moveDownButton->setPosition({ windowSize.width / 1.25f, windowSize.height / 3.f });
 	moveDownButton->loadTextureBackGround("BlueRadioButtonOff", cocos2d::ui::Widget::TextureResType::PLIST);
 	moveDownButton->loadTextureFrontCross("BlueRadioButtonOn", cocos2d::ui::Widget::TextureResType::PLIST);
 	
-	controlButtons = cocos2d::ui::RadioButtonGroup::create();
+	auto* controlButtons = cocos2d::ui::RadioButtonGroup::create();
 	controlButtons->setAllowedNoSelection(true);
-	controlButtons->retain();
 	
 	controlButtons->addRadioButton(moveRightButton);
 	controlButtons->addRadioButton(moveLeftButton);
 	controlButtons->addRadioButton(moveUpButton);
 	controlButtons->addRadioButton(moveDownButton);
 
-	addChild(keyboardManager);
+	auto* keyboardListener = cocos2d::EventListenerKeyboard::create();
+
+	keyboardListener->onKeyPressed = [&appSettings, moveRightButton, moveLeftButton, moveUpButton, moveDownButton](auto keyCode, auto* event) 
+	{
+		if (moveRightButton->isSelected())
+		{
+			appSettings.setKeyBinding(KeyAction::MoveRight, keyCode);
+		}
+		else if (moveLeftButton->isSelected())
+		{
+			appSettings.setKeyBinding(KeyAction::MoveLeft, keyCode);
+		}
+		else if (moveUpButton->isSelected())
+		{
+			appSettings.setKeyBinding(KeyAction::MoveUp, keyCode);
+		}
+		else if (moveDownButton->isSelected())
+		{
+			appSettings.setKeyBinding(KeyAction::MoveDown, keyCode);
+		}
+	};
+
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);
+
 	addChild(background);
 	addChild(backButton);
 	addChild(soundLabel);
@@ -143,21 +145,6 @@ bool SettingsNode::init()
 	addChild(controlButtons);
 
 	return true;
-}
-
-void SettingsNode::update(float dt)
-{
-	if (keyboardManager->isKeyPressed())
-	{
-		auto* selectedButton = controlButtons->getRadioButtonByIndex(controlButtons->getSelectedButtonIndex());
-
-		auto keyAction = static_cast<KeyAction*>(selectedButton->getUserData());
-		auto keyCode = keyboardManager->getActiveKeys().begin();
-
-		AppSettings::getInstance().setKeyBinding(*keyAction, *keyCode);
-
-		selectedButton->setSelected(false);
-	}
 }
 
 cocos2d::Scene* SettingsNode::scene()

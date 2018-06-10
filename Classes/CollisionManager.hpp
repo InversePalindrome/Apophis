@@ -9,11 +9,11 @@ InversePalindrome.com
 
 #include "ObjectType.hpp"
 
-#include <entityx/Event.h>
-#include <entityx/Entity.h>
-
 #include <Box2D/Dynamics/b2WorldCallbacks.h>
 #include <Box2D/Dynamics/Contacts/b2Contact.h>
+
+#include <entityx/Event.h>
+#include <entityx/Entity.h>
 
 #include <utility>
 #include <optional>

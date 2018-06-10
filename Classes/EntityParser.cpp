@@ -9,7 +9,6 @@ InversePalindrome.com
 #include "Events.hpp"
 #include "EntityParser.hpp"
 #include "BodyComponent.hpp"
-#include "ItemComponent.hpp"
 #include "DropComponent.hpp"
 #include "SpeedComponent.hpp"
 #include "SoundComponent.hpp"
@@ -27,11 +26,12 @@ InversePalindrome.com
 #include "HealthComponent.hpp"
 #include "DamageComponent.hpp"
 #include "PursueComponent.hpp"
-#include "PowerUpComponent.hpp"
 #include "ParticleComponent.hpp"
 #include "AnimationComponent.hpp"
 #include "ExplosionComponent.hpp"
 #include "SatelliteComponent.hpp"
+#include "SpeedBoostComponent.hpp"
+#include "RegenBoostComponent.hpp"
 #include "AnchorPointComponent.hpp"
 
 #include <cocos/platform/CCFileUtils.h>
@@ -55,7 +55,6 @@ EntityParser::EntityParser(entityx::EntityManager& entityManager, entityx::Event
 	componentParsers.emplace("Particle", [](auto entity, const auto& componentNode) { entity.assign<ParticleComponent>(componentNode); });
 	componentParsers.emplace("Satellite", [](auto entity, const auto& componentNode) { entity.assign<SatelliteComponent>(componentNode); });
 	componentParsers.emplace("Drop", [](auto entity, const auto& componentNode) { entity.assign<DropComponent>(componentNode); });
-	componentParsers.emplace("Item", [](auto entity, const auto& componentNode) { entity.assign<ItemComponent>(componentNode); });
 	componentParsers.emplace("Health", [](auto entity, const auto& componentNode) { entity.assign<HealthComponent>(componentNode); });
 	componentParsers.emplace("Damage", [](auto entity, const auto& componentNode) { entity.assign<DamageComponent>(componentNode); });
 	componentParsers.emplace("Vision", [](auto entity, const auto& componentNode) { entity.assign<VisionComponent>(componentNode); });
@@ -65,7 +64,8 @@ EntityParser::EntityParser(entityx::EntityManager& entityManager, entityx::Event
 	componentParsers.emplace("Explosion", [](auto entity, const auto& componentNode) { entity.assign<ExplosionComponent>(componentNode); });
 	componentParsers.emplace("Speed", [](auto entity, const auto& componentNode) { entity.assign<SpeedComponent>(componentNode); });
 	componentParsers.emplace("AnchorPoint", [](auto entity, const auto& componentNode) { entity.assign<AnchorPointComponent>(componentNode); });
-	componentParsers.emplace("PowerUp", [](auto entity, const auto& componentNode) { entity.assign<PowerUpComponent>(componentNode); });
+	componentParsers.emplace("SpeedBoost", [](auto entity, const auto& componentNode) { entity.assign<SpeedBoostComponent>(componentNode); });
+	componentParsers.emplace("RegenBoost", [](auto entity, const auto& componentNode) { entity.assign<RegenBoostComponent>(componentNode); });
 
 	tagParsers.emplace("Player", [](auto entity) { entity.assign<Player>(); });
 	tagParsers.emplace("Striker", [](auto entity) { entity.assign<Striker>(); });
@@ -79,11 +79,11 @@ entityx::Entity EntityParser::createEntity(const std::string& filename)
 	
 	if (doc.load_file(cocos2d::FileUtils::getInstance()->fullPathForFilename(filename + ".xml").c_str()))
 	{
-		if (auto entityNode = doc.child("Entity"))
+		if (const auto entityNode = doc.child("Entity"))
 		{
-			for (auto componentsNode : entityNode.children("Components"))
+			for (const auto componentsNode : entityNode.children("Components"))
 			{
-				for (auto componentNode : componentsNode.children())
+				for (const auto componentNode : componentsNode.children())
 				{
 					if (componentParsers.count(componentNode.name()))
 					{
@@ -92,9 +92,9 @@ entityx::Entity EntityParser::createEntity(const std::string& filename)
 				}
 			}
 
-			for (auto tagsNode : entityNode.children("Tags"))
+			for (const auto tagsNode : entityNode.children("Tags"))
 			{
-				for (auto tagNode : tagsNode.children())
+				for (const auto tagNode : tagsNode.children())
 				{
 					if (tagParsers.count(tagNode.name()))
 					{

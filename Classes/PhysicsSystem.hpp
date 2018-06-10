@@ -43,6 +43,7 @@ private:
 	std::vector<b2Body*> bodiesToRemove;
 
 	void updateWorld();
+
 	void createBodies();
 	void removeBodies();
 

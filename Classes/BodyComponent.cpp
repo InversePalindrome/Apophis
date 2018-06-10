@@ -62,7 +62,7 @@ b2Vec2 BodyComponent::getPosition() const
 
 void BodyComponent::setPosition(const b2Vec2& position)
 {
-	body->SetTransform(position, body->GetAngle());
+    body->SetTransform(position, body->GetAngle());
 }
 
 b2AABB BodyComponent::getAABB() const
@@ -95,9 +95,9 @@ b2Vec2 BodyComponent::getLinearVelocity() const
 	return body->GetLinearVelocity();
 }
 
-void BodyComponent::setLinearVelocity(const b2Vec2& velocity)
+void BodyComponent::setLinearVelocity(const b2Vec2& linearVelocity)
 {
-	body->SetLinearVelocity(velocity);
+    body->SetLinearVelocity(linearVelocity);
 }
 
 float BodyComponent::getAngularVelocity() const
@@ -105,9 +105,9 @@ float BodyComponent::getAngularVelocity() const
 	return body->GetAngularVelocity();
 }
 
-void BodyComponent::setAngularVelocity(float velocity)
+void BodyComponent::setAngularVelocity(float angularVelocity)
 {
-	body->SetAngularVelocity(velocity);
+    body->SetAngularVelocity(angularVelocity);
 }
 
 float BodyComponent::getAngle() const
@@ -117,7 +117,7 @@ float BodyComponent::getAngle() const
 
 void BodyComponent::setAngle(float angle)
 {
-	body->SetTransform(body->GetPosition(), angle);
+    body->SetTransform(body->GetPosition(), angle);
 }
 
 float BodyComponent::getMass() const
@@ -132,7 +132,7 @@ float BodyComponent::getInertia() const
 
 void BodyComponent::applyLinearImpulse(const b2Vec2& linearImpulse)
 {
-	body->ApplyLinearImpulse(linearImpulse, body->GetWorldCenter(), true);
+    body->ApplyLinearImpulse(linearImpulse, body->GetWorldCenter(), true);
 }
 
 void BodyComponent::applyAngularImpulse(float angularImpulse)
@@ -142,12 +142,12 @@ void BodyComponent::applyAngularImpulse(float angularImpulse)
 
 void BodyComponent::applyLinearForce(const b2Vec2& linearForce)
 {
-	body->ApplyForceToCenter(linearForce, true);
+    body->ApplyForceToCenter(linearForce, true);
 }
 
 void BodyComponent::applyAngularForce(float angularForce)
 {
-	body->ApplyTorque(angularForce, true);
+    body->ApplyTorque(angularForce, true); 
 }
 
 bool BodyComponent::contains(const b2Vec2& point) const

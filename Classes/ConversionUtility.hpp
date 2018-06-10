@@ -7,9 +7,9 @@ InversePalindrome.com
 
 #pragma once
 
-#include <Box2D/Common/b2Math.h>
-
 #include <cocos/math/Vec2.h>
+
+#include <Box2D/Common/b2Math.h>
 
 
 namespace Utility

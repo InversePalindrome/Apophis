@@ -66,32 +66,35 @@ void AppSettings::setKeyBinding(KeyAction keyAction, cocos2d::EventKeyboard::Key
 void AppSettings::load(const std::string& filename)
 {
 	pugi::xml_document doc;
-
+	
 	if (doc.load_file(cocos2d::FileUtils::getInstance()->fullPathForFilename(filename).c_str()))
 	{
-		for (auto keyBindingNode : doc.children("KeyBindings"))
+		if (const auto settingsNode = doc.child("Settings"))
 		{
-			auto keyActionAttribute = keyBindingNode.attribute("action");
-			auto keyCodeAttribute = keyBindingNode.attribute("keyCode");
+			for (const auto keyBindingNode : settingsNode.children("KeyBinding"))
+			{
+				const auto keyActionAttribute = keyBindingNode.attribute("action");
+				const auto keyCodeAttribute = keyBindingNode.attribute("keyCode");
 
-			if (keyActionAttribute && keyCodeAttribute)
-			{
-				keyBindings[KeyAction::_from_string(keyActionAttribute.as_string())] = cocos2d::EventKeyboard::KeyCode{ keyCodeAttribute.as_int() };
+				if (keyActionAttribute && keyCodeAttribute)
+				{
+					keyBindings[KeyAction::_from_string(keyActionAttribute.as_string())] = cocos2d::EventKeyboard::KeyCode{ keyCodeAttribute.as_int() };
+				}
 			}
-		}
 
-		if (auto soundNode = doc.child("Sound"))
-		{
-			if (auto volumeAttribute = soundNode.attribute("volume"))
+			if (const auto soundNode = settingsNode.child("Sound"))
 			{
-				soundVolume = volumeAttribute.as_float();
+				if (const auto volumeAttribute = soundNode.attribute("volume"))
+				{
+					soundVolume = volumeAttribute.as_float();
+				}
 			}
-		}
-		if (auto musicNode = doc.child("Music"))
-		{
-			if (auto volumeAttribute = musicNode.attribute("volume"))
+			if (const auto musicNode = settingsNode.child("Music"))
 			{
-				musicVolume = volumeAttribute.as_float();
+				if (const auto volumeAttribute = musicNode.attribute("volume"))
+				{
+					musicVolume = volumeAttribute.as_float();
+				}
 			}
 		}
 	}
@@ -107,20 +110,20 @@ void AppSettings::save(const std::string& filename)
 
 	auto settingsNode = doc.append_child("Settings");
 
-	auto soundNode = settingsNode.append_child("Sound");
-	soundNode.append_attribute("volume") = soundVolume;
-
-	auto musicNode = settingsNode.append_child("Music");
-	musicNode.append_attribute("volume") = musicVolume;
-
-	for (const auto& [keyAction, keyCode] : keyBindings)
+	for (const auto&[keyAction, keyCode] : keyBindings)
 	{
 		auto keyBindingNode = settingsNode.append_child("KeyBinding");
 		keyBindingNode.append_attribute("action") = keyAction._to_string();
 		keyBindingNode.append_attribute("keyCode") = static_cast<int>(keyCode);
 	}
 
-	auto path = cocos2d::FileUtils::getInstance()->getWritablePath() + filename;
+	auto soundNode = settingsNode.append_child("Sound");
+	soundNode.append_attribute("volume") = soundVolume;
 
+	auto musicNode = settingsNode.append_child("Music");
+	musicNode.append_attribute("volume") = musicVolume;
+
+	auto path = cocos2d::FileUtils::getInstance()->getWritablePath() + filename;
+	
 	doc.save_file(path.c_str());
 }

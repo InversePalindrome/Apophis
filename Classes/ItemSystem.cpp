@@ -6,14 +6,11 @@ InversePalindrome.com
 
 
 #include "ItemSystem.hpp"
-#include "ItemComponent.hpp"
 #include "DropComponent.hpp"
 #include "NodeComponent.hpp"
 #include "BodyComponent.hpp"
 #include "SpeedComponent.hpp"
 #include "HealthComponent.hpp"
-#include "WeaponComponent.hpp"
-#include "PowerUpComponent.hpp"
 #include "ConversionUtility.hpp"
 
 
@@ -57,69 +54,55 @@ void ItemSystem::receive(const EntityDied& event)
 
 void ItemSystem::receive(const PickedUpItem& event)
 {	
-	if (auto item = event.itemEntity.component<ItemComponent>())
+	if (auto weapon = event.itemEntity.component<WeaponComponent>())
 	{
-		switch (item->getItem())
-		{
-		case Item::Weapon:
-			addWeapon(event.entity, event.itemEntity);
-			break;
-		case Item::RegenBoost:
-			addRegenBoost(event.entity, event.itemEntity);
-			break;
-		case Item::SpeedBoost:
-			addSpeedBoost(event.entity, event.itemEntity);
-			break;
-		}
+		addWeapon(event.entity, weapon);
 	}
-
-	eventManager->emit(PlayAction{ event.itemEntity, "Pickup", false });
-}
-
-void ItemSystem::addWeapon(entityx::Entity entity, entityx::Entity itemEntity)
-{
-	if (auto weapon = itemEntity.component<WeaponComponent>())
+	if (auto regenBoost = event.itemEntity.component<RegenBoostComponent>())
 	{
-		entity.replace<WeaponComponent>(*weapon.get());
+
+	}
+	if (auto speedBoost = event.itemEntity.component<SpeedBoostComponent>())
+	{
+
 	}
 }
 
-void ItemSystem::addRegenBoost(entityx::Entity entity, entityx::Entity itemEntity)
+void ItemSystem::addWeapon(entityx::Entity entity, entityx::ComponentHandle<WeaponComponent> weapon)
 {
-	auto entityHealth = entity.component<HealthComponent>();
-	auto itemPowerUp = itemEntity.component<PowerUpComponent>();
+	entity.replace<WeaponComponent>(*weapon.get());
+}
 
-	if (entityHealth && itemPowerUp)
+void ItemSystem::addRegenBoost(entityx::Entity entity, entityx::ComponentHandle<RegenBoostComponent> regenBoost)
+{
+	if (auto entityHealth = entity.component<HealthComponent>())
 	{ 
-		auto effectBoost = itemPowerUp->getEffectBoost();
+		auto hitpointBoost = regenBoost->getHitpointBoost();
 		
-		timer.add(itemPowerUp->getEffectTime(), [entityHealth, effectBoost](auto id) mutable
+		timer.add(regenBoost->getRegenRate(), [entityHealth, hitpointBoost](auto id) mutable
 		{
 			if (entityHealth)
 			{
-				auto regenHealth = entityHealth->getCurrentHitpoints() + effectBoost;
+				auto regenHealth = entityHealth->getCurrentHitpoints() + hitpointBoost;
 
 				if (regenHealth <= entityHealth->getMaxHitpoints())
 				{
 					entityHealth->setCurrentHitpoints(regenHealth);
 				}
 			}
-		});
+		}, regenBoost->getRegenPeriod());
 	}
 }
 
-void ItemSystem::addSpeedBoost(entityx::Entity entity, entityx::Entity itemEntity)
+void ItemSystem::addSpeedBoost(entityx::Entity entity, entityx::ComponentHandle<SpeedBoostComponent> speedBoost)
 {
-	auto entitySpeed = entity.component<SpeedComponent>();
-	auto itemPowerUp = itemEntity.component<PowerUpComponent>();
-
-	if (entitySpeed && itemPowerUp)
+	if (auto entitySpeed = entity.component<SpeedComponent>())
 	{
 		auto originalSpeed = entitySpeed->getMaxLinearSpeed();
 
-		entitySpeed->setMaxLinearSpeed(entitySpeed->getMaxLinearSpeed() * (1 + itemPowerUp->getEffectBoost()));
+		entitySpeed->setMaxLinearSpeed(entitySpeed->getMaxLinearSpeed() * speedBoost->getSpeedBoost());
 
-		timer.add(itemPowerUp->getEffectTime(), [entitySpeed, originalSpeed](auto id) mutable
+		timer.add(speedBoost->getSpeedBoostDuration(), [entitySpeed, originalSpeed](auto id) mutable
 		{
 			if (entitySpeed)
 			{
