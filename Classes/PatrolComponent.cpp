@@ -7,20 +7,18 @@ InversePalindrome.com
 
 #include "PatrolComponent.hpp"
 
-#include <string>
 
-
-PatrolComponent::PatrolComponent(const tinyxml2::XMLElement* componentNode) :
+PatrolComponent::PatrolComponent(const pugi::xml_node& componentNode) :
 	currentIndex(0u)
 {
-	for (const auto* pointNode = componentNode->FirstChildElement("Point"); pointNode; pointNode = pointNode->NextSiblingElement("Point"))
+	for (const auto pointNode : componentNode.children("Point"))
 	{
-		const auto* x = pointNode->Attribute("x");
-		const auto* y = pointNode->Attribute("y");
+		const auto xAttribute = pointNode.attribute("x");
+		const auto yAttribute = pointNode.attribute("y");
 
-		if (x && y)
+		if (xAttribute && yAttribute)
 		{
-			path.push_back({ std::stof(x), std::stof(y) });
+			path.push_back({ xAttribute.as_float(), yAttribute.as_float() });
 		}
 	}
 }

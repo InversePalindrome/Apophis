@@ -8,16 +8,16 @@ InversePalindrome.com
 #include "SoundComponent.hpp"
 
 
-SoundComponent::SoundComponent(const tinyxml2::XMLElement* componentNode)
+SoundComponent::SoundComponent(const pugi::xml_node& componentNode)
 {
-	for (const auto* actionNode = componentNode->FirstChildElement("Action"); actionNode; actionNode = actionNode->NextSiblingElement("Action"))
+	for (const auto actionNode : componentNode.children("Action"))
 	{
-		const auto* name = actionNode->Attribute("name");
-		const auto* filename = actionNode->Attribute("filename");
-		
-		if (name && filename)
+		const auto nameAttribute = actionNode.attribute("name");
+		const auto filenameAttribute = actionNode.attribute("filename");
+
+		if (nameAttribute && filenameAttribute)
 		{
-			sounds.emplace(name, filename);
+			sounds.emplace(nameAttribute.as_string(), filenameAttribute.as_string());
 		}
 	}
 }

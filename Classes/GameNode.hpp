@@ -13,12 +13,12 @@ InversePalindrome.com
 #include "EntityParser.hpp"
 #include "KeyboardManager.hpp"
 
+#include <cocos/2d/CCNode.h>
+#include <cocos/2d/CCScene.h>
+
 #include <entityx/Event.h>
 #include <entityx/Entity.h>
 #include <entityx/System.h>
-
-#include <cocos/2d/CCNode.h>
-#include <cocos/2d/CCScene.h>
 
 
 class GameNode : public cocos2d::Node

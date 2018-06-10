@@ -7,44 +7,42 @@ InversePalindrome.com
 
 #include "CocosUtility.hpp"
 
-#include <tinyxml2/tinyxml2.h>
-
 #include <cocos/platform/CCFileUtils.h>
 #include <cocos/2d/CCSpriteFrameCache.h>
+
+#include <pugixml.hpp>
 
 
 void CocosUtility::createSearchPaths(const std::string& filename)
 {
-    auto* files = cocos2d::FileUtils::getInstance();
-	auto path = files->fullPathForFilename(filename + ".xml");
-	auto data = files->getStringFromFile(path);
+	auto* files = cocos2d::FileUtils::getInstance();
 
-	tinyxml2::XMLDocument doc;
-	doc.Parse(data.c_str());
-
-	if (const auto* searchPathsNode = doc.RootElement())
+	pugi::xml_document doc;
+	
+	if (doc.load_file(files->fullPathForFilename(filename + ".xml").c_str()))
 	{
-		for (const auto* searchPathNode = searchPathsNode->FirstChildElement(); searchPathNode; searchPathNode = searchPathNode->NextSiblingElement())
+		if (const auto searchPathsNode = doc.child("SearchPaths"))
 		{
-			files->addSearchPath(searchPathNode->Value());
+			for (const auto searchPathNode : searchPathsNode.children())
+			{
+				files->addSearchPath(searchPathNode.name());
+			}
 		}
 	}
 }
 
 void CocosUtility::initSpriteFrames(const std::string& filename)
 {
-	auto* files = cocos2d::FileUtils::getInstance();
-	auto path = files->fullPathForFilename(filename + ".xml");
-	auto data = files->getStringFromFile(path);
+	pugi::xml_document doc;
 
-	tinyxml2::XMLDocument doc;
-	doc.Parse(data.c_str());
-
-	if (const auto* resourcesNode = doc.RootElement())
+	if (doc.load_file(cocos2d::FileUtils::getInstance()->fullPathForFilename(filename + ".xml").c_str()))
 	{
-		for (const auto* resourceNode = resourcesNode->FirstChildElement(); resourceNode; resourceNode = resourceNode->NextSiblingElement())
+		if (const auto spritesNode = doc.child("SpriteFrames"))
 		{
-			cocos2d::SpriteFrameCache::getInstance()->addSpriteFramesWithFile(std::string(resourceNode->Value()) + ".plist");
+			for (const auto spriteNode : spritesNode.children())
+			{
+				cocos2d::SpriteFrameCache::getInstance()->addSpriteFramesWithFile(std::string(spriteNode.name()) + ".plist");
+			}
 		}
 	}
 }

@@ -7,13 +7,13 @@ InversePalindrome.com
 
 #pragma once
 
-#include <tinyxml2/tinyxml2.h>
+#include <pugixml.hpp>
 
 
 class FollowComponent
 {
 public:
-	explicit FollowComponent(const tinyxml2::XMLElement* componentNode);
+	explicit FollowComponent(const pugi::xml_node& componentNode);
 
 	float getDistanceFromLeader() const;
 	void setDistanceFromLeader(float distanceFromLeader);

@@ -7,20 +7,18 @@ InversePalindrome.com
 
 #include "FlockComponent.hpp"
 
-#include <string>
 
-
-FlockComponent::FlockComponent(const tinyxml2::XMLElement* componentNode) :
+FlockComponent::FlockComponent(const pugi::xml_node& componentNode) :
 	groupID(-1),
 	groupRadius(25.f)
 {
-	if (const auto* groupID = componentNode->Attribute("id"))
+	if (const auto groupIDAttribute = componentNode.attribute("id"))
 	{
-		this->groupID = std::stof(groupID);
+		groupID = groupIDAttribute.as_int();
 	}
-	if (const auto* groupRadius = componentNode->Attribute("radius"))
+	if (const auto groupRadiusAttribute = componentNode.attribute("radius"))
 	{
-		this->groupRadius = std::stof(groupRadius);
+		groupRadius = groupRadiusAttribute.as_float();
 	}
 }
 

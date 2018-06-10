@@ -8,38 +8,38 @@ InversePalindrome.com
 #include "LabelComponent.hpp"
 
 
-LabelComponent::LabelComponent(const tinyxml2::XMLElement* componentNode) :
+LabelComponent::LabelComponent(const pugi::xml_node& componentNode) :
 	label(cocos2d::Label::create())
 {
-	if (const auto* text = componentNode->Attribute("text"))
+	if (const auto textAttribute = componentNode.attribute("text"))
 	{
-		label->setString(text);
+		label->setString(textAttribute.as_string());
 	}
-	if (const auto* font = componentNode->Attribute("font"))
+	if (const auto fontAttribute = componentNode.attribute("font"))
 	{
-		label->setSystemFontName(font);
+		label->setSystemFontName(fontAttribute.as_string());
 	}
-	if (const auto* fontSize = componentNode->Attribute("fontSize"))
+	if (const auto fontSizeAttribute = componentNode.attribute("fontSize"))
 	{
-		label->setSystemFontSize(std::stof(fontSize));
+		label->setSystemFontSize(fontSizeAttribute.as_float());
 	}
-	if (const auto* horizontalAlignment = componentNode->Attribute("horizontalAlignment"))
+	if (const auto horizontalAlignmentAttribute = componentNode.attribute("horizontalAlignment"))
 	{
-		label->setAlignment(static_cast<cocos2d::TextHAlignment>(std::stoi(horizontalAlignment)));
+		label->setAlignment(static_cast<cocos2d::TextHAlignment>(horizontalAlignmentAttribute.as_int()));
 	}
-	if (const auto* verticalAlignment = componentNode->Attribute("verticalAlignment"))
+	if (const auto verticalAlignmentAttribute = componentNode.attribute("verticalAlignment"))
 	{
-		label->setVerticalAlignment(static_cast<cocos2d::TextVAlignment>(std::stoi(verticalAlignment)));
+		label->setVerticalAlignment(static_cast<cocos2d::TextVAlignment>(verticalAlignmentAttribute.as_int()));
 	}
 
-	const auto* r = componentNode->Attribute("r");
-	const auto* g = componentNode->Attribute("g");
-	const auto* b = componentNode->Attribute("b");
-	const auto* a = componentNode->Attribute("a");
+	const auto rAttribute = componentNode.attribute("r");
+	const auto gAttribute = componentNode.attribute("g");
+	const auto bAttribute = componentNode.attribute("b");
+	const auto aAttribute = componentNode.attribute("a");
 
-	if (r && g && b && a)
+	if (rAttribute && gAttribute && bAttribute && aAttribute)
 	{
-		label->setTextColor(cocos2d::Color4B(std::stof(r), std::stof(g), std::stof(b), std::stof(a)));
+		label->setTextColor(cocos2d::Color4B(rAttribute.as_int(), gAttribute.as_int(), bAttribute.as_int(), aAttribute.as_int()));
 	}
     
 	label->retain();

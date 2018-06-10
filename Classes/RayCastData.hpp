@@ -14,7 +14,7 @@ InversePalindrome.com
 
 struct RayCastData
 {
-	mutable entityx::Entity* entity;
+	entityx::Entity* entity;
 	b2Vec2 point;
 	b2Vec2 normal;
 	float fraction;

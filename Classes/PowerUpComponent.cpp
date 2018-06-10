@@ -7,20 +7,18 @@ InversePalindrome.com
 
 #include "PowerUpComponent.hpp"
 
-#include <string>
 
-
-PowerUpComponent::PowerUpComponent(const tinyxml2::XMLElement* componentNode) :
+PowerUpComponent::PowerUpComponent(const pugi::xml_node& componentNode) :
 	effectBoost(5.f),
 	effectTime(1000)
 {
-	if (const auto* effectBoost = componentNode->Attribute("boost"))
+	if (const auto effectBoostAttribute = componentNode.attribute("boost"))
 	{
-		this->effectBoost = std::stof(effectBoost);
+		effectBoost = effectBoostAttribute.as_float();
 	}
-	if (const auto* effectTime = componentNode->Attribute("time"))
+	if (const auto effectTimeAttribute = componentNode.attribute("time"))
 	{
-		this->effectTime = std::chrono::milliseconds(std::stoi(effectTime));
+		effectTime = std::chrono::milliseconds(effectTimeAttribute.as_int());
 	}
 }
 

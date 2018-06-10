@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Resources>
+<SpriteFrames>
   <Spaceships></Spaceships>
   <Widgets></Widgets>
   <Backgrounds></Backgrounds>
@@ -12,4 +12,4 @@
   <GreenProjectiles></GreenProjectiles>
   <YellowProjectiles></YellowProjectiles>
   <Planets></Planets>
-</Resources>
+</SpriteFrames>

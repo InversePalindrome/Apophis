@@ -7,13 +7,13 @@ InversePalindrome.com
 
 #pragma once
 
-#include <tinyxml2/tinyxml2.h>
+#include <pugixml.hpp>
 
 
 class HealthComponent
 {
 public:
-	explicit HealthComponent(const tinyxml2::XMLElement* componentNode);
+	explicit HealthComponent(const pugi::xml_node& componentNode);
 	
 	float getMaxHitpoints() const;
 	void setMaxHitpoints(float maxHitpoints);

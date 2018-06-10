@@ -9,10 +9,10 @@ InversePalindrome.com
 #include "Events.hpp"
 #include "Constants.hpp"
 
-#include <tinyxml2/tinyxml2.h>
-
 #include <cocos/2d/CCSprite.h>
 #include <cocos/platform/CCFileUtils.h>
+
+#include <pugixml.hpp>
 
 #include <boost/math/constants/constants.hpp>
 
@@ -26,46 +26,48 @@ Map::Map(EntityParser& entityParser, entityx::EventManager& eventManager) :
 
 void Map::load(const std::string& fileName)
 {
-	auto* fileUtils = cocos2d::FileUtils::getInstance();
-	auto path = fileUtils->fullPathForFilename(fileName + ".xml");
-	auto data = fileUtils->getStringFromFile(path);
+    pugi::xml_document doc;
 
-	tinyxml2::XMLDocument doc;
-	doc.Parse(data.c_str());
-
-	if (const auto* mapNode = doc.RootElement())
+	if (doc.load_file(cocos2d::FileUtils::getInstance()->fullPathForFilename(fileName + ".xml").c_str()))
 	{
-		const auto* width = mapNode->Attribute("width");
-		const auto* height = mapNode->Attribute("height");
-
-		if (width && height)
+		if (const auto mapNode = doc.child("Map"))
 		{
-			dimensions = { std::stof(width), std::stof(height) };
-		}
-		if (const auto* background = mapNode->Attribute("background"))
-		{
-			auto* sprite = cocos2d::Sprite::createWithSpriteFrameName(background);
-			sprite->getTexture()->setTexParameters({ GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT });
-			sprite->setTextureRect({ 0.f, 0.f, dimensions.x * Constants::PTM_RATIO, dimensions.y * Constants::PTM_RATIO });
-
-			mainNode->addChild(sprite);
-		}
-		if (const auto* maxEntityCount = mapNode->Attribute("maxEntityCount"))
-		{
-			this->maxEntityCount = std::stoull(maxEntityCount);
-		}
-		if (const auto* entitiesNode = mapNode->FirstChildElement("Entities"))
-		{
-			std::vector<std::string> entities;
-			std::vector<int> weights;
-
-			for (const auto* entityNode = entitiesNode->FirstChildElement(); entityNode; entityNode = entityNode->NextSiblingElement())
+			if (const auto widthAttribute = mapNode.attribute("width"))
 			{
-				entities.push_back(entityNode->Value());
-				weights.push_back(std::stoi(entityNode->GetText()));
+				dimensions.x = widthAttribute.as_float();
 			}
+			if (const auto heightAttribute = mapNode.attribute("height"))
+			{
+				dimensions.y = heightAttribute.as_float();
+			}
+			if (const auto backgroundAttribute = mapNode.attribute("background"))
+			{
+				auto* sprite = cocos2d::Sprite::createWithSpriteFrameName(backgroundAttribute.as_string());
+				sprite->getTexture()->setTexParameters({ GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT });
+				sprite->setTextureRect({ 0.f, 0.f, dimensions.x * Constants::PTM_RATIO, dimensions.y * Constants::PTM_RATIO });
 
-			generateMap(entities, weights);
+				mainNode->addChild(sprite);
+			}
+			if (const auto maxEntityCountAttribute = mapNode.attribute("maxEntityCount"))
+			{
+				maxEntityCount = maxEntityCountAttribute.as_ullong();
+			}
+			for (const auto entitiesNode : mapNode.children("Entities"))
+			{
+				for (const auto entityNode : entitiesNode.children())
+				{
+					std::vector<std::string> entities;
+					std::vector<int> weights;
+
+					for (const auto entityNode : entitiesNode.children())
+					{
+						entities.push_back(entityNode.name());
+						weights.push_back(entityNode.text().as_int());
+					}
+
+					generateMap(entities, weights);
+				}
+			}
 		}
 	}
 }

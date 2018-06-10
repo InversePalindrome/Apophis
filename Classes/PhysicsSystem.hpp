@@ -9,7 +9,6 @@ InversePalindrome.com
 
 #include "Events.hpp"
 #include "BodyComponent.hpp"
-#include "BodyDefinition.hpp"
 #include "SpeedComponent.hpp"
 #include "CollisionManager.hpp"
 
@@ -17,14 +16,15 @@ InversePalindrome.com
 
 #include <entityx/System.h>
 
+#include <pugixml.hpp>
+
 #include <vector>
-#include <memory>
 
 
 class PhysicsSystem : public entityx::System<PhysicsSystem>, public entityx::Receiver<PhysicsSystem>
 {
 public:
-    PhysicsSystem(entityx::EntityManager& entityManager, entityx::EventManager& eventManager);
+	PhysicsSystem(entityx::EntityManager& entityManager, entityx::EventManager& eventManager);
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
@@ -36,11 +36,11 @@ public:
 private:
 	b2World world;
 	CollisionManager collisionManager;
-	
+
 	entityx::EntityManager& entityManager;
 
-	std::vector<BodyDefinition> bodiesDefinitions;
-	std::vector<b2Body*> deletionBodies;
+	std::vector<std::pair<entityx::Entity, pugi::xml_document>> bodiesToCreate;
+	std::vector<b2Body*> bodiesToRemove;
 
 	void updateWorld();
 	void createBodies();

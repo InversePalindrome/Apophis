@@ -7,20 +7,18 @@ InversePalindrome.com
 
 #include "SpeedComponent.hpp"
 
-#include <string>
 
-
-SpeedComponent::SpeedComponent(const tinyxml2::XMLElement* componentNode) :
+SpeedComponent::SpeedComponent(const pugi::xml_node& componentNode) :
 	maxLinearSpeed(10.f),
 	maxAngularSpeed(10.f)
 {
-	if (const auto* maxLinearSpeed = componentNode->Attribute("linear"))
+	if (const auto maxLinearSpeedAttribute = componentNode.attribute("linear"))
 	{
-		this->maxLinearSpeed = std::stof(maxLinearSpeed);
+		maxLinearSpeed = maxLinearSpeedAttribute.as_float();
 	}
-	if (const auto* maxAngularSpeed = componentNode->Attribute("angular"))
+	if (const auto maxAngularSpeedAttribute = componentNode.attribute("angular"))
 	{
-		this->maxAngularSpeed = std::stof(maxAngularSpeed);
+		maxAngularSpeed = maxAngularSpeedAttribute.as_float();
 	}
 }
 

@@ -8,16 +8,16 @@ InversePalindrome.com
 #include "ExplosionComponent.hpp"
 
 
-ExplosionComponent::ExplosionComponent(const tinyxml2::XMLElement* componentNode) :
+ExplosionComponent::ExplosionComponent(const pugi::xml_node& componentNode) :
 	explosionTime(1.f)
 {
-	if (const auto* explosionName = componentNode->Attribute("name"))
+	if (const auto explosionNameAttribute = componentNode.attribute("name"))
 	{
-		this->explosionName = explosionName;
+		explosionName = explosionNameAttribute.as_string();
 	}
-	if (const auto* explosionTime = componentNode->Attribute("time"))
+	if (const auto explosionTimeAttribute = componentNode.attribute("time"))
 	{
-		this->explosionTime = std::stof(explosionTime);
+		explosionTime = explosionTimeAttribute.as_float();
 	}
 }
 

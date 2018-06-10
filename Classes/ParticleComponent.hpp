@@ -7,9 +7,9 @@ InversePalindrome.com
 
 #pragma once
 
-#include <tinyxml2/tinyxml2.h>
-
 #include <cocos/2d/CCParticleSystemQuad.h>
+
+#include <pugixml.hpp>
 
 #include <string>
 
@@ -17,7 +17,7 @@ InversePalindrome.com
 class ParticleComponent 
 {
 public:
-	explicit ParticleComponent(const tinyxml2::XMLElement* componentNode);
+	explicit ParticleComponent(const pugi::xml_node& componentNode);
 
 	~ParticleComponent();
 

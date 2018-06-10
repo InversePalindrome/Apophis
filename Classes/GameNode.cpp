@@ -20,8 +20,6 @@ InversePalindrome.com
 #include "StrikerSystem.hpp"
 #include "GraphicsSystem.hpp"
 
-#include <entityx/deps/Dependencies.h>
-
 #include <cocos/base/CCEventDispatcher.h>
 #include <cocos/base/CCEventListenerCustom.h>
 

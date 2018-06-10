@@ -7,30 +7,28 @@ InversePalindrome.com
 
 #include "QueueComponent.hpp"
 
-#include <string>
 
-
-QueueComponent::QueueComponent(const tinyxml2::XMLElement* componentNode) :
+QueueComponent::QueueComponent(const pugi::xml_node& componentNode) :
 	queueAheadDistance(5.f),
 	queueRadius(1.f),
 	brakeFactor(0.8f),
 	velocityShrinkFactor(0.3f)
 {
-	if (const auto* queueAheadDistance = componentNode->Attribute("distance"))
+	if (const auto queueAheadDistanceAttribute = componentNode.attribute("distance"))
 	{
-		this->queueAheadDistance = std::stof(queueAheadDistance);
+		queueAheadDistance = queueAheadDistanceAttribute.as_float();
 	}
-	if (const auto* queueRadius = componentNode->Attribute("radius"))
+	if (const auto queueRadiusAttribute = componentNode.attribute("radius"))
 	{
-		this->queueRadius = std::stof(queueRadius);
+		queueRadius = queueRadiusAttribute.as_float();
 	}
-	if (const auto* brakeFactor = componentNode->Attribute("brake"))
+	if (const auto brakeFactorAttribute = componentNode.attribute("brake"))
 	{
-		this->brakeFactor = std::stof(brakeFactor);
+		brakeFactor = brakeFactorAttribute.as_float();
 	}
-	if (const auto* velocityShrinkFactor = componentNode->Attribute("shrink"))
+	if (const auto velocityShrinkFactorAttribute = componentNode.attribute("shrink"))
 	{
-		this->velocityShrinkFactor = std::stof(velocityShrinkFactor);
+		velocityShrinkFactor = velocityShrinkFactorAttribute.as_float();
 	}
 }
 

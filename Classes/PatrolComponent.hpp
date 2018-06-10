@@ -7,7 +7,7 @@ InversePalindrome.com
 
 #pragma once
 
-#include <tinyxml2/tinyxml2.h>
+#include <pugixml.hpp>
 
 #include <Box2D/Common/b2Math.h>
 
@@ -17,7 +17,7 @@ InversePalindrome.com
 class PatrolComponent
 {
 public:
-	explicit PatrolComponent(const tinyxml2::XMLElement* componentNode);
+	explicit PatrolComponent(const pugi::xml_node& componentNode);
 
 	void nextPoint();
 

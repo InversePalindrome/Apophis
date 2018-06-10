@@ -7,13 +7,13 @@ InversePalindrome.com
 
 #pragma once
 
-#include <tinyxml2/tinyxml2.h>
+#include <pugixml.hpp>
 
 
 class AvoidComponent
 {
 public:
-	explicit AvoidComponent(const tinyxml2::XMLElement* componentNode);
+	explicit AvoidComponent(const pugi::xml_node& componentNode);
 
 	float getAvoidanceAheadDistance() const;
 	void setAvoidanceAheadDistance(float avoidanceAheadDistance);

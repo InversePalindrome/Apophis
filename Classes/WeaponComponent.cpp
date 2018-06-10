@@ -8,17 +8,17 @@ InversePalindrome.com
 #include "WeaponComponent.hpp"
 
 
-WeaponComponent::WeaponComponent(const tinyxml2::XMLElement* componentNode) :
+WeaponComponent::WeaponComponent(const pugi::xml_node& componentNode) :
 	reloadTime(1000),
 	reloadStatus(true)
 {
-	if (const auto* projectileName = componentNode->Attribute("projectileName"))
+	if (const auto projectileNameAttribute = componentNode.attribute("projectileName"))
 	{
-		this->projectileName = projectileName;
+		projectileName = projectileNameAttribute.as_string();
 	}
-	if (const auto* reloadTime = componentNode->Attribute("reloadTime"))
+	if (const auto reloadTimeAttribute = componentNode.attribute("reloadTime"))
 	{
-		this->reloadTime = std::chrono::milliseconds(std::stoi(reloadTime));
+		reloadTime = std::chrono::milliseconds(reloadTimeAttribute.as_int());
 	}
 }
 

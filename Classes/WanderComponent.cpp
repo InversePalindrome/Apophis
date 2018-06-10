@@ -11,26 +11,24 @@ InversePalindrome.com
 
 #include <boost/math/constants/constants.hpp>
 
-#include <string>
 
-
-WanderComponent::WanderComponent(const tinyxml2::XMLElement* componentNode) :
+WanderComponent::WanderComponent(const pugi::xml_node& componentNode) :
 	wanderDistance(5.f),
 	wanderRadius(1.f),
 	wanderRate(1.f),
 	wanderAngle(cocos2d::RandomHelper::random_real(0.f, 2.f * boost::math::constants::pi<float>()))
 {
-	if (const auto* wanderDistance = componentNode->Attribute("distance"))
+	if (const auto wanderDistanceAttribute = componentNode.attribute("distance"))
 	{
-		this->wanderDistance = std::stof(wanderDistance);
+		wanderDistance = wanderDistanceAttribute.as_float();
 	}
-	if (const auto* wanderRadius = componentNode->Attribute("radius"))
+	if (const auto wanderRadiusAttribute = componentNode.attribute("radius"))
 	{
-		this->wanderRadius = std::stof(wanderRadius);
+		wanderRadius = wanderRadiusAttribute.as_float();
 	}
-	if (const auto* wanderRate = componentNode->Attribute("rate"))
+	if (const auto wanderRateAttribute = componentNode.attribute("rate"))
 	{
-		this->wanderRate = std::stof(wanderRate);
+		wanderRate = wanderRateAttribute.as_float();
 	}
 }
 

@@ -7,19 +7,17 @@ InversePalindrome.com
 
 #include "AnchorPointComponent.hpp"
 
-#include <string>
 
-
-AnchorPointComponent::AnchorPointComponent(const tinyxml2::XMLElement* componentNode) :
+AnchorPointComponent::AnchorPointComponent(const pugi::xml_node& componentNode) :
 	anchorPoint(0.f, 0.f)
 {
-	if (const auto* x = componentNode->Attribute("x"))
+	if (const auto xAttribute = componentNode.attribute("x"))
 	{
-		anchorPoint.x = std::stof(x);
+		anchorPoint.x = xAttribute.as_float();
 	}
-	if (const auto* y = componentNode->Attribute("y"))
+	if (const auto yAttribute = componentNode.attribute("y"))
 	{
-		anchorPoint.y = std::stof(y);
+		anchorPoint.y = yAttribute.as_float();
 	}
 }
 

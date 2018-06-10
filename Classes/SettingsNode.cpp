@@ -8,8 +8,6 @@ InversePalindrome.com
 #include "AppSettings.hpp"
 #include "SettingsNode.hpp"
 
-#include <tinyxml2/tinyxml2.h>
-
 #include <cocos/2d/CCLabel.h>
 #include <cocos/2d/CCSprite.h>
 #include <cocos/ui/UIButton.h>

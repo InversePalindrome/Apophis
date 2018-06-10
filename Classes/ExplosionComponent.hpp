@@ -7,7 +7,7 @@ InversePalindrome.com
 
 #pragma once
 
-#include <tinyxml2/tinyxml2.h>
+#include <pugixml.hpp>
 
 #include <string>
 
@@ -15,7 +15,7 @@ InversePalindrome.com
 class ExplosionComponent
 {
 public:
-	explicit ExplosionComponent(const tinyxml2::XMLElement* componentNode);
+	explicit ExplosionComponent(const pugi::xml_node& componentNode);
 
 	std::string getExplosionName() const;
 

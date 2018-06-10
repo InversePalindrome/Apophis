@@ -7,15 +7,15 @@ InversePalindrome.com
 
 #pragma once
 
-#include <tinyxml2/tinyxml2.h>
-
 #include <Box2D/Common/b2Math.h>
+
+#include <pugixml.hpp>
 
 
 class AnchorPointComponent
 {
 public:
-	explicit AnchorPointComponent(const tinyxml2::XMLElement* componentNode);
+	explicit AnchorPointComponent(const pugi::xml_node& componentNode);
 
 	b2Vec2 getAnchorPoint() const;
 	void setAnchorPoint(const b2Vec2& anchorPoint);

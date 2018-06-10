@@ -7,20 +7,18 @@ InversePalindrome.com
 
 #include "AvoidComponent.hpp"
 
-#include <string>
 
-
-AvoidComponent::AvoidComponent(const tinyxml2::XMLElement* componentNode) :
+AvoidComponent::AvoidComponent(const pugi::xml_node& componentNode) :
 	avoidanceAheadDistance(10.f),
 	avoidanceForce(50.f)
 {
-	if (const auto* avoidanceAheadDistance = componentNode->Attribute("distance"))
+	if (const auto distanceAttribute = componentNode.attribute("distance"))
 	{
-		this->avoidanceAheadDistance = std::stof(avoidanceAheadDistance);
+		avoidanceAheadDistance = distanceAttribute.as_float();
 	}
-	if (const auto* avoidanceForce = componentNode->Attribute("force"))
+	if (const auto avoidanceForceAttribute = componentNode.attribute("force"))
 	{
-		this->avoidanceForce = std::stof(avoidanceForce);
+		avoidanceForce = avoidanceForceAttribute.as_float();
 	}
 }
 

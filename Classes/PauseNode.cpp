@@ -16,7 +16,8 @@ InversePalindrome.com
 #include <cocos/base/CCDirector.h>
 #include <cocos/base/CCEventDispatcher.h>
 #include <cocos/base/CCEventListenerCustom.h>
-#
+
+
 
 bool PauseNode::init()
 {

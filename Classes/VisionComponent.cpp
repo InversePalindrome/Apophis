@@ -7,16 +7,10 @@ InversePalindrome.com
 
 #include "VisionComponent.hpp"
 
-#include <string>
 
-
-VisionComponent::VisionComponent(const tinyxml2::XMLElement* componentNode) :
-	visionDistance(5.f)
+VisionComponent::VisionComponent(const pugi::xml_node& componentNode) :
+	visionDistance(componentNode.text().as_float(10.f))
 {
-	if (const auto* visionDistance = componentNode->GetText())
-	{
-		this->visionDistance = std::stof(visionDistance);
-	}
 }
 
 float VisionComponent::getVisionDistance() const

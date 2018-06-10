@@ -5,7 +5,6 @@ InversePalindrome.com
 */
 
 
-#include "BodyParser.hpp"
 #include "PhysicsSystem.hpp"
 #include "AnchorPointComponent.hpp"
 #include "DistanceJointComponent.hpp"
@@ -33,7 +32,7 @@ void PhysicsSystem::update(entityx::EntityManager& entityManager, entityx::Event
 	entityx::ComponentHandle<SpeedComponent> speed;
 
 	for (auto entity : entityManager.entities_with_components(body, speed))
-	{        
+	{
 		limitLinearSpeed(body, speed);
 		limitAngularSpeed(body, speed);
 	}
@@ -49,39 +48,21 @@ void PhysicsSystem::receive(const entityx::EntityDestroyedEvent& event)
 
 	if (auto body = entity.component<BodyComponent>())
 	{
-		deletionBodies.push_back(body->getBody());
+		bodiesToRemove.push_back(body->getBody());
 	}
 }
 
 void PhysicsSystem::receive(const entityx::ComponentRemovedEvent<BodyComponent>& event)
 {
-	deletionBodies.push_back(event.component->getBody());
+	bodiesToRemove.push_back(event.component->getBody());
 }
 
 void PhysicsSystem::receive(const CreateBody& event)
 {
-	auto bodyDef = BodyParser::createBodyDef(event.bodyNode);
-	bodyDef.userData = new entityx::Entity(event.entity);
+	pugi::xml_document doc;
+	doc.append_copy(event.bodyNode);
 
-	std::vector<std::pair<b2FixtureDef, std::variant<b2CircleShape, b2PolygonShape>>> fixtureDefs;
-
-	for (const auto* fixtureNode = event.bodyNode->FirstChildElement(); fixtureNode; fixtureNode = fixtureNode->NextSiblingElement())
-	{
-		std::variant<b2CircleShape, b2PolygonShape> shape;
-
-		if (std::strcmp(fixtureNode->Value(), "Circle") == 0)
-		{
-			shape = BodyParser::createCircle(fixtureNode);
-		}
-		else if (std::strcmp(fixtureNode->Value(), "Polygon") == 0)
-		{
-			shape = BodyParser::createPolygon(fixtureNode);
-		}
-		
-		fixtureDefs.push_back({BodyParser::createFixtureDef(fixtureNode), shape });
-	}
-
-	bodiesDefinitions.push_back({ bodyDef, fixtureDefs });
+	bodiesToCreate.push_back({ event.entity, std::move(doc) });
 }
 
 void PhysicsSystem::receive(const CreateDistanceJoint& event)
@@ -108,35 +89,24 @@ void PhysicsSystem::updateWorld()
 
 void PhysicsSystem::createBodies()
 {
-	for (auto& bodyDefinition : bodiesDefinitions)
+	for (auto&& [entity, doc] : bodiesToCreate)
 	{
-		auto* body = world.CreateBody(&bodyDefinition.bodyDef);
-
-		for (auto& [fixtureDef, shape] : bodyDefinition.fixtureDefs)
-		{
-			std::visit([&body, &fixtureDef](auto& shapeValue) 
-			{
-				fixtureDef.shape = &shapeValue;
-				body->CreateFixture(&fixtureDef);
-			}, shape);
-		}
-
-		static_cast<entityx::Entity*>(bodyDefinition.bodyDef.userData)->assign<BodyComponent>(body);
+		entity.assign<BodyComponent>(world, doc.child("Body"), new entityx::Entity(entity));
 	}
 
-	bodiesDefinitions.clear();
+	bodiesToCreate.clear();
 }
 
 void PhysicsSystem::removeBodies()
 {
-	for (const auto& body : deletionBodies)
+	for (const auto& body : bodiesToRemove)
 	{
 		delete static_cast<entityx::Entity*>(body->GetUserData());
 
 		world.DestroyBody(body);
 	}
 
-	deletionBodies.clear();
+	bodiesToRemove.clear();
 }
 
 void PhysicsSystem::limitLinearSpeed(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<SpeedComponent> speed)

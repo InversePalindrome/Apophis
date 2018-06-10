@@ -9,11 +9,11 @@ InversePalindrome.com
 
 #include "EntityParser.hpp"
 
-#include <entityx/entityx.h>
+#include <cocos/2d/CCNode.h>
 
 #include <Box2D/Common/b2Math.h>
 
-#include <cocos/2d/CCNode.h>
+#include <entityx/entityx.h>
 
 #include <map>
 #include <string>

@@ -7,15 +7,15 @@ InversePalindrome.com
 
 #pragma once
 
-#include <tinyxml2/tinyxml2.h>
-
 #include <cocos/2d/CCLabel.h>
+
+#include <pugixml.hpp>
 
 
 class LabelComponent 
 {
 public:
-	explicit LabelComponent(const tinyxml2::XMLElement* componentNode);
+	explicit LabelComponent(const pugi::xml_node& componentNode);
 	~LabelComponent();
 
 	cocos2d::Label* getLabel();

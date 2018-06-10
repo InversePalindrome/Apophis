@@ -9,13 +9,13 @@ InversePalindrome.com
 
 #include "ObjectType.hpp"
 
-#include <tinyxml2/tinyxml2.h>
+#include <pugixml.hpp>
 
 
 class ObjectComponent
 {
 public:
-	explicit ObjectComponent(const tinyxml2::XMLElement* componentNode);
+	explicit ObjectComponent(const pugi::xml_node& componentNode);
 
 	ObjectType getObjectType() const;
 	void setObjectType(ObjectType objectType);

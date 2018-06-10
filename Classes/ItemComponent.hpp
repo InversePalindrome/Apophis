@@ -9,13 +9,13 @@ InversePalindrome.com
 
 #include "Item.hpp"
 
-#include <tinyxml2/tinyxml2.h>
+#include <pugixml.hpp>
 
 
 class ItemComponent
 {
 public:
-	explicit ItemComponent(const tinyxml2::XMLElement* componentNode);
+	explicit ItemComponent(const pugi::xml_node& componentNode);
 
 	Item getItem() const;
 	void setItem(Item item);

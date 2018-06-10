@@ -7,7 +7,7 @@ InversePalindrome.com
 
 #pragma once
 
-#include <tinyxml2/tinyxml2.h>
+#include <pugixml.hpp>
 
 #include <string>
 #include <chrono>
@@ -16,7 +16,7 @@ InversePalindrome.com
 class WeaponComponent
 {
 public:
-	explicit WeaponComponent(const tinyxml2::XMLElement* componentNode);
+	explicit WeaponComponent(const pugi::xml_node& componentNode);
 
 	std::string getProjectileName() const;
 	void setProjectileName(const std::string& projectileName);

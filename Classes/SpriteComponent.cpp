@@ -8,13 +8,10 @@ InversePalindrome.com
 #include "SpriteComponent.hpp"
 
 
-SpriteComponent::SpriteComponent(const tinyxml2::XMLElement* componentNode) :
+SpriteComponent::SpriteComponent(const pugi::xml_node& componentNode) :
 	sprite(cocos2d::Sprite::create())
 {
-	if (const auto* name = componentNode->GetText())
-	{
-		load(name);
-	}
+	load(componentNode.text().as_string());
 	
 	sprite->retain();
 }

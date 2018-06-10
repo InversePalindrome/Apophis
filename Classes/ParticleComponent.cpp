@@ -8,13 +8,10 @@ InversePalindrome.com
 #include "ParticleComponent.hpp"
 
 
-ParticleComponent::ParticleComponent(const tinyxml2::XMLElement* componentNode)  :
+ParticleComponent::ParticleComponent(const pugi::xml_node& componentNode)  :
 	particleSystem(cocos2d::ParticleSystemQuad::create())
 {
-	if (const auto* filename = componentNode->GetText())
-	{
-	    load(filename);
-	}
+	load(componentNode.text().as_string());
 
 	particleSystem->retain();
 }

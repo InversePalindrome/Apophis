@@ -7,13 +7,13 @@ InversePalindrome.com
 
 #pragma once
 
-#include "tinyxml2/tinyxml2.h"
+#include <pugixml.hpp>
 
 
 class FlockComponent
 {
 public:
-	explicit FlockComponent(const tinyxml2::XMLElement* componentNode);
+	explicit FlockComponent(const pugi::xml_node& componentNode);
 
 	int getGroupID() const;
 	void setGroupID(int groupID);

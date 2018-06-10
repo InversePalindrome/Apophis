@@ -7,13 +7,13 @@ InversePalindrome.com
 
 #pragma once
 
-#include <tinyxml2/tinyxml2.h>
+#include <pugixml.hpp>
 
 
 class WanderComponent
 {
 public:
-	explicit WanderComponent(const tinyxml2::XMLElement* componentNode);
+	explicit WanderComponent(const pugi::xml_node& componentNode);
 
 	float getWanderDistance() const;
 	void setWanderDistance(float wanderDistance);

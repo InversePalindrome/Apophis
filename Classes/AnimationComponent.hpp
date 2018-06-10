@@ -7,16 +7,16 @@ InversePalindrome.com
 
 #pragma once
 
-#include <tinyxml2/tinyxml2.h>
-
 #include <cocos/base/CCMap.h>
 #include <cocos/2d/CCAnimation.h>
+
+#include <pugixml.hpp>
 
 
 class AnimationComponent
 {
 public:
-	explicit AnimationComponent(const tinyxml2::XMLElement* componentNode);
+	explicit AnimationComponent(const pugi::xml_node& componentNode);
 
 	cocos2d::Animation* getAnimation(const std::string& action) const;
 

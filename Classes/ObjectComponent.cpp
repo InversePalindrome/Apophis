@@ -8,13 +8,9 @@ InversePalindrome.com
 #include "ObjectComponent.hpp"
 
 
-ObjectComponent::ObjectComponent(const tinyxml2::XMLElement* componentNode) :
-	objectType(ObjectType::Undefined)
+ObjectComponent::ObjectComponent(const pugi::xml_node& componentNode) :
+	objectType(ObjectType::_from_string(componentNode.text().as_string()))
 {
-	if (const auto* objectType = componentNode->GetText())
-	{
-		this->objectType = ObjectType::_from_string(objectType);
-	}
 }
 
 ObjectType ObjectComponent::getObjectType() const

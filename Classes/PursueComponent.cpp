@@ -7,16 +7,10 @@ InversePalindrome.com
 
 #include "PursueComponent.hpp"
 
-#include <string>
 
-
-PursueComponent::PursueComponent(const tinyxml2::XMLElement* componentNode) :
-	predictionTime(5.f)
+PursueComponent::PursueComponent(const pugi::xml_node& componentNode) :
+	predictionTime(componentNode.text().as_float(5.f))
 {
-	if (const auto* predictionTime = componentNode->GetText())
-	{
-		this->predictionTime = std::stof(predictionTime);
-	}
 }
 
 float PursueComponent::getPredictionTime() const

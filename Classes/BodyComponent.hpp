@@ -10,11 +10,13 @@ InversePalindrome.com
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2World.h>
 
+#include <pugixml.hpp>
+
 
 class BodyComponent
 {
 public:
-	explicit BodyComponent(b2Body* body);
+	BodyComponent(b2World& world, const pugi::xml_node& componentNode, void* bodyData);
 
 	b2Body* getBody();
 	b2Body* getBody() const;
@@ -53,4 +55,7 @@ public:
 
 private:
 	b2Body* body;
+
+	void createBody(b2World& world, const pugi::xml_node& bodyNode, void* bodyData);
+	void createFixture(const pugi::xml_node& fixtureNode);
 };

@@ -7,7 +7,7 @@ InversePalindrome.com
 
 #pragma once
 
-#include <tinyxml2/tinyxml2.h>
+#include <pugixml.hpp>
 
 #include <string>
 #include <unordered_map>
@@ -16,7 +16,7 @@ InversePalindrome.com
 class SoundComponent
 {
 public:
-	explicit SoundComponent(const tinyxml2::XMLElement* componentNode);
+	explicit SoundComponent(const pugi::xml_node& componentNode);
 
 	std::string getSound(const std::string& action) const;
 

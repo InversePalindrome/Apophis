@@ -7,7 +7,7 @@ InversePalindrome.com
 
 #pragma once
 
-#include <tinyxml2/tinyxml2.h>
+#include <pugixml.hpp>
 
 #include <cocos/2d/CCSprite.h>
 
@@ -17,7 +17,7 @@ InversePalindrome.com
 class SpriteComponent
 {
 public:
-	explicit SpriteComponent(const tinyxml2::XMLElement* componentNode);
+	explicit SpriteComponent(const pugi::xml_node& componentNode);
 
 	~SpriteComponent();
 

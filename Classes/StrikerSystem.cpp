@@ -70,7 +70,7 @@ void StrikerSystem::update(entityx::EntityManager& entityManager, entityx::Event
 
 	for (auto entity : entityManager.entities_with_components(striker, body, speed, wander, vision, health))
 	{
-		strikerTree.process(StrikerContext{ entity, body, speed, wander, vision, health });
+		//strikerTree.process(StrikerContext{ entity, body, speed, wander, vision, health });
 	}
 }
 

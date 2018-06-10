@@ -7,13 +7,13 @@ InversePalindrome.com
 
 #pragma once
 
-#include <tinyxml2/tinyxml2.h>
+#include <pugixml.hpp>
 
 
 class DamageComponent
 {
 public:
-	explicit DamageComponent(const tinyxml2::XMLElement* componentNode);
+	explicit DamageComponent(const pugi::xml_node& componentNode);
 
 	float getDamageHitpoints() const;
 	void setDamageHitpoints(float hitpoints);

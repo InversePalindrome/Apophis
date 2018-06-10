@@ -7,13 +7,13 @@ InversePalindrome.com
 
 #pragma once
 
-#include <tinyxml2/tinyxml2.h>
+#include <pugixml.hpp>
 
 
 class VisionComponent
 {
 public:
-	explicit VisionComponent(const tinyxml2::XMLElement* componentNode);
+	explicit VisionComponent(const pugi::xml_node& componentNode);
 
 	float getVisionDistance() const;
 	void setVisionDistance(float visionDistance);

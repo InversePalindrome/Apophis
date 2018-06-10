@@ -14,9 +14,9 @@ InversePalindrome.com
 #include "HealthComponent.hpp"
 #include "VisionComponent.hpp"
 
-#include <beehive/beehive.hpp>
-
 #include <entityx/System.h>
+
+#include <beehive/beehive.hpp>
 
 
 struct StrikerContext

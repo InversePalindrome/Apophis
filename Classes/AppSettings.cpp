@@ -7,9 +7,9 @@ InversePalindrome.com
 
 #include "AppSettings.hpp"
 
-#include <tinyxml2/tinyxml2.h>
-
 #include <cocos/platform/CCFileUtils.h>
+
+#include <pugixml.hpp>
 
 
 AppSettings::AppSettings() :
@@ -65,38 +65,33 @@ void AppSettings::setKeyBinding(KeyAction keyAction, cocos2d::EventKeyboard::Key
 
 void AppSettings::load(const std::string& filename)
 {
-	auto* fileUtils = cocos2d::FileUtils::getInstance();
-	auto path = fileUtils->fullPathForFilename(filename);
-    auto data = fileUtils->getStringFromFile(path);
+	pugi::xml_document doc;
 
-	tinyxml2::XMLDocument doc;
-	doc.Parse(data.c_str());
-
-	if (const auto* settingsNode = doc.RootElement())
+	if (doc.load_file(cocos2d::FileUtils::getInstance()->fullPathForFilename(filename).c_str()))
 	{
-		if (const auto* soundNode = settingsNode->FirstChildElement("Sound"))
+		for (auto keyBindingNode : doc.children("KeyBindings"))
 		{
-			if (const auto* soundVolume = soundNode->Attribute("volume"))
+			auto keyActionAttribute = keyBindingNode.attribute("action");
+			auto keyCodeAttribute = keyBindingNode.attribute("keyCode");
+
+			if (keyActionAttribute && keyCodeAttribute)
 			{
-				this->soundVolume = std::stof(soundVolume);
-			}
-		}
-		if (const auto* musicNode = settingsNode->FirstChildElement("Music"))
-		{
-			if (const auto* musicVolume = musicNode->Attribute("volume"))
-			{
-				this->musicVolume = std::stof(musicVolume);
+				keyBindings[KeyAction::_from_string(keyActionAttribute.as_string())] = cocos2d::EventKeyboard::KeyCode{ keyCodeAttribute.as_int() };
 			}
 		}
 
-		for (const auto* keyBindingNode = settingsNode->FirstChildElement("KeyBinding"); keyBindingNode; keyBindingNode = keyBindingNode->NextSiblingElement("KeyBinding"))
+		if (auto soundNode = doc.child("Sound"))
 		{
-			const auto* keyAction = keyBindingNode->Attribute("action");
-			const auto* keyCode = keyBindingNode->Attribute("keyCode");
-
-			if (keyAction && keyCode)
+			if (auto volumeAttribute = soundNode.attribute("volume"))
 			{
-				keyBindings[KeyAction::_from_string(keyAction)] = cocos2d::EventKeyboard::KeyCode{ std::stoi(keyCode) };
+				soundVolume = volumeAttribute.as_float();
+			}
+		}
+		if (auto musicNode = doc.child("Music"))
+		{
+			if (auto volumeAttribute = musicNode.attribute("volume"))
+			{
+				musicVolume = volumeAttribute.as_float();
 			}
 		}
 	}
@@ -104,34 +99,28 @@ void AppSettings::load(const std::string& filename)
 
 void AppSettings::save(const std::string& filename)
 {
-	tinyxml2::XMLDocument doc;
+	pugi::xml_document doc;
 
-	auto* decl = doc.NewDeclaration();
-	doc.LinkEndChild(decl);
+	auto declaration = doc.append_child(pugi::node_declaration);
+	declaration.append_attribute("version") = "1.0";
+	declaration.append_attribute("encoding") = "UTF-8";
 
-	auto* settingsNode = doc.NewElement("Settings");
+	auto settingsNode = doc.append_child("Settings");
 
-	auto* soundNode = doc.NewElement("Sound");
-	soundNode->SetAttribute("volume", soundVolume);
+	auto soundNode = settingsNode.append_child("Sound");
+	soundNode.append_attribute("volume") = soundVolume;
 
-	auto* musicNode = doc.NewElement("Music");
-	musicNode->SetAttribute("volume", musicVolume);
-
-	settingsNode->LinkEndChild(soundNode);
-	settingsNode->LinkEndChild(musicNode);
+	auto musicNode = settingsNode.append_child("Music");
+	musicNode.append_attribute("volume") = musicVolume;
 
 	for (const auto& [keyAction, keyCode] : keyBindings)
 	{
-		auto* keyBindingNode = doc.NewElement("KeyBinding");
-		keyBindingNode->SetAttribute("action", keyAction._to_string());
-		keyBindingNode->SetAttribute("keyCode", static_cast<int>(keyCode));
-
-		settingsNode->LinkEndChild(keyBindingNode);
+		auto keyBindingNode = settingsNode.append_child("KeyBinding");
+		keyBindingNode.append_attribute("action") = keyAction._to_string();
+		keyBindingNode.append_attribute("keyCode") = static_cast<int>(keyCode);
 	}
-
-	doc.LinkEndChild(settingsNode);
 
 	auto path = cocos2d::FileUtils::getInstance()->getWritablePath() + filename;
 
-	doc.SaveFile(path.c_str());
+	doc.save_file(path.c_str());
 }

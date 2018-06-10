@@ -11,13 +11,13 @@ InversePalindrome.com
 #include "ObjectType.hpp"
 #include "RayCastQuery.hpp"
 
-#include <entityx/Entity.h>
+#include <cocos/math/Vec2.h>
 
 #include <Box2D/Common/b2Math.h>
 
-#include <cocos/math/Vec2.h>
+#include <entityx/Entity.h>
 
-#include <tinyxml2/tinyxml2.h>
+#include <pugixml.hpp>
 
 
 struct EntityParsed
@@ -38,8 +38,8 @@ struct ShootProjectile
 
 struct CreateBody
 {
-	const tinyxml2::XMLElement* bodyNode;
 	entityx::Entity entity;
+	const pugi::xml_node bodyNode;
 };
 
 struct CreateDistanceJoint

@@ -7,16 +7,10 @@ InversePalindrome.com
 
 #include "DamageComponent.hpp"
 
-#include <string>
 
-
-DamageComponent::DamageComponent(const tinyxml2::XMLElement* componentNode) :
-	damageHitpoints(1.f)
+DamageComponent::DamageComponent(const pugi::xml_node& componentNode) :
+	damageHitpoints(componentNode.text().as_float(1.f))
 {
-	if (const auto* damageHitpoints = componentNode->GetText())
-	{
-		this->damageHitpoints = std::stof(damageHitpoints);
-	}
 }
 
 float DamageComponent::getDamageHitpoints() const

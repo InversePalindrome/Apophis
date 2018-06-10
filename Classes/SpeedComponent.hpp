@@ -7,13 +7,13 @@ InversePalindrome.com
 
 #pragma once
 
-#include <tinyxml2/tinyxml2.h>
+#include <pugixml.hpp>
 
 
 class SpeedComponent
 {
 public:
-	explicit SpeedComponent(const tinyxml2::XMLElement* componentNode);
+	explicit SpeedComponent(const pugi::xml_node& componentNode);
 
 	float getMaxLinearSpeed() const;
 	void setMaxLinearSpeed(float maxLinearSpeed);

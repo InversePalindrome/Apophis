@@ -7,13 +7,13 @@ InversePalindrome.com
 
 #pragma once
 
-#include <tinyxml2/tinyxml2.h>
+#include <pugixml.hpp>
 
 
 class PursueComponent
 {
 public:
-	explicit PursueComponent(const tinyxml2::XMLElement* componentNode);
+	explicit PursueComponent(const pugi::xml_node& componentNode);
 
 	float getPredictionTime() const;
 	void setPredictionTime(float predictionTime);

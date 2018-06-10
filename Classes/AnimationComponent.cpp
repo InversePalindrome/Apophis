@@ -10,26 +10,23 @@ InversePalindrome.com
 #include <cocos/2d/CCSpriteFrameCache.h>
 
 
-AnimationComponent::AnimationComponent(const tinyxml2::XMLElement* componentNode)
+AnimationComponent::AnimationComponent(const pugi::xml_node& componentNode)
 {
-	for (const auto* actionNode = componentNode->FirstChildElement(); actionNode; actionNode = actionNode->NextSiblingElement())
+	for (const auto actionNode : componentNode.children())
 	{
 		auto* animation = cocos2d::Animation::create();
- 	
-		for (const auto* frameNode = actionNode->FirstChildElement("Frame"); frameNode; frameNode = frameNode->NextSiblingElement("Frame"))
+
+		for (const auto frameNode : actionNode.children("Frame"))
 		{
-			if (const auto* frameName = frameNode->GetText())
-			{
-				animation->addSpriteFrame(cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(frameName));
-			}
+			animation->addSpriteFrame(cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(frameNode.text().as_string()));
 		}
 
-		if (const auto* delay = actionNode->Attribute("delay"))
+		if (const auto delayAttribute = actionNode.attribute("delay"))
 		{
-			animation->setDelayPerUnit(std::stof(delay));
+			animation->setDelayPerUnit(delayAttribute.as_float());
 		}
 
-		animations.insert(actionNode->Value(), animation);
+		animations.insert(actionNode.value(), animation);
 	}
 }
 

@@ -7,16 +7,10 @@ InversePalindrome.com
 
 #include "FollowComponent.hpp"
 
-#include <string>
 
-
-FollowComponent::FollowComponent(const tinyxml2::XMLElement* componentNode) :
-	distanceFromLeader(5.f)
+FollowComponent::FollowComponent(const pugi::xml_node& componentNode) :
+	distanceFromLeader(componentNode.text().as_float(5.f))
 {
-	if (const auto* distanceFromLeader = componentNode->GetText())
-	{
-		this->distanceFromLeader = std::stof(distanceFromLeader);
-	}
 }
 
 float FollowComponent::getDistanceFromLeader() const

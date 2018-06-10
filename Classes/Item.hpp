@@ -10,4 +10,4 @@ InversePalindrome.com
 #include <enum.h>
 
 
-BETTER_ENUM(Item, int, Undefined, Weapon, RegenBoost, SpeedBoost)
+BETTER_ENUM(Item, int, Weapon, RegenBoost, SpeedBoost)

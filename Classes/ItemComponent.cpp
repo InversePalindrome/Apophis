@@ -8,13 +8,9 @@ InversePalindrome.com
 #include "ItemComponent.hpp"
 
 
-ItemComponent::ItemComponent(const tinyxml2::XMLElement* componentNode) :
-	item(Item::Undefined)
+ItemComponent::ItemComponent(const pugi::xml_node& componentNode) :
+	item(Item::_from_string(componentNode.text().as_string()))
 {
-	if (const auto* item = componentNode->GetText())
-	{
-		this->item = Item::_from_string(item);
-	}
 }
 
 Item ItemComponent::getItem() const

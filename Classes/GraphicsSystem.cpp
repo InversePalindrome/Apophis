@@ -41,8 +41,11 @@ void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::Even
 
 	for (auto entity : entityManager.entities_with_components(node, body))
 	{
-		node->setPosition(Utility::worldToScreenCoordinates(body->getPosition()));
-		node->setRotation(Utility::radiansToDegrees(body->getAngle()));
+		if (body->getBody())
+		{
+			node->setPosition(Utility::worldToScreenCoordinates(body->getPosition()));
+			node->setRotation(Utility::radiansToDegrees(body->getAngle()));
+		}
 	}
 
 	updateView();

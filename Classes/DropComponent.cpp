@@ -8,13 +8,13 @@ InversePalindrome.com
 #include "DropComponent.hpp"
 
 
-DropComponent::DropComponent(const tinyxml2::XMLElement* componentNode) :
+DropComponent::DropComponent(const pugi::xml_node& componentNode) :
 	randomEngine(std::random_device()())
 {
-	for (const auto* itemNode = componentNode->FirstChildElement(); itemNode; itemNode = itemNode->NextSiblingElement())
+	for (const auto itemNode : componentNode.children())
 	{
-		items.push_back(itemNode->Value());
-		weights.push_back(std::stoi(itemNode->GetText()));
+		items.push_back(itemNode.value());
+		weights.push_back(itemNode.text().as_int());
 	}
 }
 

@@ -7,13 +7,13 @@ InversePalindrome.com
 
 #pragma once
 
-#include <tinyxml2/tinyxml2.h>
+#include <pugixml.hpp>
 
 
 class SatelliteComponent
 {
 public:
-	explicit SatelliteComponent(const tinyxml2::XMLElement* componentNode);
+	explicit SatelliteComponent(const pugi::xml_node& componentNode);
 
 	int getPrimaryID() const;
 	void setPrimaryID(int primaryID);
