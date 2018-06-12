@@ -19,9 +19,12 @@ InversePalindrome.com
 #include "OrbitalSystem.hpp"
 #include "StrikerSystem.hpp"
 #include "GraphicsSystem.hpp"
+#include "ImpulseComponent.hpp"
 
 #include <cocos/base/CCEventDispatcher.h>
 #include <cocos/base/CCEventListenerCustom.h>
+
+#include <entityx/deps/Dependencies.h>
 
 
 GameNode::GameNode() :
@@ -59,7 +62,7 @@ bool GameNode::init()
 	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("resume", [this](auto* event) { scheduleUpdate(); }), this);
 	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("gameOver", [this](auto* event)
 	{
-		scheduleOnce([this](auto dt) { entityManager.reset(); }, 0.f, "Reset");
+		entityManager.reset();
 	}), this);
 
 	map.setMainNode(this);
@@ -110,6 +113,7 @@ void GameNode::initSystems()
 	systemManager.add<PhysicsSystem>(entityManager, eventManager);
 	systemManager.add<CombatSystem>(entityParser);
 	systemManager.add<GraphicsSystem>(this, map);
+	systemManager.add<entityx::deps::Dependency<SpeedComponent, ImpulseComponent>>();
 
 	systemManager.configure();
 }

@@ -10,7 +10,9 @@ InversePalindrome.com
 #include "Events.hpp"
 #include "BodyComponent.hpp"
 #include "SpeedComponent.hpp"
+#include "SpatialComponent.hpp"
 #include "CollisionManager.hpp"
+#include "ImpulseComponent.hpp"
 
 #include <Box2D/Dynamics/b2World.h>
 
@@ -47,6 +49,8 @@ private:
 	void createBodies();
 	void removeBodies();
 
+	static void updateSpatialProperties(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<SpatialComponent> spatial);
+	static void applyImpulses(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<ImpulseComponent> impulse);
 	static void limitLinearSpeed(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<SpeedComponent> speed);
 	static void limitAngularSpeed(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<SpeedComponent> speed);
 };

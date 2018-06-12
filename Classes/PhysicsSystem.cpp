@@ -5,6 +5,7 @@ InversePalindrome.com
 */
 
 
+#include "Conversions.hpp"
 #include "PhysicsSystem.hpp"
 #include "AnchorPointComponent.hpp"
 #include "DistanceJointComponent.hpp"
@@ -28,17 +29,22 @@ void PhysicsSystem::configure(entityx::EventManager& eventManager)
 
 void PhysicsSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
-	entityx::ComponentHandle<BodyComponent> body;
-	entityx::ComponentHandle<SpeedComponent> speed;
+	createBodies();
+	removeBodies();
 
-	for (auto entity : entityManager.entities_with_components(body, speed))
+	entityx::ComponentHandle<BodyComponent> body;
+	entityx::ComponentHandle<SpatialComponent> spatial;
+	entityx::ComponentHandle<SpeedComponent> speed;
+	entityx::ComponentHandle<ImpulseComponent> impulse;
+
+	for (auto entity : entityManager.entities_with_components(body, spatial, speed, impulse))
 	{
+		updateSpatialProperties(body, spatial);
+		applyImpulses(body, impulse);
 		limitLinearSpeed(body, speed);
 		limitAngularSpeed(body, speed);
 	}
-
-	createBodies();
-	removeBodies();
+	
 	updateWorld();
 }
 
@@ -91,7 +97,13 @@ void PhysicsSystem::createBodies()
 {
 	for (auto&& [entity, doc] : bodiesToCreate)
 	{
-		entity.assign<BodyComponent>(world, doc.child("Body"), new entityx::Entity(entity));
+		auto body = entity.assign<BodyComponent>(world, doc.child("Body"), new entityx::Entity(entity));
+
+		if (auto spatial = entity.component<SpatialComponent>())
+		{
+			body->setPosition({ spatial->getPosition()[0], spatial->getPosition()[1] });
+			body->setAngle(Conversions::degreesToRadians(spatial->getAngle()));
+		}
 	}
 
 	bodiesToCreate.clear();
@@ -107,6 +119,21 @@ void PhysicsSystem::removeBodies()
 	}
 
 	bodiesToRemove.clear();
+}
+
+void PhysicsSystem::updateSpatialProperties(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<SpatialComponent> spatial)
+{
+	spatial->setPosition(Vector2f{ body->getPosition().x, body->getPosition().y });
+	spatial->setAngle(Conversions::radiansToDegrees(body->getAngle()));
+}
+
+void PhysicsSystem::applyImpulses(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<ImpulseComponent> impulse)
+{
+	body->applyLinearImpulse(impulse->getLinearImpulse());
+	body->applyAngularImpulse(impulse->getAngularImpulse());
+
+	impulse->setLinearImpulse({ 0.f, 0.f });
+	impulse->setAngularImpulse(0.f);
 }
 
 void PhysicsSystem::limitLinearSpeed(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<SpeedComponent> speed)

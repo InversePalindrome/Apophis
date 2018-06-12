@@ -11,6 +11,7 @@ InversePalindrome.com
 #include "BodyComponent.hpp"
 #include "SpeedComponent.hpp"
 #include "KeyboardManager.hpp"
+#include "ImpulseComponent.hpp"
 
 #include <entityx/System.h>
 
@@ -27,7 +28,7 @@ private:
 	KeyboardManager* keyboardManager;
 	MouseManager* mouseManager;
 
-	void updateMovement(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<SpeedComponent> speed);
-	void updateRotation(entityx::ComponentHandle<BodyComponent> body);
+	void updateMovement(entityx::ComponentHandle<SpeedComponent> speed, entityx::ComponentHandle<ImpulseComponent> impulse);
+	void updateRotation(entityx::ComponentHandle<ImpulseComponent> impulse, entityx::ComponentHandle<BodyComponent> body);
 	void updateShooting(entityx::EventManager& eventManager, entityx::Entity player);
 };

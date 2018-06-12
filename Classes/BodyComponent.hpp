@@ -30,8 +30,6 @@ public:
 	b2Vec2 getPosition() const;
 	void setPosition(const b2Vec2& position);
 
-	b2AABB getAABB() const;
-
 	b2Vec2 getLinearVelocity() const;
 	void setLinearVelocity(const b2Vec2& linearVelocity);
 

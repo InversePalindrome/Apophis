@@ -65,31 +65,6 @@ void BodyComponent::setPosition(const b2Vec2& position)
     body->SetTransform(position, body->GetAngle());
 }
 
-b2AABB BodyComponent::getAABB() const
-{
-	b2AABB aabb{ { 0.f, 0.f },{ 0.f, 0.f } };
-
-	b2Transform transform;
-	transform.SetIdentity();
-
-	for (const auto* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
-	{
-		const auto* shape = fixture->GetShape();
-
-		for (int child = 0; child < shape->GetChildCount(); ++child)
-		{
-			b2AABB shapeAABB;
-			shape->ComputeAABB(&shapeAABB, transform, child);
-			shapeAABB.lowerBound = shapeAABB.lowerBound;
-			shapeAABB.upperBound = shapeAABB.upperBound;
-
-			aabb.Combine(shapeAABB);
-		}
-	}
-
-	return aabb;
-}
-
 b2Vec2 BodyComponent::getLinearVelocity() const
 {
 	return body->GetLinearVelocity();

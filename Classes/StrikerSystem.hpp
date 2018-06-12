@@ -7,12 +7,12 @@ InversePalindrome.com
 
 #pragma once
 
-#include "Tags.hpp"
 #include "BodyComponent.hpp"
 #include "SpeedComponent.hpp"
 #include "WanderComponent.hpp"
 #include "HealthComponent.hpp"
 #include "VisionComponent.hpp"
+#include "ImpulseComponent.hpp"
 
 #include <entityx/System.h>
 
@@ -24,6 +24,7 @@ struct StrikerContext
 	entityx::Entity striker;
 	entityx::ComponentHandle<BodyComponent> body;
 	entityx::ComponentHandle<SpeedComponent> speed;
+	entityx::ComponentHandle<ImpulseComponent> impulse;
 	entityx::ComponentHandle<WanderComponent> wander;
 	entityx::ComponentHandle<VisionComponent> vision;
 	entityx::ComponentHandle<HealthComponent> health;
@@ -36,7 +37,7 @@ public:
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
-	virtual void receive(const entityx::ComponentAddedEvent<Player>& event);
+	virtual void receive(const entityx::ComponentAddedEvent<BodyComponent>& event);
 
 private:
 	entityx::EventManager* eventManager;

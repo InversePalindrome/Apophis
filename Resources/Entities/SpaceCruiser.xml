@@ -4,20 +4,21 @@
     <Striker></Striker>
   </Tags>
   <Components>
+    <Spatial x="10" y="10" width="1.6" height="1.6"></Spatial>
     <Sprite>SpaceCruiser</Sprite>
     <Object>Enemy</Object>
     <Body type="2" x="-5" y="-18" fixedRotation="false">
       <Circle radius="1.6" density="0.3"></Circle>
     </Body>
     <Speed angular="10"></Speed>
-    <Weapon projectileName="Laser" projectileVelocity="16" reloadTime="0.5"></Weapon>
-    <Explosion name="Boom" time="2"></Explosion>
+    <Weapon projectileName="Laser" projectileVelocity="16" reloadTime="2000"></Weapon>
+    <Explosion name="Boom" time="2000"></Explosion>
     <Drop>
       <SpeedBoost>1</SpeedBoost>
       <RegenBoost>1</RegenBoost>
     </Drop>
     <Health>80</Health>
-    <Vision>5</Vision>
+    <Vision>15</Vision>
     <Avoid distance="5" force="30"></Avoid>
     <Wander></Wander>
     <Queue></Queue>

@@ -10,6 +10,7 @@ InversePalindrome.com
 #include <pugixml.hpp>
 
 #include <string>
+#include <chrono>
 
 
 class ExplosionComponent
@@ -18,11 +19,12 @@ public:
 	explicit ExplosionComponent(const pugi::xml_node& componentNode);
 
 	std::string getExplosionName() const;
+	void setExplosionName(const std::string& explosionName);
 
-	float getExplosionTime() const;
-	void setExplosionTime(float explosionTime);
+    std::chrono::milliseconds getExplosionTime() const;
+	void setExplosionTime(const std::chrono::milliseconds& explosionTime);
 
 private:
 	std::string explosionName;
-	float explosionTime;
+	std::chrono::milliseconds explosionTime;
 };

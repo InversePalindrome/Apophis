@@ -7,9 +7,8 @@ InversePalindrome.com
 
 #include "Tags.hpp"
 #include "Constants.hpp"
-#include "BodyComponent.hpp"
+#include "SpatialComponent.hpp"
 #include "GraphicsSystem.hpp"
-#include "ConversionUtility.hpp"
 #include "AnimationComponent.hpp"
 
 #include <cocos/base/CCDirector.h>
@@ -37,15 +36,12 @@ void GraphicsSystem::configure(entityx::EventManager& eventManager)
 void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
 	entityx::ComponentHandle<NodeComponent> node;
-	entityx::ComponentHandle<BodyComponent> body;
+	entityx::ComponentHandle<SpatialComponent> spatial;
 
-	for (auto entity : entityManager.entities_with_components(node, body))
+	for (auto entity : entityManager.entities_with_components(node, spatial))
 	{
-		if (body->getBody())
-		{
-			node->setPosition(Utility::worldToScreenCoordinates(body->getPosition()));
-			node->setRotation(Utility::radiansToDegrees(body->getAngle()));
-		}
+		node->setPosition({ spatial->getPosition()[0] * Constants::PTM_RATIO, spatial->getPosition()[1] * Constants::PTM_RATIO });
+		node->setRotation(spatial->getAngle());
 	}
 
 	updateView();

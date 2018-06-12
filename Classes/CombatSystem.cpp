@@ -6,14 +6,14 @@ InversePalindrome.com
 
 
 #include "Constants.hpp"
+#include "Conversions.hpp"
 #include "CombatSystem.hpp"
-#include "NodeComponent.hpp"
-#include "BodyComponent.hpp"
 #include "SpeedComponent.hpp"
 #include "HealthComponent.hpp"
 #include "DamageComponent.hpp"
 #include "WeaponComponent.hpp"
-#include "ConversionUtility.hpp"
+#include "SpatialComponent.hpp"
+#include "ImpulseComponent.hpp"
 #include "ExplosionComponent.hpp"
 
 
@@ -38,34 +38,26 @@ void CombatSystem::update(entityx::EntityManager& entityManager, entityx::EventM
 void CombatSystem::receive(const ShootProjectile& event)
 {
 	auto shooterWeapon = event.shooter.component<WeaponComponent>();
+	auto shooterSpatial = event.shooter.component<SpatialComponent>();
 
-	if (shooterWeapon && shooterWeapon->isReloaded())
+	if (shooterWeapon && shooterSpatial && shooterWeapon->isReloaded())
 	{
-		auto shooterBody = event.shooter.component<BodyComponent>();
+		shooterWeapon->setReloadStatus(false);
 
 		auto projectileEntity = entityParser.createEntity(shooterWeapon->getProjectileName());
-		auto projectileNode = projectileEntity.component<NodeComponent>();
-		auto projectileBody = projectileEntity.component<BodyComponent>();
+		auto projectileSpatial = projectileEntity.component<SpatialComponent>();
 		auto projectileSpeed = projectileEntity.component<SpeedComponent>();
+		auto projectileImpulse = projectileEntity.component<ImpulseComponent>();
 
-		if (shooterBody && projectileNode && projectileBody && projectileSpeed)
+		if (projectileSpatial && projectileSpeed && projectileImpulse)
 		{
-			shooterWeapon->setReloadStatus(false);
+			auto projectileDirection = blaze::normalize(event.targetPosition - shooterSpatial->getPosition());
+		    
+		    projectileSpatial->setPosition(projectileDirection * shooterSpatial->getSize() + shooterSpatial->getPosition());
+			projectileSpatial->setAngle(shooterSpatial->getAngle());
 
-			auto shooterBodySize = shooterBody->getAABB().upperBound - shooterBody->getAABB().lowerBound;
-	
-			auto projectileDirection = event.targetPosition - shooterBody->getPosition();
-			projectileDirection.Normalize();
+			projectileImpulse += {projectileDirection[0] * projectileSpeed->getMaxLinearSpeed(), projectileDirection[1] * projectileSpeed->getMaxLinearSpeed()};
 
-			b2Vec2 projectilePosition(projectileDirection.x * shooterBodySize.x, projectileDirection.y * shooterBodySize.y);
-			projectilePosition += shooterBody->getPosition();
-	
-			projectileNode->setPosition(Utility::worldToScreenCoordinates(projectilePosition));
-			projectileNode->setRotation(Utility::radiansToDegrees(shooterBody->getAngle()));
-			projectileBody->setPosition(projectilePosition);
-			projectileBody->setAngle(shooterBody->getAngle());
-			projectileBody->applyLinearImpulse(projectileSpeed->getMaxLinearSpeed() * projectileDirection);
-			
 			timer.add(shooterWeapon->getReloadTime(), [shooterWeapon](auto id) mutable
 			{
 				if (shooterWeapon)
@@ -79,15 +71,25 @@ void CombatSystem::receive(const ShootProjectile& event)
 
 void CombatSystem::receive(const EntityDied& event)
 {
-	auto node = event.entity.component<NodeComponent>();
-	auto body = event.entity.component<BodyComponent>();
+	auto spatial = event.entity.component<SpatialComponent>();
 	auto explosion = event.entity.component<ExplosionComponent>();
 
-	if (node && body && explosion)
+	if (spatial && explosion)
 	{
+		auto explosionEntity = entityParser.createEntity(explosion->getExplosionName());
 
+		if (auto explosionSpatial = explosionEntity.component<SpatialComponent>())
+		{
+			explosionSpatial->setPosition(spatial->getPosition());
 
-	
+			timer.add(explosion->getExplosionTime(), [explosionEntity](auto id) mutable
+			{
+				if (explosionEntity)
+				{
+					explosionEntity.destroy();
+				}
+			});
+		}
 	}
 }
 

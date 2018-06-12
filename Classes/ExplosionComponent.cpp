@@ -9,7 +9,7 @@ InversePalindrome.com
 
 
 ExplosionComponent::ExplosionComponent(const pugi::xml_node& componentNode) :
-	explosionTime(1.f)
+	explosionTime(1000)
 {
 	if (const auto explosionNameAttribute = componentNode.attribute("name"))
 	{
@@ -17,7 +17,7 @@ ExplosionComponent::ExplosionComponent(const pugi::xml_node& componentNode) :
 	}
 	if (const auto explosionTimeAttribute = componentNode.attribute("time"))
 	{
-		explosionTime = explosionTimeAttribute.as_float();
+		explosionTime = std::chrono::milliseconds(explosionTimeAttribute.as_int());
 	}
 }
 
@@ -26,11 +26,16 @@ std::string ExplosionComponent::getExplosionName() const
 	return explosionName;
 }
 
-float ExplosionComponent::getExplosionTime() const
+void ExplosionComponent::setExplosionName(const std::string& explosionName)
+{
+	this->explosionName = explosionName;
+}
+
+std::chrono::milliseconds ExplosionComponent::getExplosionTime() const
 {
 	return explosionTime;
 }
-void ExplosionComponent::setExplosionTime(float explosionTime)
+void ExplosionComponent::setExplosionTime(const std::chrono::milliseconds& explosionTime)
 {
 	this->explosionTime = explosionTime;
 }

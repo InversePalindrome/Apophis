@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
   <Components>
+    <Spatial width="1" height="1"></Spatial>
     <Object>Projectile</Object>
     <Sprite>YellowBlast06</Sprite>
     <Body type="2" bullet="true">

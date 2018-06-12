@@ -6,12 +6,10 @@ InversePalindrome.com
 
 
 #include "ItemSystem.hpp"
+#include "Conversions.hpp"
 #include "DropComponent.hpp"
-#include "NodeComponent.hpp"
-#include "BodyComponent.hpp"
 #include "SpeedComponent.hpp"
 #include "HealthComponent.hpp"
-#include "ConversionUtility.hpp"
 
 
 ItemSystem::ItemSystem(EntityParser& entityParser) :
@@ -34,22 +32,7 @@ void ItemSystem::update(entityx::EntityManager& entityManager, entityx::EventMan
 
 void ItemSystem::receive(const EntityDied& event)
 {
-	auto drop = event.entity.component<DropComponent>();
-	auto body = event.entity.component<BodyComponent>();
-
-	if (drop && body)
-	{
-		auto dropEntity = entityParser.createEntity(drop->getItem());
-
-		if (auto dropNode = dropEntity.component<NodeComponent>())
-		{
-		    dropNode->setPosition(Utility::worldToScreenCoordinates(body->getPosition()));
-		}
-		if (auto dropBody = dropEntity.component<BodyComponent>())
-		{
-			dropBody->setPosition(body->getPosition());
-		}
-	}
+	
 }
 
 void ItemSystem::receive(const PickedUpItem& event)
@@ -62,7 +45,7 @@ void ItemSystem::receive(const PickedUpItem& event)
 	{
 
 	}
-	if (auto speedBoost = event.itemEntity.component<SpeedBoostComponent>())
+	if (auto speedBoostPercent = event.itemEntity.component<SpeedBoostComponent>())
 	{
 
 	}
@@ -94,15 +77,15 @@ void ItemSystem::addRegenBoost(entityx::Entity entity, entityx::ComponentHandle<
 	}
 }
 
-void ItemSystem::addSpeedBoost(entityx::Entity entity, entityx::ComponentHandle<SpeedBoostComponent> speedBoost)
+void ItemSystem::addSpeedBoost(entityx::Entity entity, entityx::ComponentHandle<SpeedBoostComponent> speedBoostPercent)
 {
 	if (auto entitySpeed = entity.component<SpeedComponent>())
 	{
 		auto originalSpeed = entitySpeed->getMaxLinearSpeed();
 
-		entitySpeed->setMaxLinearSpeed(entitySpeed->getMaxLinearSpeed() * speedBoost->getSpeedBoost());
+		entitySpeed->setMaxLinearSpeed(entitySpeed->getMaxLinearSpeed() * speedBoostPercent->getSpeedBoostPercent());
 
-		timer.add(speedBoost->getSpeedBoostDuration(), [entitySpeed, originalSpeed](auto id) mutable
+		timer.add(speedBoostPercent->getSpeedBoostDuration(), [entitySpeed, originalSpeed](auto id) mutable
 		{
 			if (entitySpeed)
 			{

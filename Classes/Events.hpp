@@ -11,13 +11,11 @@ InversePalindrome.com
 #include "ObjectType.hpp"
 #include "RayCastQuery.hpp"
 
-#include <cocos/math/Vec2.h>
-
-#include <Box2D/Common/b2Math.h>
-
 #include <entityx/Entity.h>
 
 #include <pugixml.hpp>
+
+#include <blaze/math/StaticVector.h>
 
 
 struct EntityParsed
@@ -33,7 +31,7 @@ struct EntityDied
 struct ShootProjectile
 {
 	mutable entityx::Entity shooter;
-	b2Vec2 targetPosition;
+	blaze::StaticVector<float, 2UL> targetPosition;
 };
 
 struct CreateBody
