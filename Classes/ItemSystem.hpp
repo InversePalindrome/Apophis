@@ -36,5 +36,5 @@ private:
 
 	static void addWeapon(entityx::Entity entity, entityx::ComponentHandle<WeaponComponent> weapon);
 	void addRegenBoost(entityx::Entity entity, entityx::ComponentHandle<RegenBoostComponent> regenBoost);
-	void addSpeedBoost(entityx::Entity entity, entityx::ComponentHandle<SpeedBoostComponent> speedBoostPercent);
+	void addSpeedBoost(entityx::Entity entity, entityx::ComponentHandle<SpeedBoostComponent> speedBoost);
 };

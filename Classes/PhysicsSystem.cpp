@@ -33,13 +33,13 @@ void PhysicsSystem::update(entityx::EntityManager& entityManager, entityx::Event
 	removeBodies();
 
 	entityx::ComponentHandle<BodyComponent> body;
-	entityx::ComponentHandle<SpatialComponent> spatial;
+	entityx::ComponentHandle<GeometryComponent> geometry;
 	entityx::ComponentHandle<SpeedComponent> speed;
 	entityx::ComponentHandle<ImpulseComponent> impulse;
 
-	for (auto entity : entityManager.entities_with_components(body, spatial, speed, impulse))
+	for (auto entity : entityManager.entities_with_components(body, geometry, speed, impulse))
 	{
-		updateSpatialProperties(body, spatial);
+		updateSpatialProperties(body, geometry);
 		applyImpulses(body, impulse);
 		limitLinearSpeed(body, speed);
 		limitAngularSpeed(body, speed);
@@ -99,7 +99,7 @@ void PhysicsSystem::createBodies()
 	{
 		auto body = entity.assign<BodyComponent>(world, doc.child("Body"), new entityx::Entity(entity));
 
-		if (auto spatial = entity.component<SpatialComponent>())
+		if (auto spatial = entity.component<GeometryComponent>())
 		{
 			body->setPosition({ spatial->getPosition()[0], spatial->getPosition()[1] });
 			body->setAngle(Conversions::degreesToRadians(spatial->getAngle()));
@@ -121,9 +121,9 @@ void PhysicsSystem::removeBodies()
 	bodiesToRemove.clear();
 }
 
-void PhysicsSystem::updateSpatialProperties(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<SpatialComponent> spatial)
+void PhysicsSystem::updateSpatialProperties(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<GeometryComponent> spatial)
 {
-	spatial->setPosition(Vector2f{ body->getPosition().x, body->getPosition().y });
+	spatial->setPosition({ body->getPosition().x, body->getPosition().y });
 	spatial->setAngle(Conversions::radiansToDegrees(body->getAngle()));
 }
 

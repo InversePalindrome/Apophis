@@ -15,7 +15,7 @@ InversePalindrome.com
 
 #include <pugixml.hpp>
 
-#include <blaze/math/StaticVector.h>
+#include <wykobi.hpp>
 
 
 struct EntityParsed
@@ -31,7 +31,7 @@ struct EntityDied
 struct ShootProjectile
 {
 	mutable entityx::Entity shooter;
-	blaze::StaticVector<float, 2UL> targetPosition;
+	wykobi::vector2d<float> targetPosition;
 };
 
 struct CreateBody

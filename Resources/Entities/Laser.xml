@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
   <Components>
-    <Spatial width="1" height="1"></Spatial>
+    <Geometry width="1.2" height="1.2">
+      <Circle x="0" y="0" radius="1"></Circle>
+    </Geometry>
     <Object>Projectile</Object>
     <Sprite>YellowBlast06</Sprite>
     <Body type="2" bullet="true">

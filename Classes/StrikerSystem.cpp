@@ -7,7 +7,6 @@ InversePalindrome.com
 
 #include "Tags.hpp"
 #include "Events.hpp"
-#include "Vector2.hpp"
 #include "StrikerSystem.hpp"
 #include "SteeringBehaviors.hpp"
 
@@ -33,7 +32,7 @@ StrikerSystem::StrikerSystem() :
 	           context.impulse += SteeringBehaviors::seek(context.body->getPosition(), playerBody->getPosition(), context.body->getLinearVelocity(), context.speed->getMaxLinearSpeed());
 			   context.impulse += SteeringBehaviors::face(context.body->getPosition(), playerBody->getPosition(), context.body->getAngle(), context.body->getAngularVelocity(), context.body->getInertia());
 			   
-			   eventManager->emit(ShootProjectile{ context.striker, Vector2f{playerBody->getPosition().x, playerBody->getPosition().y} });
+			  // eventManager->emit(ShootProjectile{ context.striker, Vector2f{playerBody->getPosition().x, playerBody->getPosition().y} });
 			
 		       return beehive::Status::SUCCESS;
 	       }

@@ -29,7 +29,7 @@ void CollisionManager::BeginContact(b2Contact* contact)
 
 	if (auto collisionPair = getCollisionPair(bodyA, bodyB, ObjectType::Projectile, ObjectType::Alive))
 	{
-		//eventManager.emit(ProjectileHit{ collisionPair->first, collisionPair->second });
+		eventManager.emit(ProjectileHit{ collisionPair->first, collisionPair->second });
 	}
 	else if (auto collisionPair = getCollisionPair(bodyA, bodyB, ObjectType::Player, ObjectType::Item))
 	{
@@ -58,18 +58,21 @@ CollisionManager::getCollisionPair(const b2Body* bodyA, const b2Body* bodyB, Obj
 	auto* entityA = static_cast<entityx::Entity*>(bodyA->GetUserData());
 	auto* entityB = static_cast<entityx::Entity*>(bodyB->GetUserData());
 
-	auto objectA = entityA->component<ObjectComponent>();
-	auto objectB = entityB->component<ObjectComponent>();
-		
-	if (objectA && objectB)
+	if (entityA->valid() && entityB->valid())
 	{
-		if (objectA->getObjectType() & objectTypeA && objectB->getObjectType() & objectTypeB)
+		auto objectA = entityA->component<ObjectComponent>();
+		auto objectB = entityB->component<ObjectComponent>();
+
+		if (objectA && objectB)
 		{
-			return { { *entityA, *entityB } };
-		}
-		else if (objectA->getObjectType() & objectTypeB && objectB->getObjectType() & objectTypeA)
-		{
-			return { { *entityB, *entityA } };
+			if (objectA->getObjectType() & objectTypeA && objectB->getObjectType() & objectTypeB)
+			{
+				return { { *entityA, *entityB } };
+			}
+			else if (objectA->getObjectType() & objectTypeB && objectB->getObjectType() & objectTypeA)
+			{
+				return { { *entityB, *entityA } };
+			}
 		}
 	}
 

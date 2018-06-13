@@ -134,7 +134,7 @@ bool BodyComponent::contains(const b2Vec2& point) const
 			return true;
 		}
 	}
-
+	
 	return false;
 }
 
@@ -174,18 +174,6 @@ void BodyComponent::createBody(b2World& world, const pugi::xml_node& bodyNode, v
 	if (const auto bulletAttribute = bodyNode.attribute("bullet"))
 	{
 		bodyDef.bullet = bulletAttribute.as_bool();
-	}
-	if (const auto xAttribute = bodyNode.attribute("x"))
-	{
-		bodyDef.position.x = xAttribute.as_float();
-	}
-	if (const auto yAttribute = bodyNode.attribute("y"))
-	{
-		bodyDef.position.y = yAttribute.as_float();
-	}
-	if (const auto angleAttribute = bodyNode.attribute("angle"))
-	{
-		bodyDef.angle = angleAttribute.as_float();
 	}
 
 	bodyDef.userData = bodyData;
@@ -257,7 +245,7 @@ void BodyComponent::createFixture(const pugi::xml_node& fixtureNode)
 		polygon.Set(vertices.data(), vertices.size());
 
 		shape = polygon;
-
+		
 		fixtureDef.shape = &std::get<1>(shape);
 	}
 

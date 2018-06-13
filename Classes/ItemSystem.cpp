@@ -43,12 +43,14 @@ void ItemSystem::receive(const PickedUpItem& event)
 	}
 	if (auto regenBoost = event.itemEntity.component<RegenBoostComponent>())
 	{
-
+		addRegenBoost(event.entity, regenBoost);
 	}
-	if (auto speedBoostPercent = event.itemEntity.component<SpeedBoostComponent>())
+	if (auto speedBoost = event.itemEntity.component<SpeedBoostComponent>())
 	{
-
+		addSpeedBoost(event.entity, speedBoost);
 	}
+
+	event.itemEntity.destroy();
 }
 
 void ItemSystem::addWeapon(entityx::Entity entity, entityx::ComponentHandle<WeaponComponent> weapon)
@@ -77,15 +79,15 @@ void ItemSystem::addRegenBoost(entityx::Entity entity, entityx::ComponentHandle<
 	}
 }
 
-void ItemSystem::addSpeedBoost(entityx::Entity entity, entityx::ComponentHandle<SpeedBoostComponent> speedBoostPercent)
+void ItemSystem::addSpeedBoost(entityx::Entity entity, entityx::ComponentHandle<SpeedBoostComponent> speedBoost)
 {
 	if (auto entitySpeed = entity.component<SpeedComponent>())
 	{
 		auto originalSpeed = entitySpeed->getMaxLinearSpeed();
 
-		entitySpeed->setMaxLinearSpeed(entitySpeed->getMaxLinearSpeed() * speedBoostPercent->getSpeedBoostPercent());
+		entitySpeed->setMaxLinearSpeed(entitySpeed->getMaxLinearSpeed() * speedBoost->getSpeedBoostPercent());
 
-		timer.add(speedBoostPercent->getSpeedBoostDuration(), [entitySpeed, originalSpeed](auto id) mutable
+		timer.add(speedBoost->getSpeedBoostDuration(), [entitySpeed, originalSpeed](auto id) mutable
 		{
 			if (entitySpeed)
 			{

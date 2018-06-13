@@ -9,7 +9,6 @@ InversePalindrome.com
 
 #include "Tags.hpp"
 #include "Events.hpp"
-#include "Vector2.hpp"
 #include "Constants.hpp"
 #include "AppSettings.hpp"
 #include "PlayerSystem.hpp"
@@ -72,6 +71,6 @@ void PlayerSystem::updateShooting(entityx::EventManager& eventManager, entityx::
 {
 	if (mouseManager->isMousePressed())
 	{
-		eventManager.emit(ShootProjectile{ player,  Vector2f{mouseManager->getMousePosition().x / Constants::PTM_RATIO, mouseManager->getMousePosition().y / Constants::PTM_RATIO} });
+		eventManager.emit(ShootProjectile{ player, {mouseManager->getMousePosition().x / Constants::PTM_RATIO, mouseManager->getMousePosition().y / Constants::PTM_RATIO} });
 	}
 }

@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
   <Components>
+    <Geometry x="0" y="0">
+      <Circle x="0" y="0" radius="8.5"></Circle>
+    </Geometry>
      <Sprite>Planet_D</Sprite>
      <Object>Asteroid</Object>
      <Body type="0" x="0" y="0">
-       <Fixture shape="circle" radius="8.5"></Fixture>
+       <Circle radius="8.5"></Circle>
      </Body>
      <AnchorPoint></AnchorPoint>
   </Components>

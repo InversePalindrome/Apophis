@@ -6,14 +6,13 @@ InversePalindrome.com
 
 
 #include "Constants.hpp"
-#include "Conversions.hpp"
 #include "CombatSystem.hpp"
 #include "SpeedComponent.hpp"
 #include "HealthComponent.hpp"
 #include "DamageComponent.hpp"
 #include "WeaponComponent.hpp"
-#include "SpatialComponent.hpp"
 #include "ImpulseComponent.hpp"
+#include "GeometryComponent.hpp"
 #include "ExplosionComponent.hpp"
 
 
@@ -38,23 +37,25 @@ void CombatSystem::update(entityx::EntityManager& entityManager, entityx::EventM
 void CombatSystem::receive(const ShootProjectile& event)
 {
 	auto shooterWeapon = event.shooter.component<WeaponComponent>();
-	auto shooterSpatial = event.shooter.component<SpatialComponent>();
+	auto shooterGeometry = event.shooter.component<GeometryComponent>();
 
-	if (shooterWeapon && shooterSpatial && shooterWeapon->isReloaded())
+	if (shooterWeapon && shooterGeometry && shooterWeapon->isReloaded())
 	{
 		shooterWeapon->setReloadStatus(false);
 
 		auto projectileEntity = entityParser.createEntity(shooterWeapon->getProjectileName());
-		auto projectileSpatial = projectileEntity.component<SpatialComponent>();
+		auto projectileGeometry = projectileEntity.component<GeometryComponent>();
 		auto projectileSpeed = projectileEntity.component<SpeedComponent>();
 		auto projectileImpulse = projectileEntity.component<ImpulseComponent>();
 
-		if (projectileSpatial && projectileSpeed && projectileImpulse)
+		if (projectileGeometry && projectileSpeed && projectileImpulse)
 		{
-			auto projectileDirection = blaze::normalize(event.targetPosition - shooterSpatial->getPosition());
-		    
-		    projectileSpatial->setPosition(projectileDirection * shooterSpatial->getSize() + shooterSpatial->getPosition());
-			projectileSpatial->setAngle(shooterSpatial->getAngle());
+			const auto shooterSize = shooterGeometry->getAABB()[1] - shooterGeometry->getAABB()[0];
+			const auto projectileDirection = wykobi::normalize(event.targetPosition - shooterGeometry->getPosition());
+			const auto projectilePosition = shooterGeometry->getPosition() + wykobi::vector2d<float>(projectileDirection.x * shooterSize.x, projectileDirection.y * shooterSize.y);
+	
+		    projectileGeometry->setPosition(projectilePosition);
+			projectileGeometry->setAngle(shooterGeometry->getAngle());
 
 			projectileImpulse += {projectileDirection[0] * projectileSpeed->getMaxLinearSpeed(), projectileDirection[1] * projectileSpeed->getMaxLinearSpeed()};
 
@@ -71,18 +72,18 @@ void CombatSystem::receive(const ShootProjectile& event)
 
 void CombatSystem::receive(const EntityDied& event)
 {
-	auto spatial = event.entity.component<SpatialComponent>();
-	auto explosion = event.entity.component<ExplosionComponent>();
+	auto deadGeometry = event.entity.component<GeometryComponent>();
+	const auto deadExplosion = event.entity.component<ExplosionComponent>();
 
-	if (spatial && explosion)
+	if (deadGeometry && deadExplosion)
 	{
-		auto explosionEntity = entityParser.createEntity(explosion->getExplosionName());
+		auto explosionEntity = entityParser.createEntity(deadExplosion->getExplosionName());
 
-		if (auto explosionSpatial = explosionEntity.component<SpatialComponent>())
+		if (auto explosionGeometry = explosionEntity.component<GeometryComponent>())
 		{
-			explosionSpatial->setPosition(spatial->getPosition());
+			explosionGeometry->setPosition(deadGeometry->getPosition());
 
-			timer.add(explosion->getExplosionTime(), [explosionEntity](auto id) mutable
+			timer.add(deadExplosion->getExplosionTime(), [explosionEntity](auto id) mutable
 			{
 				if (explosionEntity)
 				{
@@ -96,7 +97,7 @@ void CombatSystem::receive(const EntityDied& event)
 void CombatSystem::receive(const ProjectileHit& event)
 {
 	auto victimHealth = event.victim.component<HealthComponent>();
-	auto projectileDamage = event.projectile.component<DamageComponent>();
+	const auto projectileDamage = event.projectile.component<DamageComponent>();
 
 	if (victimHealth && projectileDamage)
 	{

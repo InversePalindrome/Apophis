@@ -7,8 +7,8 @@ InversePalindrome.com
 
 #include "Tags.hpp"
 #include "Constants.hpp"
-#include "SpatialComponent.hpp"
 #include "GraphicsSystem.hpp"
+#include "GeometryComponent.hpp"
 #include "AnimationComponent.hpp"
 
 #include <cocos/base/CCDirector.h>
@@ -36,7 +36,7 @@ void GraphicsSystem::configure(entityx::EventManager& eventManager)
 void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
 	entityx::ComponentHandle<NodeComponent> node;
-	entityx::ComponentHandle<SpatialComponent> spatial;
+	entityx::ComponentHandle<GeometryComponent> spatial;
 
 	for (auto entity : entityManager.entities_with_components(node, spatial))
 	{

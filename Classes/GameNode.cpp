@@ -72,7 +72,7 @@ bool GameNode::init()
 	map.load("Andromeda");
 	entityParser.createEntity("UFO");
 	entityParser.createEntity("SpaceCruiser");
-	//auto planet = entityParser.createEntity("Planet");
+	auto planet = entityParser.createEntity("Planet");
 	//auto asteroid = entityParser.createEntity("BlueAsteroid");
 
    // eventManager.emit(CreateDistanceJoint{ planet, asteroid });
