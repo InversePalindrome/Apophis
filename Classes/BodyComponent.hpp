@@ -9,14 +9,23 @@ InversePalindrome.com
 
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2World.h>
+#include <Box2D/Dynamics/b2Fixture.h>
+#include <Box2D/Collision/Shapes/b2CircleShape.h>
+#include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
 #include <pugixml.hpp>
+
+#include <vector>
+#include <variant>
 
 
 class BodyComponent
 {
 public:
-	BodyComponent(b2World& world, const pugi::xml_node& componentNode, void* bodyData);
+	explicit BodyComponent(const pugi::xml_node& componentNode);
+
+	void createBody(b2World& world);
+	void createFixtures(const std::vector<std::variant<b2CircleShape, b2PolygonShape>>& shapes);
 
 	b2Body* getBody();
 	b2Body* getBody() const;
@@ -53,7 +62,9 @@ public:
 
 private:
 	b2Body* body;
+	b2BodyDef bodyDef;
+	std::vector<b2FixtureDef> fixtureDefs;
 
-	void createBody(b2World& world, const pugi::xml_node& bodyNode, void* bodyData);
-	void createFixture(const pugi::xml_node& fixtureNode);
+	void initBodyDef(const pugi::xml_node& bodyNode);
+	void initFixtureDef(const pugi::xml_node& fixtureNode);
 };

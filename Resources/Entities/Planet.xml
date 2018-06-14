@@ -7,7 +7,7 @@
      <Sprite>Planet_D</Sprite>
      <Object>Asteroid</Object>
      <Body type="0" x="0" y="0">
-       <Circle radius="8.5"></Circle>
+       <Fixture radius="8.5"></Fixture>
      </Body>
      <AnchorPoint></AnchorPoint>
   </Components>

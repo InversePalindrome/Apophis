@@ -18,8 +18,6 @@ InversePalindrome.com
 
 #include <entityx/System.h>
 
-#include <pugixml.hpp>
-
 #include <vector>
 
 
@@ -31,8 +29,8 @@ public:
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
 	virtual void receive(const entityx::EntityDestroyedEvent& event);
+	virtual void receive(const entityx::ComponentAddedEvent<BodyComponent>& event);
 	virtual void receive(const entityx::ComponentRemovedEvent<BodyComponent>& event);
-	virtual void receive(const CreateBody& event);
 	virtual void receive(const CreateDistanceJoint& event);
 
 private:
@@ -41,7 +39,7 @@ private:
 
 	entityx::EntityManager& entityManager;
 
-	std::vector<std::pair<entityx::Entity, pugi::xml_document>> bodiesToCreate;
+	std::vector<std::pair<entityx::Entity, entityx::ComponentHandle<BodyComponent>>> bodiesToCreate;
 	std::vector<b2Body*> bodiesToRemove;
 
 	void updateWorld();

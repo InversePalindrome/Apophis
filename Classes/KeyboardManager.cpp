@@ -20,11 +20,11 @@ bool KeyboardManager::init()
 	
 	auto* keyboardListener = cocos2d::EventListenerKeyboard::create();
 	
-	keyboardListener->onKeyPressed = [this](auto keyCode, auto* event)
+	keyboardListener->onKeyPressed = [this](const auto keyCode, auto* event)
 	{
 		activeKeys.insert(keyCode);
 	};
-	keyboardListener->onKeyReleased = [this](auto keyCode, auto* event)
+	keyboardListener->onKeyReleased = [this](const auto keyCode, auto* event)
 	{
 		activeKeys.erase(keyCode);
 	};

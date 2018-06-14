@@ -22,7 +22,7 @@ void AudioSystem::update(entityx::EntityManager& entityManager, entityx::EventMa
 
 void AudioSystem::receive(const PlayAction& event)
 {
-	auto sound = event.entity.component<SoundComponent>();
+	const auto sound = event.entity.component<SoundComponent>();
 
 	if (sound && sound->hasSound(event.action))
 	{

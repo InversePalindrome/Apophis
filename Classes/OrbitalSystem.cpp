@@ -6,8 +6,9 @@ InversePalindrome.com
 
 
 #include "OrbitalSystem.hpp"
-#include "BodyComponent.hpp"
 #include "SpeedComponent.hpp"
+#include "ImpulseComponent.hpp"
+#include "GeometryComponent.hpp"
 #include "SteeringBehaviors.hpp"
 #include "SatelliteComponent.hpp"
 
@@ -15,16 +16,17 @@ InversePalindrome.com
 void OrbitalSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
 	entityx::ComponentHandle<SatelliteComponent> satellite;
-	entityx::ComponentHandle<BodyComponent> body;
+	entityx::ComponentHandle<GeometryComponent> geometry;
+	entityx::ComponentHandle<ImpulseComponent> impulse;
 	entityx::ComponentHandle<SpeedComponent> speed;
 	
-	for (auto entity : entityManager.entities_with_components(satellite, body, speed))
+	for (auto entity : entityManager.entities_with_components(satellite, geometry, speed, impulse))
 	{
 		if (auto primaryEntity = entityManager.get(entityManager.create_id(satellite->getPrimaryID())))
 		{
-			if (auto primaryBody = primaryEntity.component<BodyComponent>())
+			if (auto primaryGeometry = primaryEntity.component<GeometryComponent>())
 			{
-				body->applyLinearImpulse(SteeringBehaviors::orbit(body->getPosition(), primaryBody->getPosition(), speed->getMaxLinearSpeed()));
+				//impulse += SteeringBehaviors::orbit(primaryGeometry->getPosition(), primaryBody->getPosition(), speed->getMaxLinearSpeed());
 			}
 		}
 	}

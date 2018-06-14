@@ -7,21 +7,35 @@ InversePalindrome.com
 
 #include "BodyComponent.hpp"
 
-#include <Box2D/Dynamics/b2Fixture.h>
-#include <Box2D/Collision/Shapes/b2CircleShape.h>
-#include <Box2D/Collision/Shapes/b2PolygonShape.h>
+#include <boost/range/combine.hpp>
 
 #include <vector>
 #include <variant>
 
 
-BodyComponent::BodyComponent(b2World& world, const pugi::xml_node& componentNode, void* bodyData) 
+BodyComponent::BodyComponent(const pugi::xml_node& componentNode) :
+	body(nullptr)
 {
-	createBody(world, componentNode, bodyData);
-
-	for (const auto fixtureNode : componentNode.children())
+	initBodyDef(componentNode);
+	
+	for (const auto fixtureNode : componentNode.children("Fixture"))
 	{
-		createFixture(fixtureNode);
+		initFixtureDef(fixtureNode);
+	}
+}
+
+void BodyComponent::createBody(b2World& world)
+{
+	body = world.CreateBody(&bodyDef);
+}
+
+void BodyComponent::createFixtures(const std::vector<std::variant<b2CircleShape, b2PolygonShape>>& shapes)
+{
+	for (const auto& fixtureAndShape : boost::combine(fixtureDefs, shapes))
+	{
+		std::visit([fixtureAndShape](const auto& shape) { boost::get<0>(fixtureAndShape).shape = &shape; }, boost::get<1>(fixtureAndShape));
+
+		body->CreateFixture(&boost::get<0>(fixtureAndShape));
 	}
 }
 
@@ -151,10 +165,8 @@ bool BodyComponent::raycast(b2RayCastOutput& output, const b2RayCastInput& input
 	return false;
 }
 
-void BodyComponent::createBody(b2World& world, const pugi::xml_node& bodyNode, void* bodyData)
+void BodyComponent::initBodyDef(const pugi::xml_node& bodyNode)
 {
-	b2BodyDef bodyDef;
-
 	if (const auto bodyTypeAttribute = bodyNode.attribute("type"))
 	{
 		bodyDef.type = static_cast<b2BodyType>(bodyTypeAttribute.as_int());
@@ -175,13 +187,9 @@ void BodyComponent::createBody(b2World& world, const pugi::xml_node& bodyNode, v
 	{
 		bodyDef.bullet = bulletAttribute.as_bool();
 	}
-
-	bodyDef.userData = bodyData;
-
-	body = world.CreateBody(&bodyDef);
 }
 
-void BodyComponent::createFixture(const pugi::xml_node& fixtureNode)
+void BodyComponent::initFixtureDef(const pugi::xml_node& fixtureNode)
 {
 	b2FixtureDef fixtureDef;
 
@@ -202,52 +210,5 @@ void BodyComponent::createFixture(const pugi::xml_node& fixtureNode)
 		fixtureDef.isSensor = sensorAttribute.as_bool();
 	}
 
-	std::variant<b2CircleShape, b2PolygonShape> shape;
-
-	if (std::strcmp(fixtureNode.name(), "Circle") == 0)
-	{
-		b2CircleShape circle;
-
-		if (const auto xAttribute = fixtureNode.attribute("x"))
-		{
-			circle.m_p.x = xAttribute.as_float();
-		}
-		if (const auto yAttribute = fixtureNode.attribute("y"))
-		{
-			circle.m_p.y = yAttribute.as_float();
-		}
-		if (const auto radiusAttribute = fixtureNode.attribute("radius"))
-		{
-			circle.m_radius = radiusAttribute.as_float();
-		}
-
-		shape = circle;
-
-		fixtureDef.shape = &std::get<0>(shape);
-	}
-	else if (std::strcmp(fixtureNode.name(), "Polygon") == 0)
-	{
-		b2PolygonShape polygon;
-
-		std::vector<b2Vec2> vertices;
-
-		for (const auto vertexNode : fixtureNode.children("Vertex"))
-		{
-			auto xAttribute = vertexNode.attribute("x");
-			auto yAttribute = vertexNode.attribute("y");
-
-			if (xAttribute && yAttribute)
-			{
-				vertices.push_back({ xAttribute.as_float(), yAttribute.as_float() });
-			}
-		}
-
-		polygon.Set(vertices.data(), vertices.size());
-
-		shape = polygon;
-		
-		fixtureDef.shape = &std::get<1>(shape);
-	}
-
-	body->CreateFixture(&fixtureDef);
+	fixtureDefs.push_back(fixtureDef);
 }

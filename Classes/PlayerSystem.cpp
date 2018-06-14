@@ -34,9 +34,12 @@ void PlayerSystem::update(entityx::EntityManager& entityManager, entityx::EventM
 
 	for (auto entity : entityManager.entities_with_components(player, speed, impulse, body))
 	{
-		updateMovement(speed, impulse);
-		updateRotation(impulse, body);
-		updateShooting(eventManager, entity);
+		if (body->getBody())
+		{
+			updateMovement(speed, impulse);
+			updateRotation(impulse, body);
+			updateShooting(eventManager, entity);
+		}
 	}
 }
 

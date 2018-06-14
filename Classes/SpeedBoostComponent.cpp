@@ -9,12 +9,12 @@ InversePalindrome.com
 
 
 SpeedBoostComponent::SpeedBoostComponent(const pugi::xml_node& componentNode) :
-	speedBoostPercent(5.f),
+	speedBoostRatio(2.f),
 	speedBoostDuration(1000)
 {
-	if (const auto speedBoostPercentAttribute = componentNode.attribute("boost"))
+	if (const auto speedBoostRatioAttribute = componentNode.attribute("ratio"))
 	{
-		speedBoostPercent = speedBoostPercentAttribute.as_float();
+		speedBoostRatio = speedBoostRatioAttribute.as_float();
 	}
 	if (const auto speedBoostDurationAttribute = componentNode.attribute("duration"))
 	{
@@ -22,14 +22,14 @@ SpeedBoostComponent::SpeedBoostComponent(const pugi::xml_node& componentNode) :
 	}
 }
 
-float SpeedBoostComponent::getSpeedBoostPercent() const
+float SpeedBoostComponent::getSpeedBoostRatio() const
 {
-	return speedBoostPercent;
+	return speedBoostRatio;
 }
 
-void SpeedBoostComponent::setSpeedBoostPercent(float speedBoostPercent)
+void SpeedBoostComponent::setSpeedBoostRatio(float speedBoostRatio)
 {
-	this->speedBoostPercent = speedBoostPercent;
+	this->speedBoostRatio = speedBoostRatio;
 }
 
 std::chrono::milliseconds SpeedBoostComponent::getSpeedBoostDuration() const

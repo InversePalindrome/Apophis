@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
   <Components>
-    <PowerUp boost="1500" time="5"></PowerUp>
-    <Item>SpeedBoost</Item>
+    <Geometry>
+      <Circle radius="1"></Circle>
+    </Geometry>
+    <SpeedBoost ratio="3" duration="10000"></SpeedBoost>
     <Object>Item</Object>
     <Sprite>Energy</Sprite>
     <Body type="2" linearDamping="1" fixedRotation="false" x="-5" y="-5">
-      <Fixture shape="circle" radius="1.0" density="0.3"></Fixture>
+      <Fixture radius="1.0" density="0.3"></Fixture>
     </Body>
   </Components>
 </Entity>

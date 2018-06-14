@@ -57,7 +57,7 @@ GeometryComponent::GeometryComponent(const pugi::xml_node& componentNode) :
 			{
 				const auto xAttribute = pointNode.attribute("x");
 				const auto yAttribute = pointNode.attribute("y");
-
+				
 				if (xAttribute && yAttribute)
 				{
 					polygon.push_back(wykobi::make_point(xAttribute.as_float(), yAttribute.as_float()));
@@ -81,11 +81,6 @@ void GeometryComponent::setPosition(const wykobi::vector2d<float>& position)
 	this->position = position;
 }
 
-wykobi::rectangle<float> GeometryComponent::getAABB() const
-{
-	return AABB;
-}
-
 float GeometryComponent::getAngle() const
 {
 	return angle;
@@ -94,6 +89,16 @@ float GeometryComponent::getAngle() const
 void GeometryComponent::setAngle(float angle)
 {
 	this->angle = angle;
+}
+
+wykobi::rectangle<float> GeometryComponent::getAABB() const
+{
+	return AABB;
+}
+
+const std::vector<GeometryComponent::Shape>& GeometryComponent::getShapes() const
+{
+	return shapes;
 }
 
 void GeometryComponent::addAABB(const wykobi::rectangle<float>& shapeAABB)

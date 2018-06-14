@@ -103,7 +103,5 @@ float SteeringBehaviors::face(const b2Vec2& bodyPosition, const b2Vec2& targetPo
 
 	auto totalRotation = std::remainderf(desiredAngle - nextAngle, 2 * boost::math::constants::pi<float>());
 
-	auto desiredAngularVelocity = totalRotation * Constants::FPS;
-
-	return bodyInertia * desiredAngularVelocity;
+	return bodyInertia * totalRotation * Constants::FPS;
 }

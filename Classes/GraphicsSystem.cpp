@@ -28,20 +28,19 @@ void GraphicsSystem::configure(entityx::EventManager& eventManager)
 	eventManager.subscribe<entityx::ComponentAddedEvent<SpriteComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<LabelComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<ParticleComponent>>(*this);
-	eventManager.subscribe<entityx::ComponentAddedEvent<Player>>(*this);
-	eventManager.subscribe<EntityDied>(*this);
+	eventManager.subscribe<EntityParsed>(*this);
 	eventManager.subscribe<PlayAction>(*this);
 }
 
 void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
 	entityx::ComponentHandle<NodeComponent> node;
-	entityx::ComponentHandle<GeometryComponent> spatial;
+	entityx::ComponentHandle<GeometryComponent> geometry;
 
-	for (auto entity : entityManager.entities_with_components(node, spatial))
+	for (auto entity : entityManager.entities_with_components(node, geometry))
 	{
-		node->setPosition({ spatial->getPosition()[0] * Constants::PTM_RATIO, spatial->getPosition()[1] * Constants::PTM_RATIO });
-		node->setRotation(spatial->getAngle());
+		node->setPosition({ geometry->getPosition().x * Constants::PTM_RATIO, geometry->getPosition().y * Constants::PTM_RATIO });
+		node->setRotation(geometry->getAngle());
 	}
 
 	updateView();
@@ -74,19 +73,12 @@ void GraphicsSystem::receive(const entityx::ComponentAddedEvent<ParticleComponen
 	entity.assign<NodeComponent>(event.component->getParticleSystem());
 }
 
-void GraphicsSystem::receive(const entityx::ComponentAddedEvent<Player>& event)
-{
-	auto player = event.entity;
-
-	playerNode = player.component<NodeComponent>();
-	playerHealth = player.component<HealthComponent>();
-}
-
-void GraphicsSystem::receive(const EntityDied& event)
+void GraphicsSystem::receive(const EntityParsed& event)
 {
 	if (event.entity.has_component<Player>())
 	{
-		gameNode->getEventDispatcher()->dispatchCustomEvent("gameOver");
+		playerNode = event.entity.component<NodeComponent>();
+		playerHealth = event.entity.component<HealthComponent>();
 	}
 }
 
@@ -112,8 +104,8 @@ void GraphicsSystem::updateView()
 {
 	if (playerNode.valid())
 	{
-		auto worldPoint = gameNode->convertToWorldSpace(playerNode->getPosition());
-		auto windowSize = cocos2d::Director::getInstance()->getWinSize();
+		const auto worldPoint = gameNode->convertToWorldSpace(playerNode->getPosition());
+		const auto windowSize = cocos2d::Director::getInstance()->getWinSize();
 	
 		if (std::abs(playerNode->getPosition().x) < map.getDimensions().x * Constants::PTM_RATIO / 2.f - windowSize.width / 2.f)
 		{

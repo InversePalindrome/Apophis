@@ -17,13 +17,13 @@ class SpeedBoostComponent
 public:
 	explicit SpeedBoostComponent(const pugi::xml_node& componentNode);
 
-	float getSpeedBoostPercent() const;
-	void setSpeedBoostPercent(float speedBoostPercent);
+	float getSpeedBoostRatio() const;
+	void setSpeedBoostRatio(float speedBoostRatio);
 
 	std::chrono::milliseconds getSpeedBoostDuration() const;
 	void setSpeedBoostDuration(const std::chrono::milliseconds& speedBoostDuration);
 
 private:
-	float speedBoostPercent;
+	float speedBoostRatio;
 	std::chrono::milliseconds speedBoostDuration;
 };

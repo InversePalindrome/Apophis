@@ -22,8 +22,8 @@ PhysicsSystem::PhysicsSystem(entityx::EntityManager& entityManager, entityx::Eve
 void PhysicsSystem::configure(entityx::EventManager& eventManager)
 {
 	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
+	eventManager.subscribe<entityx::ComponentAddedEvent<BodyComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentRemovedEvent<BodyComponent>>(*this);
-	eventManager.subscribe<CreateBody>(*this);
 	eventManager.subscribe<CreateDistanceJoint>(*this);
 }
 
@@ -58,17 +58,14 @@ void PhysicsSystem::receive(const entityx::EntityDestroyedEvent& event)
 	}
 }
 
+void PhysicsSystem::receive(const entityx::ComponentAddedEvent<BodyComponent>& event)
+{
+	bodiesToCreate.emplace_back(event.entity, event.component);
+}
+
 void PhysicsSystem::receive(const entityx::ComponentRemovedEvent<BodyComponent>& event)
 {
 	bodiesToRemove.push_back(event.component->getBody());
-}
-
-void PhysicsSystem::receive(const CreateBody& event)
-{
-	pugi::xml_document doc;
-	doc.append_copy(event.bodyNode);
-
-	bodiesToCreate.push_back({ event.entity, std::move(doc) });
 }
 
 void PhysicsSystem::receive(const CreateDistanceJoint& event)
@@ -95,15 +92,53 @@ void PhysicsSystem::updateWorld()
 
 void PhysicsSystem::createBodies()
 {
-	for (auto&& [entity, doc] : bodiesToCreate)
+	for (auto& [entity, body] : bodiesToCreate)
 	{
-		auto body = entity.assign<BodyComponent>(world, doc.child("Body"), new entityx::Entity(entity));
+		body->createBody(world);
 
-		if (auto spatial = entity.component<GeometryComponent>())
+		if (const auto geometry = entity.component<GeometryComponent>())
 		{
-			body->setPosition({ spatial->getPosition()[0], spatial->getPosition()[1] });
-			body->setAngle(Conversions::degreesToRadians(spatial->getAngle()));
+			std::vector<std::variant<b2CircleShape, b2PolygonShape>> shapes;
+
+			for (const auto& shape : geometry->getShapes())
+			{
+				std::visit([&shapes](const auto& shape) 
+				{
+					using T = std::decay_t<decltype(shape)>;
+
+					if constexpr(std::is_same_v<T, wykobi::circle<float>>)
+					{
+						b2CircleShape circle;
+
+						circle.m_p = { shape.x, shape.y };
+						circle.m_radius = shape.radius;
+
+						shapes.push_back(circle);
+					}
+					else if (std::is_same_v<T, wykobi::polygon<float, 2>>)
+					{
+						b2PolygonShape polygon;
+						
+						std::vector<b2Vec2> points;
+
+						for (const auto& point : shape)
+						{
+							points.push_back({ point.x, point.y });
+						}
+
+						polygon.Set(points.data(), points.size());
+
+						shapes.push_back(polygon);
+					}
+				}, shape);
+			}
+
+			body->createFixtures(shapes);
+			body->setPosition({ geometry->getPosition().x, geometry->getPosition().y });
+			body->setAngle(Conversions::degreesToRadians(geometry->getAngle()));
 		}
+
+		body->setUserData(new entityx::Entity(entity));
 	}
 
 	bodiesToCreate.clear();

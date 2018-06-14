@@ -7,7 +7,7 @@
     <Object>Projectile</Object>
     <Sprite>YellowBlast06</Sprite>
     <Body type="2" bullet="true">
-      <Circle radius="1"></Circle>
+      <Fixture></Fixture>
     </Body>
     <Speed linear="40"></Speed>
     <Impulse linear="30"></Impulse>

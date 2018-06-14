@@ -8,7 +8,10 @@ InversePalindrome.com
 #include "RegenBoostComponent.hpp"
 
 
-RegenBoostComponent::RegenBoostComponent(const pugi::xml_node& componentNode)
+RegenBoostComponent::RegenBoostComponent(const pugi::xml_node& componentNode) :
+	hitpointBoost(1.f),
+	regenRate(1000),
+	regenDuration(5000)
 {
 	if (const auto hitpointBoostAttribute = componentNode.attribute("boost"))
 	{
@@ -18,9 +21,9 @@ RegenBoostComponent::RegenBoostComponent(const pugi::xml_node& componentNode)
 	{
 		regenRate = std::chrono::milliseconds(regenRateAttribute.as_int());
 	}
-	if (const auto regenPeriodAttribute = componentNode.attribute("period"))
+	if (const auto regenDurationAttribute = componentNode.attribute("duration"))
 	{
-		regenPeriod = std::chrono::milliseconds(regenPeriodAttribute.as_int());
+		regenDuration = std::chrono::milliseconds(regenDurationAttribute.as_int());
 	}
 }
 
@@ -44,12 +47,12 @@ void RegenBoostComponent::setRegenRate(const std::chrono::milliseconds& regenRat
 	this->regenRate = regenRate;
 }
 
-std::chrono::milliseconds RegenBoostComponent::getRegenPeriod() const
+std::chrono::milliseconds RegenBoostComponent::getRegenDuration() const
 {
-	return regenPeriod;
+	return regenDuration;
 }
 
-void RegenBoostComponent::setRegenPeriod(const std::chrono::milliseconds& regenPeriod)
+void RegenBoostComponent::setRegenDuration(const std::chrono::milliseconds& regenDuration)
 {
-	this->regenPeriod = regenPeriod;
+	this->regenDuration = regenDuration;
 }

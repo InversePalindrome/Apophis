@@ -23,21 +23,10 @@ struct EntityParsed
 	mutable entityx::Entity entity;
 };
 
-struct EntityDied
-{
-	mutable entityx::Entity entity;
-};
-
 struct ShootProjectile
 {
 	mutable entityx::Entity shooter;
 	wykobi::vector2d<float> targetPosition;
-};
-
-struct CreateBody
-{
-	entityx::Entity entity;
-	const pugi::xml_node bodyNode;
 };
 
 struct CreateDistanceJoint

@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
+  <Components>
   <Sprite>Explosion1</Sprite>
   <Sound>
     <Action name="Explosion" filename="Boom.mp3"></Action>
   </Sound>
   <Object>Explosion</Object>
+  <Geometry>
+    <Circle radius="0.8"></Circle>
+  </Geometry>
   <Body type="2" bullet="true">
-    <Fixture shape="polygon" width="0.8" height="0.8" density="0.001"></Fixture>
+    <Fixture density="0.001"></Fixture>
   </Body>
-  <Animation>
-    <Action name="Explosion" delay="0.25">
-      <Frame>Explosion1</Frame>
-      <Frame>Explosion2</Frame>
-      <Frame>Explosion3</Frame>
-      <Frame>Explosion4</Frame>
-      <Frame>Explosion5</Frame>
-      <Frame>Explosion6</Frame>
-    </Action>
-  </Animation>
+    </Components>
 </Entity>

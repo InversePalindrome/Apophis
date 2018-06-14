@@ -8,7 +8,6 @@ InversePalindrome.com
 #pragma once
 
 #include "Map.hpp"
-#include "Tags.hpp"
 #include "Events.hpp" 
 #include "HudNode.hpp"
 #include "NodeComponent.hpp"
@@ -33,8 +32,7 @@ public:
 	virtual void receive(const entityx::ComponentAddedEvent<SpriteComponent>& event);
 	virtual void receive(const entityx::ComponentAddedEvent<LabelComponent>& event);
 	virtual void receive(const entityx::ComponentAddedEvent<ParticleComponent>& event);
-	virtual void receive(const entityx::ComponentAddedEvent<Player>& event);
-	virtual void receive(const EntityDied& event);
+	virtual void receive(const EntityParsed& event);
 	virtual void receive(const PlayAction& event);
 	
 private:

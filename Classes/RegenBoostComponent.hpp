@@ -23,11 +23,11 @@ public:
 	std::chrono::milliseconds getRegenRate() const;
 	void setRegenRate(const std::chrono::milliseconds& regenRate);
 
-	std::chrono::milliseconds getRegenPeriod() const;
-	void setRegenPeriod(const std::chrono::milliseconds& regenPeriod);
+	std::chrono::milliseconds getRegenDuration() const;
+	void setRegenDuration(const std::chrono::milliseconds& regenDuration);
 
 private:
 	float hitpointBoost;
 	std::chrono::milliseconds regenRate;
-	std::chrono::milliseconds regenPeriod;
+	std::chrono::milliseconds regenDuration;
 };

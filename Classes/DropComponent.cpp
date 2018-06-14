@@ -13,12 +13,12 @@ DropComponent::DropComponent(const pugi::xml_node& componentNode) :
 {
 	for (const auto itemNode : componentNode.children())
 	{
-		items.push_back(itemNode.value());
+		items.push_back(itemNode.name());
 		weights.push_back(itemNode.text().as_int());
 	}
 }
 
-std::string DropComponent::getItem() 
+std::string DropComponent::getItem()
 {
 	std::discrete_distribution<> distribution(std::cbegin(weights), std::cend(weights));
 	

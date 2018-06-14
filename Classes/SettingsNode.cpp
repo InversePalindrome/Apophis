@@ -106,7 +106,7 @@ bool SettingsNode::init()
 
 	auto* keyboardListener = cocos2d::EventListenerKeyboard::create();
 
-	keyboardListener->onKeyPressed = [&appSettings, moveRightButton, moveLeftButton, moveUpButton, moveDownButton](auto keyCode, auto* event) 
+	keyboardListener->onKeyPressed = [&appSettings, moveRightButton, moveLeftButton, moveUpButton, moveDownButton](const auto keyCode, auto* event) 
 	{
 		if (moveRightButton->isSelected())
 		{

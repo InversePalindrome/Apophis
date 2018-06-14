@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
   <Components>
+    <Geometry>
+      <Circle radius="1"></Circle>
+    </Geometry>
     <Sprite>Heart</Sprite>
     <Object>Item</Object>
     <Body type="2" linearDamping="1" fixedRotation="false">
-      <Fixture shape="circle" radius="1.0" density="0.3"></Fixture>
+      <Fixture radius="1.0" density="0.3"></Fixture>
     </Body>
-    <PowerUp boost="5000" time="15"></PowerUp>
-    <Item>RegenBoost</Item>
+    <RegenBoost period="1000"></RegenBoost>
   </Components>
 </Entity>

@@ -25,7 +25,7 @@ public:
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
-	virtual void receive(const EntityDied& event);
+	virtual void receive(const entityx::EntityDestroyedEvent& event);
 	virtual void receive(const PickedUpItem& event);
 
 private:
@@ -35,6 +35,6 @@ private:
 	CppTime::Timer timer;
 
 	static void addWeapon(entityx::Entity entity, entityx::ComponentHandle<WeaponComponent> weapon);
-	void addRegenBoost(entityx::Entity entity, entityx::ComponentHandle<RegenBoostComponent> regenBoost);
-	void addSpeedBoost(entityx::Entity entity, entityx::ComponentHandle<SpeedBoostComponent> speedBoost);
+	void addRegenBoost(entityx::Entity entity, const entityx::ComponentHandle<RegenBoostComponent> regenBoost);
+	void addSpeedBoost(entityx::Entity entity, const entityx::ComponentHandle<SpeedBoostComponent> speedBoost);
 };

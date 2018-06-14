@@ -51,7 +51,7 @@ EntityParser::EntityParser(entityx::EntityManager& entityManager, entityx::Event
 	componentParsers.emplace("Flock", [](auto entity, const auto& componentNode) { entity.assign<FlockComponent>(componentNode); });
 	componentParsers.emplace("Follow", [](auto entity, const auto& componentNode) { entity.assign<FollowComponent>(componentNode); });
 	componentParsers.emplace("Queue", [](auto entity, const auto& componentNode) { entity.assign<QueueComponent>(componentNode); });
-	componentParsers.emplace("Body", [&eventManager](auto entity, const auto& componentNode) { eventManager.emit(CreateBody{ entity, componentNode }); });
+	componentParsers.emplace("Body", [](auto entity, const auto& componentNode) { entity.assign<BodyComponent>(componentNode); });
 	componentParsers.emplace("Sprite", [](auto entity, const auto& componentNode) { entity.assign<SpriteComponent>(componentNode); });
 	componentParsers.emplace("Label", [](auto entity, const auto& componentNode) { entity.assign<LabelComponent>(componentNode); });
 	componentParsers.emplace("Particle", [](auto entity, const auto& componentNode) { entity.assign<ParticleComponent>(componentNode); });

@@ -25,8 +25,8 @@ void CombatSystem::configure(entityx::EventManager& eventManager)
 {
 	this->eventManager = &eventManager;
 
+	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
 	eventManager.subscribe<ShootProjectile>(*this);
-	eventManager.subscribe<EntityDied>(*this);
 	eventManager.subscribe<ProjectileHit>(*this);
 }
 
@@ -34,10 +34,36 @@ void CombatSystem::update(entityx::EntityManager& entityManager, entityx::EventM
 {
 }
 
+void CombatSystem::receive(const entityx::EntityDestroyedEvent& event)
+{
+	auto deadEntity = event.entity;
+	
+	auto deadGeometry = deadEntity.component<GeometryComponent>();
+	const auto deadExplosion = deadEntity.component<ExplosionComponent>();
+	
+	if (deadGeometry && deadExplosion)
+	{
+		auto explosionEntity = entityParser.createEntity(deadExplosion->getExplosionName());
+		
+		if (auto explosionGeometry = explosionEntity.component<GeometryComponent>())
+		{
+			explosionGeometry->setPosition(deadGeometry->getPosition());
+			
+			timer.add(deadExplosion->getExplosionTime(), [explosionEntity](auto id) mutable
+			{
+				if (explosionEntity)
+				{
+					explosionEntity.destroy();
+				}
+			});
+		}
+	}
+}
+
 void CombatSystem::receive(const ShootProjectile& event)
 {
 	auto shooterWeapon = event.shooter.component<WeaponComponent>();
-	auto shooterGeometry = event.shooter.component<GeometryComponent>();
+	const auto shooterGeometry = event.shooter.component<GeometryComponent>();
 
 	if (shooterWeapon && shooterGeometry && shooterWeapon->isReloaded())
 	{
@@ -45,7 +71,7 @@ void CombatSystem::receive(const ShootProjectile& event)
 
 		auto projectileEntity = entityParser.createEntity(shooterWeapon->getProjectileName());
 		auto projectileGeometry = projectileEntity.component<GeometryComponent>();
-		auto projectileSpeed = projectileEntity.component<SpeedComponent>();
+		const auto projectileSpeed = projectileEntity.component<SpeedComponent>();
 		auto projectileImpulse = projectileEntity.component<ImpulseComponent>();
 
 		if (projectileGeometry && projectileSpeed && projectileImpulse)
@@ -70,30 +96,6 @@ void CombatSystem::receive(const ShootProjectile& event)
 	}
 }
 
-void CombatSystem::receive(const EntityDied& event)
-{
-	auto deadGeometry = event.entity.component<GeometryComponent>();
-	const auto deadExplosion = event.entity.component<ExplosionComponent>();
-
-	if (deadGeometry && deadExplosion)
-	{
-		auto explosionEntity = entityParser.createEntity(deadExplosion->getExplosionName());
-
-		if (auto explosionGeometry = explosionEntity.component<GeometryComponent>())
-		{
-			explosionGeometry->setPosition(deadGeometry->getPosition());
-
-			timer.add(deadExplosion->getExplosionTime(), [explosionEntity](auto id) mutable
-			{
-				if (explosionEntity)
-				{
-					explosionEntity.destroy();
-				}
-			});
-		}
-	}
-}
-
 void CombatSystem::receive(const ProjectileHit& event)
 {
 	auto victimHealth = event.victim.component<HealthComponent>();
@@ -105,8 +107,6 @@ void CombatSystem::receive(const ProjectileHit& event)
 
 		if (victimHealth->getCurrentHitpoints() <= 0.f)
 		{
-			eventManager->emit(EntityDied{ event.victim });
-
 			event.victim.destroy();
 		}
 		
