@@ -5,7 +5,9 @@
       <Circle x="0" y="0" radius="1"></Circle>
     </Geometry>
     <Object>Projectile</Object>
-    <Sprite>YellowBlast06</Sprite>
+    <SceneNode>
+       <Sprite>YellowBlast06</Sprite>
+    </SceneNode>
     <Body type="2" bullet="true">
       <Fixture></Fixture>
     </Body>

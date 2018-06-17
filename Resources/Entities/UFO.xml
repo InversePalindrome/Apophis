@@ -4,19 +4,22 @@
     <Player></Player>
   </Tags>
   <Components>
+     <Particle>Supernova</Particle>
     <Geometry x="0" y="10" width ="3.2" height="3.2">
       <Circle x="0" y="0" radius="1.6"></Circle>
     </Geometry>
     <Weapon projectileName="Laser" reloadTime="400"></Weapon>
     <Speed angular="100" linear="35"></Speed>
-    <Sprite>UFO</Sprite>
+    <SceneNode>
+      <Sprite>UFO</Sprite>
+    </SceneNode>
     <Object>Player</Object>
     <Body type="2" x="-20" y="-20" fixedRotation="false" linearDamping="0.4">
       <Fixture radius="1.6" density="0.3"></Fixture>
     </Body>
     <Explosion name="Boom" time="2000"></Explosion>
     <Sound>
-      <Action name="Shoot" filename="Laser.mp3"></Action>
+      <Shoot>Laser.mp3</Shoot>
     </Sound>
     <Health>100</Health>
     <Vision>5</Vision>

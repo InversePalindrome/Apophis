@@ -2,8 +2,8 @@
 <Entity>
   <Components>
   <Sprite>Explosion1</Sprite>
-  <Sound>
-    <Action name="Explosion" filename="Boom.mp3"></Action>
+    <Sound>
+    <Explode>Boom.mp3</Explode>
   </Sound>
   <Object>Explosion</Object>
   <Geometry>

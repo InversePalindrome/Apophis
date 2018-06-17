@@ -57,6 +57,8 @@ void CombatSystem::receive(const entityx::EntityDestroyedEvent& event)
 				}
 			});
 		}
+
+		eventManager->emit(PlayAction{ explosionEntity, Action::Explode, false });
 	}
 }
 
@@ -78,12 +80,12 @@ void CombatSystem::receive(const ShootProjectile& event)
 		{
 			const auto shooterSize = shooterGeometry->getAABB()[1] - shooterGeometry->getAABB()[0];
 			const auto projectileDirection = wykobi::normalize(event.targetPosition - shooterGeometry->getPosition());
-			const auto projectilePosition = shooterGeometry->getPosition() + wykobi::vector2d<float>(projectileDirection.x * shooterSize.x, projectileDirection.y * shooterSize.y);
+			const auto projectilePosition = shooterGeometry->getPosition() + wykobi::vector2d(projectileDirection.x * shooterSize.x, projectileDirection.y * shooterSize.y);
 	
 		    projectileGeometry->setPosition(projectilePosition);
 			projectileGeometry->setAngle(shooterGeometry->getAngle());
 
-			projectileImpulse += {projectileDirection[0] * projectileSpeed->getMaxLinearSpeed(), projectileDirection[1] * projectileSpeed->getMaxLinearSpeed()};
+			projectileImpulse += {projectileDirection.x * projectileSpeed->getMaxLinearSpeed(), projectileDirection.y * projectileSpeed->getMaxLinearSpeed()};
 
 			timer.add(shooterWeapon->getReloadTime(), [shooterWeapon](auto id) mutable
 			{
@@ -93,6 +95,8 @@ void CombatSystem::receive(const ShootProjectile& event)
 				}
 			});
 		}
+
+		eventManager->emit(PlayAction{ event.shooter, Action::Shoot, false });
 	}
 }
 

@@ -4,7 +4,9 @@
     <Geometry x="0" y="0">
       <Circle x="0" y="0" radius="8.5"></Circle>
     </Geometry>
-     <Sprite>Planet_D</Sprite>
+    <SceneNode>
+      <Sprite>Planet_D</Sprite>
+    </SceneNode>
      <Object>Asteroid</Object>
      <Body type="0" x="0" y="0">
        <Fixture radius="8.5"></Fixture>

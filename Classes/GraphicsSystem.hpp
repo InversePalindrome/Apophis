@@ -10,11 +10,8 @@ InversePalindrome.com
 #include "Map.hpp"
 #include "Events.hpp" 
 #include "HudNode.hpp"
-#include "NodeComponent.hpp"
-#include "LabelComponent.hpp"
 #include "HealthComponent.hpp"
-#include "SpriteComponent.hpp"
-#include "ParticleComponent.hpp"
+#include "SceneNodeComponent.hpp"
 
 #include <cocos/2d/CCNode.h>
 
@@ -28,19 +25,15 @@ public:
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
-	virtual void receive(const entityx::ComponentAddedEvent<NodeComponent>& event);
-	virtual void receive(const entityx::ComponentAddedEvent<SpriteComponent>& event);
-	virtual void receive(const entityx::ComponentAddedEvent<LabelComponent>& event);
-	virtual void receive(const entityx::ComponentAddedEvent<ParticleComponent>& event);
+	virtual void receive(const entityx::ComponentAddedEvent<SceneNodeComponent>& event);
 	virtual void receive(const EntityParsed& event);
-	virtual void receive(const PlayAction& event);
 	
 private:
 	cocos2d::Node* gameNode;
 
 	Map& map;
 
-	entityx::ComponentHandle<NodeComponent> playerNode;
+	entityx::ComponentHandle<SceneNodeComponent> playerNode;
 	entityx::ComponentHandle<HealthComponent> playerHealth;
 
 	void updateView();

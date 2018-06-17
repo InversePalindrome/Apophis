@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #pragma once
 
+#include "Action.hpp"
 #include "AreaQuery.hpp"
 #include "ObjectType.hpp"
 #include "RayCastQuery.hpp"
@@ -38,8 +39,14 @@ struct CreateDistanceJoint
 struct PlayAction
 {
 	mutable entityx::Entity entity;
-	std::string action;
+	Action action;
 	bool loop;
+};
+
+struct StopAction
+{
+	mutable entityx::Entity entity;
+	Action action;
 };
 
 struct ProjectileHit

@@ -9,17 +9,17 @@ InversePalindrome.com
 
 
 GeometryComponent::GeometryComponent(const pugi::xml_node& componentNode) :
-	position({ 0.f, 0.f }),
+	position(0.f, 0.f),
 	AABB(wykobi::make_rectangle(0.f, 0.f, 0.f, 0.f)),
 	angle(0.f)
 {
 	if (const auto xPositionAttribute = componentNode.attribute("x"))
 	{
-		position[0] = xPositionAttribute.as_float();
+		position.x = xPositionAttribute.as_float();
 	}
 	if (const auto yPositionAttribute = componentNode.attribute("y"))
 	{
-		position[1] = yPositionAttribute.as_float();
+		position.y = yPositionAttribute.as_float();
 	}
 	if (const auto angleAttribute = componentNode.attribute("angle"))
 	{

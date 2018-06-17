@@ -10,24 +10,43 @@ InversePalindrome.com
 
 SoundComponent::SoundComponent(const pugi::xml_node& componentNode)
 {
-	for (const auto actionNode : componentNode.children("Action"))
+	for (const auto soundNode : componentNode.children())
 	{
-		const auto nameAttribute = actionNode.attribute("name");
-		const auto filenameAttribute = actionNode.attribute("filename");
-
-		if (nameAttribute && filenameAttribute)
-		{
-			sounds.emplace(nameAttribute.as_string(), filenameAttribute.as_string());
-		}
+		soundFiles.emplace(Action::_from_string(soundNode.name()), soundNode.text().as_string());
 	}
 }
 
-std::string SoundComponent::getSound(const std::string& action) const
+std::string SoundComponent::getSoundFile(Action action) const
 {
-	return sounds.at(action);
+	return soundFiles.at(action);
 }
 
-bool SoundComponent::hasSound(const std::string& action) const
+int SoundComponent::getSoundID(Action action) const
 {
-	return sounds.count(action);
+	return soundIDs.at(action);
+}
+
+const std::unordered_map<Action, int, EnumHash<Action>>& SoundComponent::getSoundIDs() const
+{
+	return soundIDs;
+}
+
+void SoundComponent::addSoundID(Action action, int soundID)
+{
+	soundIDs.emplace(action, soundID);
+}
+
+void SoundComponent::removeSoundID(Action action)
+{
+	soundIDs.erase(action);
+}
+
+bool SoundComponent::hasSoundFile(Action action) const
+{
+	return soundFiles.count(action);
+}
+
+bool SoundComponent::hasSoundID(Action action) const
+{
+	return soundIDs.count(action);
 }
