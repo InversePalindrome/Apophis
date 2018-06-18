@@ -12,41 +12,46 @@ SoundComponent::SoundComponent(const pugi::xml_node& componentNode)
 {
 	for (const auto soundNode : componentNode.children())
 	{
-		soundFiles.emplace(Action::_from_string(soundNode.name()), soundNode.text().as_string());
+		soundFiles.emplace(Sound::_from_string(soundNode.name()), soundNode.text().as_string());
 	}
 }
 
-std::string SoundComponent::getSoundFile(Action action) const
+std::string SoundComponent::getSoundFile(Sound sound) const
 {
-	return soundFiles.at(action);
+	return soundFiles.at(sound);
 }
 
-int SoundComponent::getSoundID(Action action) const
+int SoundComponent::getSoundID(Sound sound) const
 {
-	return soundIDs.at(action);
+	return soundIDs.at(sound);
 }
 
-const std::unordered_map<Action, int, EnumHash<Action>>& SoundComponent::getSoundIDs() const
+const std::unordered_map<Sound, int, EnumHash<Sound>>& SoundComponent::getSoundIDs() const
 {
 	return soundIDs;
 }
 
-void SoundComponent::addSoundID(Action action, int soundID)
+void SoundComponent::addSoundID(Sound sound, int soundID)
 {
-	soundIDs.emplace(action, soundID);
+	soundIDs.emplace(sound, soundID);
 }
 
-void SoundComponent::removeSoundID(Action action)
+void SoundComponent::removeSoundID(Sound sound)
 {
-	soundIDs.erase(action);
+	soundIDs.erase(sound);
 }
 
-bool SoundComponent::hasSoundFile(Action action) const
+void SoundComponent::clearSoundIDs()
 {
-	return soundFiles.count(action);
+	soundIDs.clear();
 }
 
-bool SoundComponent::hasSoundID(Action action) const
+bool SoundComponent::hasSoundFile(Sound sound) const
 {
-	return soundIDs.count(action);
+	return soundFiles.count(sound);
+}
+
+bool SoundComponent::hasSoundID(Sound sound) const
+{
+	return soundIDs.count(sound);
 }

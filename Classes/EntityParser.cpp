@@ -24,11 +24,12 @@ InversePalindrome.com
 #include "HealthComponent.hpp"
 #include "DamageComponent.hpp"
 #include "PursueComponent.hpp"
+#include "SpriteComponent.hpp"
+#include "ParticleComponent.hpp"
 #include "GeometryComponent.hpp"
 #include "AnimationComponent.hpp"
 #include "ExplosionComponent.hpp"
 #include "SatelliteComponent.hpp"
-#include "SceneNodeComponent.hpp"
 #include "SpeedBoostComponent.hpp"
 #include "RegenBoostComponent.hpp"
 #include "AnchorPointComponent.hpp"
@@ -40,7 +41,8 @@ EntityParser::EntityParser(entityx::EntityManager& entityManager, entityx::Event
 	entityManager(entityManager),
 	eventManager(eventManager)
 {
-	componentParsers.emplace("SceneNode", [](auto entity, const auto& componentNode) { entity.assign<SceneNodeComponent>(componentNode); });
+	componentParsers.emplace("Sprite", [](auto entity, const auto& componentNode) { entity.assign<SpriteComponent>(componentNode); });
+	componentParsers.emplace("Particle", [](auto entity, const auto& componentNode) { entity.assign<ParticleComponent>(componentNode); });
 	componentParsers.emplace("Geometry", [](auto entity, const auto& componentNode) { entity.assign<GeometryComponent>(componentNode); });
 	componentParsers.emplace("Object", [](auto entity, const auto& componentNode) { entity.assign<ObjectComponent>(componentNode); });
 	componentParsers.emplace("Pursue", [](auto entity, const auto& componentNode) { entity.assign<PursueComponent>(componentNode); });

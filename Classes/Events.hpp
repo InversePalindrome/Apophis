@@ -7,7 +7,8 @@ InversePalindrome.com
 
 #pragma once
 
-#include "Action.hpp"
+#include "Sound.hpp"
+#include "Animation.hpp"
 #include "AreaQuery.hpp"
 #include "ObjectType.hpp"
 #include "RayCastQuery.hpp"
@@ -36,17 +37,35 @@ struct CreateDistanceJoint
 	mutable entityx::Entity entityB;	
 };
 
-struct PlayAction
+struct PlayAudio
 {
 	mutable entityx::Entity entity;
-	Action action;
+	Sound sound;
 	bool loop;
 };
 
-struct StopAction
+struct StopAudio
 {
 	mutable entityx::Entity entity;
-	Action action;
+	Sound sound;
+};
+
+struct StopAllAudio
+{
+	mutable entityx::Entity entity;
+};
+
+struct PlayAnimation
+{
+	mutable entityx::Entity entity;
+	Animation animation;
+	bool loop;
+};
+
+struct StopAnimation
+{
+	mutable entityx::Entity entity;
+	Animation animation;
 };
 
 struct ProjectileHit

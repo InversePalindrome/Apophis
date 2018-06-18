@@ -4,15 +4,13 @@
     <Player></Player>
   </Tags>
   <Components>
-     <Particle>Supernova</Particle>
+    <Particle>Supernova</Particle>
     <Geometry x="0" y="10" width ="3.2" height="3.2">
       <Circle x="0" y="0" radius="1.6"></Circle>
     </Geometry>
     <Weapon projectileName="Laser" reloadTime="400"></Weapon>
     <Speed angular="100" linear="35"></Speed>
-    <SceneNode>
-      <Sprite>UFO</Sprite>
-    </SceneNode>
+     <Sprite>UFO</Sprite>
     <Object>Player</Object>
     <Body type="2" x="-20" y="-20" fixedRotation="false" linearDamping="0.4">
       <Fixture radius="1.6" density="0.3"></Fixture>

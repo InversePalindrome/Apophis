@@ -58,7 +58,7 @@ void CombatSystem::receive(const entityx::EntityDestroyedEvent& event)
 			});
 		}
 
-		eventManager->emit(PlayAction{ explosionEntity, Action::Explode, false });
+		eventManager->emit(PlayAudio{ explosionEntity, Sound::Explode, false });
 	}
 }
 
@@ -96,7 +96,7 @@ void CombatSystem::receive(const ShootProjectile& event)
 			});
 		}
 
-		eventManager->emit(PlayAction{ event.shooter, Action::Shoot, false });
+		eventManager->emit(PlayAudio{ event.shooter, Sound::Shoot, false });
 	}
 }
 

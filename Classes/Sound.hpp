@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-Apophis - Action.hpp
+Apophis - Sound.hpp
 InversePalindrome.com
 */
 
@@ -10,4 +10,4 @@ InversePalindrome.com
 #include <enum.h>
 
 
-BETTER_ENUM(Action, int, Shoot, Explode);
+BETTER_ENUM(Sound, int, Shoot, Explode);

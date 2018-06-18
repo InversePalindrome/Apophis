@@ -7,7 +7,7 @@ InversePalindrome.com
 
 #pragma once
 
-#include "Action.hpp"
+#include "Sound.hpp"
 #include "EnumHash.hpp"
 
 #include <pugixml.hpp>
@@ -21,18 +21,19 @@ class SoundComponent
 public:
 	explicit SoundComponent(const pugi::xml_node& componentNode);
 
-	std::string getSoundFile(Action action) const;
+	std::string getSoundFile(Sound sound) const;
 
-	int getSoundID(Action action) const;
-	const std::unordered_map<Action, int, EnumHash<Action>>& getSoundIDs() const;
+	int getSoundID(Sound sound) const;
+	const std::unordered_map<Sound, int, EnumHash<Sound>>& getSoundIDs() const;
 
-	void addSoundID(Action action, int soundID);
-	void removeSoundID(Action action);
+	void addSoundID(Sound sound, int soundID);
+	void removeSoundID(Sound sound);
+	void clearSoundIDs();
 
-	bool hasSoundFile(Action action) const;
-	bool hasSoundID(Action action) const;
+	bool hasSoundFile(Sound sound) const;
+	bool hasSoundID(Sound sound) const;
 
 private:
-	std::unordered_map<Action, std::string, EnumHash<Action>> soundFiles;
-	std::unordered_map<Action, int, EnumHash<Action>> soundIDs;
+	std::unordered_map<Sound, std::string, EnumHash<Sound>> soundFiles;
+	std::unordered_map<Sound, int, EnumHash<Sound>> soundIDs;
 };

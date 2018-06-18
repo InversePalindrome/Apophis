@@ -70,6 +70,8 @@ bool GameNode::init()
 	entityParser.createEntity("UFO");
 	entityParser.createEntity("SpaceCruiser");
 	auto planet = entityParser.createEntity("Planet");
+	auto coin = entityParser.createEntity("Coin");
+	eventManager.emit(PlayAnimation{ coin, Animation::Alert, true });
 	//auto asteroid = entityParser.createEntity("BlueAsteroid");
 
    // eventManager.emit(CreateDistanceJoint{ planet, asteroid });
