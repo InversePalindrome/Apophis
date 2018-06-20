@@ -16,17 +16,10 @@ SpriteComponent::SpriteComponent(const pugi::xml_node& componentNode) :
 
 SpriteComponent::~SpriteComponent()
 {
+	sprite->removeAllChildren();
+	sprite->removeFromParent();
+	
 	sprite->release();
-}
-
-void SpriteComponent::setPosition(const cocos2d::Vec2& position)
-{
-	sprite->setPosition(position);
-}
-
-void SpriteComponent::setRotation(float angle)
-{
-	sprite->setRotation(angle);
 }
 
 cocos2d::Sprite* SpriteComponent::getSprite()
@@ -37,4 +30,29 @@ cocos2d::Sprite* SpriteComponent::getSprite()
 cocos2d::Sprite* SpriteComponent::getSprite() const
 {
 	return sprite;
+}
+
+void SpriteComponent::setPosition(const cocos2d::Vec2& position)
+{
+	sprite->setPosition(position);
+}
+
+void SpriteComponent::setSize(const cocos2d::Vec2& size)
+{
+	sprite->setScale(size.x / sprite->getContentSize().width, size.y / sprite->getContentSize().height);
+}
+
+void SpriteComponent::setRotation(float angle)
+{
+	sprite->setRotation(angle);
+}
+
+cocos2d::Action* SpriteComponent::runAction(cocos2d::Action* action)
+{
+	return sprite->runAction(action);
+}
+
+void SpriteComponent::stopAction(cocos2d::Action* action)
+{
+	sprite->stopAction(action);
 }

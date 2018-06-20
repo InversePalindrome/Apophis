@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "Constants.hpp"
+#include "Conversions.hpp"
 #include "CombatSystem.hpp"
 #include "SpeedComponent.hpp"
 #include "HealthComponent.hpp"
@@ -64,10 +65,10 @@ void CombatSystem::receive(const entityx::EntityDestroyedEvent& event)
 
 void CombatSystem::receive(const ShootProjectile& event)
 {
-	auto shooterWeapon = event.shooter.component<WeaponComponent>();
 	const auto shooterGeometry = event.shooter.component<GeometryComponent>();
+	auto shooterWeapon = event.shooter.component<WeaponComponent>();
 
-	if (shooterWeapon && shooterGeometry && shooterWeapon->isReloaded())
+	if (shooterGeometry && shooterWeapon && shooterWeapon->isReloaded())
 	{
 		shooterWeapon->setReloadStatus(false);
 
@@ -78,14 +79,13 @@ void CombatSystem::receive(const ShootProjectile& event)
 
 		if (projectileGeometry && projectileSpeed && projectileImpulse)
 		{
-			const auto shooterSize = shooterGeometry->getAABB()[1] - shooterGeometry->getAABB()[0];
-			const auto projectileDirection = wykobi::normalize(event.targetPosition - shooterGeometry->getPosition());
-			const auto projectilePosition = shooterGeometry->getPosition() + wykobi::vector2d(projectileDirection.x * shooterSize.x, projectileDirection.y * shooterSize.y);
-	
-		    projectileGeometry->setPosition(projectilePosition);
-			projectileGeometry->setAngle(shooterGeometry->getAngle());
+			const auto projectileDirection = wykobi::vector2d(std::cos(Conversions::degreesToRadians(shooterGeometry->getAngle())), std::sin(Conversions::degreesToRadians(shooterGeometry->getAngle())));
+			const auto projectilePosition = wykobi::vector2d(projectileDirection.x * (shooterGeometry->getSize().x + projectileGeometry->getSize().x / 2.f), projectileDirection.y * (shooterGeometry->getSize().y + projectileGeometry->getSize().y / 2.f));
 
-			projectileImpulse += {projectileDirection.x * projectileSpeed->getMaxLinearSpeed(), projectileDirection.y * projectileSpeed->getMaxLinearSpeed()};
+		    projectileGeometry->setPosition(shooterGeometry->getPosition() + projectilePosition);
+			projectileGeometry->setAngle(shooterGeometry->getAngle());
+			
+		    projectileImpulse += {projectileDirection.x * projectileSpeed->getMaxLinearSpeed(), projectileDirection.y * projectileSpeed->getMaxLinearSpeed()};
 
 			timer.add(shooterWeapon->getReloadTime(), [shooterWeapon](auto id) mutable
 			{

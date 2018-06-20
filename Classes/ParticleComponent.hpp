@@ -24,6 +24,7 @@ public:
 
 	void setPosition(const cocos2d::Vec2& position);
 	void setRotation(float angle);
+	void setScale(float xScale, float yScale);
 
 private:
 	cocos2d::ParticleSystemQuad* particleSystem;

@@ -7,7 +7,7 @@
     <Geometry x="10" y="10" width="1.6" height="1.6">
       <Circle x="0" y="0" radius="1.6"></Circle>
     </Geometry>
-      <Sprite>SpaceCruiser</Sprite>
+      <Sprite>Spaceship3</Sprite>
     <Object>Enemy</Object>
     <Body type="2" x="-5" y="-18" fixedRotation="false">
       <Fixture radius="1.6" density="0.3"></Fixture>

@@ -17,8 +17,6 @@ InversePalindrome.com
 
 #include <pugixml.hpp>
 
-#include <wykobi.hpp>
-
 
 struct EntityParsed
 {
@@ -28,7 +26,6 @@ struct EntityParsed
 struct ShootProjectile
 {
 	mutable entityx::Entity shooter;
-	wykobi::vector2d<float> targetPosition;
 };
 
 struct CreateDistanceJoint
@@ -60,12 +57,6 @@ struct PlayAnimation
 	mutable entityx::Entity entity;
 	Animation animation;
 	bool loop;
-};
-
-struct StopAnimation
-{
-	mutable entityx::Entity entity;
-	Animation animation;
 };
 
 struct ProjectileHit

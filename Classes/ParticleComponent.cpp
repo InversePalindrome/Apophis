@@ -16,6 +16,9 @@ ParticleComponent::ParticleComponent(const pugi::xml_node& componentNode) :
 
 ParticleComponent::~ParticleComponent()
 {
+	particleSystem->removeAllChildren();
+	particleSystem->removeFromParent();
+
 	particleSystem->release();
 }
 
@@ -37,4 +40,8 @@ void ParticleComponent::setPosition(const cocos2d::Vec2& position)
 void ParticleComponent::setRotation(float angle)
 {
 	particleSystem->setRotation(angle);
+}
+
+void ParticleComponent::setScale(float xScale, float yScale)
+{
 }

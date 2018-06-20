@@ -98,7 +98,7 @@ b2Vec2 SteeringBehaviors::desiredVelocity(const b2Vec2& bodyPosition, const b2Ve
 
 float SteeringBehaviors::face(const b2Vec2& bodyPosition, const b2Vec2& targetPosition, float bodyAngle, float bodyAngularVelocity, float bodyInertia)
 {
-	auto desiredAngle = std::atan2f(targetPosition.x - bodyPosition.x, targetPosition.y - bodyPosition.y);
+	auto desiredAngle = std::atan2f(targetPosition.y - bodyPosition.y, targetPosition.x - bodyPosition.x);
 	auto nextAngle = bodyAngle + bodyAngularVelocity / Constants::FPS;
 
 	auto totalRotation = std::remainderf(desiredAngle - nextAngle, 2 * boost::math::constants::pi<float>());

@@ -10,6 +10,7 @@ InversePalindrome.com
 #include "Events.hpp"
 #include "BodyComponent.hpp"
 #include "SpeedComponent.hpp"
+#include "CollisionFilter.hpp"
 #include "CollisionManager.hpp"
 #include "ImpulseComponent.hpp"
 #include "GeometryComponent.hpp"
@@ -36,6 +37,7 @@ public:
 private:
 	b2World world;
 	CollisionManager collisionManager;
+	CollisionFilter collisionFilter;
 
 	entityx::EntityManager& entityManager;
 

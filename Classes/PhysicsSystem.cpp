@@ -17,6 +17,7 @@ PhysicsSystem::PhysicsSystem(entityx::EntityManager& entityManager, entityx::Eve
 	entityManager(entityManager)
 {
 	world.SetContactListener(&collisionManager);
+	world.SetContactFilter(&collisionFilter);
 }
 
 void PhysicsSystem::configure(entityx::EventManager& eventManager)
@@ -115,7 +116,15 @@ void PhysicsSystem::createBodies()
 
 						shapes.push_back(circle);
 					}
-					else if (std::is_same_v<T, wykobi::polygon<float, 2>>)
+					else if constexpr (std::is_same_v<T, wykobi::rectangle<float>>)
+					{
+						b2PolygonShape rectangle;
+
+						rectangle.SetAsBox(shape[1].x, shape[1].y);
+
+						shapes.push_back(rectangle);
+					}
+					else if constexpr (std::is_same_v<T, wykobi::polygon<float, 2>>)
 					{
 						b2PolygonShape polygon;
 						
@@ -156,10 +165,10 @@ void PhysicsSystem::removeBodies()
 	bodiesToRemove.clear();
 }
 
-void PhysicsSystem::updateSpatialProperties(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<GeometryComponent> spatial)
+void PhysicsSystem::updateSpatialProperties(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<GeometryComponent> geometry)
 {
-	spatial->setPosition({ body->getPosition().x, body->getPosition().y });
-	spatial->setAngle(Conversions::radiansToDegrees(body->getAngle()));
+	geometry->setPosition({ body->getPosition().x, body->getPosition().y });
+	geometry->setAngle(Conversions::radiansToDegrees(body->getAngle()));
 }
 
 void PhysicsSystem::applyImpulses(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<ImpulseComponent> impulse)

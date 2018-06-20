@@ -58,7 +58,7 @@ CollisionManager::getCollisionPair(const b2Body* bodyA, const b2Body* bodyB, Obj
 	auto* entityA = static_cast<entityx::Entity*>(bodyA->GetUserData());
 	auto* entityB = static_cast<entityx::Entity*>(bodyB->GetUserData());
 
-	if (entityA && entityB)
+	if (*entityA && *entityB)
 	{
 		auto objectA = entityA->component<ObjectComponent>();
 		auto objectB = entityB->component<ObjectComponent>();

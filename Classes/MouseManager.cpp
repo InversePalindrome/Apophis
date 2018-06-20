@@ -11,6 +11,12 @@ InversePalindrome.com
 #include <cocos/base/CCEventListenerMouse.h>
 
 
+MouseManager::MouseManager() :
+	mousePosition(0.f, 0.f),
+	isPressed(false)
+{
+}
+
 bool MouseManager::init()
 {
 	if (!Node::init())
@@ -22,7 +28,7 @@ bool MouseManager::init()
 
 	mouseListener->onMouseMove = [this](auto* event)
 	{
-		mousePosition = convertToNodeSpace({ event->getCursorX(), event->getCursorY() });
+		mousePosition = { event->getCursorX(), event->getCursorY() };
 	};
 	mouseListener->onMouseDown = [this](auto* event)
 	{

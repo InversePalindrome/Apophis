@@ -209,6 +209,6 @@ void BodyComponent::initFixtureDef(const pugi::xml_node& fixtureNode)
 	{
 		fixtureDef.isSensor = sensorAttribute.as_bool();
 	}
-
+	
 	fixtureDefs.push_back(fixtureDef);
 }

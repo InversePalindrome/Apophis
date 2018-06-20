@@ -17,7 +17,7 @@ InversePalindrome.com
 
 class GeometryComponent
 {
-	using Shape = std::variant<wykobi::circle<float>, wykobi::polygon<float, 2>>;
+	using Shape = std::variant<wykobi::circle<float>, wykobi::rectangle<float>, wykobi::polygon<float, 2>>;
 
 public:
 	explicit GeometryComponent(const pugi::xml_node& componentNode);
@@ -25,18 +25,21 @@ public:
 	wykobi::vector2d<float> getPosition() const;
 	void setPosition(const wykobi::vector2d<float>& position);
 
+	wykobi::vector2d<float> getSize() const;
+
 	float getAngle() const;
 	void setAngle(float angle);
 	
-	wykobi::rectangle<float> getAABB() const;
 	const std::vector<Shape>& getShapes() const;
+
+	void addShape(const Shape& shape);
 
 private:
 	wykobi::vector2d<float> position;
-	wykobi::rectangle<float> AABB;
+	wykobi::vector2d<float> size;
 	float angle;
 
-	std::vector<Shape> shapes;
+	wykobi::rectangle<float> AABB;
 
-	void addAABB(const wykobi::rectangle<float>& shapeAABB);
+	std::vector<Shape> shapes;
 };

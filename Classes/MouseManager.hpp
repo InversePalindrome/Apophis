@@ -14,7 +14,7 @@ InversePalindrome.com
 class MouseManager : public cocos2d::Node
 {
 public:
-	MouseManager() = default;
+	MouseManager();
 	MouseManager(const MouseManager&) = delete;
 	MouseManager& operator= (const MouseManager&) = delete;
 

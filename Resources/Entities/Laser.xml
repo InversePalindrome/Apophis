@@ -2,10 +2,10 @@
 <Entity>
   <Components>
     <Geometry width="1.2" height="1.2">
-      <Circle x="0" y="0" radius="1"></Circle>
+      <Rectangle width="1.8" height="1.2"></Rectangle>
     </Geometry>
     <Object>Projectile</Object>
-       <Sprite>YellowBlast06</Sprite>
+       <Sprite>RedBlast03</Sprite>
     <Body type="2" bullet="true">
       <Fixture></Fixture>
     </Body>

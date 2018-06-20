@@ -67,13 +67,15 @@ void PlayerSystem::updateMovement(entityx::ComponentHandle<SpeedComponent> speed
 
 void PlayerSystem::updateRotation(entityx::ComponentHandle<ImpulseComponent> impulse, entityx::ComponentHandle<BodyComponent> body)
 {
-	impulse += SteeringBehaviors::face(body->getPosition(), { mouseManager->getMousePosition().x / Constants::PTM_RATIO, mouseManager->getMousePosition().y / Constants::PTM_RATIO }, body->getAngle(), body->getAngularVelocity(), body->getInertia());
+	const auto mousePosition = mouseManager->convertToNodeSpace(mouseManager->getMousePosition());
+
+	impulse += SteeringBehaviors::face(body->getPosition(), { mousePosition.x / Constants::PTM_RATIO, mousePosition.y / Constants::PTM_RATIO }, body->getAngle(), body->getAngularVelocity(), body->getInertia());
 }
 
 void PlayerSystem::updateShooting(entityx::EventManager& eventManager, entityx::Entity player)
 {
 	if (mouseManager->isMousePressed())
 	{
-		eventManager.emit(ShootProjectile{ player, { mouseManager->getMousePosition().x / Constants::PTM_RATIO, mouseManager->getMousePosition().y / Constants::PTM_RATIO} });
+		eventManager.emit(ShootProjectile{ player });
 	}
 }
