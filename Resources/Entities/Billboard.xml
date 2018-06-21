@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
-  <Label text="HELLO WORLD" font="Bebas Regular" fontSize="100" r="207" g="16" b="32" a="255" xPosition="500" yPosition="500"></Label>
+  <Components>
+    <Geometry x="20" y="20">
+      <Rectangle width="6" height="2"></Rectangle>
+    </Geometry>
+    <Body type="2" fixedRotation="false" linearDamping="0.4">
+      <Fixture density="0.3"></Fixture>
+    </Body>
+    <Speed linear="40"></Speed>
+    <Impulse linear="30"></Impulse>
+     <Label font="Bebas Regular" size="100" r="207" g="16" b="32" a="255">Hello World</Label>
+  </Components>
 </Entity>

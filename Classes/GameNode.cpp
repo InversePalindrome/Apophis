@@ -70,9 +70,10 @@ bool GameNode::init()
 	map.load("Andromeda");
 	entityParser.createEntity("UFO");
 	entityParser.createEntity("SpaceCruiser");
-	//auto planet = entityParser.createEntity("Planet");
-	//auto coin = entityParser.createEntity("Coin");
-	//eventManager.emit(PlayAnimation{ coin, Animation::Alert, true });
+	entityParser.createEntity("Billboard");
+	auto planet = entityParser.createEntity("Planet");
+	auto coin = entityParser.createEntity("Coin");
+	eventManager.emit(PlayAnimation{ coin, Animation::Alert, true });
 	//auto asteroid = entityParser.createEntity("BlueAsteroid");
 
    // eventManager.emit(CreateDistanceJoint{ planet, asteroid });

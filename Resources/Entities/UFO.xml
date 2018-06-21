@@ -10,9 +10,9 @@
     </Geometry>
     <Weapon projectileName="Laser" reloadTime="400"></Weapon>
     <Speed angular="100" linear="35"></Speed>
-     <Sprite>Spaceship4</Sprite>
+    
     <Object>Player</Object>
-    <Body type="2" x="-20" y="-20" fixedRotation="false" linearDamping="0.4">
+    <Body type="2" fixedRotation="false" linearDamping="0.4">
       <Fixture density="0.3"></Fixture>
     </Body>
     <Explosion name="Boom" time="2000"></Explosion>

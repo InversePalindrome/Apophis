@@ -15,7 +15,6 @@ InversePalindrome.com
 
 #include <entityx/entityx.h>
 
-#include <map>
 #include <string>
 
 

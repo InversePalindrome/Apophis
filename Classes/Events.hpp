@@ -15,8 +15,6 @@ InversePalindrome.com
 
 #include <entityx/Entity.h>
 
-#include <pugixml.hpp>
-
 
 struct EntityParsed
 {

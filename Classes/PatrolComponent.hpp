@@ -7,9 +7,9 @@ InversePalindrome.com
 
 #pragma once
 
-#include <pugixml.hpp>
-
 #include <Box2D/Common/b2Math.h>
+
+#include <pugixml.hpp>
 
 #include <vector>
 

@@ -9,39 +9,75 @@ InversePalindrome.com
 
 
 ParticleComponent::ParticleComponent(const pugi::xml_node& componentNode) :
-	particleSystem(cocos2d::ParticleSystemQuad::create(std::string(componentNode.text().as_string()) + ".plist"))
+	emitter(cocos2d::ParticleSystemQuad::create(std::string(componentNode.text().as_string()) + ".plist"))
 {
-	particleSystem->retain();
+	emitter->retain();
 }
 
 ParticleComponent::~ParticleComponent()
 {
-	particleSystem->removeAllChildren();
-	particleSystem->removeFromParent();
+    emitter->removeFromParent();
+	emitter->removeAllChildren();
 
-	particleSystem->release();
+    emitter->release();
 }
 
-cocos2d::ParticleSystemQuad* ParticleComponent::getParticleSystem()
+cocos2d::ParticleSystemQuad* ParticleComponent::getEmitter()
 {
-	return particleSystem;
+	return emitter;
 }
 
-cocos2d::ParticleSystemQuad* ParticleComponent::getParticleSystem() const
+cocos2d::ParticleSystemQuad* ParticleComponent::getEmitter() const
 {
-	return particleSystem;
+	return emitter;
 }
 
 void ParticleComponent::setPosition(const cocos2d::Vec2& position)
 {
-	particleSystem->setPosition(position);
+	emitter->setPosition(position);
 }
 
 void ParticleComponent::setRotation(float angle)
 {
-	particleSystem->setRotation(angle);
+	emitter->setRotation(angle);
 }
 
-void ParticleComponent::setScale(float xScale, float yScale)
+cocos2d::ParticleSystem::Mode ParticleComponent::getMode() const
 {
+	return emitter->getEmitterMode();
+}
+
+void ParticleComponent::setMode(cocos2d::ParticleSystem::Mode mode)
+{
+	emitter->setEmitterMode(mode);
+}
+
+float ParticleComponent::getDuration() const
+{
+	return emitter->getDuration();
+}
+
+void ParticleComponent::setDuration(float duration)
+{
+	emitter->setDuration(duration);
+}
+
+float ParticleComponent::getTangentialAcceleration() const
+{
+	return emitter->getTangentialAccel();
+}
+
+void ParticleComponent::setTangentialAcceleration(float tangentialAcceleration)
+{
+	emitter->setTangentialAccel(tangentialAcceleration);
+}
+
+float ParticleComponent::getStartRadius() const
+{
+	return emitter->getStartRadius();
+}
+
+void ParticleComponent::setStartRadius(float startRadius)
+{
+	emitter->setStartRadius(startRadius);
 }

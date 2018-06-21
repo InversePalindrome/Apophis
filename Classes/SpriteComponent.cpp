@@ -16,8 +16,8 @@ SpriteComponent::SpriteComponent(const pugi::xml_node& componentNode) :
 
 SpriteComponent::~SpriteComponent()
 {
-	sprite->removeAllChildren();
 	sprite->removeFromParent();
+	sprite->removeAllChildren();
 	
 	sprite->release();
 }

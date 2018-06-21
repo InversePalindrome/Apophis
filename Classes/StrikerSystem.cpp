@@ -32,7 +32,7 @@ StrikerSystem::StrikerSystem() :
 	           context.impulse += SteeringBehaviors::seek(context.body->getPosition(), playerBody->getPosition(), context.body->getLinearVelocity(), context.speed->getMaxLinearSpeed());
 			   context.impulse += SteeringBehaviors::face(context.body->getPosition(), playerBody->getPosition(), context.body->getAngle(), context.body->getAngularVelocity(), context.body->getInertia());
 			   
-			  // eventManager->emit(ShootProjectile{ context.striker, Vector2f{playerBody->getPosition().x, playerBody->getPosition().y} });
+			   eventManager->emit(ShootProjectile{ context.striker });
 			
 		       return beehive::Status::SUCCESS;
 	       }
@@ -57,7 +57,7 @@ void StrikerSystem::configure(entityx::EventManager& eventManager)
 {
 	this->eventManager = &eventManager;
 
-	eventManager.subscribe<entityx::ComponentAddedEvent<BodyComponent>>(*this);
+	eventManager.subscribe<EntityParsed>(*this);
 }
 
 void StrikerSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
@@ -79,7 +79,7 @@ void StrikerSystem::update(entityx::EntityManager& entityManager, entityx::Event
 	}
 }
 
-void StrikerSystem::receive(const entityx::ComponentAddedEvent<BodyComponent>& event)
+void StrikerSystem::receive(const EntityParsed& event)
 {
 	auto entity = event.entity;
 

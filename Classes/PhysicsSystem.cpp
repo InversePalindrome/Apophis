@@ -55,6 +55,7 @@ void PhysicsSystem::receive(const entityx::EntityDestroyedEvent& event)
 
 	if (auto body = entity.component<BodyComponent>())
 	{
+		body.valid();
 		bodiesToRemove.push_back(body->getBody());
 	}
 }

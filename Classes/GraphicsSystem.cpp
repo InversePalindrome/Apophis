@@ -26,6 +26,7 @@ GraphicsSystem::GraphicsSystem(cocos2d::Node* gameNode, Map& map) :
 void GraphicsSystem::configure(entityx::EventManager& eventManager)
 {
 	eventManager.subscribe<entityx::ComponentAddedEvent<SpriteComponent>>(*this); 
+	eventManager.subscribe<entityx::ComponentAddedEvent<LabelComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<ParticleComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<Player>>(*this);
 	eventManager.subscribe<EntityParsed>(*this);
@@ -47,6 +48,8 @@ void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::Even
 		}
 	});
 	
+	addNodes();
+
 	if (player)
 	{
 		updateView();
@@ -56,12 +59,35 @@ void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::Even
 
 void GraphicsSystem::receive(const entityx::ComponentAddedEvent<SpriteComponent>& event)
 {
-	gameNode->addChild(event.component->getSprite());
+	renderablesToAdd.push_back([this, event]
+	{
+		if (event.component)
+		{
+			gameNode->addChild(event.component->getSprite());
+		}
+	});
+}
+
+void GraphicsSystem::receive(const entityx::ComponentAddedEvent<LabelComponent>& event)
+{
+	renderablesToAdd.push_back([this, event]
+	{
+		if (event.component)
+		{
+			gameNode->addChild(event.component->getLabel());
+		}
+	});
 }
 
 void GraphicsSystem::receive(const entityx::ComponentAddedEvent<ParticleComponent>& event)
 {
-	gameNode->addChild(event.component->getParticleSystem());
+	renderablesToAdd.push_back([this, event] 
+	{
+		if (event.component)
+		{
+			gameNode->addChild(event.component->getEmitter());
+		}
+	});
 }
 
 void GraphicsSystem::receive(const entityx::ComponentAddedEvent<Player>& event)
@@ -71,13 +97,28 @@ void GraphicsSystem::receive(const entityx::ComponentAddedEvent<Player>& event)
 
 void GraphicsSystem::receive(const EntityParsed& event)
 {
-	auto sprite = event.entity.component<SpriteComponent>();
-	auto geometry = event.entity.component<GeometryComponent>();
-
-	if (sprite && geometry)
+	brigand::for_each<Renderables>([event](auto renderableElement)
 	{
-		sprite->setSize({ geometry->getSize().x * Constants::PTM_RATIO, geometry->getSize().y * Constants::PTM_RATIO });;
+		using RenderableComponent = decltype(renderableElement)::type;
+
+		auto renderable = event.entity.component<RenderableComponent>();
+		auto geometry = event.entity.component<GeometryComponent>();
+
+		if (renderable && geometry)
+		{
+			//renderable->setSize({ geometry->getSize().x * Constants::PTM_RATIO, geometry->getSize().y * Constants::PTM_RATIO });;
+		}
+	});
+}
+
+void GraphicsSystem::addNodes()
+{
+	for (const auto renderableToAdd : renderablesToAdd)
+	{
+		renderableToAdd();
 	}
+	
+	renderablesToAdd.clear();
 }
 
 void GraphicsSystem::updateView()

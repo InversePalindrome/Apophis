@@ -87,6 +87,25 @@ b2Vec2 SteeringBehaviors::orbit(const b2Vec2& satellitePosition, const b2Vec2& p
 	return steeringForce;
 }
 
+b2Vec2 SteeringBehaviors::avoidForce()
+{
+	return {};
+}
+
+b2Vec2 SteeringBehaviors::alignForce()
+{
+	return {};
+}
+
+b2Vec2 SteeringBehaviors::cohesionForce()
+{
+	return {};
+}
+b2Vec2 SteeringBehaviors::separateForce()
+{
+	return {};
+}
+
 b2Vec2 SteeringBehaviors::desiredVelocity(const b2Vec2& bodyPosition, const b2Vec2& targetPosition, float maxSpeed)
 {
 	auto desiredVelocity = targetPosition - bodyPosition;

@@ -9,9 +9,6 @@ InversePalindrome.com
 
 #include <boost/range/combine.hpp>
 
-#include <vector>
-#include <variant>
-
 
 BodyComponent::BodyComponent(const pugi::xml_node& componentNode) :
 	body(nullptr)

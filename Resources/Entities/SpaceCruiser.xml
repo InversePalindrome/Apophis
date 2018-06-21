@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
   <Tags>
-    
+    <Striker></Striker>
   </Tags>
   <Components>
     <Geometry x="10" y="10" width="1.6" height="1.6">
       <Circle x="0" y="0" radius="1.6"></Circle>
     </Geometry>
-      <Sprite>Spaceship3</Sprite>
+    <Sprite>Spaceship3</Sprite>
     <Object>Enemy</Object>
     <Body type="2" x="-5" y="-18" fixedRotation="false">
       <Fixture radius="1.6" density="0.3"></Fixture>
@@ -20,7 +20,7 @@
       <RegenBoost>1</RegenBoost>
     </Drop>
     <Health>80</Health>
-    <Vision>15</Vision>
+    <Vision>25</Vision>
     <Avoid distance="5" force="30"></Avoid>
     <Wander></Wander>
     <Queue></Queue>

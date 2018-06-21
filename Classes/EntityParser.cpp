@@ -15,6 +15,7 @@ InversePalindrome.com
 #include "AvoidComponent.hpp"
 #include "FlockComponent.hpp"
 #include "QueueComponent.hpp"
+#include "LabelComponent.hpp"
 #include "ObjectComponent.hpp"
 #include "WeaponComponent.hpp"
 #include "VisionComponent.hpp"
@@ -42,6 +43,7 @@ EntityParser::EntityParser(entityx::EntityManager& entityManager, entityx::Event
 	eventManager(eventManager)
 {
 	componentParsers.emplace("Sprite", [](auto entity, const auto& componentNode) { entity.assign<SpriteComponent>(componentNode); });
+	componentParsers.emplace("Label", [](auto entity, const auto& componentNode) { entity.assign<LabelComponent>(componentNode); });
 	componentParsers.emplace("Particle", [](auto entity, const auto& componentNode) { entity.assign<ParticleComponent>(componentNode); });
 	componentParsers.emplace("Geometry", [](auto entity, const auto& componentNode) { entity.assign<GeometryComponent>(componentNode); });
 	componentParsers.emplace("Object", [](auto entity, const auto& componentNode) { entity.assign<ObjectComponent>(componentNode); });
