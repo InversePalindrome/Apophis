@@ -9,50 +9,27 @@ InversePalindrome.com
 
 
 SpriteComponent::SpriteComponent(const pugi::xml_node& componentNode) :
-	sprite(cocos2d::Sprite::createWithSpriteFrameName(componentNode.text().as_string()))
+	NodeComponent(cocos2d::Sprite::createWithSpriteFrameName(componentNode.text().as_string())),
+	sprite(static_cast<cocos2d::Sprite*>(getNode()))
 {
-	sprite->retain();
 }
 
-SpriteComponent::~SpriteComponent()
+cocos2d::Rect SpriteComponent::getTextureRect() const
 {
-	sprite->removeFromParent();
-	sprite->removeAllChildren();
-	
-	sprite->release();
+	return sprite->getTextureRect();
 }
 
-cocos2d::Sprite* SpriteComponent::getSprite()
+void SpriteComponent::setTextureRect(const cocos2d::Rect& textureRect)
 {
-	return sprite;
+	sprite->setTextureRect(textureRect);
 }
 
-cocos2d::Sprite* SpriteComponent::getSprite() const
+cocos2d::SpriteFrame* SpriteComponent::getSpriteFrame() const
 {
-	return sprite;
+	return sprite->getSpriteFrame();
 }
 
-void SpriteComponent::setPosition(const cocos2d::Vec2& position)
+void SpriteComponent::setSpriteFrame(const std::string& spriteFrameName)
 {
-	sprite->setPosition(position);
-}
-
-void SpriteComponent::setSize(const cocos2d::Vec2& size)
-{
-	sprite->setScale(size.x / sprite->getContentSize().width, size.y / sprite->getContentSize().height);
-}
-
-void SpriteComponent::setRotation(float angle)
-{
-	sprite->setRotation(angle);
-}
-
-cocos2d::Action* SpriteComponent::runAction(cocos2d::Action* action)
-{
-	return sprite->runAction(action);
-}
-
-void SpriteComponent::stopAction(cocos2d::Action* action)
-{
-	sprite->stopAction(action);
+	sprite->setSpriteFrame(spriteFrameName);
 }

@@ -9,10 +9,11 @@ InversePalindrome.com
 
 
 LabelComponent::LabelComponent(const pugi::xml_node& componentNode) :
-	label(cocos2d::Label::create())
+	NodeComponent(cocos2d::Label::create()),
+	label(static_cast<cocos2d::Label*>(getNode()))
 {
 	label->setString(componentNode.text().as_string());
-
+	
 	if (const auto fontAttribute = componentNode.attribute("font"))
 	{
 		label->setSystemFontName(fontAttribute.as_string());
@@ -29,37 +30,16 @@ LabelComponent::LabelComponent(const pugi::xml_node& componentNode) :
 	{
 		label->setVerticalAlignment(static_cast<cocos2d::TextVAlignment>(VAlignmentAttribute.as_int()));
 	}
+	
+	const auto rAttribute = componentNode.attribute("R");
+	const auto gAttribute = componentNode.attribute("G");
+	const auto bAttribute = componentNode.attribute("B");
 
-	label->retain();
-}
-
-LabelComponent::~LabelComponent()
-{
-	label->removeFromParent();
-	label->removeAllChildren();
-
-	label->release();
-}
-
-cocos2d::Label* LabelComponent::getLabel()
-{
-	return label;
-}
-
-cocos2d::Label* LabelComponent::getLabel() const
-{
-	return label;
-}
-
-void LabelComponent::setPosition(const cocos2d::Vec2& position)
-{
-	label->setPosition(position);
-}
-
-void LabelComponent::setRotation(float angle)
-{
-	label->setRotation(angle);
-}
+	if (rAttribute && gAttribute && bAttribute)
+	{
+		label->setTextColor(cocos2d::Color4B(cocos2d::Color3B(rAttribute.as_uint(), gAttribute.as_uint(), bAttribute.as_uint())));
+	}
+} 
 
 std::string LabelComponent::getFontName() const
 {
@@ -79,4 +59,14 @@ float LabelComponent::getFontSize() const
 void LabelComponent::setFontSize(float fontSize)
 {
 	label->setSystemFontSize(fontSize);
+}
+
+cocos2d::Color4B LabelComponent::getTextColor() const
+{
+	return label->getTextColor();
+}
+
+void LabelComponent::setTextColor(const cocos2d::Color4B& textColor)
+{
+	label->setTextColor(textColor);
 }

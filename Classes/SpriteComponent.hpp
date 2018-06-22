@@ -7,27 +7,23 @@ InversePalindrome.com
 
 #pragma once
 
+#include "NodeComponent.hpp"
+
 #include <cocos/2d/CCSprite.h>
 
 #include <pugixml.hpp>
 
 
-class SpriteComponent 
+class SpriteComponent : public NodeComponent
 {
 public:
 	explicit SpriteComponent(const pugi::xml_node& componentNode);
 
-	~SpriteComponent();
+	cocos2d::Rect getTextureRect() const;
+	void setTextureRect(const cocos2d::Rect& textureRect);
 
-	cocos2d::Sprite* getSprite();
-	cocos2d::Sprite* getSprite() const;
-
-	void setPosition(const cocos2d::Vec2& position);
-	void setSize(const cocos2d::Vec2& size);
-	void setRotation(float angle);
-
-	cocos2d::Action* runAction(cocos2d::Action* action);
-	void stopAction(cocos2d::Action* action);
+	cocos2d::SpriteFrame* getSpriteFrame() const;
+	void setSpriteFrame(const std::string& spriteFrameName);
 
 private:
 	cocos2d::Sprite* sprite;

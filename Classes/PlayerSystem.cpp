@@ -14,68 +14,104 @@ InversePalindrome.com
 #include "PlayerSystem.hpp"
 #include "SteeringBehaviors.hpp"
 
+#include <cocos/base/CCEventDispatcher.h>
+#include <cocos/base/CCEventListenerMouse.h>
+#include <cocos/base/CCEventListenerKeyboard.h>
 
-PlayerSystem::PlayerSystem(KeyboardManager* keyboardManager, MouseManager* mouseManager) :
-	keyboardManager(keyboardManager),
-	mouseManager(mouseManager)
+
+PlayerSystem::PlayerSystem(cocos2d::Node* gameNode) :
+	gameNode(gameNode),
+	isShooting(false)
 {
+	const auto& appSettings = AppSettings::getInstance();
+
+	auto* keyboardListener = cocos2d::EventListenerKeyboard::create();
+	keyboardListener->onKeyPressed = [this, &appSettings](auto keyCode, auto* event) 
+	{ 
+		if (appSettings.hasKeyAction(keyCode))
+		{
+			keyActions.push_back(appSettings.getKeyAction(keyCode));
+		}
+	};
+	keyboardListener->onKeyReleased = [this, &appSettings](auto keyCode, auto* event) 
+	{
+		if (appSettings.hasKeyAction(keyCode))
+		{
+			keyActions.erase(std::remove(std::begin(keyActions), std::end(keyActions), appSettings.getKeyAction(keyCode)), std::end(keyActions));
+		}
+	};
+
+	auto* mouseListener = cocos2d::EventListenerMouse::create();
+	mouseListener->onMouseMove = [this, gameNode](auto* event) { playerFocusPoint = gameNode->convertToNodeSpace({ event->getCursorX(), event->getCursorY() }); };
+	mouseListener->onMouseDown = [this](auto* event) { isShooting = true; };
+	mouseListener->onMouseUp = [this](auto* event) { isShooting = false; };
+
+	gameNode->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, gameNode);
+	gameNode->getEventDispatcher()->addEventListenerWithSceneGraphPriority(mouseListener, gameNode);
 }
 
 void PlayerSystem::configure(entityx::EventManager& eventManager)
 {
+	this->eventManager = &eventManager;
+	 
+	eventManager.subscribe<EntityParsed>(*this);
 }
 
 void PlayerSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
-	entityx::ComponentHandle<Player> player;
-	entityx::ComponentHandle<SpeedComponent> speed;
-	entityx::ComponentHandle<ImpulseComponent> impulse;
-	entityx::ComponentHandle<BodyComponent> body;
+	updateMovement();
+	updateRotation();
+	updateShooting();
+}
 
-	for (auto entity : entityManager.entities_with_components(player, speed, impulse, body))
+void PlayerSystem::receive(const EntityParsed& event)
+{
+	if (event.entity.has_component<Player>())
 	{
-		if (body->getBody())
+		player = event.entity;
+		playerBody = event.entity.component<BodyComponent>();
+		playerSpeed = event.entity.component<SpeedComponent>();
+		playerImpulse = event.entity.component<ImpulseComponent>();
+	}
+}
+
+void PlayerSystem::updateMovement()
+{
+	if (playerSpeed && playerImpulse)
+	{
+		for (const auto& keyAction : keyActions)
 		{
-			updateMovement(speed, impulse);
-			updateRotation(impulse, body);
-			updateShooting(eventManager, entity);
+			switch (keyAction)
+			{
+			case KeyAction::MoveRight:
+				playerImpulse += playerSpeed->getMaxLinearSpeed() * b2Vec2(1.f, 0.f);
+				break;
+			case KeyAction::MoveLeft:
+				playerImpulse += playerSpeed->getMaxLinearSpeed() * b2Vec2(-1.f, 0.f);
+				break;
+			case KeyAction::MoveUp:
+				playerImpulse += playerSpeed->getMaxLinearSpeed() * b2Vec2(0.f, 1.f);
+				break;
+			case KeyAction::MoveDown:
+				playerImpulse += playerSpeed->getMaxLinearSpeed() * b2Vec2(0.f, -1.f);
+				break;
+			}
 		}
 	}
 }
 
-void PlayerSystem::updateMovement(entityx::ComponentHandle<SpeedComponent> speed, entityx::ComponentHandle<ImpulseComponent> impulse)
+void PlayerSystem::updateRotation()
 {
-	const auto& appSettings = AppSettings::getInstance();
-
-	if (keyboardManager->isKeyPressed(appSettings.getKeyCode(KeyAction::MoveRight)))
+	if (playerImpulse && playerBody && playerBody->getBody())
 	{
-		impulse += speed->getMaxLinearSpeed() * b2Vec2(1.f, 0.f);
-	}
-	else if (keyboardManager->isKeyPressed(appSettings.getKeyCode(KeyAction::MoveLeft)))
-	{
-		impulse += speed->getMaxLinearSpeed() * b2Vec2(-1.f, 0.f);
-	}
-	if (keyboardManager->isKeyPressed(appSettings.getKeyCode(KeyAction::MoveUp)))
-	{
-		impulse += speed->getMaxLinearSpeed() * b2Vec2(0.f, 1.f);
-	}
-	else if (keyboardManager->isKeyPressed(appSettings.getKeyCode(KeyAction::MoveDown)))
-	{
-		impulse += speed->getMaxLinearSpeed() * b2Vec2(0.f, -1.f);
+		playerImpulse += SteeringBehaviors::face(playerBody->getPosition(), { playerFocusPoint.x / Constants::PTM_RATIO, playerFocusPoint.y / Constants::PTM_RATIO }, playerBody->getAngle(), playerBody->getAngularVelocity(), playerBody->getInertia());
 	}
 }
 
-void PlayerSystem::updateRotation(entityx::ComponentHandle<ImpulseComponent> impulse, entityx::ComponentHandle<BodyComponent> body)
+void PlayerSystem::updateShooting()
 {
-	const auto mousePosition = mouseManager->convertToNodeSpace(mouseManager->getMousePosition());
-
-	impulse += SteeringBehaviors::face(body->getPosition(), { mousePosition.x / Constants::PTM_RATIO, mousePosition.y / Constants::PTM_RATIO }, body->getAngle(), body->getAngularVelocity(), body->getInertia());
-}
-
-void PlayerSystem::updateShooting(entityx::EventManager& eventManager, entityx::Entity player)
-{
-	if (mouseManager->isMousePressed())
+	if (player && isShooting)
 	{
-		eventManager.emit(ShootProjectile{ player });
+		eventManager->emit(ShootProjectile{ player });
 	}
 }

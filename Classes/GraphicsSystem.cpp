@@ -25,9 +25,6 @@ GraphicsSystem::GraphicsSystem(cocos2d::Node* gameNode, Map& map) :
 
 void GraphicsSystem::configure(entityx::EventManager& eventManager)
 {
-	eventManager.subscribe<entityx::ComponentAddedEvent<SpriteComponent>>(*this); 
-	eventManager.subscribe<entityx::ComponentAddedEvent<LabelComponent>>(*this);
-	eventManager.subscribe<entityx::ComponentAddedEvent<ParticleComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<Player>>(*this);
 	eventManager.subscribe<EntityParsed>(*this);
 }
@@ -57,39 +54,6 @@ void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::Even
 	}
 }
 
-void GraphicsSystem::receive(const entityx::ComponentAddedEvent<SpriteComponent>& event)
-{
-	renderablesToAdd.push_back([this, event]
-	{
-		if (event.component)
-		{
-			gameNode->addChild(event.component->getSprite());
-		}
-	});
-}
-
-void GraphicsSystem::receive(const entityx::ComponentAddedEvent<LabelComponent>& event)
-{
-	renderablesToAdd.push_back([this, event]
-	{
-		if (event.component)
-		{
-			gameNode->addChild(event.component->getLabel());
-		}
-	});
-}
-
-void GraphicsSystem::receive(const entityx::ComponentAddedEvent<ParticleComponent>& event)
-{
-	renderablesToAdd.push_back([this, event] 
-	{
-		if (event.component)
-		{
-			gameNode->addChild(event.component->getEmitter());
-		}
-	});
-}
-
 void GraphicsSystem::receive(const entityx::ComponentAddedEvent<Player>& event)
 {
 	player = event.entity;
@@ -97,17 +61,19 @@ void GraphicsSystem::receive(const entityx::ComponentAddedEvent<Player>& event)
 
 void GraphicsSystem::receive(const EntityParsed& event)
 {
-	brigand::for_each<Renderables>([event](auto renderableElement)
+	brigand::for_each<Renderables>([this, event](auto renderableElement)
 	{
 		using RenderableComponent = decltype(renderableElement)::type;
 
 		auto renderable = event.entity.component<RenderableComponent>();
-		auto geometry = event.entity.component<GeometryComponent>();
 
-		if (renderable && geometry)
-		{
-			//renderable->setSize({ geometry->getSize().x * Constants::PTM_RATIO, geometry->getSize().y * Constants::PTM_RATIO });;
-		}
+		renderablesToAdd.push_back([this, renderable]() 
+		{ 
+			if (renderable)
+			{
+				gameNode->addChild(renderable->getNode());
+			}
+		});
 	});
 }
 

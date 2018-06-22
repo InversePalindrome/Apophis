@@ -4,7 +4,7 @@
     <Player></Player>
   </Tags>
   <Components>
-    <Particle>Supernova</Particle>
+    <Sprite>Spaceship4</Sprite>
     <Geometry x="0" y="10">
       <Circle x="0" y="0" radius="1.5"></Circle>
     </Geometry>

@@ -24,6 +24,7 @@ InversePalindrome.com
 
 #include <cocos/base/CCEventDispatcher.h>
 #include <cocos/base/CCEventListenerCustom.h>
+#include <cocos/base/CCEventListenerKeyboard.h>
 
 #include <entityx/deps/Dependencies.h>
 
@@ -36,12 +37,6 @@ GameNode::GameNode() :
 {
 }
 
-GameNode::~GameNode()
-{
-	keyboardManager->release();
-	mouseManager->release();
-}
-
 bool GameNode::init()
 {
 	if (!Node::init())
@@ -51,17 +46,21 @@ bool GameNode::init()
 
 	scheduleUpdate();
 
-	keyboardManager = KeyboardManager::create();
-	keyboardManager->retain();
-	
-	mouseManager = MouseManager::create();
-	mouseManager->retain();
-
-	addChild(keyboardManager);
-	addChild(mouseManager);
-
 	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("resume", [this](auto* event) { scheduleUpdate(); }), this);
 	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("gameOver", [this](auto* event){ entityManager.reset(); }), this);
+
+	auto* keyboardListener = cocos2d::EventListenerKeyboard::create();
+
+	keyboardListener->onKeyPressed = [this](const auto keyCode, auto* event)
+	{
+		if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_ESCAPE)
+		{
+			unscheduleUpdate();
+			getEventDispatcher()->dispatchCustomEvent("pause");
+		}
+	};
+
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);
 
 	map.setMainNode(this);
 	
@@ -83,12 +82,6 @@ bool GameNode::init()
 
 void GameNode::update(float dt)
 {
-	if (keyboardManager->isKeyPressed(cocos2d::EventKeyboard::KeyCode::KEY_ESCAPE))
-	{
-		unscheduleUpdate();
-		getEventDispatcher()->dispatchCustomEvent("pause");
-	}
-	
 	systemManager.update_all(dt);
 }
 
@@ -107,7 +100,7 @@ cocos2d::Scene* GameNode::scene()
 void GameNode::initSystems()
 {
 	systemManager.add<StrikerSystem>();
-	systemManager.add<PlayerSystem>(keyboardManager, mouseManager);
+	systemManager.add<PlayerSystem>(this);
 	systemManager.add<AudioSystem>();
 	systemManager.add<ActionSystem>();
 	systemManager.add<OrbitalSystem>();

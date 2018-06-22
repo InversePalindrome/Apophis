@@ -103,26 +103,26 @@ bool SettingsNode::init()
 	controlButtons->addRadioButton(moveLeftButton);
 	controlButtons->addRadioButton(moveUpButton);
 	controlButtons->addRadioButton(moveDownButton);
-
+	
 	auto* keyboardListener = cocos2d::EventListenerKeyboard::create();
 
-	keyboardListener->onKeyPressed = [&appSettings, moveRightButton, moveLeftButton, moveUpButton, moveDownButton](const auto keyCode, auto* event) 
+	keyboardListener->onKeyPressed = [&appSettings, moveRightButton, moveLeftButton, moveUpButton, moveDownButton](auto keyCode, auto* event)
 	{
 		if (moveRightButton->isSelected())
 		{
-			appSettings.setKeyBinding(KeyAction::MoveRight, keyCode);
+			appSettings.setKeyBinding(keyCode, KeyAction::MoveRight);
 		}
 		else if (moveLeftButton->isSelected())
 		{
-			appSettings.setKeyBinding(KeyAction::MoveLeft, keyCode);
+			appSettings.setKeyBinding(keyCode, KeyAction::MoveLeft);
 		}
 		else if (moveUpButton->isSelected())
 		{
-			appSettings.setKeyBinding(KeyAction::MoveUp, keyCode);
+			appSettings.setKeyBinding(keyCode, KeyAction::MoveUp);
 		}
 		else if (moveDownButton->isSelected())
 		{
-			appSettings.setKeyBinding(KeyAction::MoveDown, keyCode);
+			appSettings.setKeyBinding(keyCode, KeyAction::MoveDown);
 		}
 	};
 

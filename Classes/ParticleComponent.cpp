@@ -9,37 +9,9 @@ InversePalindrome.com
 
 
 ParticleComponent::ParticleComponent(const pugi::xml_node& componentNode) :
-	emitter(cocos2d::ParticleSystemQuad::create(std::string(componentNode.text().as_string()) + ".plist"))
+	NodeComponent(cocos2d::ParticleSystemQuad::create(std::string(componentNode.text().as_string()) + ".plist")),
+	emitter(static_cast<cocos2d::ParticleSystemQuad*>(getNode()))
 {
-	emitter->retain();
-}
-
-ParticleComponent::~ParticleComponent()
-{
-    emitter->removeFromParent();
-	emitter->removeAllChildren();
-
-    emitter->release();
-}
-
-cocos2d::ParticleSystemQuad* ParticleComponent::getEmitter()
-{
-	return emitter;
-}
-
-cocos2d::ParticleSystemQuad* ParticleComponent::getEmitter() const
-{
-	return emitter;
-}
-
-void ParticleComponent::setPosition(const cocos2d::Vec2& position)
-{
-	emitter->setPosition(position);
-}
-
-void ParticleComponent::setRotation(float angle)
-{
-	emitter->setRotation(angle);
 }
 
 cocos2d::ParticleSystem::Mode ParticleComponent::getMode() const
@@ -62,6 +34,16 @@ void ParticleComponent::setDuration(float duration)
 	emitter->setDuration(duration);
 }
 
+cocos2d::Vec2 ParticleComponent::getGravity() const
+{
+	return emitter->getGravity();
+}
+
+void ParticleComponent::setGravity(const cocos2d::Vec2& gravity)
+{
+	emitter->setGravity(gravity);
+}
+
 float ParticleComponent::getTangentialAcceleration() const
 {
 	return emitter->getTangentialAccel();
@@ -80,4 +62,14 @@ float ParticleComponent::getStartRadius() const
 void ParticleComponent::setStartRadius(float startRadius)
 {
 	emitter->setStartRadius(startRadius);
+}
+
+float ParticleComponent::getEndRadius() const
+{
+	return emitter->getEndRadius();
+}
+
+void ParticleComponent::setEndRadius(float endRadius)
+{
+	emitter->setEndRadius(endRadius);
 }

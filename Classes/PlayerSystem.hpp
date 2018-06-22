@@ -7,28 +7,42 @@ InversePalindrome.com
 
 #pragma once
 
-#include "MouseManager.hpp"
+#include "KeyAction.hpp"
 #include "BodyComponent.hpp"
 #include "SpeedComponent.hpp"
-#include "KeyboardManager.hpp"
 #include "ImpulseComponent.hpp"
 
+#include <cocos/2d/CCNode.h>
+
 #include <entityx/System.h>
+
+#include <vector>
 
 
 class PlayerSystem : public entityx::System<PlayerSystem>, public entityx::Receiver<PlayerSystem>
 {
 public:
-	PlayerSystem(KeyboardManager* keyboardManager, MouseManager* mouseManager);
+	explicit PlayerSystem(cocos2d::Node* gameNode);
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
+	virtual void receive(const EntityParsed& event);
 
 private:
-	KeyboardManager* keyboardManager;
-	MouseManager* mouseManager;
+	cocos2d::Node* gameNode;
 
-	void updateMovement(entityx::ComponentHandle<SpeedComponent> speed, entityx::ComponentHandle<ImpulseComponent> impulse);
-	void updateRotation(entityx::ComponentHandle<ImpulseComponent> impulse, entityx::ComponentHandle<BodyComponent> body);
-	void updateShooting(entityx::EventManager& eventManager, entityx::Entity player);
+	entityx::EventManager* eventManager;
+
+	entityx::Entity player;
+	entityx::ComponentHandle<BodyComponent> playerBody;
+	entityx::ComponentHandle<SpeedComponent> playerSpeed;
+	entityx::ComponentHandle<ImpulseComponent> playerImpulse;
+
+	std::vector<KeyAction> keyActions;
+	cocos2d::Vec2 playerFocusPoint;
+	bool isShooting;
+
+	void updateMovement();
+	void updateRotation();
+	void updateShooting();
 };

@@ -12,13 +12,10 @@ InversePalindrome.com
 #include <cocos/2d/CCSprite.h>
 #include <cocos/base/CCDirector.h>
 #include <cocos/2d/CCActionInterval.h>
+#include <cocos/base/CCEventDispatcher.h>
 #include <cocos/2d/CCParticleSystemQuad.h>
+#include <cocos/base/CCEventListenerKeyboard.h>
 
-
-StartNode::~StartNode()
-{
-	keyboardManager->release();
-}
 
 bool StartNode::init()
 {
@@ -27,12 +24,7 @@ bool StartNode::init()
 		return false;
 	}
 
-	scheduleUpdate();
-
-	keyboardManager = KeyboardManager::create();
-	keyboardManager->retain();
-
-	auto windowSize = cocos2d::Director::getInstance()->getVisibleSize();
+	const auto windowSize = cocos2d::Director::getInstance()->getVisibleSize();
 
 	auto* background = cocos2d::Sprite::create("SpaceBackground.png");
 	background->setPosition(windowSize.width / 2.f, windowSize.height / 2.f);
@@ -52,21 +44,21 @@ bool StartNode::init()
 	startLabel->setPosition(windowSize.width / 2.f, windowSize.height / 8.f);
 	startLabel->runAction(cocos2d::RepeatForever::create(cocos2d::Sequence::createWithTwoActions(cocos2d::FadeOut::create(1.f), cocos2d::FadeIn::create(1.f))));
 
-	addChild(keyboardManager);
+	auto* keyboardListener = cocos2d::EventListenerKeyboard::create();
+
+	keyboardListener->onKeyPressed = [](const auto keyCode, auto* event)
+	{
+		cocos2d::Director::getInstance()->replaceScene(MenuNode::scene());
+	};
+
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);
+
 	addChild(background);
 	addChild(backgroundEffect);
 	addChild(titleLabel);
 	addChild(startLabel);
 
 	return true;
-}
-
-void StartNode::update(float dt)
-{
-	if (keyboardManager->isKeyPressed())
-	{
-		cocos2d::Director::getInstance()->replaceScene(MenuNode::scene());
-	}
 }
 
 cocos2d::Scene* StartNode::scene()

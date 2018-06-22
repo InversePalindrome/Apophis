@@ -15,8 +15,8 @@ InversePalindrome.com
 AppSettings::AppSettings() :
 	soundVolume(1.f),
 	musicVolume(1.f),
-	keyBindings({ { KeyAction::MoveRight, cocos2d::EventKeyboard::KeyCode::KEY_D }, { KeyAction::MoveLeft, cocos2d::EventKeyboard::KeyCode::KEY_A } ,
-				  { KeyAction::MoveUp, cocos2d::EventKeyboard::KeyCode::KEY_W }, { KeyAction::MoveDown, cocos2d::EventKeyboard::KeyCode::KEY_S } })
+	keyBindings({ { cocos2d::EventKeyboard::KeyCode::KEY_D, KeyAction::MoveRight}, { cocos2d::EventKeyboard::KeyCode::KEY_A, KeyAction::MoveLeft } ,
+				  { cocos2d::EventKeyboard::KeyCode::KEY_W, KeyAction::MoveUp }, { cocos2d::EventKeyboard::KeyCode::KEY_S, KeyAction::MoveDown } })
 {
 	load("Settings.xml");
 }
@@ -53,14 +53,24 @@ void AppSettings::setMusicVolume(float musicVolume)
 	this->musicVolume = musicVolume;
 }
 
-cocos2d::EventKeyboard::KeyCode AppSettings::getKeyCode(KeyAction keyAction) const
+KeyAction AppSettings::getKeyAction(cocos2d::EventKeyboard::KeyCode keyCode) const
 {
-	return keyBindings.at(keyAction);
+	return keyBindings.at(keyCode);
 }
 
-void AppSettings::setKeyBinding(KeyAction keyAction, cocos2d::EventKeyboard::KeyCode keyCode)
+void AppSettings::setKeyBinding(cocos2d::EventKeyboard::KeyCode keyCode, KeyAction keyAction)
 {
-	keyBindings[keyAction] = keyCode;
+	auto result = keyBindings.emplace(keyCode, keyAction);
+
+	if (!result.second)
+	{
+		result.first->second = keyAction;
+	}
+}
+
+bool AppSettings::hasKeyAction(cocos2d::EventKeyboard::KeyCode keyCode) const
+{
+	return keyBindings.count(keyCode);
 }
 
 void AppSettings::load(const std::string& filename)
@@ -73,12 +83,12 @@ void AppSettings::load(const std::string& filename)
 		{
 			for (const auto keyBindingNode : settingsNode.children("KeyBinding"))
 			{
+				const auto keyCodeAttribute = keyBindingNode.attribute("code");
 				const auto keyActionAttribute = keyBindingNode.attribute("action");
-				const auto keyCodeAttribute = keyBindingNode.attribute("keyCode");
 
-				if (keyActionAttribute && keyCodeAttribute)
+				if (keyCodeAttribute && keyActionAttribute)
 				{
-					keyBindings[KeyAction::_from_string(keyActionAttribute.as_string())] = cocos2d::EventKeyboard::KeyCode{ keyCodeAttribute.as_int() };
+					keyBindings.emplace(cocos2d::EventKeyboard::KeyCode{ keyCodeAttribute.as_int() }, KeyAction::_from_string(keyActionAttribute.as_string()));
 				}
 			}
 
@@ -109,12 +119,12 @@ void AppSettings::save(const std::string& filename)
 	declaration.append_attribute("encoding") = "UTF-8";
 
 	auto settingsNode = doc.append_child("Settings");
-
-	for (const auto&[keyAction, keyCode] : keyBindings)
+	
+	for (const auto&[keyCode, keyAction] : keyBindings)
 	{
 		auto keyBindingNode = settingsNode.append_child("KeyBinding");
+		keyBindingNode.append_attribute("code") = static_cast<int>(keyCode);
 		keyBindingNode.append_attribute("action") = keyAction._to_string();
-		keyBindingNode.append_attribute("keyCode") = static_cast<int>(keyCode);
 	}
 
 	auto soundNode = settingsNode.append_child("Sound");

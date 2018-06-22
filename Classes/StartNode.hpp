@@ -5,7 +5,7 @@ InversePalindrome.com
 */
 
 
-#include "KeyboardManager.hpp"
+#pragma once
 
 #include <cocos/2d/CCNode.h>
 #include <cocos/2d/CCScene.h>
@@ -14,15 +14,9 @@ InversePalindrome.com
 class StartNode : public cocos2d::Node
 {
 public:
-	~StartNode();
-
 	virtual bool init() override;
-	virtual void update(float dt) override;
 
 	CREATE_FUNC(StartNode);
 
 	static cocos2d::Scene* scene();
-
-private:
-	KeyboardManager* keyboardManager;
 };

@@ -30,14 +30,12 @@ public:
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
-	virtual void receive(const entityx::ComponentAddedEvent<SpriteComponent>& event);
-	virtual void receive(const entityx::ComponentAddedEvent<LabelComponent>& event);
-	virtual void receive(const entityx::ComponentAddedEvent<ParticleComponent>& event);
 	virtual void receive(const entityx::ComponentAddedEvent<Player>& event);
 	virtual void receive(const EntityParsed& event);
 	
 private:
 	cocos2d::Node* gameNode;
+
     std::vector<std::function<void()>> renderablesToAdd;
 
 	Map& map;

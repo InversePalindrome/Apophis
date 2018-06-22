@@ -21,7 +21,6 @@ class AnimationComponent
 {
 public:
 	explicit AnimationComponent(const pugi::xml_node& componentNode);
-
 	~AnimationComponent();
 
 	cocos2d::Animation* getAnimation(Animation animation) const;

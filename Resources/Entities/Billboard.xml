@@ -9,6 +9,6 @@
     </Body>
     <Speed linear="40"></Speed>
     <Impulse linear="30"></Impulse>
-     <Label font="Bebas Regular" size="100" r="207" g="16" b="32" a="255">Hello World</Label>
+     <Label font="Bebas Regular" size="100" textColor="#808080">Hello World</Label>
   </Components>
 </Entity>
