@@ -4,9 +4,10 @@
   <Geometry x ="-10" y="-10">
   </Geometry>
      <Sprite>Coin3</Sprite>
-  <Object>Item</Object>
-   <Body type="2" linearDamping="1" x="50" y="50" fixedRotation="false">
-  </Body>
+    <Object>Item</Object>
+    <Body type="2">
+      <Circle radius="0.5"></Circle>
+    </Body>
   <Animation>
     <Alert delay="0.2">
       <Frame>Coin1</Frame>

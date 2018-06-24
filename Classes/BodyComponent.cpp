@@ -15,7 +15,7 @@ BodyComponent::BodyComponent(const pugi::xml_node& componentNode) :
 {
 	initBodyDef(componentNode);
 	
-	for (const auto fixtureNode : componentNode.children("Fixture"))
+	for (const auto fixtureNode : componentNode.children())
 	{
 		initFixtureDef(fixtureNode);
 	}
@@ -24,15 +24,11 @@ BodyComponent::BodyComponent(const pugi::xml_node& componentNode) :
 void BodyComponent::createBody(b2World& world)
 {
 	body = world.CreateBody(&bodyDef);
-}
+	body->SetUserData(&userData);
 
-void BodyComponent::createFixtures(const std::vector<std::variant<b2CircleShape, b2PolygonShape>>& shapes)
-{
-	for (const auto& fixtureAndShape : boost::combine(fixtureDefs, shapes))
+	for (const auto& fixtureDef : fixtureDefs)
 	{
-		std::visit([fixtureAndShape](const auto& shape) { boost::get<0>(fixtureAndShape).shape = &shape; }, boost::get<1>(fixtureAndShape));
-
-		body->CreateFixture(&boost::get<0>(fixtureAndShape));
+		body->CreateFixture(&fixtureDef);
 	}
 }
 
@@ -56,14 +52,14 @@ b2World* BodyComponent::getWorld() const
 	return body->GetWorld();
 }
 
-void* BodyComponent::getUserData() const
+std::any BodyComponent::getUserData() const
 {
-	return body->GetUserData();
+	return userData;
 }
 
-void BodyComponent::setUserData(void* userData)
+void BodyComponent::setUserData(std::any userData)
 {
-	body->SetUserData(userData);
+	this->userData = userData;
 }
 
 b2Vec2 BodyComponent::getPosition() const
@@ -207,5 +203,84 @@ void BodyComponent::initFixtureDef(const pugi::xml_node& fixtureNode)
 		fixtureDef.isSensor = sensorAttribute.as_bool();
 	}
 	
+	if (std::strcmp(fixtureNode.name(), "Circle") == 0)
+	{
+		b2CircleShape circle;
+
+		if (const auto xAttribute = fixtureNode.attribute("x"))
+		{
+			circle.m_p.x = xAttribute.as_float();
+		}
+		if (const auto yAttribute = fixtureNode.attribute("y"))
+		{
+			circle.m_p.y = yAttribute.as_float();
+		}
+		if (const auto radiusAttribute = fixtureNode.attribute("radius"))
+		{
+			circle.m_radius = radiusAttribute.as_float();
+		}
+
+		shapes.push_back(circle);
+	}
+	else if (std::strcmp(fixtureNode.name(), "Rectangle") == 0)
+	{
+		b2PolygonShape rectangle;
+		b2Vec2 center(0.f, 0.f);
+		float width = 0.f, height = 0.f, angle = 0.f;
+
+		if (const auto xAttribute = fixtureNode.attribute("x"))
+		{
+			center.x = xAttribute.as_float();
+		}
+		if (const auto yAttribute = fixtureNode.attribute("y"))
+		{
+			center.y = yAttribute.as_float();
+		}
+		if (const auto widthAttribute = fixtureNode.attribute("width"))
+		{
+			width = widthAttribute.as_float();
+		}
+		if (const auto heightAttribute = fixtureNode.attribute("height"))
+		{
+			height = heightAttribute.as_float();
+		}
+		if (const auto angleAttribute = fixtureNode.attribute("angle"))
+		{
+			angle = angleAttribute.as_float();
+		}
+
+		rectangle.SetAsBox(width, height, center, angle);
+
+		shapes.push_back(rectangle);
+	}
+	else if (std::strcmp(fixtureNode.name(), "Polygon"))
+	{
+		b2PolygonShape polygon;
+
+		std::vector<b2Vec2> points;
+
+		for (const auto pointNode : fixtureNode.children("Point"))
+		{
+			b2Vec2 point(0.f, 0.f);
+
+			if (const auto xAttribute = pointNode.attribute("x"))
+			{
+				point.x = xAttribute.as_float();
+			}
+			if (const auto yAttribute = pointNode.attribute("y"))
+			{
+				point.y = yAttribute.as_float();
+			}
+
+			points.push_back(point);
+		}
+
+		polygon.Set(points.data(), points.size());
+
+		shapes.push_back(polygon);
+	}
+	
+	std::visit([&fixtureDef](auto& shape) { fixtureDef.shape = &shape; }, shapes.back());
+
 	fixtureDefs.push_back(fixtureDef);
 }

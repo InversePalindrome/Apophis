@@ -13,6 +13,8 @@ InversePalindrome.com
 #include "HudNode.hpp"
 #include "LabelComponent.hpp"
 #include "SpriteComponent.hpp"
+#include "HealthComponent.hpp"
+#include "GeometryComponent.hpp"
 #include "ParticleComponent.hpp"
 
 #include <cocos/2d/CCNode.h>
@@ -30,7 +32,6 @@ public:
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
-	virtual void receive(const entityx::ComponentAddedEvent<Player>& event);
 	virtual void receive(const EntityParsed& event);
 	
 private:
@@ -40,7 +41,8 @@ private:
 
 	Map& map;
 
-	entityx::Entity player;
+	entityx::ComponentHandle<GeometryComponent> playerGeometry;
+	entityx::ComponentHandle<HealthComponent> playerHealth;
 
 	void addNodes();
 

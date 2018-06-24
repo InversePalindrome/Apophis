@@ -20,6 +20,7 @@ InversePalindrome.com
 #include <entityx/System.h>
 
 #include <vector>
+#include <functional>
 
 
 class PhysicsSystem : public entityx::System<PhysicsSystem>, public entityx::Receiver<PhysicsSystem>
@@ -41,13 +42,10 @@ private:
 
 	entityx::EntityManager& entityManager;
 
-	std::vector<std::pair<entityx::Entity, entityx::ComponentHandle<BodyComponent>>> bodiesToCreate;
-	std::vector<b2Body*> bodiesToRemove;
+	std::vector<std::function<void()>> bodyCallbacks;
 
 	void updateWorld();
-
-	void createBodies();
-	void removeBodies();
+	void updateCallbacks();
 
 	static void updateSpatialProperties(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<GeometryComponent> geometry);
 	static void applyImpulses(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<ImpulseComponent> impulse);

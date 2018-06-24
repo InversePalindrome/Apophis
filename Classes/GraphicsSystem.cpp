@@ -8,8 +8,6 @@ InversePalindrome.com
 #include "Constants.hpp"
 #include "Renderables.hpp"
 #include "GraphicsSystem.hpp"
-#include "HealthComponent.hpp"
-#include "GeometryComponent.hpp"
 
 #include <cocos/base/CCDirector.h>
 #include <cocos/base/CCEventDispatcher.h>
@@ -25,7 +23,6 @@ GraphicsSystem::GraphicsSystem(cocos2d::Node* gameNode, Map& map) :
 
 void GraphicsSystem::configure(entityx::EventManager& eventManager)
 {
-	eventManager.subscribe<entityx::ComponentAddedEvent<Player>>(*this);
 	eventManager.subscribe<EntityParsed>(*this);
 }
 
@@ -47,16 +44,8 @@ void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::Even
 	
 	addNodes();
 
-	if (player)
-	{
-		updateView();
-		updateHealthBar();
-	}
-}
-
-void GraphicsSystem::receive(const entityx::ComponentAddedEvent<Player>& event)
-{
-	player = event.entity;
+	updateView();
+	updateHealthBar();
 }
 
 void GraphicsSystem::receive(const EntityParsed& event)
@@ -65,16 +54,31 @@ void GraphicsSystem::receive(const EntityParsed& event)
 	{
 		using RenderableComponent = decltype(renderableElement)::type;
 
-		auto renderable = event.entity.component<RenderableComponent>();
-
-		renderablesToAdd.push_back([this, renderable]() 
-		{ 
-			if (renderable)
+		if (auto renderable = event.entity.component<RenderableComponent>())
+		{
+			renderablesToAdd.push_back([this, renderable]()
 			{
-				gameNode->addChild(renderable->getNode());
+				if (renderable)
+				{
+					gameNode->addChild(renderable->getNode());
+				}
+			});
+
+			if (auto geometry = event.entity.component<GeometryComponent>())
+			{
+				if constexpr (std::is_same_v<SpriteComponent, RenderableComponent>)
+				{
+					//renderable->setScale({ geometry->getSize().x * Constants::PTM_RATIO / renderable->getContentSize().width, geometry->getSize().y * Constants::PTM_RATIO / renderable->getContentSize().height });
+				}
 			}
-		});
+		}
 	});
+
+	if (event.entity.has_component<Player>())
+	{
+		playerGeometry = event.entity.component<GeometryComponent>();
+		playerHealth = event.entity.component<HealthComponent>();
+	}
 }
 
 void GraphicsSystem::addNodes()
@@ -89,7 +93,7 @@ void GraphicsSystem::addNodes()
 
 void GraphicsSystem::updateView()
 {
-	if (auto playerGeometry = player.component<GeometryComponent>())
+	if (playerGeometry)
 	{
 		const auto playerNodePosition = cocos2d::Vec2(playerGeometry->getPosition().x * Constants::PTM_RATIO, playerGeometry->getPosition().y * Constants::PTM_RATIO);
 		const auto worldPoint = gameNode->convertToWorldSpace(playerNodePosition);
@@ -108,7 +112,7 @@ void GraphicsSystem::updateView()
 
 void GraphicsSystem::updateHealthBar()
 {
-	if (auto playerHealth = player.component<HealthComponent>())
+	if (playerHealth)
 	{
 		auto healthPercent = playerHealth->getCurrentHitpoints() / playerHealth->getMaxHitpoints() * 100.f;
 

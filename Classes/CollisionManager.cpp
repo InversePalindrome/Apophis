@@ -11,6 +11,8 @@ InversePalindrome.com
 
 #include <Box2D/Dynamics/b2Fixture.h>
 
+#include <any>
+
 
 CollisionManager::CollisionManager(entityx::EventManager& eventManager) :
 	eventManager(eventManager)
@@ -55,23 +57,29 @@ void CollisionManager::PostSolve(b2Contact* contact, const b2ContactImpulse* imp
 std::optional<std::pair<entityx::Entity, entityx::Entity>>
 CollisionManager::getCollisionPair(const b2Body* bodyA, const b2Body* bodyB, ObjectType objectTypeA, ObjectType objectTypeB)
 {
-	auto* entityA = static_cast<entityx::Entity*>(bodyA->GetUserData());
-	auto* entityB = static_cast<entityx::Entity*>(bodyB->GetUserData());
+    auto* userDataA = static_cast<std::any*>(bodyA->GetUserData());
+	auto* userDataB = static_cast<std::any*>(bodyB->GetUserData());
 
-	if (*entityA && *entityB)
+	if (userDataA->type() == typeid(entityx::Entity) && userDataB->type() == typeid(entityx::Entity))
 	{
-		auto objectA = entityA->component<ObjectComponent>();
-		auto objectB = entityB->component<ObjectComponent>();
+		auto* entityA = std::any_cast<entityx::Entity>(userDataA);
+	    auto* entityB = std::any_cast<entityx::Entity>(userDataB);
 
-		if (objectA && objectB)
+		if (*entityA && *entityB)
 		{
-			if (objectA->getObjectType() & objectTypeA && objectB->getObjectType() & objectTypeB)
+			const auto objectA = entityA->component<ObjectComponent>();
+			const auto objectB = entityB->component<ObjectComponent>();
+
+			if (objectA && objectB)
 			{
-				return { { *entityA, *entityB } };
-			}
-			else if (objectA->getObjectType() & objectTypeB && objectB->getObjectType() & objectTypeA)
-			{
-				return { { *entityB, *entityA } };
+				if (objectA->getObjectType() & objectTypeA && objectB->getObjectType() & objectTypeB)
+				{
+					return { { *entityA, *entityB } };
+				}
+				else if (objectA->getObjectType() & objectTypeB && objectB->getObjectType() & objectTypeA)
+				{
+					return { { *entityB, *entityA } };
+				}
 			}
 		}
 	}

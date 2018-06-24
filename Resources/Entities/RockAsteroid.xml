@@ -3,10 +3,11 @@
   <Tags>
   </Tags>
   <Components>
+    <Geometry></Geometry>
     <Sprite>RockAsteroid</Sprite>
     <Object>Asteroid</Object>
     <Body type="2" x="30" y="0">
-      <Fixture shape="circle" radius="2" density="0.3"></Fixture>
+      <Circle" radius="2" density="0.3"></Circle>
     </Body>
     <Impulse>5</Impulse>
     <Speed linear="15"></Speed>

@@ -15,6 +15,7 @@ InversePalindrome.com
 
 #include <pugixml.hpp>
 
+#include <any>
 #include <vector>
 #include <variant>
 
@@ -25,7 +26,6 @@ public:
 	explicit BodyComponent(const pugi::xml_node& componentNode);
 
 	void createBody(b2World& world);
-	void createFixtures(const std::vector<std::variant<b2CircleShape, b2PolygonShape>>& shapes);
 
 	b2Body* getBody();
 	b2Body* getBody() const;
@@ -33,8 +33,8 @@ public:
 	b2World* getWorld();
 	b2World* getWorld() const;
 
-	void* getUserData() const;
-	void setUserData(void* userData);
+	std::any getUserData() const;
+	void setUserData(std::any userData);
 
 	b2Vec2 getPosition() const;
 	void setPosition(const b2Vec2& position);
@@ -63,7 +63,9 @@ public:
 private:
 	b2Body* body;
 	b2BodyDef bodyDef;
+	std::any userData;
 	std::vector<b2FixtureDef> fixtureDefs;
+	std::vector<std::variant<b2CircleShape, b2PolygonShape>> shapes;
 
 	void initBodyDef(const pugi::xml_node& bodyNode);
 	void initFixtureDef(const pugi::xml_node& fixtureNode);

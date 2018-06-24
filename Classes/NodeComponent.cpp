@@ -52,6 +52,16 @@ cocos2d::Node* NodeComponent::getNode() const
 	return node;
 }
 
+cocos2d::Size NodeComponent::getContentSize() const
+{
+	return node->getContentSize();
+}
+
+void NodeComponent::setContentSize(const cocos2d::Size& contentSize)
+{
+	node->setContentSize(contentSize);
+}
+
 cocos2d::Vec2 NodeComponent::getScale() const
 {
 	return { node->getScaleX(), node->getScaleY() };

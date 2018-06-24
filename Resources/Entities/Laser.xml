@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
   <Components>
-    <Geometry>
-      <Rectangle width="1.8" height="1"></Rectangle>
-    </Geometry>
+    <Geometry></Geometry>
     <Object>Projectile</Object>
        <Sprite>RedBlast03</Sprite>
     <Body type="2" bullet="true">
-      <Fixture></Fixture>
+      <Rectangle width="1.5" height="1"></Rectangle>
     </Body>
     <Speed linear="40"></Speed>
     <Impulse linear="30"></Impulse>

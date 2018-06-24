@@ -28,6 +28,9 @@ public:
 	cocos2d::Vec2 getScale() const;
 	void setScale(const cocos2d::Vec2& scale);
 
+	cocos2d::Size getContentSize() const;
+	void setContentSize(const cocos2d::Size& contentSize);
+
 	cocos2d::Vec2 getPosition() const;
 	void setPosition(const cocos2d::Vec2& position);
 

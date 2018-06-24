@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
   <Components>
-    <Geometry x="20" y="20">
-      <Rectangle width="6" height="2"></Rectangle>
-    </Geometry>
+    <Geometry x="20" y="20"></Geometry>
     <Body type="2" fixedRotation="false" linearDamping="0.4">
-      <Fixture density="0.3"></Fixture>
+      <Rectangle width="6" height="2"></Rectangle>
     </Body>
     <Speed linear="40"></Speed>
     <Impulse linear="30"></Impulse>

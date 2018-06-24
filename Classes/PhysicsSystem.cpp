@@ -30,8 +30,7 @@ void PhysicsSystem::configure(entityx::EventManager& eventManager)
 
 void PhysicsSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
-	createBodies();
-	removeBodies();
+	updateCallbacks();
 
 	entityx::ComponentHandle<BodyComponent> body;
 	entityx::ComponentHandle<GeometryComponent> geometry;
@@ -53,20 +52,40 @@ void PhysicsSystem::receive(const entityx::EntityDestroyedEvent& event)
 {
 	auto entity = event.entity;
 
-	if (auto body = entity.component<BodyComponent>())
+	if (auto destroyedBody = entity.component<BodyComponent>())
 	{
-		bodiesToRemove.push_back(body->getBody());
+		auto* body = destroyedBody->getBody();
+
+		bodyCallbacks.push_back([this, body]() { world.DestroyBody(body); });
 	}
 }
 
 void PhysicsSystem::receive(const entityx::ComponentAddedEvent<BodyComponent>& event)
 {
-	bodiesToCreate.emplace_back(event.entity, event.component);
+	auto entity = event.entity;
+	auto body = event.component;
+	
+	bodyCallbacks.push_back([this, entity, body, event]() mutable
+	{
+		if (body)
+		{
+			body->createBody(world);
+			body->setUserData(entity);
+
+			if (const auto geometry = entity.component<GeometryComponent>())
+			{
+				body->setPosition({ geometry->getPosition().x, geometry->getPosition().y });
+				body->setAngle(Conversions::degreesToRadians(geometry->getAngle()));
+			}
+		}
+	});
 }
 
 void PhysicsSystem::receive(const entityx::ComponentRemovedEvent<BodyComponent>& event)
 {
-	bodiesToRemove.push_back(event.component->getBody());
+	auto* body = event.component->getBody();
+
+	bodyCallbacks.push_back([this, body](){ world.DestroyBody(body); });
 }
 
 void PhysicsSystem::receive(const CreateDistanceJoint& event)
@@ -91,78 +110,14 @@ void PhysicsSystem::updateWorld()
 	world.Step(timeStep, velocityIterations, positionIterations);
 }
 
-void PhysicsSystem::createBodies()
+void PhysicsSystem::updateCallbacks()
 {
-	for (auto& [entity, body] : bodiesToCreate)
+	for (const auto& bodyCallback : bodyCallbacks)
 	{
-		body->createBody(world);
-
-		if (const auto geometry = entity.component<GeometryComponent>())
-		{
-			std::vector<std::variant<b2CircleShape, b2PolygonShape>> shapes;
-
-			for (const auto& shape : geometry->getShapes())
-			{
-				std::visit([&shapes](const auto& shape) 
-				{
-					using T = std::decay_t<decltype(shape)>;
-
-					if constexpr(std::is_same_v<T, wykobi::circle<float>>)
-					{
-						b2CircleShape circle;
-
-						circle.m_p = { shape.x, shape.y };
-						circle.m_radius = shape.radius;
-
-						shapes.push_back(circle);
-					}
-					else if constexpr (std::is_same_v<T, wykobi::rectangle<float>>)
-					{
-						b2PolygonShape rectangle;
-
-						rectangle.SetAsBox(shape[1].x, shape[1].y);
-
-						shapes.push_back(rectangle);
-					}
-					else if constexpr (std::is_same_v<T, wykobi::polygon<float, 2>>)
-					{
-						b2PolygonShape polygon;
-						
-						std::vector<b2Vec2> points;
-
-						for (const auto& point : shape)
-						{
-							points.push_back({ point.x, point.y });
-						}
-
-						polygon.Set(points.data(), points.size());
-
-						shapes.push_back(polygon);
-					}
-				}, shape);
-			}
-
-			body->createFixtures(shapes);
-			body->setPosition({ geometry->getPosition().x, geometry->getPosition().y });
-			body->setAngle(Conversions::degreesToRadians(geometry->getAngle()));
-		}
-
-		body->setUserData(new entityx::Entity(entity));
+		bodyCallback();
 	}
 
-	bodiesToCreate.clear();
-}
-
-void PhysicsSystem::removeBodies()
-{
-	for (const auto& body : bodiesToRemove)
-	{
-		delete static_cast<entityx::Entity*>(body->GetUserData());
-
-		world.DestroyBody(body);
-	}
-
-	bodiesToRemove.clear();
+	bodyCallbacks.clear();
 }
 
 void PhysicsSystem::updateSpatialProperties(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<GeometryComponent> geometry)
