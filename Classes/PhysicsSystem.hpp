@@ -31,8 +31,8 @@ public:
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
 	virtual void receive(const entityx::EntityDestroyedEvent& event);
-	virtual void receive(const entityx::ComponentAddedEvent<BodyComponent>& event);
 	virtual void receive(const entityx::ComponentRemovedEvent<BodyComponent>& event);
+	virtual void receive(const CreateBody& event);
 	virtual void receive(const CreateDistanceJoint& event);
 
 private:
@@ -45,9 +45,9 @@ private:
 	std::vector<std::function<void()>> bodyCallbacks;
 
 	void updateWorld();
-	void updateCallbacks();
+	void updateBodyCallbacks();
 
-	static void updateSpatialProperties(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<GeometryComponent> geometry);
+	static void updateGeometry(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<GeometryComponent> geometry);
 	static void applyImpulses(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<ImpulseComponent> impulse);
 	static void limitLinearSpeed(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<SpeedComponent> speed);
 	static void limitAngularSpeed(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<SpeedComponent> speed);

@@ -50,68 +50,52 @@ PlayerSystem::PlayerSystem(cocos2d::Node* gameNode) :
 	gameNode->getEventDispatcher()->addEventListenerWithSceneGraphPriority(mouseListener, gameNode);
 }
 
-void PlayerSystem::configure(entityx::EventManager& eventManager)
-{
-	this->eventManager = &eventManager;
-	 
-	eventManager.subscribe<EntityParsed>(*this);
-}
-
 void PlayerSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
-	updateMovement();
-	updateRotation();
-	updateShooting();
-}
+	entityx::ComponentHandle<Player> player;
+	entityx::ComponentHandle<BodyComponent> body;
+	entityx::ComponentHandle<SpeedComponent> speed;
+	entityx::ComponentHandle<ImpulseComponent> impulse;
 
-void PlayerSystem::receive(const EntityParsed& event)
-{
-	if (event.entity.has_component<Player>())
+	for (auto entity : entityManager.entities_with_components(player, body, speed, impulse))
 	{
-		player = event.entity;
-		playerBody = event.entity.component<BodyComponent>();
-		playerSpeed = event.entity.component<SpeedComponent>();
-		playerImpulse = event.entity.component<ImpulseComponent>();
+		updateMovement(speed, impulse);
+		updateRotation(body, impulse);
+		updateShooting(eventManager, entity);
 	}
 }
 
-void PlayerSystem::updateMovement()
+void PlayerSystem::updateMovement(entityx::ComponentHandle<SpeedComponent> speed, entityx::ComponentHandle<ImpulseComponent> impulse)
 {
-	if (playerSpeed && playerImpulse)
+	for (auto keyAction : keyActions)
 	{
-		for (const auto& keyAction : keyActions)
+		switch (keyAction)
 		{
-			switch (keyAction)
-			{
-			case KeyAction::MoveRight:
-				playerImpulse += playerSpeed->getMaxLinearSpeed() * b2Vec2(1.f, 0.f);
-				break;
-			case KeyAction::MoveLeft:
-				playerImpulse += playerSpeed->getMaxLinearSpeed() * b2Vec2(-1.f, 0.f);
-				break;
-			case KeyAction::MoveUp:
-				playerImpulse += playerSpeed->getMaxLinearSpeed() * b2Vec2(0.f, 1.f);
-				break;
-			case KeyAction::MoveDown:
-				playerImpulse += playerSpeed->getMaxLinearSpeed() * b2Vec2(0.f, -1.f);
-				break;
-			}
+		case KeyAction::MoveRight:
+			impulse += speed->getMaxLinearSpeed() * b2Vec2(1.f, 0.f);
+			break;
+		case KeyAction::MoveLeft:
+			impulse += speed->getMaxLinearSpeed() * b2Vec2(-1.f, 0.f);
+			break;
+		case KeyAction::MoveUp:
+			impulse += speed->getMaxLinearSpeed() * b2Vec2(0.f, 1.f);
+			break;
+		case KeyAction::MoveDown:
+			impulse += speed->getMaxLinearSpeed() * b2Vec2(0.f, -1.f);
+			break;
 		}
 	}
 }
 
-void PlayerSystem::updateRotation()
+void PlayerSystem::updateRotation(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<ImpulseComponent> impulse)
 {
-	if (playerImpulse && playerBody && playerBody->getBody())
-	{
-		playerImpulse += SteeringBehaviors::face(playerBody->getPosition(), { playerFocusPoint.x / Constants::PTM_RATIO, playerFocusPoint.y / Constants::PTM_RATIO }, playerBody->getAngle(), playerBody->getAngularVelocity(), playerBody->getInertia());
-	}
+	impulse += SteeringBehaviors::face(body->getPosition(), { playerFocusPoint.x / Constants::PTM_RATIO, playerFocusPoint.y / Constants::PTM_RATIO }, body->getAngle(), body->getAngularVelocity(), body->getInertia());
 }
 
-void PlayerSystem::updateShooting()
+void PlayerSystem::updateShooting(entityx::EventManager& eventManager, entityx::Entity entity)
 {
-	if (player && isShooting)
+	if (isShooting)
 	{
-		eventManager->emit(ShootProjectile{ player });
+		eventManager.emit(ShootProjectile{ entity });
 	}
 }

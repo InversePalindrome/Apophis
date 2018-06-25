@@ -7,9 +7,9 @@ InversePalindrome.com
 
 #pragma once
 
-#include <pugixml.hpp>
+#include <Box2D/Common/b2Math.h>
 
-#include <wykobi.hpp>
+#include <pugixml.hpp>
 
 
 class GeometryComponent
@@ -17,17 +17,17 @@ class GeometryComponent
 public:
 	explicit GeometryComponent(const pugi::xml_node& componentNode);
 	
-	wykobi::vector2d<float> getPosition() const;
-	void setPosition(const wykobi::vector2d<float>& position);
+	b2Vec2 getPosition() const;
+	void setPosition(const b2Vec2& position);
 
-	wykobi::vector2d<float> getSize() const;
+	b2Vec2 getSize() const;
+	void setSize(const b2Vec2& size);
 
 	float getAngle() const;
 	void setAngle(float angle);
 
-
 private:
-	wykobi::vector2d<float> position;
-	wykobi::vector2d<float> size;
+	b2Vec2 position;
+	b2Vec2 size;
 	float angle;
 };

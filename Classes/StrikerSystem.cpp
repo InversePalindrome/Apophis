@@ -17,7 +17,7 @@ StrikerSystem::StrikerSystem() :
 		.sequence()
 		.leaf([this](auto& context)
         {
-	        if (playerBody.valid() && (playerBody->getPosition() - context.body->getPosition()).Length() <= context.vision->getVisionDistance())
+	        if (playerBody && (playerBody->getPosition() - context.body->getPosition()).Length() <= context.vision->getVisionDistance())
 		    {
 		        return beehive::Status::SUCCESS;
 	        }
@@ -72,10 +72,7 @@ void StrikerSystem::update(entityx::EntityManager& entityManager, entityx::Event
 
 	for (auto entity : entityManager.entities_with_components(striker, body, speed, impulse, wander, vision, health))
 	{
-		if (body->getBody())
-		{
-			strikerTree.process(StrikerContext{ entity, body, speed, impulse, wander, vision, health });
-		}
+		strikerTree.process(StrikerContext{ entity, body, speed, impulse, wander, vision, health });
 	}
 }
 

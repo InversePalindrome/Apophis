@@ -20,8 +20,6 @@ ItemSystem::ItemSystem(EntityParser& entityParser) :
 
 void ItemSystem::configure(entityx::EventManager& eventManager)
 {
-	this->eventManager = &eventManager;
-
 	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
 	eventManager.subscribe<PickedUpItem>(*this);
 }

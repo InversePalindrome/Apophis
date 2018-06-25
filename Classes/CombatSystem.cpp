@@ -79,13 +79,13 @@ void CombatSystem::receive(const ShootProjectile& event)
 
 		if (projectileGeometry && projectileSpeed && projectileImpulse)
 		{
-			const auto projectileDirection = wykobi::vector2d(std::cos(Conversions::degreesToRadians(shooterGeometry->getAngle())), std::sin(Conversions::degreesToRadians(shooterGeometry->getAngle())));
-			const auto projectilePosition = wykobi::vector2d(projectileDirection.x * (shooterGeometry->getSize().x + projectileGeometry->getSize().x / 2.f), projectileDirection.y * (shooterGeometry->getSize().y + projectileGeometry->getSize().y / 2.f));
-
+			b2Vec2 projectileDirection(std::cos(Conversions::degreesToRadians(shooterGeometry->getAngle())), std::sin(Conversions::degreesToRadians(shooterGeometry->getAngle())));
+			b2Vec2 projectilePosition(projectileDirection.x * (shooterGeometry->getSize().x + projectileGeometry->getSize().x / 2.f), projectileDirection.y * (shooterGeometry->getSize().y + projectileGeometry->getSize().y / 2.f));
+			
 		    projectileGeometry->setPosition(shooterGeometry->getPosition() + projectilePosition);
 			projectileGeometry->setAngle(shooterGeometry->getAngle());
 			
-		    projectileImpulse += {projectileDirection.x * projectileSpeed->getMaxLinearSpeed(), projectileDirection.y * projectileSpeed->getMaxLinearSpeed()};
+			projectileImpulse += projectileSpeed->getMaxLinearSpeed() * projectileDirection;
 
 			timer.add(shooterWeapon->getReloadTime(), [shooterWeapon](auto id) mutable
 			{

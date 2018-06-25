@@ -30,7 +30,6 @@ public:
 
 private:
 	EntityParser& entityParser;
-	entityx::EventManager* eventManager;
 
 	CppTime::Timer timer;
 

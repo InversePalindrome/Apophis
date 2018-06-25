@@ -39,6 +39,11 @@ void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::Even
 		{
 			renderable->setPosition({ geometry->getPosition().x * Constants::PTM_RATIO, geometry->getPosition().y * Constants::PTM_RATIO });
 			renderable->setRotation(-geometry->getAngle());
+
+			if constexpr(std::is_same_v<RenderableComponent, SpriteComponent> || std::is_same_v<RenderableComponent, LabelComponent>)
+			{
+				renderable->setScale({ geometry->getSize().x * Constants::PTM_RATIO / renderable->getContentSize().width, geometry->getSize().y * Constants::PTM_RATIO / renderable->getContentSize().height });
+			}
 		}
 	});
 	
@@ -63,14 +68,6 @@ void GraphicsSystem::receive(const EntityParsed& event)
 					gameNode->addChild(renderable->getNode());
 				}
 			});
-
-			if (auto geometry = event.entity.component<GeometryComponent>())
-			{
-				if constexpr (std::is_same_v<SpriteComponent, RenderableComponent>)
-				{
-					//renderable->setScale({ geometry->getSize().x * Constants::PTM_RATIO / renderable->getContentSize().width, geometry->getSize().y * Constants::PTM_RATIO / renderable->getContentSize().height });
-				}
-			}
 		}
 	});
 

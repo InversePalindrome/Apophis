@@ -15,10 +15,18 @@ InversePalindrome.com
 
 #include <entityx/Entity.h>
 
+#include <pugixml.hpp>
+
 
 struct EntityParsed
 {
 	mutable entityx::Entity entity;
+};
+
+struct CreateBody
+{
+	mutable entityx::Entity entity;
+	pugi::xml_node bodyNode;
 };
 
 struct ShootProjectile

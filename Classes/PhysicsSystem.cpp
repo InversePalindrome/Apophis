@@ -5,6 +5,7 @@ InversePalindrome.com
 */
 
 
+#include "BodyParser.hpp"
 #include "Conversions.hpp"
 #include "PhysicsSystem.hpp"
 #include "AnchorPointComponent.hpp"
@@ -23,26 +24,32 @@ PhysicsSystem::PhysicsSystem(entityx::EntityManager& entityManager, entityx::Eve
 void PhysicsSystem::configure(entityx::EventManager& eventManager)
 {
 	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
-	eventManager.subscribe<entityx::ComponentAddedEvent<BodyComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentRemovedEvent<BodyComponent>>(*this);
+	eventManager.subscribe<CreateBody>(*this);
 	eventManager.subscribe<CreateDistanceJoint>(*this);
 }
 
 void PhysicsSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
-	updateCallbacks();
+	updateBodyCallbacks();
 
 	entityx::ComponentHandle<BodyComponent> body;
-	entityx::ComponentHandle<GeometryComponent> geometry;
-	entityx::ComponentHandle<SpeedComponent> speed;
-	entityx::ComponentHandle<ImpulseComponent> impulse;
 
-	for (auto entity : entityManager.entities_with_components(body, geometry, speed, impulse))
+	for (auto entity : entityManager.entities_with_components(body))
 	{
-		updateSpatialProperties(body, geometry);
-		applyImpulses(body, impulse);
-		limitLinearSpeed(body, speed);
-		limitAngularSpeed(body, speed);
+		if (auto geometry = entity.component<GeometryComponent>())
+		{
+			updateGeometry(body, geometry);
+		}
+		if (auto impulse = entity.component<ImpulseComponent>())
+		{
+			applyImpulses(body, impulse);
+		}
+		if (auto speed = entity.component<SpeedComponent>())
+		{
+			limitLinearSpeed(body, speed);
+			limitAngularSpeed(body, speed);
+		}
 	}
 	
 	updateWorld();
@@ -60,32 +67,45 @@ void PhysicsSystem::receive(const entityx::EntityDestroyedEvent& event)
 	}
 }
 
-void PhysicsSystem::receive(const entityx::ComponentAddedEvent<BodyComponent>& event)
-{
-	auto entity = event.entity;
-	auto body = event.component;
-	
-	bodyCallbacks.push_back([this, entity, body, event]() mutable
-	{
-		if (body)
-		{
-			body->createBody(world);
-			body->setUserData(entity);
-
-			if (const auto geometry = entity.component<GeometryComponent>())
-			{
-				body->setPosition({ geometry->getPosition().x, geometry->getPosition().y });
-				body->setAngle(Conversions::degreesToRadians(geometry->getAngle()));
-			}
-		}
-	});
-}
-
 void PhysicsSystem::receive(const entityx::ComponentRemovedEvent<BodyComponent>& event)
 {
 	auto* body = event.component->getBody();
 
 	bodyCallbacks.push_back([this, body](){ world.DestroyBody(body); });
+}
+
+void PhysicsSystem::receive(const CreateBody& event)
+{
+	auto bodyDef = BodyParser::createBodyDef(event.bodyNode);
+
+	std::vector<std::pair<b2FixtureDef, std::variant<b2CircleShape, b2PolygonShape>>> fixtures;
+
+	for (const auto fixtureNode : event.bodyNode.children())
+	{
+		fixtures.push_back({ BodyParser::createFixtureDef(fixtureNode), BodyParser::createShape(fixtureNode) });
+	}
+
+	bodyCallbacks.push_back([this, event, bodyDef, fixtures]() 
+	{
+		if (event.entity)
+		{
+			auto body = event.entity.assign<BodyComponent>(world.CreateBody(&bodyDef));
+			body->setUserData(event.entity);
+
+			for (auto fixture : fixtures)
+			{
+				std::visit([&fixture](auto& shape) { fixture.first.shape = &shape; }, fixture.second);
+
+				body->createFixture(fixture.first);
+			}
+
+			if (auto geometry = event.entity.component<GeometryComponent>())
+			{
+				body->setPosition(geometry->getPosition());
+				body->setAngle(Conversions::degreesToRadians(geometry->getAngle()));
+			}
+		}
+	});
 }
 
 void PhysicsSystem::receive(const CreateDistanceJoint& event)
@@ -110,7 +130,7 @@ void PhysicsSystem::updateWorld()
 	world.Step(timeStep, velocityIterations, positionIterations);
 }
 
-void PhysicsSystem::updateCallbacks()
+void PhysicsSystem::updateBodyCallbacks()
 {
 	for (const auto& bodyCallback : bodyCallbacks)
 	{
@@ -120,9 +140,10 @@ void PhysicsSystem::updateCallbacks()
 	bodyCallbacks.clear();
 }
 
-void PhysicsSystem::updateSpatialProperties(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<GeometryComponent> geometry)
+void PhysicsSystem::updateGeometry(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<GeometryComponent> geometry)
 {
-	geometry->setPosition({ body->getPosition().x, body->getPosition().y });
+	geometry->setPosition(body->getPosition());
+	geometry->setSize(body->getAABB().upperBound - body->getAABB().lowerBound);
 	geometry->setAngle(Conversions::radiansToDegrees(body->getAngle()));
 }
 

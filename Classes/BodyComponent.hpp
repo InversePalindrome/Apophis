@@ -10,28 +10,21 @@ InversePalindrome.com
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2World.h>
 #include <Box2D/Dynamics/b2Fixture.h>
-#include <Box2D/Collision/Shapes/b2CircleShape.h>
-#include <Box2D/Collision/Shapes/b2PolygonShape.h>
-
-#include <pugixml.hpp>
 
 #include <any>
 #include <vector>
-#include <variant>
 
 
 class BodyComponent
 {
 public:
-	explicit BodyComponent(const pugi::xml_node& componentNode);
+	explicit BodyComponent(b2Body* body);
 
-	void createBody(b2World& world);
+	void createFixture(const b2FixtureDef& fixtureDef);
+	void destroyFixture(b2Fixture* fixture);
 
 	b2Body* getBody();
 	b2Body* getBody() const;
-
-	b2World* getWorld();
-	b2World* getWorld() const;
 
 	std::any getUserData() const;
 	void setUserData(std::any userData);
@@ -51,6 +44,8 @@ public:
 	float getMass() const;
 	float getInertia() const;
 
+	b2AABB getAABB() const;
+
 	void applyLinearImpulse(const b2Vec2& linearImpulse);
 	void applyAngularImpulse(float angularImpulse);
 
@@ -62,11 +57,11 @@ public:
 
 private:
 	b2Body* body;
-	b2BodyDef bodyDef;
-	std::any userData;
-	std::vector<b2FixtureDef> fixtureDefs;
-	std::vector<std::variant<b2CircleShape, b2PolygonShape>> shapes;
+	std::vector<b2Fixture*> fixtures;
 
-	void initBodyDef(const pugi::xml_node& bodyNode);
-	void initFixtureDef(const pugi::xml_node& fixtureNode);
+	b2AABB AABB;
+
+	std::any userData;
+
+	void computeAABB();
 };

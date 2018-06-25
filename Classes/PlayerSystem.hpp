@@ -24,25 +24,16 @@ class PlayerSystem : public entityx::System<PlayerSystem>, public entityx::Recei
 public:
 	explicit PlayerSystem(cocos2d::Node* gameNode);
 
-	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
-	virtual void receive(const EntityParsed& event);
 
 private:
 	cocos2d::Node* gameNode;
-
-	entityx::EventManager* eventManager;
-
-	entityx::Entity player;
-	entityx::ComponentHandle<BodyComponent> playerBody;
-	entityx::ComponentHandle<SpeedComponent> playerSpeed;
-	entityx::ComponentHandle<ImpulseComponent> playerImpulse;
 
 	std::vector<KeyAction> keyActions;
 	cocos2d::Vec2 playerFocusPoint;
 	bool isShooting;
 
-	void updateMovement();
-	void updateRotation();
-	void updateShooting();
+	void updateMovement(entityx::ComponentHandle<SpeedComponent> speed, entityx::ComponentHandle<ImpulseComponent> impulse);
+	void updateRotation(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<ImpulseComponent> impulse);
+	void updateShooting(entityx::EventManager& eventManager, entityx::Entity entity);
 };

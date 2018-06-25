@@ -6,11 +6,9 @@
     <Explode>Boom.mp3</Explode>
   </Sound>
   <Object>Explosion</Object>
-  <Geometry>
-    <Circle radius="0.8"></Circle>
-  </Geometry>
+  <Geometry></Geometry>
   <Body type="2" bullet="true">
-    <Fixture density="0.001"></Fixture>
+    <Circle radius="0.8" density="0.001"></Circle>
   </Body>
     </Components>
 </Entity>

@@ -33,22 +33,26 @@ GeometryComponent::GeometryComponent(const pugi::xml_node& componentNode) :
 	{
 		angle = angleAttribute.as_float();
 	}
-	
 }
 
-wykobi::vector2d<float> GeometryComponent::getPosition() const
+b2Vec2 GeometryComponent::getPosition() const
 {
 	return position;
 }
 
-void GeometryComponent::setPosition(const wykobi::vector2d<float>& position)
+void GeometryComponent::setPosition(const b2Vec2& position)
 {
 	this->position = position;
 }
 
-wykobi::vector2d<float> GeometryComponent::getSize() const
+b2Vec2 GeometryComponent::getSize() const
 {
 	return size;
+}
+
+void GeometryComponent::setSize(const b2Vec2& size)
+{
+	this->size = size;
 }
 
 float GeometryComponent::getAngle() const
