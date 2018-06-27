@@ -1,14 +1,14 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-Apophis - GeometryComponent.cpp
+Apophis - TransformComponent.cpp
 InversePalindrome.com
 */
 
 
-#include "GeometryComponent.hpp"
+#include "TransformComponent.hpp"
 
 
-GeometryComponent::GeometryComponent(const pugi::xml_node& componentNode) :
+TransformComponent::TransformComponent(const pugi::xml_node& componentNode) :
 	position(0.f, 0.f),
 	angle(0.f)
 {
@@ -22,26 +22,26 @@ GeometryComponent::GeometryComponent(const pugi::xml_node& componentNode) :
 	}
 	if (const auto angleAttribute = componentNode.attribute("angle"))
 	{
-		angle = angleAttribute.as_float();
+		setAngle(angleAttribute.as_float());
 	}
 }
 
-b2Vec2 GeometryComponent::getPosition() const
+b2Vec2 TransformComponent::getPosition() const
 {
 	return position;
 }
 
-void GeometryComponent::setPosition(const b2Vec2& position)
+void TransformComponent::setPosition(const b2Vec2& position)
 {
 	this->position = position;
 }
 
-float GeometryComponent::getAngle() const
+float TransformComponent::getAngle() const
 {
 	return angle;
 }
 
-void GeometryComponent::setAngle(float angle)
+void TransformComponent::setAngle(float angle)
 {
 	this->angle = angle;
 }

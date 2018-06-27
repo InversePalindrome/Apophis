@@ -14,11 +14,11 @@ AvoidComponent::AvoidComponent(const pugi::xml_node& componentNode) :
 {
 	if (const auto distanceAttribute = componentNode.attribute("distance"))
 	{
-		avoidanceAheadDistance = distanceAttribute.as_float();
+		setAvoidanceAheadDistance(distanceAttribute.as_float());
 	}
 	if (const auto avoidanceForceAttribute = componentNode.attribute("force"))
 	{
-		avoidanceForce = avoidanceForceAttribute.as_float();
+	    setAvoidanceForce(avoidanceForceAttribute.as_float());
 	}
 }
 

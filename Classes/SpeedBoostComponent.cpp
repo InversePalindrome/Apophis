@@ -14,11 +14,11 @@ SpeedBoostComponent::SpeedBoostComponent(const pugi::xml_node& componentNode) :
 {
 	if (const auto speedBoostRatioAttribute = componentNode.attribute("ratio"))
 	{
-		speedBoostRatio = speedBoostRatioAttribute.as_float();
+		setSpeedBoostRatio(speedBoostRatioAttribute.as_float());
 	}
 	if (const auto speedBoostDurationAttribute = componentNode.attribute("duration"))
 	{
-		speedBoostDuration = std::chrono::milliseconds(speedBoostDurationAttribute.as_int());
+		setSpeedBoostDuration(std::chrono::milliseconds(speedBoostDurationAttribute.as_int()));
 	}
 }
 

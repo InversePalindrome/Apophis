@@ -14,11 +14,11 @@ SpeedComponent::SpeedComponent(const pugi::xml_node& componentNode) :
 {
 	if (const auto maxLinearSpeedAttribute = componentNode.attribute("linear"))
 	{
-		maxLinearSpeed = maxLinearSpeedAttribute.as_float();
+		setMaxLinearSpeed(maxLinearSpeedAttribute.as_float());
 	}
 	if (const auto maxAngularSpeedAttribute = componentNode.attribute("angular"))
 	{
-		maxAngularSpeed = maxAngularSpeedAttribute.as_float();
+		setMaxAngularSpeed(maxAngularSpeedAttribute.as_float());
 	}
 }
 

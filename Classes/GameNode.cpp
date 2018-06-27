@@ -60,12 +60,12 @@ bool GameNode::init()
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);
 
 	initSystems();
-
+	
 	map.setMainNode(this);
 
 	map.load("Andromeda");
 	entityParser.createEntity("UFO");
-	//entityParser.createEntity("Planet");
+	entityParser.createEntity("Planet");
 	//entityParser.createEntity("SpaceCruiser");
 	entityParser.createEntity("Billboard");
 	auto coin = entityParser.createEntity("Coin");

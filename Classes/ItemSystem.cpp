@@ -10,7 +10,7 @@ InversePalindrome.com
 #include "DropComponent.hpp"
 #include "SpeedComponent.hpp"
 #include "HealthComponent.hpp"
-#include "GeometryComponent.hpp"
+#include "TransformComponent.hpp"
 
 
 ItemSystem::ItemSystem(EntityParser& entityParser) :
@@ -31,18 +31,18 @@ void ItemSystem::update(entityx::EntityManager& entityManager, entityx::EventMan
 
 void ItemSystem::receive(const entityx::EntityDestroyedEvent& event)
 {
-	auto deadEntity = event.entity;
+	auto destroyedEntity = event.entity;
 
-	auto deadDrop = deadEntity.component<DropComponent>();
-	const auto deadGeometry = deadEntity.component<GeometryComponent>();
+	auto destroyedDrop = destroyedEntity.component<DropComponent>();
+	const auto destroyedGeometry = destroyedEntity.component<TransformComponent>();
 
-	if (deadDrop && deadGeometry)
+	if (destroyedDrop && destroyedGeometry)
 	{
-		auto itemEntity = entityParser.createEntity(deadDrop->getItem());
+		auto itemEntity = entityParser.createEntity(destroyedDrop->getItem());
 
-		if (auto itemGeometry = itemEntity.component<GeometryComponent>())
+		if (auto itemGeometry = itemEntity.component<TransformComponent>())
 		{
-			itemGeometry->setPosition(deadGeometry->getPosition());
+			itemGeometry->setPosition(destroyedGeometry->getPosition());
 		}
 	}
 }
@@ -76,7 +76,7 @@ void ItemSystem::addRegenBoost(entityx::Entity entity, const entityx::ComponentH
 	{ 
 		const auto hitpointBoost = regenBoost->getHitpointBoost();
 		
-		auto regenPeriodicTimerID = timer.add(std::chrono::milliseconds::zero(), [entityHealth, hitpointBoost](auto id) mutable
+		const auto regenPeriodicTimerID = timer.add(std::chrono::milliseconds::zero(), [entityHealth, hitpointBoost](auto id) mutable
 		{
 			if (entityHealth)
 			{

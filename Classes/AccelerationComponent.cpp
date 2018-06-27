@@ -15,11 +15,11 @@ AccelerationComponent::AccelerationComponent(const pugi::xml_node& componentNode
 {
 	if (const auto linearAccelerationAttribute = componentNode.attribute("linear"))
 	{
-		linearAcceleration = linearAccelerationAttribute.as_float();
+		setLinearAcceleration(linearAccelerationAttribute.as_float());
 	}
 	if (const auto angularAccelerationAttribute = componentNode.attribute("angular"))
 	{
-		angularAcceleration = angularAccelerationAttribute.as_float();
+		setAngularAcceleration(angularAccelerationAttribute.as_float());
 	}
 }
 

@@ -6,7 +6,7 @@
     </Geometry>
     <SpeedBoost ratio="3" duration="10000"></SpeedBoost>
     <Object>Item</Object>
-    <Sprite>Energy</Sprite>
+    <Sprite frame="SpeedBoost"></Sprite>
     <Body type="2" linearDamping="1" fixedRotation="false" x="-5" y="-5">
       <Fixture radius="1.0" density="0.3"></Fixture>
     </Body>

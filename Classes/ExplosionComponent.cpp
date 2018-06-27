@@ -13,11 +13,11 @@ ExplosionComponent::ExplosionComponent(const pugi::xml_node& componentNode) :
 {
 	if (const auto explosionNameAttribute = componentNode.attribute("name"))
 	{
-		explosionName = explosionNameAttribute.as_string();
+		setExplosionName(explosionNameAttribute.as_string());
 	}
 	if (const auto explosionTimeAttribute = componentNode.attribute("time"))
 	{
-		explosionTime = std::chrono::milliseconds(explosionTimeAttribute.as_int());
+		setExplosionTime(std::chrono::milliseconds(explosionTimeAttribute.as_int()));
 	}
 }
 

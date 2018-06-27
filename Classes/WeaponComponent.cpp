@@ -14,11 +14,11 @@ WeaponComponent::WeaponComponent(const pugi::xml_node& componentNode) :
 {
 	if (const auto projectileNameAttribute = componentNode.attribute("projectileName"))
 	{
-		projectileName = projectileNameAttribute.as_string();
+		setProjectileName(projectileNameAttribute.as_string());
 	}
 	if (const auto reloadTimeAttribute = componentNode.attribute("reloadTime"))
 	{
-		reloadTime = std::chrono::milliseconds(reloadTimeAttribute.as_int());
+		setReloadTime(std::chrono::milliseconds(reloadTimeAttribute.as_int()));
 	}
 }
 

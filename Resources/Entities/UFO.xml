@@ -4,8 +4,8 @@
     <Player></Player>
   </Tags>
   <Components>
-    <Sprite>Spaceship4</Sprite>
-    <Geometry x="0" y="10"></Geometry>
+    <Sprite frame="Spaceship4"></Sprite>
+    <Transform x="0" y="10"></Transform>
     <Weapon projectileName="Laser" reloadTime="400"></Weapon>
     <Speed angular="100" linear="35"></Speed>
     <Object>Player</Object>

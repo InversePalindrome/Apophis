@@ -13,7 +13,7 @@ InversePalindrome.com
 #include "HealthComponent.hpp"
 #include "DamageComponent.hpp"
 #include "WeaponComponent.hpp"
-#include "GeometryComponent.hpp"
+#include "TransformComponent.hpp"
 #include "ExplosionComponent.hpp"
 
 
@@ -28,7 +28,7 @@ void CombatSystem::configure(entityx::EventManager& eventManager)
 
 	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
 	eventManager.subscribe<ShootProjectile>(*this);
-	eventManager.subscribe<ProjectileHit>(*this);
+	eventManager.subscribe<CombatOcurred>(*this);
 }
 
 void CombatSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
@@ -37,20 +37,20 @@ void CombatSystem::update(entityx::EntityManager& entityManager, entityx::EventM
 
 void CombatSystem::receive(const entityx::EntityDestroyedEvent& event)
 {
-	auto deadEntity = event.entity;
+	auto destroyedEntity = event.entity;
 	
-	auto deadGeometry = deadEntity.component<GeometryComponent>();
-	const auto deadExplosion = deadEntity.component<ExplosionComponent>();
+	auto destroyedGeometry = destroyedEntity.component<TransformComponent>();
+	const auto destroyedExplosion = destroyedEntity.component<ExplosionComponent>();
 	
-	if (deadGeometry && deadExplosion)
+	if (destroyedGeometry && destroyedExplosion)
 	{
-		auto explosionEntity = entityParser.createEntity(deadExplosion->getExplosionName());
+		auto explosionEntity = entityParser.createEntity(destroyedExplosion->getExplosionName());
 		
-		if (auto explosionGeometry = explosionEntity.component<GeometryComponent>())
+		if (auto explosionGeometry = explosionEntity.component<TransformComponent>())
 		{
-			explosionGeometry->setPosition(deadGeometry->getPosition());
+			explosionGeometry->setPosition(destroyedGeometry->getPosition());
 			
-			timer.add(deadExplosion->getExplosionTime(), [explosionEntity](auto id) mutable
+			timer.add(destroyedExplosion->getExplosionTime(), [explosionEntity](auto id) mutable
 			{
 				if (explosionEntity)
 				{
@@ -65,30 +65,28 @@ void CombatSystem::receive(const entityx::EntityDestroyedEvent& event)
 
 void CombatSystem::receive(const ShootProjectile& event)
 {
-	const auto shooterGeometry = event.shooter.component<GeometryComponent>();
-	const auto shooterBody = event.shooter.component<BodyComponent>();
 	auto shooterWeapon = event.shooter.component<WeaponComponent>();
 
-	if (shooterGeometry && shooterBody && shooterWeapon && shooterWeapon->isReloaded())
+	if (shooterWeapon && shooterWeapon->isReloaded())
 	{
 		shooterWeapon->setReloadStatus(false);
 
+		const auto shooterBody = event.shooter.component<BodyComponent>();
+
 		auto projectileEntity = entityParser.createEntity(shooterWeapon->getProjectileName());
 		auto projectileBody = projectileEntity.component<BodyComponent>();
-		auto projectileGeometry = projectileEntity.component<GeometryComponent>();
 		const auto projectileSpeed = projectileEntity.component<SpeedComponent>();
 		
-		if (projectileBody && projectileGeometry && projectileSpeed)
+		if (shooterBody && projectileBody && projectileSpeed)
 		{
-			const float projectileOffset = 0.05f;
 			const b2Vec2 shooterSize(shooterBody->getAABB().upperBound - shooterBody->getAABB().lowerBound);
-			const b2Vec2 projectileSize(projectileBody->getAABB().upperBound - projectileBody->getAABB().lowerBound);
-			const b2Vec2 projectileDirection(std::cos(Conversions::degreesToRadians(shooterGeometry->getAngle())), std::sin(Conversions::degreesToRadians(shooterGeometry->getAngle())));
+			const b2Vec2 projectileSize(projectileBody->getAABB().upperBound - projectileBody->getAABB().lowerBound);			
+			const b2Vec2 projectileDirection(std::cos(shooterBody->getAngle()), std::sin(shooterBody->getAngle()));
 			const b2Vec2 velocityOffset(b2Abs(Constants::TIMESTEP * shooterBody->getLinearVelocity()));
-			const b2Vec2 sizeOffset(shooterSize + 0.5f * projectileSize);		
-			const b2Vec2 projectilePosition(projectileDirection.x * (velocityOffset.x + sizeOffset.x + projectileOffset),  projectileDirection.y *  (velocityOffset.y + sizeOffset.y + projectileOffset));
+			const b2Vec2 sizeOffset(0.5f * shooterSize + projectileSize);
+			const b2Vec2 projectilePosition(projectileDirection.x * (sizeOffset.x + velocityOffset.x),  projectileDirection.y * (sizeOffset.y + velocityOffset.y));
 		
-			projectileBody->setPosition(shooterGeometry->getPosition() + projectilePosition);
+			projectileBody->setPosition(shooterBody->getPosition() + projectilePosition);
 			projectileBody->setAngle(shooterBody->getAngle());
 			projectileBody->setLinearVelocity(shooterBody->getLinearVelocity());
 			projectileBody->applyLinearImpulse(projectileSpeed->getMaxLinearSpeed() * projectileDirection);
@@ -106,20 +104,18 @@ void CombatSystem::receive(const ShootProjectile& event)
 	}
 }
 
-void CombatSystem::receive(const ProjectileHit& event)
+void CombatSystem::receive(const CombatOcurred& event)
 {
 	auto victimHealth = event.victim.component<HealthComponent>();
-	const auto projectileDamage = event.projectile.component<DamageComponent>();
+	const auto attackerDamage = event.attacker.component<DamageComponent>();
 
-	if (victimHealth && projectileDamage)
+	if (victimHealth && attackerDamage)
 	{
-		victimHealth->setCurrentHitpoints(victimHealth->getCurrentHitpoints() - projectileDamage->getDamageHitpoints());
+		victimHealth->setCurrentHitpoints(victimHealth->getCurrentHitpoints() - attackerDamage->getDamageHitpoints());
 
 		if (victimHealth->getCurrentHitpoints() <= 0.f)
 		{
 			event.victim.destroy();
 		}
-		
-		event.projectile.destroy();
 	}
 }

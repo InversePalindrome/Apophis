@@ -20,15 +20,15 @@ WanderComponent::WanderComponent(const pugi::xml_node& componentNode) :
 {
 	if (const auto wanderDistanceAttribute = componentNode.attribute("distance"))
 	{
-		wanderDistance = wanderDistanceAttribute.as_float();
+		setWanderDistance(wanderDistanceAttribute.as_float());
 	}
 	if (const auto wanderRadiusAttribute = componentNode.attribute("radius"))
 	{
-		wanderRadius = wanderRadiusAttribute.as_float();
+		setWanderRadius(wanderRadiusAttribute.as_float());
 	}
 	if (const auto wanderRateAttribute = componentNode.attribute("rate"))
 	{
-		wanderRate = wanderRateAttribute.as_float();
+		setWanderRate(wanderRateAttribute.as_float());
 	}
 }
 

@@ -11,6 +11,18 @@ InversePalindrome.com
 NodeComponent::NodeComponent(cocos2d::Node* node, const pugi::xml_node& componentNode) :
 	node(node)
 {
+	if (const auto xPositionAttribute = componentNode.attribute("x"))
+	{
+		node->setPositionX(xPositionAttribute.as_float());
+	}
+	if (const auto yPositionAttribute = componentNode.attribute("y"))
+	{
+		node->setPositionY(yPositionAttribute.as_float());
+	}
+	if (const auto rotationAttribute = componentNode.attribute("rotation"))
+	{
+		setRotation(rotationAttribute.as_float());
+	}
 	if (const auto xScaleAttribute = componentNode.attribute("xScale"))
 	{
 		node->setScaleX(xScaleAttribute.as_float());
@@ -19,7 +31,16 @@ NodeComponent::NodeComponent(cocos2d::Node* node, const pugi::xml_node& componen
 	{
 		node->setScaleY(yScaleAttribute.as_float());
 	}
+	
+	const auto rAttribute = componentNode.attribute("R");
+	const auto gAttribute = componentNode.attribute("G");
+	const auto bAttribute = componentNode.attribute("B");
 
+	if (rAttribute && gAttribute && bAttribute)
+	{
+		setColor(cocos2d::Color3B(rAttribute.as_uint(), gAttribute.as_uint(), bAttribute.as_uint()));
+	}
+	
 	node->retain();
 }
 

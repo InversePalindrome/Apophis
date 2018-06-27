@@ -24,7 +24,7 @@ public:
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
 	virtual void receive(const entityx::EntityDestroyedEvent& event);
 	virtual void receive(const ShootProjectile& event);
-	virtual void receive(const ProjectileHit& event);
+	virtual void receive(const CombatOcurred& event);
 
 private:
 	EntityParser& entityParser;

@@ -16,19 +16,19 @@ QueueComponent::QueueComponent(const pugi::xml_node& componentNode) :
 {
 	if (const auto queueAheadDistanceAttribute = componentNode.attribute("distance"))
 	{
-		queueAheadDistance = queueAheadDistanceAttribute.as_float();
+		setQueueAheadDistance(queueAheadDistanceAttribute.as_float());
 	}
 	if (const auto queueRadiusAttribute = componentNode.attribute("radius"))
 	{
-		queueRadius = queueRadiusAttribute.as_float();
+		setQueueRadius(queueRadiusAttribute.as_float());
 	}
 	if (const auto brakeFactorAttribute = componentNode.attribute("brake"))
 	{
-		brakeFactor = brakeFactorAttribute.as_float();
+		setBrakeFactor(brakeFactorAttribute.as_float());
 	}
 	if (const auto velocityShrinkFactorAttribute = componentNode.attribute("shrink"))
 	{
-		velocityShrinkFactor = velocityShrinkFactorAttribute.as_float();
+       setVelocityShrinkFactor(velocityShrinkFactorAttribute.as_float());
 	}
 }
 

@@ -9,7 +9,7 @@ InversePalindrome.com
 #include "BodyParser.hpp"
 #include "Conversions.hpp"
 #include "PhysicsSystem.hpp"
-#include "GeometryComponent.hpp"
+#include "TransformComponent.hpp"
 #include "AnchorPointComponent.hpp"
 #include "DistanceJointComponent.hpp"
 
@@ -35,12 +35,12 @@ void PhysicsSystem::configure(entityx::EventManager& eventManager)
 void PhysicsSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
 	entityx::ComponentHandle<BodyComponent> body;
-	entityx::ComponentHandle<GeometryComponent> geometry;
+	entityx::ComponentHandle<TransformComponent> transform;
 
-	for (auto entity : entityManager.entities_with_components(body, geometry))
+	for (auto entity : entityManager.entities_with_components(body, transform))
 	{
-		geometry->setPosition(body->getPosition());
-		geometry->setAngle(Conversions::radiansToDegrees(body->getAngle()));
+		transform->setPosition(body->getPosition());
+		transform->setAngle(Conversions::radiansToDegrees(body->getAngle()));
 	}
 	
 	collisionManager.update();
@@ -65,12 +65,12 @@ void PhysicsSystem::receive(const entityx::ComponentRemovedEvent<BodyComponent>&
 void PhysicsSystem::receive(const EntityCreated& event)
 {
 	auto body = event.entity.component<BodyComponent>();
-	auto geometry = event.entity.component<GeometryComponent>();
+	auto transform = event.entity.component<TransformComponent>();
 
-	if (body && geometry)
+	if (body && transform)
 	{
-		body->setPosition(geometry->getPosition());
-		body->setAngle(Conversions::degreesToRadians(geometry->getAngle()));
+		body->setPosition(transform->getPosition());
+		body->setAngle(Conversions::degreesToRadians(transform->getAngle()));
 	}
 }
 

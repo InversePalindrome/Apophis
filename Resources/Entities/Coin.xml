@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
   <Components>
-  <Geometry x ="-10" y="-10">
-  </Geometry>
-     <Sprite>Coin3</Sprite>
+    <Transform x ="-10" y="-10">
+  </Transform>
+     <Sprite frame="Coin3"></Sprite>
     <Object>Item</Object>
     <Body type="2">
       <Circle radius="0.5"></Circle>

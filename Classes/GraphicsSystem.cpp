@@ -36,15 +36,16 @@ void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::Even
 		using RenderableComponent = decltype(renderableElement)::type;
 
 		entityx::ComponentHandle<RenderableComponent> renderable;
-		entityx::ComponentHandle<GeometryComponent> geometry;
+		entityx::ComponentHandle<TransformComponent> transform;
 
-		for (auto entity : entityManager.entities_with_components(renderable, geometry))
+		for (auto entity : entityManager.entities_with_components(renderable, transform))
 		{
-			renderable->setPosition({ geometry->getPosition().x * Constants::PTM_RATIO, geometry->getPosition().y * Constants::PTM_RATIO });
-			renderable->setRotation(-geometry->getAngle());
+			renderable->setPosition({ transform->getPosition().x * Constants::PTM_RATIO, transform->getPosition().y * Constants::PTM_RATIO });
+			renderable->setRotation(-transform->getAngle());
 		}
 	});
 
+	updateNodeCallbacks();
 	updateView();
 	updateHealthBar();
 }
@@ -53,31 +54,41 @@ void GraphicsSystem::receive(const EntityCreated& event)
 {
 	if (event.entity.has_component<Player>())
 	{
-		playerGeometry = event.entity.component<GeometryComponent>();
+		playerTransform = event.entity.component<TransformComponent>();
 		playerHealth = event.entity.component<HealthComponent>();
 	}
 }
 
 void GraphicsSystem::receive(const entityx::ComponentAddedEvent<SpriteComponent>& event)
 {
-	gameNode->addChild(event.component->getNode());
+	nodeCallbacks.push_back([this, event]() { gameNode->addChild(event.component->getNode()); });
 }
 
 void GraphicsSystem::receive(const entityx::ComponentAddedEvent<LabelComponent>& event)
 {
-	gameNode->addChild(event.component->getNode());
+	nodeCallbacks.push_back([this, event]() { gameNode->addChild(event.component->getNode()); });
 }
 
 void GraphicsSystem::receive(const entityx::ComponentAddedEvent<ParticleComponent>& event)
 {
-	gameNode->addChild(event.component->getNode());
+	nodeCallbacks.push_back([this, event]() { gameNode->addChild(event.component->getNode()); });
+}
+
+void GraphicsSystem::updateNodeCallbacks()
+{
+	for (const auto& nodeCallback : nodeCallbacks)
+	{
+		nodeCallback();
+	}
+
+	nodeCallbacks.clear();
 }
 
 void GraphicsSystem::updateView()
 {
-	if (playerGeometry)
+	if (playerTransform)
 	{
-		const auto playerNodePosition = cocos2d::Vec2(playerGeometry->getPosition().x * Constants::PTM_RATIO, playerGeometry->getPosition().y * Constants::PTM_RATIO);
+		const auto playerNodePosition = cocos2d::Vec2(playerTransform->getPosition().x * Constants::PTM_RATIO, playerTransform->getPosition().y * Constants::PTM_RATIO);
 		const auto worldPoint = gameNode->convertToWorldSpace(playerNodePosition);
 		const auto windowSize = cocos2d::Director::getInstance()->getWinSize();
 		

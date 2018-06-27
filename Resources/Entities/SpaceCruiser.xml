@@ -4,8 +4,8 @@
     <Striker></Striker>
   </Tags>
   <Components>
-    <Geometry x="10" y="10" width="1.6" height="1.6"> </Geometry>
-    <Sprite>Spaceship3</Sprite>
+    <Transform x="10" y="10" width="1.6" height="1.6"> </Transform>
+    <Sprite frame="Spaceship3"></Sprite>
     <Object>Enemy</Object>
     <Body type="2" x="-5" y="-18" fixedRotation="false">
       <Circle x="0" y="0" radius="1.6"></Circle>

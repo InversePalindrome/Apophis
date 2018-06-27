@@ -14,12 +14,15 @@ InversePalindrome.com
 #include "LabelComponent.hpp"
 #include "SpriteComponent.hpp"
 #include "HealthComponent.hpp"
-#include "GeometryComponent.hpp"
 #include "ParticleComponent.hpp"
+#include "TransformComponent.hpp"
 
 #include <cocos/2d/CCNode.h>
 
 #include <entityx/System.h>
+
+#include <vector>
+#include <functional>
 
 
 class GraphicsSystem : public entityx::System<GraphicsSystem>, public entityx::Receiver<GraphicsSystem>
@@ -37,11 +40,14 @@ public:
 private:
 	cocos2d::Node* gameNode;
 
+	std::vector<std::function<void()>> nodeCallbacks;
+
 	Map& map;
 
-	entityx::ComponentHandle<GeometryComponent> playerGeometry;
+	entityx::ComponentHandle<TransformComponent> playerTransform;
 	entityx::ComponentHandle<HealthComponent> playerHealth;
 
+	void updateNodeCallbacks();
 	void updateView();
 	void updateHealthBar();
 };

@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-Apophis - GeometryComponent.hpp
+Apophis - TransformComponent.hpp
 InversePalindrome.com
 */
 
@@ -12,10 +12,10 @@ InversePalindrome.com
 #include <pugixml.hpp>
 
 
-class GeometryComponent
+class TransformComponent
 {
 public:
-	explicit GeometryComponent(const pugi::xml_node& componentNode);
+	explicit TransformComponent(const pugi::xml_node& componentNode);
 	
 	b2Vec2 getPosition() const;
 	void setPosition(const b2Vec2& position);

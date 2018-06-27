@@ -4,8 +4,8 @@
      <Body type="0" density="0.3">
        <Circle radius="8.5"></Circle>
      </Body>
-    <Sprite>Planet_D</Sprite>
-    <Geometry></Geometry>
+    <Sprite frame="Planet_D"></Sprite>
+    <Transform></Transform>
      <Object>Asteroid</Object>
      <AnchorPoint></AnchorPoint>
   </Components>

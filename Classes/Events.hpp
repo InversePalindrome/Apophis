@@ -67,9 +67,9 @@ struct PlayAnimation
 	bool loop;
 };
 
-struct ProjectileHit
+struct CombatOcurred
 {
-	mutable entityx::Entity projectile;
+	mutable entityx::Entity attacker;
 	mutable entityx::Entity victim;
 };
 

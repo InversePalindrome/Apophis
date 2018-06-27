@@ -14,11 +14,11 @@ FlockComponent::FlockComponent(const pugi::xml_node& componentNode) :
 {
 	if (const auto groupIDAttribute = componentNode.attribute("id"))
 	{
-		groupID = groupIDAttribute.as_int();
+		setGroupID(groupIDAttribute.as_int());
 	}
 	if (const auto groupRadiusAttribute = componentNode.attribute("radius"))
 	{
-		groupRadius = groupRadiusAttribute.as_float();
+		setGroupRadius(groupRadiusAttribute.as_float());
 	}
 }
 
