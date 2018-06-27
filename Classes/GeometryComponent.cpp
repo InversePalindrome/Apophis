@@ -10,7 +10,6 @@ InversePalindrome.com
 
 GeometryComponent::GeometryComponent(const pugi::xml_node& componentNode) :
 	position(0.f, 0.f),
-	size(0.f, 0.f),
 	angle(0.f)
 {
 	if (const auto xPositionAttribute = componentNode.attribute("x"))
@@ -20,14 +19,6 @@ GeometryComponent::GeometryComponent(const pugi::xml_node& componentNode) :
 	if (const auto yPositionAttribute = componentNode.attribute("y"))
 	{
 		position.y = yPositionAttribute.as_float();
-	}
-	if (const auto widthAttribute = componentNode.attribute("width"))
-	{
-		size.x = widthAttribute.as_float();
-	}
-	if (const auto heightAttribute = componentNode.attribute("height"))
-	{
-		size.y = heightAttribute.as_float();
 	}
 	if (const auto angleAttribute = componentNode.attribute("angle"))
 	{
@@ -43,16 +34,6 @@ b2Vec2 GeometryComponent::getPosition() const
 void GeometryComponent::setPosition(const b2Vec2& position)
 {
 	this->position = position;
-}
-
-b2Vec2 GeometryComponent::getSize() const
-{
-	return size;
-}
-
-void GeometryComponent::setSize(const b2Vec2& size)
-{
-	this->size = size;
 }
 
 float GeometryComponent::getAngle() const

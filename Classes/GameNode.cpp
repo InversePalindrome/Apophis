@@ -20,13 +20,10 @@ InversePalindrome.com
 #include "OrbitalSystem.hpp"
 #include "StrikerSystem.hpp"
 #include "GraphicsSystem.hpp"
-#include "ImpulseComponent.hpp"
 
 #include <cocos/base/CCEventDispatcher.h>
 #include <cocos/base/CCEventListenerCustom.h>
 #include <cocos/base/CCEventListenerKeyboard.h>
-
-#include <entityx/deps/Dependencies.h>
 
 
 GameNode::GameNode() :
@@ -62,17 +59,17 @@ bool GameNode::init()
 
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);
 
-	map.setMainNode(this);
-	
 	initSystems();
+
+	map.setMainNode(this);
 
 	map.load("Andromeda");
 	entityParser.createEntity("UFO");
-	entityParser.createEntity("Planet");
-	entityParser.createEntity("SpaceCruiser");
+	//entityParser.createEntity("Planet");
+	//entityParser.createEntity("SpaceCruiser");
 	entityParser.createEntity("Billboard");
 	auto coin = entityParser.createEntity("Coin");
-	eventManager.emit(PlayAnimation{ coin, Animation::Alert, true });
+    eventManager.emit(PlayAnimation{ coin, Animation::Alert, true });
 	//auto asteroid = entityParser.createEntity("BlueAsteroid");
 
    // eventManager.emit(CreateDistanceJoint{ planet, asteroid });
@@ -108,7 +105,6 @@ void GameNode::initSystems()
 	systemManager.add<PhysicsSystem>(entityManager, eventManager);
 	systemManager.add<CombatSystem>(entityParser);
 	systemManager.add<GraphicsSystem>(this, map);
-	systemManager.add<entityx::deps::Dependency<SpeedComponent, ImpulseComponent>>();
-	
+
 	systemManager.configure();
 }

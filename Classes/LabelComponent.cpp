@@ -9,7 +9,7 @@ InversePalindrome.com
 
 
 LabelComponent::LabelComponent(const pugi::xml_node& componentNode) :
-	NodeComponent(cocos2d::Label::create()),
+	NodeComponent(cocos2d::Label::create(), componentNode),
 	label(static_cast<cocos2d::Label*>(getNode()))
 {
 	label->setString(componentNode.text().as_string());

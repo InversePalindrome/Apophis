@@ -21,9 +21,6 @@ InversePalindrome.com
 
 #include <entityx/System.h>
 
-#include <vector>
-#include <functional>
-
 
 class GraphicsSystem : public entityx::System<GraphicsSystem>, public entityx::Receiver<GraphicsSystem>
 {
@@ -32,19 +29,18 @@ public:
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
-	virtual void receive(const EntityParsed& event);
+	virtual void receive(const EntityCreated& event);
+	virtual void receive(const entityx::ComponentAddedEvent<SpriteComponent>& event);
+	virtual void receive(const entityx::ComponentAddedEvent<LabelComponent>& event);
+	virtual void receive(const entityx::ComponentAddedEvent<ParticleComponent>& event);
 	
 private:
 	cocos2d::Node* gameNode;
-
-    std::vector<std::function<void()>> renderablesToAdd;
 
 	Map& map;
 
 	entityx::ComponentHandle<GeometryComponent> playerGeometry;
 	entityx::ComponentHandle<HealthComponent> playerHealth;
-
-	void addNodes();
 
 	void updateView();
 	void updateHealthBar();

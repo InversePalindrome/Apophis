@@ -8,9 +8,18 @@ InversePalindrome.com
 #include "NodeComponent.hpp"
 
 
-NodeComponent::NodeComponent(cocos2d::Node* node) :
+NodeComponent::NodeComponent(cocos2d::Node* node, const pugi::xml_node& componentNode) :
 	node(node)
 {
+	if (const auto xScaleAttribute = componentNode.attribute("xScale"))
+	{
+		node->setScaleX(xScaleAttribute.as_float());
+	}
+	if (const auto yScaleAttribute = componentNode.attribute("yScale"))
+	{
+		node->setScaleY(yScaleAttribute.as_float());
+	}
+
 	node->retain();
 }
 

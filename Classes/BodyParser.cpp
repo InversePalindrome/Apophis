@@ -157,4 +157,6 @@ std::variant<b2CircleShape, b2PolygonShape> BodyParser::createShape(const pugi::
 	{
 		return BodyParser::createPolygon(shapeNode);
 	}
+
+	return {};
 }

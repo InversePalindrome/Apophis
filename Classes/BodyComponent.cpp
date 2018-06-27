@@ -18,8 +18,6 @@ BodyComponent::BodyComponent(b2Body* body) :
 void BodyComponent::createFixture(const b2FixtureDef& fixtureDef)
 {
 	fixtures.push_back(body->CreateFixture(&fixtureDef));
-
-	computeAABB();
 }
 
 void BodyComponent::destroyFixture(b2Fixture* fixture)
@@ -104,6 +102,23 @@ b2AABB BodyComponent::getAABB() const
 	return AABB;
 }
 
+void BodyComponent::computeAABB()
+{
+	for (const auto& fixture : fixtures)
+	{
+		for (int child = 0; child < fixture->GetShape()->GetChildCount(); ++child)
+		{
+			b2Transform transform;
+			transform.SetIdentity();
+
+			b2AABB shapeAABB{ { FLT_MAX, FLT_MAX },{ -FLT_MAX, -FLT_MAX } };
+			fixture->GetShape()->ComputeAABB(&shapeAABB, transform, child);
+
+			AABB.Combine(shapeAABB);
+		}
+	}
+}
+
 void BodyComponent::applyLinearImpulse(const b2Vec2& linearImpulse)
 {
     body->ApplyLinearImpulse(linearImpulse, body->GetWorldCenter(), true);
@@ -148,21 +163,4 @@ bool BodyComponent::raycast(b2RayCastOutput& output, const b2RayCastInput& input
 	}
 
 	return false;
-}
-
-void BodyComponent::computeAABB()
-{
-	for (const auto& fixture : fixtures)
-	{
-		for (int child = 0; child < fixture->GetShape()->GetChildCount(); ++child)
-		{
-			b2Transform transform;
-			transform.SetIdentity();
-
-			b2AABB shapeAABB{ { FLT_MAX, FLT_MAX },{ -FLT_MAX, -FLT_MAX } };
-			fixture->GetShape()->ComputeAABB(&shapeAABB, transform, child);
-
-			AABB.Combine(shapeAABB);
-		}
-	}
 }

@@ -9,11 +9,13 @@ InversePalindrome.com
 
 #include <cocos/2d/CCNode.h>
 
+#include <pugixml.hpp>
+
 
 class NodeComponent
 {
 public:
-	explicit NodeComponent(cocos2d::Node* node);
+	NodeComponent(cocos2d::Node* node, const pugi::xml_node& componentNode);
 	~NodeComponent();
 
 	void addChild(cocos2d::Node* child);

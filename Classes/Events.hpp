@@ -17,8 +17,10 @@ InversePalindrome.com
 
 #include <pugixml.hpp>
 
+#include <functional>
 
-struct EntityParsed
+
+struct EntityCreated
 {
 	mutable entityx::Entity entity;
 };

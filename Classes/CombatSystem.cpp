@@ -8,11 +8,11 @@ InversePalindrome.com
 #include "Constants.hpp"
 #include "Conversions.hpp"
 #include "CombatSystem.hpp"
+#include "BodyComponent.hpp"
 #include "SpeedComponent.hpp"
 #include "HealthComponent.hpp"
 #include "DamageComponent.hpp"
 #include "WeaponComponent.hpp"
-#include "ImpulseComponent.hpp"
 #include "GeometryComponent.hpp"
 #include "ExplosionComponent.hpp"
 
@@ -66,27 +66,33 @@ void CombatSystem::receive(const entityx::EntityDestroyedEvent& event)
 void CombatSystem::receive(const ShootProjectile& event)
 {
 	const auto shooterGeometry = event.shooter.component<GeometryComponent>();
+	const auto shooterBody = event.shooter.component<BodyComponent>();
 	auto shooterWeapon = event.shooter.component<WeaponComponent>();
 
-	if (shooterGeometry && shooterWeapon && shooterWeapon->isReloaded())
+	if (shooterGeometry && shooterBody && shooterWeapon && shooterWeapon->isReloaded())
 	{
 		shooterWeapon->setReloadStatus(false);
 
 		auto projectileEntity = entityParser.createEntity(shooterWeapon->getProjectileName());
+		auto projectileBody = projectileEntity.component<BodyComponent>();
 		auto projectileGeometry = projectileEntity.component<GeometryComponent>();
 		const auto projectileSpeed = projectileEntity.component<SpeedComponent>();
-		auto projectileImpulse = projectileEntity.component<ImpulseComponent>();
-
-		if (projectileGeometry && projectileSpeed && projectileImpulse)
+		
+		if (projectileBody && projectileGeometry && projectileSpeed)
 		{
-			b2Vec2 projectileDirection(std::cos(Conversions::degreesToRadians(shooterGeometry->getAngle())), std::sin(Conversions::degreesToRadians(shooterGeometry->getAngle())));
-			b2Vec2 projectilePosition(projectileDirection.x * (shooterGeometry->getSize().x + projectileGeometry->getSize().x / 2.f), projectileDirection.y * (shooterGeometry->getSize().y + projectileGeometry->getSize().y / 2.f));
+			const float projectileOffset = 0.05f;
+			const b2Vec2 shooterSize(shooterBody->getAABB().upperBound - shooterBody->getAABB().lowerBound);
+			const b2Vec2 projectileSize(projectileBody->getAABB().upperBound - projectileBody->getAABB().lowerBound);
+			const b2Vec2 projectileDirection(std::cos(Conversions::degreesToRadians(shooterGeometry->getAngle())), std::sin(Conversions::degreesToRadians(shooterGeometry->getAngle())));
+			const b2Vec2 velocityOffset(b2Abs(Constants::TIMESTEP * shooterBody->getLinearVelocity()));
+			const b2Vec2 sizeOffset(shooterSize + 0.5f * projectileSize);		
+			const b2Vec2 projectilePosition(projectileDirection.x * (velocityOffset.x + sizeOffset.x + projectileOffset),  projectileDirection.y *  (velocityOffset.y + sizeOffset.y + projectileOffset));
+		
+			projectileBody->setPosition(shooterGeometry->getPosition() + projectilePosition);
+			projectileBody->setAngle(shooterBody->getAngle());
+			projectileBody->setLinearVelocity(shooterBody->getLinearVelocity());
+			projectileBody->applyLinearImpulse(projectileSpeed->getMaxLinearSpeed() * projectileDirection);
 			
-		    projectileGeometry->setPosition(shooterGeometry->getPosition() + projectilePosition);
-			projectileGeometry->setAngle(shooterGeometry->getAngle());
-			
-			projectileImpulse += projectileSpeed->getMaxLinearSpeed() * projectileDirection;
-
 			timer.add(shooterWeapon->getReloadTime(), [shooterWeapon](auto id) mutable
 			{
 				if (shooterWeapon)

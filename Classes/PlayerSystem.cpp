@@ -55,41 +55,41 @@ void PlayerSystem::update(entityx::EntityManager& entityManager, entityx::EventM
 	entityx::ComponentHandle<Player> player;
 	entityx::ComponentHandle<BodyComponent> body;
 	entityx::ComponentHandle<SpeedComponent> speed;
-	entityx::ComponentHandle<ImpulseComponent> impulse;
+	entityx::ComponentHandle<AccelerationComponent> acceleration;
 
-	for (auto entity : entityManager.entities_with_components(player, body, speed, impulse))
+	for (auto entity : entityManager.entities_with_components(player, body, speed, acceleration))
 	{
-		updateMovement(speed, impulse);
-		updateRotation(body, impulse);
+		updateMovement(body, speed, acceleration);
+		updateRotation(body);
 		updateShooting(eventManager, entity);
 	}
 }
 
-void PlayerSystem::updateMovement(entityx::ComponentHandle<SpeedComponent> speed, entityx::ComponentHandle<ImpulseComponent> impulse)
+void PlayerSystem::updateMovement(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<SpeedComponent> speed, entityx::ComponentHandle<AccelerationComponent> acceleration)
 {
 	for (auto keyAction : keyActions)
 	{
 		switch (keyAction)
 		{
 		case KeyAction::MoveRight:
-			impulse += speed->getMaxLinearSpeed() * b2Vec2(1.f, 0.f);
+			body->applyLinearImpulse({ body->getMass() * (b2Min(body->getLinearVelocity().x + acceleration->getLinearAcceleration(), speed->getMaxLinearSpeed()) - body->getLinearVelocity().x), 0.f });
 			break;
 		case KeyAction::MoveLeft:
-			impulse += speed->getMaxLinearSpeed() * b2Vec2(-1.f, 0.f);
+			body->applyLinearImpulse({ body->getMass() * (b2Max(body->getLinearVelocity().x - acceleration->getLinearAcceleration(), -speed->getMaxLinearSpeed()) - body->getLinearVelocity().x), 0.f });
 			break;
 		case KeyAction::MoveUp:
-			impulse += speed->getMaxLinearSpeed() * b2Vec2(0.f, 1.f);
+			body->applyLinearImpulse({ 0.f, body->getMass() * (b2Min(body->getLinearVelocity().y + acceleration->getLinearAcceleration(), speed->getMaxLinearSpeed()) - body->getLinearVelocity().y) });
 			break;
 		case KeyAction::MoveDown:
-			impulse += speed->getMaxLinearSpeed() * b2Vec2(0.f, -1.f);
+			body->applyLinearImpulse({ 0.f, body->getMass() * (b2Max(body->getLinearVelocity().y - acceleration->getLinearAcceleration(), -speed->getMaxLinearSpeed()) - body->getLinearVelocity().y) });
 			break;
 		}
 	}
 }
 
-void PlayerSystem::updateRotation(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<ImpulseComponent> impulse)
+void PlayerSystem::updateRotation(entityx::ComponentHandle<BodyComponent> body)
 {
-	impulse += SteeringBehaviors::face(body->getPosition(), { playerFocusPoint.x / Constants::PTM_RATIO, playerFocusPoint.y / Constants::PTM_RATIO }, body->getAngle(), body->getAngularVelocity(), body->getInertia());
+	body->applyAngularImpulse(SteeringBehaviors::face(body->getPosition(), { playerFocusPoint.x / Constants::PTM_RATIO, playerFocusPoint.y / Constants::PTM_RATIO }, body->getAngle(), body->getAngularVelocity(), body->getInertia()));
 }
 
 void PlayerSystem::updateShooting(entityx::EventManager& eventManager, entityx::Entity entity)

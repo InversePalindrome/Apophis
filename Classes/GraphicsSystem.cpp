@@ -23,7 +23,10 @@ GraphicsSystem::GraphicsSystem(cocos2d::Node* gameNode, Map& map) :
 
 void GraphicsSystem::configure(entityx::EventManager& eventManager)
 {
-	eventManager.subscribe<EntityParsed>(*this);
+	eventManager.subscribe<EntityCreated>(*this);
+	eventManager.subscribe<entityx::ComponentAddedEvent<SpriteComponent>>(*this);
+	eventManager.subscribe<entityx::ComponentAddedEvent<LabelComponent>>(*this);
+	eventManager.subscribe<entityx::ComponentAddedEvent<ParticleComponent>>(*this);
 }
 
 void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
@@ -39,38 +42,15 @@ void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::Even
 		{
 			renderable->setPosition({ geometry->getPosition().x * Constants::PTM_RATIO, geometry->getPosition().y * Constants::PTM_RATIO });
 			renderable->setRotation(-geometry->getAngle());
-
-			if constexpr(std::is_same_v<RenderableComponent, SpriteComponent> || std::is_same_v<RenderableComponent, LabelComponent>)
-			{
-				renderable->setScale({ geometry->getSize().x * Constants::PTM_RATIO / renderable->getContentSize().width, geometry->getSize().y * Constants::PTM_RATIO / renderable->getContentSize().height });
-			}
 		}
 	});
-	
-	addNodes();
 
 	updateView();
 	updateHealthBar();
 }
 
-void GraphicsSystem::receive(const EntityParsed& event)
+void GraphicsSystem::receive(const EntityCreated& event)
 {
-	brigand::for_each<Renderables>([this, event](auto renderableElement)
-	{
-		using RenderableComponent = decltype(renderableElement)::type;
-
-		if (auto renderable = event.entity.component<RenderableComponent>())
-		{
-			renderablesToAdd.push_back([this, renderable]()
-			{
-				if (renderable)
-				{
-					gameNode->addChild(renderable->getNode());
-				}
-			});
-		}
-	});
-
 	if (event.entity.has_component<Player>())
 	{
 		playerGeometry = event.entity.component<GeometryComponent>();
@@ -78,14 +58,19 @@ void GraphicsSystem::receive(const EntityParsed& event)
 	}
 }
 
-void GraphicsSystem::addNodes()
+void GraphicsSystem::receive(const entityx::ComponentAddedEvent<SpriteComponent>& event)
 {
-	for (const auto renderableToAdd : renderablesToAdd)
-	{
-		renderableToAdd();
-	}
-	
-	renderablesToAdd.clear();
+	gameNode->addChild(event.component->getNode());
+}
+
+void GraphicsSystem::receive(const entityx::ComponentAddedEvent<LabelComponent>& event)
+{
+	gameNode->addChild(event.component->getNode());
+}
+
+void GraphicsSystem::receive(const entityx::ComponentAddedEvent<ParticleComponent>& event)
+{
+	gameNode->addChild(event.component->getNode());
 }
 
 void GraphicsSystem::updateView()

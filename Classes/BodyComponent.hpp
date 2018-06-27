@@ -45,6 +45,7 @@ public:
 	float getInertia() const;
 
 	b2AABB getAABB() const;
+	void computeAABB();
 
 	void applyLinearImpulse(const b2Vec2& linearImpulse);
 	void applyAngularImpulse(float angularImpulse);
@@ -62,6 +63,4 @@ private:
 	b2AABB AABB;
 
 	std::any userData;
-
-	void computeAABB();
 };

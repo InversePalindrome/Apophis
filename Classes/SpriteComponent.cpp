@@ -9,7 +9,7 @@ InversePalindrome.com
 
 
 SpriteComponent::SpriteComponent(const pugi::xml_node& componentNode) :
-	NodeComponent(cocos2d::Sprite::createWithSpriteFrameName(componentNode.text().as_string())),
+	NodeComponent(cocos2d::Sprite::createWithSpriteFrameName(componentNode.text().as_string()), componentNode),
 	sprite(static_cast<cocos2d::Sprite*>(getNode()))
 {
 }

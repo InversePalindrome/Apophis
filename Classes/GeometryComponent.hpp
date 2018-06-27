@@ -20,14 +20,10 @@ public:
 	b2Vec2 getPosition() const;
 	void setPosition(const b2Vec2& position);
 
-	b2Vec2 getSize() const;
-	void setSize(const b2Vec2& size);
-
 	float getAngle() const;
 	void setAngle(float angle);
 
 private:
 	b2Vec2 position;
-	b2Vec2 size;
 	float angle;
 };

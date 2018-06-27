@@ -12,6 +12,7 @@
     <Body type="2" linearDamping="0.4">
       <Circle x="0" y="0" radius="1.5" density="0.1"></Circle>
     </Body>
+    <Acceleration linear="2"></Acceleration>
     <Explosion name="Boom" time="2000"></Explosion>
     <Sound>
       <Shoot>Laser.mp3</Shoot>

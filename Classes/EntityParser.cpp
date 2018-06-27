@@ -33,6 +33,7 @@ InversePalindrome.com
 #include "SpeedBoostComponent.hpp"
 #include "RegenBoostComponent.hpp"
 #include "AnchorPointComponent.hpp"
+#include "AccelerationComponent.hpp"
 
 #include <cocos/platform/CCFileUtils.h>
 
@@ -64,6 +65,7 @@ EntityParser::EntityParser(entityx::EntityManager& entityManager, entityx::Event
 	componentParsers.emplace("Weapon", [](auto entity, const auto& componentNode) { entity.assign<WeaponComponent>(componentNode); });
 	componentParsers.emplace("Explosion", [](auto entity, const auto& componentNode) { entity.assign<ExplosionComponent>(componentNode); });
 	componentParsers.emplace("Speed", [](auto entity, const auto& componentNode) { entity.assign<SpeedComponent>(componentNode); });
+	componentParsers.emplace("Acceleration", [](auto entity, const auto& componentNode) { entity.assign<AccelerationComponent>(componentNode); });
 	componentParsers.emplace("AnchorPoint", [](auto entity, const auto& componentNode) { entity.assign<AnchorPointComponent>(componentNode); });
 	componentParsers.emplace("SpeedBoost", [](auto entity, const auto& componentNode) { entity.assign<SpeedBoostComponent>(componentNode); });
 	componentParsers.emplace("RegenBoost", [](auto entity, const auto& componentNode) { entity.assign<RegenBoostComponent>(componentNode); });
@@ -106,7 +108,7 @@ entityx::Entity EntityParser::createEntity(const std::string& filename)
 		}
 	}
 
-	eventManager.emit(EntityParsed{ entity });
+	eventManager.emit(EntityCreated{ entity });
 
 	return entity;
 }

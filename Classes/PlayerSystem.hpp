@@ -10,7 +10,7 @@ InversePalindrome.com
 #include "KeyAction.hpp"
 #include "BodyComponent.hpp"
 #include "SpeedComponent.hpp"
-#include "ImpulseComponent.hpp"
+#include "AccelerationComponent.hpp"
 
 #include <cocos/2d/CCNode.h>
 
@@ -33,7 +33,7 @@ private:
 	cocos2d::Vec2 playerFocusPoint;
 	bool isShooting;
 
-	void updateMovement(entityx::ComponentHandle<SpeedComponent> speed, entityx::ComponentHandle<ImpulseComponent> impulse);
-	void updateRotation(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<ImpulseComponent> impulse);
+	void updateMovement(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<SpeedComponent> speed, entityx::ComponentHandle<AccelerationComponent> acceleration);
+	void updateRotation(entityx::ComponentHandle<BodyComponent> body);
 	void updateShooting(entityx::EventManager& eventManager, entityx::Entity entity);
 };

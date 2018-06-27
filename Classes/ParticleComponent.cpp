@@ -9,7 +9,7 @@ InversePalindrome.com
 
 
 ParticleComponent::ParticleComponent(const pugi::xml_node& componentNode) :
-	NodeComponent(cocos2d::ParticleSystemQuad::create(std::string(componentNode.text().as_string()) + ".plist")),
+	NodeComponent(cocos2d::ParticleSystemQuad::create(std::string(componentNode.text().as_string()) + ".plist"), componentNode),
 	emitter(static_cast<cocos2d::ParticleSystemQuad*>(getNode()))
 {
 }
