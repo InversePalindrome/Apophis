@@ -29,8 +29,8 @@ InversePalindrome.com
 GameNode::GameNode() :
 	entityManager(eventManager),
 	systemManager(entityManager, eventManager),
-	entityParser(entityManager, eventManager),
-	map(entityParser, eventManager)
+	entityFactory(entityManager, eventManager),
+	map(entityFactory, eventManager)
 {
 }
 
@@ -64,15 +64,15 @@ bool GameNode::init()
 	map.setMainNode(this);
 
 	map.load("Andromeda");
-	entityParser.createEntity("UFO");
-	entityParser.createEntity("Planet");
-	//entityParser.createEntity("SpaceCruiser");
-	entityParser.createEntity("Billboard");
-	auto coin = entityParser.createEntity("Coin");
+	entityFactory.createEntity("UFO");
+	entityFactory.createEntity("Planet");
+	entityFactory.createEntity("SpaceCruiser");
+	entityFactory.createEntity("Billboard");
+	auto coin = entityFactory.createEntity("Coin");
     eventManager.emit(PlayAnimation{ coin, Animation::Alert, true });
-	//auto asteroid = entityParser.createEntity("BlueAsteroid");
+	//auto asteroid = entityFactory.createEntity("BlueAsteroid");
 
-   // eventManager.emit(CreateDistanceJoint{ planet, asteroid });
+  //  eventManager.emit(CreateDistanceJoint{ planet, asteroid });
 
 	return true;
 }
@@ -101,9 +101,9 @@ void GameNode::initSystems()
 	systemManager.add<AudioSystem>();
 	systemManager.add<ActionSystem>();
 	systemManager.add<OrbitalSystem>();
-	systemManager.add<ItemSystem>(entityParser);
-	systemManager.add<PhysicsSystem>(entityManager, eventManager);
-	systemManager.add<CombatSystem>(entityParser);
+	systemManager.add<ItemSystem>(entityFactory);
+	systemManager.add<PhysicsSystem>(eventManager);
+	systemManager.add<CombatSystem>(entityFactory);
 	systemManager.add<GraphicsSystem>(this, map);
 
 	systemManager.configure();

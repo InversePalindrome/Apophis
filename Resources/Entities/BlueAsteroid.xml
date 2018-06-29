@@ -3,14 +3,12 @@
   <Tags>
   </Tags>
   <Components>
-    <Sprite>BlueAsteroid</Sprite>
+    <Sprite frame="BlueAsteroid"></Sprite>
     <Object>Asteroid</Object>
     <Body type="2" x="30" y="0">
-      <Fixture shape="circle" radius="1.8" density="0.3"></Fixture>
+      <Circle radius="1.8" density="0.3"></Circle>
     </Body>
-    <Impulse>5</Impulse>
     <Speed linear="15"></Speed>
-    <AnchorPoint></AnchorPoint>
     <Satellite>2</Satellite>
   </Components>
 </Entity>

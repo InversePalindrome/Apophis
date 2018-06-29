@@ -109,7 +109,7 @@
     <key>textureRotated</key>
     <false/>
    </dict>
-   <key>Energy</key>
+   <key>SpeedBoost</key>
    <dict>
     <key>aliases</key>
     <array/>

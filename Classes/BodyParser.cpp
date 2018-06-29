@@ -10,10 +10,8 @@ InversePalindrome.com
 #include <vector>
 
 
-b2BodyDef BodyParser::createBodyDef(const pugi::xml_node& bodyNode)
+void BodyParser::parseBodyDef(b2BodyDef& bodyDef, const pugi::xml_node& bodyNode)
 {
-	b2BodyDef bodyDef;
-	
 	if (const auto bodyTypeAttribute = bodyNode.attribute("type"))
 	{
 		bodyDef.type = static_cast<b2BodyType>(bodyTypeAttribute.as_int());
@@ -34,14 +32,10 @@ b2BodyDef BodyParser::createBodyDef(const pugi::xml_node& bodyNode)
 	{
 		bodyDef.bullet = bulletAttribute.as_bool();
 	}
-
-	return bodyDef;
 }
 
-b2FixtureDef BodyParser::createFixtureDef(const pugi::xml_node& fixtureNode)
+void BodyParser::parseFixtureDef(b2FixtureDef& fixtureDef, const pugi::xml_node& fixtureNode)
 {
-	b2FixtureDef fixtureDef;
-
 	if (const auto densityAttribute = fixtureNode.attribute("density"))
 	{
 		fixtureDef.density = densityAttribute.as_float();
@@ -58,36 +52,28 @@ b2FixtureDef BodyParser::createFixtureDef(const pugi::xml_node& fixtureNode)
 	{
 		fixtureDef.isSensor = sensorAttribute.as_bool();
 	}
-
-	return fixtureDef;
 }
 
-b2CircleShape BodyParser::createCircle(const pugi::xml_node& circleNode)
+void BodyParser::parseCircleShape(b2CircleShape& circleShape, const pugi::xml_node& circleNode)
 {
-	b2CircleShape circle;
-	
 	if (const auto xAttribute = circleNode.attribute("x"))
 	{
-		circle.m_p.x = xAttribute.as_float();
+		circleShape.m_p.x = xAttribute.as_float();
 	}
 	if (const auto yAttribute = circleNode.attribute("y"))
 	{
-		circle.m_p.y = yAttribute.as_float();
+		circleShape.m_p.y = yAttribute.as_float();
 	}
 	if (const auto radiusAttribute = circleNode.attribute("radius"))
 	{
-		circle.m_radius = radiusAttribute.as_float();
+		circleShape.m_radius = radiusAttribute.as_float();
 	}
-
-	return circle;
 }
 
-b2PolygonShape BodyParser::createRectangle(const pugi::xml_node& rectangleNode)
+void BodyParser::parseRectangleShape(b2PolygonShape& rectangleShape, const pugi::xml_node& rectangleNode)
 {
-	b2PolygonShape rectangle;
-
 	b2Vec2 center(0.f, 0.f);
-	float width = 0.f, height = 0.f, angle = 0.f;
+	float width = 1.f, height = 1.f, angle = 0.f;
 
 	if (const auto xAttribute = rectangleNode.attribute("x"))
 	{
@@ -109,16 +95,12 @@ b2PolygonShape BodyParser::createRectangle(const pugi::xml_node& rectangleNode)
 	{
 		angle = angleAttribute.as_float();
 	}
-
-	rectangle.SetAsBox(width, height, center, angle);
-
-	return rectangle;
+	
+	rectangleShape.SetAsBox(width, height, center, angle);
 }
 
-b2PolygonShape BodyParser::createPolygon(const pugi::xml_node& polygonNode)
+void BodyParser::parsePolygonShape(b2PolygonShape& polygonShape, const pugi::xml_node& polygonNode)
 {
-	b2PolygonShape polygon;
-
 	std::vector<b2Vec2> points;
 
 	for (const auto pointNode : polygonNode.children("Point"))
@@ -137,26 +119,5 @@ b2PolygonShape BodyParser::createPolygon(const pugi::xml_node& polygonNode)
 		points.push_back(point);
 	}
 
-	polygon.Set(points.data(), points.size());
-
-	return polygon;
-}
-
-
-std::variant<b2CircleShape, b2PolygonShape> BodyParser::createShape(const pugi::xml_node& shapeNode)
-{
-	if (std::strcmp(shapeNode.name(), "Circle") == 0)
-	{
-		return BodyParser::createCircle(shapeNode);
-	}
-	else if (std::strcmp(shapeNode.name(), "Rectangle") == 0)
-	{
-		return BodyParser::createRectangle(shapeNode);
-	}
-	else if (std::strcmp(shapeNode.name(), "Polygon") == 0)
-	{
-		return BodyParser::createPolygon(shapeNode);
-	}
-
-	return {};
+	polygonShape.Set(points.data(), points.size());
 }

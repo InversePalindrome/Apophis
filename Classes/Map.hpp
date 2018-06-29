@@ -7,13 +7,13 @@ InversePalindrome.com
 
 #pragma once
 
-#include "EntityParser.hpp"
+#include "EntityFactory.hpp"
 
 #include <cocos/2d/CCNode.h>
 
 #include <Box2D/Common/b2Math.h>
 
-#include <entityx/entityx.h>
+#include <entityx/Event.h>
 
 #include <string>
 
@@ -21,7 +21,7 @@ InversePalindrome.com
 class Map
 {
 public:
-	Map(EntityParser& entityParser, entityx::EventManager& eventManager);
+	Map(EntityFactory& entityFactory, entityx::EventManager& eventManager);
 
 	void load(const std::string& fileName);
 
@@ -31,7 +31,7 @@ public:
 
 private: 
 	cocos2d::Node* mainNode;
-	EntityParser& entityParser;
+	EntityFactory& entityFactory;
 	entityx::EventManager& eventManager;
 
 	b2Vec2 dimensions;

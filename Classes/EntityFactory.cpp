@@ -1,13 +1,13 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-Apophis - EntityParser.cpp
+Apophis - EntityFactory.cpp
 InversePalindrome.com
 */
 
 
 #include "Tags.hpp"
 #include "Events.hpp"
-#include "EntityParser.hpp"
+#include "EntityFactory.hpp"
 #include "DropComponent.hpp"
 #include "SpeedComponent.hpp"
 #include "SoundComponent.hpp"
@@ -32,13 +32,12 @@ InversePalindrome.com
 #include "SatelliteComponent.hpp"
 #include "SpeedBoostComponent.hpp"
 #include "RegenBoostComponent.hpp"
-#include "AnchorPointComponent.hpp"
 #include "AccelerationComponent.hpp"
 
 #include <cocos/platform/CCFileUtils.h>
 
 
-EntityParser::EntityParser(entityx::EntityManager& entityManager, entityx::EventManager& eventManager) :
+EntityFactory::EntityFactory(entityx::EntityManager& entityManager, entityx::EventManager& eventManager) :
 	entityManager(entityManager),
 	eventManager(eventManager)
 {
@@ -66,7 +65,6 @@ EntityParser::EntityParser(entityx::EntityManager& entityManager, entityx::Event
 	componentParsers.emplace("Explosion", [](auto entity, const auto& componentNode) { entity.assign<ExplosionComponent>(componentNode); });
 	componentParsers.emplace("Speed", [](auto entity, const auto& componentNode) { entity.assign<SpeedComponent>(componentNode); });
 	componentParsers.emplace("Acceleration", [](auto entity, const auto& componentNode) { entity.assign<AccelerationComponent>(componentNode); });
-	componentParsers.emplace("AnchorPoint", [](auto entity, const auto& componentNode) { entity.assign<AnchorPointComponent>(componentNode); });
 	componentParsers.emplace("SpeedBoost", [](auto entity, const auto& componentNode) { entity.assign<SpeedBoostComponent>(componentNode); });
 	componentParsers.emplace("RegenBoost", [](auto entity, const auto& componentNode) { entity.assign<RegenBoostComponent>(componentNode); });
 
@@ -74,7 +72,7 @@ EntityParser::EntityParser(entityx::EntityManager& entityManager, entityx::Event
 	tagParsers.emplace("Striker", [](auto entity) { entity.assign<Striker>(); });
 }
 
-entityx::Entity EntityParser::createEntity(const std::string& filename)
+entityx::Entity EntityFactory::createEntity(const std::string& filename)
 {
 	auto entity = entityManager.create();
 

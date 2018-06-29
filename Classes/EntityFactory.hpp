@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-Apophis - EntityParser.hpp
+Apophis - EntityFactory.hpp
 InversePalindrome.com
 */
 
@@ -17,12 +17,12 @@ InversePalindrome.com
 #include <unordered_map>
 
 
-class EntityParser
+class EntityFactory
 {
 public:
-	EntityParser(entityx::EntityManager& entityManager, entityx::EventManager& eventManager);
-	EntityParser(const EntityParser&) = delete;
-	EntityParser& operator=(const EntityParser&) = delete;
+	EntityFactory(entityx::EntityManager& entityManager, entityx::EventManager& eventManager);
+	EntityFactory(const EntityFactory&) = delete;
+	EntityFactory& operator=(const EntityFactory&) = delete;
 
 	entityx::Entity createEntity(const std::string& filename);
 

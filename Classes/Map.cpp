@@ -17,8 +17,8 @@ InversePalindrome.com
 #include <boost/math/constants/constants.hpp>
 
 
-Map::Map(EntityParser& entityParser, entityx::EventManager& eventManager) :
-	entityParser(entityParser),
+Map::Map(EntityFactory& entityFactory, entityx::EventManager& eventManager) :
+	entityFactory(entityFactory),
 	eventManager(eventManager),
 	maxEntityCount(0u)
 {
@@ -90,7 +90,7 @@ void Map::generateMap(const std::vector<std::string>& entities, const std::vecto
 
 	for (std::size_t i = 0; i < maxEntityCount; ++i)
 	{ 
-		//auto entity = entityParser.createEntity(entities.at(distribution(randomEngine)));
+		//auto entity = entityFactory.createEntity(entities.at(distribution(randomEngine)));
 
 
 	}

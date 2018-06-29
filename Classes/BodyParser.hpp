@@ -13,16 +13,12 @@ InversePalindrome.com
 
 #include <pugixml.hpp>
 
-#include <variant>
-
 
 namespace BodyParser
 {
-	b2BodyDef createBodyDef(const pugi::xml_node& bodyNode);
-	b2FixtureDef createFixtureDef(const pugi::xml_node& fixtureNode);
-	b2CircleShape createCircle(const pugi::xml_node& circleNode);
-	b2PolygonShape createRectangle(const pugi::xml_node& rectangleNode);
-	b2PolygonShape createPolygon(const pugi::xml_node& polygonNode);
-
-	std::variant<b2CircleShape, b2PolygonShape> createShape(const pugi::xml_node& shapeNode);
+	void parseBodyDef(b2BodyDef& bodyDef, const pugi::xml_node& bodyNode);
+    void parseFixtureDef(b2FixtureDef& fixtureDef, const pugi::xml_node& fixtureNode);
+	void parseCircleShape(b2CircleShape& circleDef, const pugi::xml_node& circleNode);
+	void parseRectangleShape(b2PolygonShape& rectangleShape, const pugi::xml_node& rectangleNode);
+	void parsePolygonShape(b2PolygonShape& polygonShape, const pugi::xml_node& polygonNode);
 }

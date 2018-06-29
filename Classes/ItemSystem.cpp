@@ -13,8 +13,8 @@ InversePalindrome.com
 #include "TransformComponent.hpp"
 
 
-ItemSystem::ItemSystem(EntityParser& entityParser) :
-	entityParser(entityParser)
+ItemSystem::ItemSystem(EntityFactory& entityFactory) :
+	entityFactory(entityFactory)
 {
 }
 
@@ -38,7 +38,7 @@ void ItemSystem::receive(const entityx::EntityDestroyedEvent& event)
 
 	if (destroyedDrop && destroyedGeometry)
 	{
-		auto itemEntity = entityParser.createEntity(destroyedDrop->getItem());
+		auto itemEntity = entityFactory.createEntity(destroyedDrop->getItem());
 
 		if (auto itemGeometry = itemEntity.component<TransformComponent>())
 		{

@@ -17,8 +17,6 @@ InversePalindrome.com
 
 #include <pugixml.hpp>
 
-#include <functional>
-
 
 struct EntityCreated
 {
@@ -31,15 +29,16 @@ struct CreateBody
 	pugi::xml_node bodyNode;
 };
 
+struct CreateDistanceJoint
+{
+	mutable entityx::Entity jointEntity;
+	mutable entityx::Entity entityA;
+	mutable entityx::Entity entityB;
+};
+
 struct ShootProjectile
 {
 	mutable entityx::Entity shooter;
-};
-
-struct CreateDistanceJoint
-{
-	mutable entityx::Entity entityA;
-	mutable entityx::Entity entityB;	
 };
 
 struct PlayAudio

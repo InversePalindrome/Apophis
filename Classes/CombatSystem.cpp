@@ -17,8 +17,8 @@ InversePalindrome.com
 #include "ExplosionComponent.hpp"
 
 
-CombatSystem::CombatSystem(EntityParser& entityParser) :
-	entityParser(entityParser)
+CombatSystem::CombatSystem(EntityFactory& entityFactory) :
+	entityFactory(entityFactory)
 {
 }
 
@@ -44,7 +44,7 @@ void CombatSystem::receive(const entityx::EntityDestroyedEvent& event)
 	
 	if (destroyedGeometry && destroyedExplosion)
 	{
-		auto explosionEntity = entityParser.createEntity(destroyedExplosion->getExplosionName());
+		auto explosionEntity = entityFactory.createEntity(destroyedExplosion->getExplosionName());
 		
 		if (auto explosionGeometry = explosionEntity.component<TransformComponent>())
 		{
@@ -73,7 +73,7 @@ void CombatSystem::receive(const ShootProjectile& event)
 
 		const auto shooterBody = event.shooter.component<BodyComponent>();
 
-		auto projectileEntity = entityParser.createEntity(shooterWeapon->getProjectileName());
+		auto projectileEntity = entityFactory.createEntity(shooterWeapon->getProjectileName());
 		auto projectileBody = projectileEntity.component<BodyComponent>();
 		const auto projectileSpeed = projectileEntity.component<SpeedComponent>();
 		

@@ -12,6 +12,7 @@ InversePalindrome.com
 #include "WanderComponent.hpp"
 #include "HealthComponent.hpp"
 #include "VisionComponent.hpp"
+#include "TransformComponent.hpp"
 
 #include <entityx/System.h>
 
@@ -39,7 +40,7 @@ public:
 
 private:
 	entityx::EventManager* eventManager;
-	entityx::ComponentHandle<BodyComponent> playerBody;
+	entityx::ComponentHandle<TransformComponent> playerTransform;
 
 	beehive::Tree<StrikerContext> strikerTree;
 };

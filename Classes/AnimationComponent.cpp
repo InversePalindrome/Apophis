@@ -15,7 +15,6 @@ AnimationComponent::AnimationComponent(const pugi::xml_node& componentNode)
 	for (const auto animationNode : componentNode.children())
 	{
 		auto* animation = cocos2d::Animation::create();
-		animation->retain();
 
 		for (const auto frameNode : animationNode.children("Frame"))
 		{
@@ -27,7 +26,7 @@ AnimationComponent::AnimationComponent(const pugi::xml_node& componentNode)
 			animation->setDelayPerUnit(delayAttribute.as_float());
 		}
 
-		animations.emplace(Animation::_from_string(animationNode.name()), animation);
+		addAnimation(Animation::_from_string(animationNode.name()), animation);
 	}
 }
 
@@ -37,6 +36,20 @@ AnimationComponent::~AnimationComponent()
 	{
 		animation.second->release();
 	}
+}
+
+void AnimationComponent::addAnimation(Animation animationName, cocos2d::Animation* animation)
+{
+	animation->retain();
+
+	animations.emplace(animationName, animation);
+}
+
+void AnimationComponent::removeAnimation(Animation animationName)
+{
+	animations.at(animationName)->release();
+
+	animations.erase(animationName);
 }
 
 cocos2d::Animation* AnimationComponent::getAnimation(Animation animation) const

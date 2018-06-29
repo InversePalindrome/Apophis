@@ -9,7 +9,7 @@ InversePalindrome.com
 
 #include "Map.hpp"
 #include "Events.hpp"
-#include "EntityParser.hpp"
+#include "EntityFactory.hpp"
 
 #include <cocos/2d/CCNode.h>
 #include <cocos/2d/CCScene.h>
@@ -36,7 +36,7 @@ private:
 	entityx::EntityManager entityManager;
 	entityx::SystemManager systemManager;
 
-	EntityParser entityParser;
+	EntityFactory entityFactory;
 
 	Map map;
 

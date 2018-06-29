@@ -8,16 +8,17 @@ InversePalindrome.com
 #include "Constants.hpp"
 #include "BodyParser.hpp"
 #include "Conversions.hpp"
+#include "JointParser.hpp"
 #include "PhysicsSystem.hpp"
 #include "TransformComponent.hpp"
-#include "AnchorPointComponent.hpp"
 #include "DistanceJointComponent.hpp"
 
+#include <variant>
 
-PhysicsSystem::PhysicsSystem(entityx::EntityManager& entityManager, entityx::EventManager& eventManager) :
+
+PhysicsSystem::PhysicsSystem(entityx::EventManager& eventManager) :
 	world({ 0.f, 0.f }),
-	collisionManager(eventManager),
-	entityManager(entityManager)
+	collisionManager(eventManager)
 {
 	world.SetContactListener(&collisionManager);
 	world.SetContactFilter(&collisionFilter);
@@ -76,13 +77,37 @@ void PhysicsSystem::receive(const EntityCreated& event)
 
 void PhysicsSystem::receive(const CreateBody& event)
 {
-	auto body = event.entity.assign<BodyComponent>(world.CreateBody(&BodyParser::createBodyDef(event.bodyNode)));
+	b2BodyDef bodyDef;
+	BodyParser::parseBodyDef(bodyDef, event.bodyNode);
+
+	auto body = event.entity.assign<BodyComponent>(world.CreateBody(&bodyDef));
 	body->setUserData(event.entity);
 
 	for (const auto fixtureNode : event.bodyNode.children())
 	{
-		auto fixtureDef = BodyParser::createFixtureDef(fixtureNode);
-		auto shape = BodyParser::createShape(fixtureNode);
+		b2FixtureDef fixtureDef;
+		BodyParser::parseFixtureDef(fixtureDef, fixtureNode);
+		
+		std::variant<b2CircleShape, b2PolygonShape> shape;
+
+		if (std::strcmp(fixtureNode.name(), "Circle") == 0)
+		{
+			b2CircleShape circleShape;
+			BodyParser::parseCircleShape(circleShape, fixtureNode);
+			shape = circleShape;
+		}
+		else if (std::strcmp(fixtureNode.name(), "Rectangle") == 0)
+		{
+			b2PolygonShape rectangleShape;
+			BodyParser::parseRectangleShape(rectangleShape, fixtureNode);
+			shape = rectangleShape;
+		}
+		else if (std::strcmp(fixtureNode.name(), "Polygon") == 0)
+		{
+			b2PolygonShape polygonShape;
+			BodyParser::parsePolygonShape(polygonShape, fixtureNode);
+			shape = polygonShape;
+		}
 
 		std::visit([&fixtureDef](auto& shape) { fixtureDef.shape = &shape; }, shape);
 
@@ -96,11 +121,9 @@ void PhysicsSystem::receive(const CreateDistanceJoint& event)
 {
 	auto bodyA = event.entityA.component<BodyComponent>();
 	auto bodyB = event.entityB.component<BodyComponent>();
-	auto anchorA = event.entityA.component<AnchorPointComponent>();
-	auto anchorB = event.entityB.component<AnchorPointComponent>();
-
-	if (bodyA && bodyB && anchorA && anchorB)
+	
+	if (bodyA && bodyB)
 	{
-		entityManager.create().assign<DistanceJointComponent>(world, bodyA->getBody(), bodyB->getBody(), anchorA->getAnchorPoint(), anchorB->getAnchorPoint());
+		//event.jointEntity.assign<DistanceJointComponent>(world.CreateJoint())
 	}
 }
