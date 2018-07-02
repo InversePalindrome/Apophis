@@ -64,15 +64,14 @@ bool GameNode::init()
 	map.setMainNode(this);
 
 	map.load("Andromeda");
-	entityFactory.createEntity("UFO");
+    entityFactory.createEntity("UFO");
 	entityFactory.createEntity("Planet");
 	entityFactory.createEntity("SpaceCruiser");
 	entityFactory.createEntity("Billboard");
 	auto coin = entityFactory.createEntity("Coin");
     eventManager.emit(PlayAnimation{ coin, Animation::Alert, true });
-	//auto asteroid = entityFactory.createEntity("BlueAsteroid");
-
-  //  eventManager.emit(CreateDistanceJoint{ planet, asteroid });
+    entityFactory.createEntity("BlueAsteroid");
+	entityFactory.createEntity("PlanetJoint");
 
 	return true;
 }
@@ -102,7 +101,7 @@ void GameNode::initSystems()
 	systemManager.add<ActionSystem>();
 	systemManager.add<OrbitalSystem>();
 	systemManager.add<ItemSystem>(entityFactory);
-	systemManager.add<PhysicsSystem>(eventManager);
+	systemManager.add<PhysicsSystem>(entityManager, eventManager);
 	systemManager.add<CombatSystem>(entityFactory);
 	systemManager.add<GraphicsSystem>(this, map);
 

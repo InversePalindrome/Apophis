@@ -10,7 +10,7 @@
     <Speed angular="100" linear="35"></Speed>
     <Object>Player</Object>
     <Body type="2" linearDamping="0.4">
-      <Circle x="0" y="0" radius="5" density="0.1"></Circle>
+      <Circle x="0" y="0" radius="1.5" density="0.1"></Circle>
     </Body>
     <Acceleration linear="2"></Acceleration>
     <Explosion name="Boom" time="2000"></Explosion>

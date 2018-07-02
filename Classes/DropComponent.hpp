@@ -29,5 +29,4 @@ private:
 	std::vector<int> weights;
 
 	std::mt19937 randomEngine;
-	std::discrete_distribution<> distribution;
 };

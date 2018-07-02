@@ -3,13 +3,14 @@
   <Tags>
   </Tags>
   <Components>
-    <Geometry></Geometry>
+    <Transform></Transform>
     <Sprite>RockAsteroid</Sprite>
     <Object>Asteroid</Object>
     <Body type="2" x="30" y="0">
-      <Circle" radius="2" density="0.3"></Circle>
+      <Circle radius="2" density="0.3"></Circle>
     </Body>
     <Impulse>5</Impulse>
+    <Satellite>1</Satellite>
     <Speed linear="15"></Speed>
     <AnchorPoint></AnchorPoint>
     <Satellite>2</Satellite>

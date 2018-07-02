@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
   <Components>
+     <Transform></Transform>
      <Body type="0" density="0.3">
-       <Circle radius="6"></Circle>
+       <Circle radius="8.5"></Circle>
      </Body>
     <Sprite frame="Planet_D"></Sprite>
-    <Transform></Transform>
      <Object>Asteroid</Object>
-     <AnchorPoint></AnchorPoint>
   </Components>
 </Entity>

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
-  <DistanceJoint ID1="0" ID2="2"></DistanceJoint>
+  <Components>
+    <DistanceJoint IDA="1" IDB="5" collideConnected="true"></DistanceJoint>
+  </Components>
 </Entity>

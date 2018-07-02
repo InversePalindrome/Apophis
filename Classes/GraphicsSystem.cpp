@@ -61,17 +61,35 @@ void GraphicsSystem::receive(const EntityCreated& event)
 
 void GraphicsSystem::receive(const entityx::ComponentAddedEvent<SpriteComponent>& event)
 {
-	nodeCallbacks.push_back([this, event]() { gameNode->addChild(event.component->getNode()); });
+	nodeCallbacks.push_back([this, event]()
+	{
+		if (event.component)
+		{
+			gameNode->addChild(event.component->getNode());
+		}
+	});
 }
 
 void GraphicsSystem::receive(const entityx::ComponentAddedEvent<LabelComponent>& event)
 {
-	nodeCallbacks.push_back([this, event]() { gameNode->addChild(event.component->getNode()); });
+	nodeCallbacks.push_back([this, event]()
+	{ 
+		if (event.component)
+		{
+			gameNode->addChild(event.component->getNode());
+		}
+	});
 }
 
 void GraphicsSystem::receive(const entityx::ComponentAddedEvent<ParticleComponent>& event)
 {
-	nodeCallbacks.push_back([this, event]() { gameNode->addChild(event.component->getNode()); });
+	nodeCallbacks.push_back([this, event]() 
+	{ 
+		if (event.component)
+		{
+			gameNode->addChild(event.component->getNode());
+		}
+	});
 }
 
 void GraphicsSystem::updateNodeCallbacks()

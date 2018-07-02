@@ -33,6 +33,7 @@ InversePalindrome.com
 #include "SpeedBoostComponent.hpp"
 #include "RegenBoostComponent.hpp"
 #include "AccelerationComponent.hpp"
+#include "DistanceJointComponent.hpp"
 
 #include <cocos/platform/CCFileUtils.h>
 
@@ -44,6 +45,8 @@ EntityFactory::EntityFactory(entityx::EntityManager& entityManager, entityx::Eve
 	componentParsers.emplace("Sprite", [](auto entity, const auto& componentNode) { entity.assign<SpriteComponent>(componentNode); });
 	componentParsers.emplace("Label", [](auto entity, const auto& componentNode) { entity.assign<LabelComponent>(componentNode); });
 	componentParsers.emplace("Particle", [](auto entity, const auto& componentNode) { entity.assign<ParticleComponent>(componentNode); });
+	componentParsers.emplace("Body", [&eventManager](auto entity, const auto& componentNode) { eventManager.emit(CreateBody{ entity, componentNode }); });
+	componentParsers.emplace("DistanceJoint", [&eventManager](auto entity, const auto& componentNode) { eventManager.emit(CreateDistanceJoint{ entity, componentNode }); });
 	componentParsers.emplace("Transform", [](auto entity, const auto& componentNode) { entity.assign<TransformComponent>(componentNode); });
 	componentParsers.emplace("Object", [](auto entity, const auto& componentNode) { entity.assign<ObjectComponent>(componentNode); });
 	componentParsers.emplace("Pursue", [](auto entity, const auto& componentNode) { entity.assign<PursueComponent>(componentNode); });
@@ -53,7 +56,6 @@ EntityFactory::EntityFactory(entityx::EntityManager& entityManager, entityx::Eve
 	componentParsers.emplace("Flock", [](auto entity, const auto& componentNode) { entity.assign<FlockComponent>(componentNode); });
 	componentParsers.emplace("Follow", [](auto entity, const auto& componentNode) { entity.assign<FollowComponent>(componentNode); });
 	componentParsers.emplace("Queue", [](auto entity, const auto& componentNode) { entity.assign<QueueComponent>(componentNode); });
-	componentParsers.emplace("Body", [&eventManager](auto entity, const auto& componentNode) { eventManager.emit(CreateBody{ entity, componentNode }); });
 	componentParsers.emplace("Satellite", [](auto entity, const auto& componentNode) { entity.assign<SatelliteComponent>(componentNode); });
 	componentParsers.emplace("Drop", [](auto entity, const auto& componentNode) { entity.assign<DropComponent>(componentNode); });
 	componentParsers.emplace("Health", [](auto entity, const auto& componentNode) { entity.assign<HealthComponent>(componentNode); });

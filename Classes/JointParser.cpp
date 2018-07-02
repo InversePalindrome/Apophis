@@ -16,24 +16,29 @@ void JointParser::parseJointDef(b2JointDef& jointDef, const pugi::xml_node& join
 	}
 }
 
-void JointParser::parseDistanceJointDef(b2DistanceJointDef& distanceJointDef, const pugi::xml_node& jointNode)
+void JointParser::parseDistanceJointDef(b2DistanceJointDef& distanceJointDef, b2Body* bodyA, b2Body* bodyB, const pugi::xml_node& jointNode)
 {
 	parseJointDef(distanceJointDef, jointNode);
 
+	b2Vec2 localAnchorA(0.f, 0.f);
+	b2Vec2 localAnchorB(0.f, 0.f);
+
 	if (const auto anchorAXAttribute = jointNode.attribute("jointAX"))
 	{
-		distanceJointDef.localAnchorA.x = anchorAXAttribute.as_float();
+		localAnchorA.x = anchorAXAttribute.as_float();
 	}
 	if (const auto anchorAYAttribute = jointNode.attribute("jointAY"))
 	{
-		distanceJointDef.localAnchorA.y = anchorAYAttribute.as_float();
+		localAnchorA.y = anchorAYAttribute.as_float();
 	}
 	if (const auto anchorBXAttribute = jointNode.attribute("jointBX"))
 	{
-		distanceJointDef.localAnchorB.x = anchorBXAttribute.as_float();
+		localAnchorB.x = anchorBXAttribute.as_float();
 	}
 	if (const auto anchorBYAttribute = jointNode.attribute("jointBY"))
 	{
-		distanceJointDef.localAnchorB.y = anchorBYAttribute.as_float();
+		localAnchorB.y = anchorBYAttribute.as_float();
 	}
+
+	distanceJointDef.Initialize(bodyA, bodyB, localAnchorA, localAnchorB);
 }

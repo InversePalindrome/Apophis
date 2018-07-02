@@ -24,7 +24,7 @@ void OrbitalSystem::update(entityx::EntityManager& entityManager, entityx::Event
 		{
 			if (auto primaryBody = primaryEntity.component<BodyComponent>())
 			{
-		
+				body->applyLinearImpulse(SteeringBehaviors::orbit(body->getPosition(), primaryBody->getPosition(), body->getLinearVelocity(), speed->getMaxLinearSpeed()));
 			}
 		}
 	}

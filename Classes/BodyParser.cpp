@@ -16,6 +16,14 @@ void BodyParser::parseBodyDef(b2BodyDef& bodyDef, const pugi::xml_node& bodyNode
 	{
 		bodyDef.type = static_cast<b2BodyType>(bodyTypeAttribute.as_int());
 	}
+	if (const auto xPositionAttribute = bodyNode.attribute("x"))
+	{
+		bodyDef.position.x = xPositionAttribute.as_float();
+	}
+	if (const auto yPositionAttribute = bodyNode.attribute("y"))
+	{
+		bodyDef.position.y = yPositionAttribute.as_float();
+	}
 	if (const auto linearDampingAttribute = bodyNode.attribute("linearDamping"))
 	{
 		bodyDef.linearDamping = linearDampingAttribute.as_float();

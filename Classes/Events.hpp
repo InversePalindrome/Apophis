@@ -31,9 +31,8 @@ struct CreateBody
 
 struct CreateDistanceJoint
 {
-	mutable entityx::Entity jointEntity;
-	mutable entityx::Entity entityA;
-	mutable entityx::Entity entityB;
+	mutable entityx::Entity entity;
+	pugi::xml_node jointNode;
 };
 
 struct ShootProjectile

@@ -39,16 +39,16 @@ void CombatSystem::receive(const entityx::EntityDestroyedEvent& event)
 {
 	auto destroyedEntity = event.entity;
 	
-	auto destroyedGeometry = destroyedEntity.component<TransformComponent>();
+	auto destroyedTransform = destroyedEntity.component<TransformComponent>();
 	const auto destroyedExplosion = destroyedEntity.component<ExplosionComponent>();
 	
-	if (destroyedGeometry && destroyedExplosion)
+	if (destroyedTransform && destroyedExplosion)
 	{
 		auto explosionEntity = entityFactory.createEntity(destroyedExplosion->getExplosionName());
 		
-		if (auto explosionGeometry = explosionEntity.component<TransformComponent>())
+		if (auto explosionTransform = explosionEntity.component<TransformComponent>())
 		{
-			explosionGeometry->setPosition(destroyedGeometry->getPosition());
+			explosionTransform->setPosition(destroyedTransform->getPosition());
 			
 			timer.add(destroyedExplosion->getExplosionTime(), [explosionEntity](auto id) mutable
 			{
@@ -77,7 +77,7 @@ void CombatSystem::receive(const ShootProjectile& event)
 		auto projectileBody = projectileEntity.component<BodyComponent>();
 		const auto projectileSpeed = projectileEntity.component<SpeedComponent>();
 		
-		if (shooterBody && projectileBody && projectileSpeed)
+		if (shooterBody && projectileBody && projectileBody && projectileSpeed)
 		{
 			const b2Vec2 shooterSize(shooterBody->getAABB().upperBound - shooterBody->getAABB().lowerBound);
 			const b2Vec2 projectileSize(projectileBody->getAABB().upperBound - projectileBody->getAABB().lowerBound);			

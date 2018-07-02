@@ -8,7 +8,7 @@
     <Sprite frame="Spaceship3"></Sprite>
     <Object>Enemy</Object>
     <Body type="2" x="-5" y="-18" fixedRotation="false">
-      <Circle x="0" y="0" radius="1.6" density="0.3"></Circle>
+      <Circle x="0" y="0" radius="1.4" density="0.3"></Circle>
     </Body>
     <Speed angular="10"></Speed>
     <Weapon projectileName="Laser" projectileVelocity="16" reloadTime="2000"></Weapon>

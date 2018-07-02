@@ -34,15 +34,15 @@ void ItemSystem::receive(const entityx::EntityDestroyedEvent& event)
 	auto destroyedEntity = event.entity;
 
 	auto destroyedDrop = destroyedEntity.component<DropComponent>();
-	const auto destroyedGeometry = destroyedEntity.component<TransformComponent>();
+	const auto destroyedTransform = destroyedEntity.component<TransformComponent>();
 
-	if (destroyedDrop && destroyedGeometry)
+	if (destroyedDrop && destroyedTransform)
 	{
 		auto itemEntity = entityFactory.createEntity(destroyedDrop->getItem());
 
 		if (auto itemGeometry = itemEntity.component<TransformComponent>())
 		{
-			itemGeometry->setPosition(destroyedGeometry->getPosition());
+			itemGeometry->setPosition(destroyedTransform->getPosition());
 		}
 	}
 }

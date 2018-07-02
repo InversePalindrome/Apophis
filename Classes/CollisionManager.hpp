@@ -15,10 +15,8 @@ InversePalindrome.com
 #include <entityx/Event.h>
 #include <entityx/Entity.h>
 
-#include <vector>
 #include <utility>
 #include <optional>
-#include <functional>
 
 
 class CollisionManager : public b2ContactListener
@@ -28,11 +26,8 @@ public:
 	CollisionManager(const CollisionManager&) = delete;
 	CollisionManager& operator= (const CollisionManager&) = delete;
 
-	void update();
-
 private:
 	entityx::EventManager& eventManager;
-	std::vector<std::function<void()>> collisionCallbacks;
 
 	virtual void BeginContact(b2Contact* contact) override;
 	virtual void EndContact(b2Contact* contact) override;

@@ -3,12 +3,13 @@
   <Tags>
   </Tags>
   <Components>
+     <Transform x="20"></Transform>
     <Sprite frame="BlueAsteroid"></Sprite>
     <Object>Asteroid</Object>
-    <Body type="2" x="30" y="0">
+    <Body type="2">
       <Circle radius="1.8" density="0.3"></Circle>
     </Body>
-    <Speed linear="15"></Speed>
-    <Satellite>2</Satellite>
+    <Speed linear="10"></Speed>
+    <Satellite>1</Satellite>
   </Components>
 </Entity>

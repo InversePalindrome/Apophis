@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
   <Components>
-  <Sprite>Explosion1</Sprite>
+  <Sprite frame="Explosion1"></Sprite>
     <Sound>
     <Explode>Boom.mp3</Explode>
   </Sound>
   <Object>Explosion</Object>
-  <Geometry></Geometry>
+    <Transform></Transform>
   <Body type="2" bullet="true">
     <Circle radius="0.8" density="0.001"></Circle>
   </Body>

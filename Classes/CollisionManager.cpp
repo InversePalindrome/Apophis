@@ -19,39 +19,21 @@ CollisionManager::CollisionManager(entityx::EventManager& eventManager) :
 {
 }
 
-void CollisionManager::update()
-{
-	for (const auto& collisionCallback : collisionCallbacks)
-	{
-		collisionCallback();
-	}
-
-	collisionCallbacks.clear();
-}
-
 void CollisionManager::BeginContact(b2Contact* contact)
 {
 	const auto* bodyA = contact->GetFixtureA()->GetBody();
 	const auto* bodyB = contact->GetFixtureB()->GetBody();
 
-	collisionCallbacks.push_back([this, bodyA, bodyB]()
+	if (auto collisionPair = getCollisionPair(bodyA, bodyB, ObjectType::Projectile, ObjectType::Alive))
 	{
-		if (!bodyA || !bodyB)
-		{
-			return;
-		}
+		eventManager.emit(CombatOcurred{ collisionPair->first, collisionPair->second });
 
-		if (auto collisionPair = getCollisionPair(bodyA, bodyB, ObjectType::Projectile, ObjectType::Alive))
-		{
-			eventManager.emit(CombatOcurred{ collisionPair->first, collisionPair->second });
-
-			collisionPair->first.destroy();
-		}
-		else if (auto collisionPair = getCollisionPair(bodyA, bodyB, ObjectType::Player, ObjectType::Item))
-		{
-			eventManager.emit(PickedUpItem{ collisionPair->first, collisionPair->second });
-		}
-	});
+		collisionPair->first.destroy();
+	}
+	else if (auto collisionPair = getCollisionPair(bodyA, bodyB, ObjectType::Player, ObjectType::Item))
+	{
+		eventManager.emit(PickedUpItem{ collisionPair->first, collisionPair->second });
+	}
 }
 
 void CollisionManager::EndContact(b2Contact* contact)

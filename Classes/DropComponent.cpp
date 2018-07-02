@@ -20,6 +20,8 @@ DropComponent::DropComponent(const pugi::xml_node& componentNode) :
 
 std::string DropComponent::getItem()
 {
+	std::discrete_distribution<> distribution(std::cbegin(weights), std::cend(weights));
+
 	return items.at(distribution(randomEngine));
 }
 
@@ -27,8 +29,6 @@ void DropComponent::addItem(const std::string& item, int weight)
 {
 	items.push_back(item);
 	weights.push_back(weight);
-
-	distribution.param(std::discrete_distribution<>(std::cbegin(weights), std::cend(weights)).param());
 }
 
 void DropComponent::removeItem(const std::string& item)
@@ -37,6 +37,4 @@ void DropComponent::removeItem(const std::string& item)
 
 	items.erase(std::cbegin(items) + index);
 	weights.erase(std::cbegin(weights) + index);
-
-	distribution.param(std::discrete_distribution<>(std::cbegin(weights), std::cend(weights)).param());
 }
