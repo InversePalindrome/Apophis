@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "BodyComponent.hpp"
 
+#include <algorithm>
+
 
 BodyComponent::BodyComponent(b2Body* body) :
 	body(body),

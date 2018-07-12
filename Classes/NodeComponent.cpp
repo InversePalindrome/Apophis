@@ -31,12 +31,10 @@ NodeComponent::NodeComponent(cocos2d::Node* node, const pugi::xml_node& componen
 	{
 		node->setScaleY(yScaleAttribute.as_float());
 	}
-	
-	const auto rAttribute = componentNode.attribute("R");
-	const auto gAttribute = componentNode.attribute("G");
-	const auto bAttribute = componentNode.attribute("B");
-
-	if (rAttribute && gAttribute && bAttribute)
+	if (const auto rAttribute = componentNode.attribute("R"),
+	    gAttribute = componentNode.attribute("G"),
+	    bAttribute = componentNode.attribute("B");
+	    rAttribute && gAttribute && bAttribute)
 	{
 		setColor(cocos2d::Color3B(rAttribute.as_uint(), gAttribute.as_uint(), bAttribute.as_uint()));
 	}

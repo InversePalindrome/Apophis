@@ -17,9 +17,8 @@ InversePalindrome.com
 bool Application::applicationDidFinishLaunching()
 {
 	auto* director = cocos2d::Director::getInstance();
-	auto* view = director->getOpenGLView();
 
-	if (!view)
+	if (auto* view = director->getOpenGLView(); !view)
 	{
 		view = cocos2d::GLViewImpl::create("Apophis");
 		view->setFrameSize(2048.f, 1536.f);

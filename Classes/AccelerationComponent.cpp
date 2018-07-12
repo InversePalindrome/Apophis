@@ -5,7 +5,6 @@ InversePalindrome.com
 */
 
 
-
 #include "AccelerationComponent.hpp"
 
 

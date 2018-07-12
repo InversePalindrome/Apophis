@@ -18,6 +18,10 @@ public:
 	int getPrimaryID() const;
 	void setPrimaryID(int primaryID);
 
+	std::int8_t getOrbitDirection() const;
+	void setOrbitDirection(std::int8_t orbitDirection);
+
 private:
 	int primaryID;
+	std::int8_t orbitDirection;
 };

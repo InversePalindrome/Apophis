@@ -26,7 +26,7 @@ void CollisionManager::BeginContact(b2Contact* contact)
 
 	if (auto collisionPair = getCollisionPair(bodyA, bodyB, ObjectType::Projectile, ObjectType::Alive))
 	{
-		eventManager.emit(CombatOcurred{ collisionPair->first, collisionPair->second });
+		eventManager.emit(CombatOcurred{collisionPair->first, collisionPair->second });
 
 		collisionPair->first.destroy();
 	}
@@ -54,20 +54,17 @@ void CollisionManager::PostSolve(b2Contact* contact, const b2ContactImpulse* imp
 std::optional<std::pair<entityx::Entity, entityx::Entity>>
 CollisionManager::getCollisionPair(const b2Body* bodyA, const b2Body* bodyB, ObjectType objectTypeA, ObjectType objectTypeB)
 {
-    auto* userDataA = static_cast<std::any*>(bodyA->GetUserData());
-	auto* userDataB = static_cast<std::any*>(bodyB->GetUserData());
-
-	if (userDataA->type() == typeid(entityx::Entity) && userDataB->type() == typeid(entityx::Entity))
+	if (auto* userDataA = static_cast<std::any*>(bodyA->GetUserData()),
+	    *userDataB = static_cast<std::any*>(bodyB->GetUserData());
+	    userDataA->type() == typeid(entityx::Entity) && userDataB->type() == typeid(entityx::Entity))
 	{
-		auto* entityA = std::any_cast<entityx::Entity>(userDataA);
-	    auto* entityB = std::any_cast<entityx::Entity>(userDataB);
-
-		if (*entityA && *entityB)
+		if (auto* entityA = std::any_cast<entityx::Entity>(userDataA),
+		    *entityB = std::any_cast<entityx::Entity>(userDataB); 
+		    *entityA && *entityB)
 		{
-			const auto objectA = entityA->component<ObjectComponent>();
-			const auto objectB = entityB->component<ObjectComponent>();
-
-			if (objectA && objectB)
+			if (const auto objectA = entityA->component<ObjectComponent>(),
+				objectB = entityB->component<ObjectComponent>();
+				objectA && objectB)
 			{
 				if (objectA->getObjectType() & objectTypeA && objectB->getObjectType() & objectTypeB)
 				{

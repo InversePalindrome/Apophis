@@ -9,7 +9,7 @@
     <Body type="2">
       <Circle radius="1.8" density="0.3"></Circle>
     </Body>
-    <Speed linear="10"></Speed>
-    <Satellite>1</Satellite>
+    <Speed linear="10" angular="25"></Speed>
+    <Satellite primaryID="1"></Satellite>
   </Components>
 </Entity>

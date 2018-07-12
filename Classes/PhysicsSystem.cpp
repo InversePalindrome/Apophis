@@ -107,10 +107,7 @@ void PhysicsSystem::receive(const EntityCreated& event)
 {
 	auto setupTransform = [event]()
 	{
-		auto body = event.entity.component<BodyComponent>();
-		auto transform = event.entity.component<TransformComponent>();
-
-		if (body && transform)
+		if (auto[body, transform] = event.entity.components<BodyComponent, TransformComponent>(); body && transform)
 		{
 			body->setPosition(transform->getPosition());
 			body->setAngle(Conversions::degreesToRadians(transform->getAngle()));
@@ -203,15 +200,13 @@ void PhysicsSystem::receive(const CreateDistanceJoint& event)
 		idB = idBAttribute.as_uint();
 	}
 
-	auto entityA = entityManager.get(entityManager.create_id(idA));
-	auto entityB = entityManager.get(entityManager.create_id(idB));
-
-	if (entityA && entityB)
+	if (auto entityA = entityManager.get(entityManager.create_id(idA)),
+        entityB = entityManager.get(entityManager.create_id(idB)); 
+	    entityA && entityB)
 	{
-		auto bodyA = entityA.component<BodyComponent>();
-		auto bodyB = entityB.component<BodyComponent>();
-
-		if (bodyA && bodyB)
+		if (auto bodyA = entityA.component<BodyComponent>(),
+		    bodyB = entityB.component<BodyComponent>(); 
+		    bodyA && bodyB)
 		{
 			JointParser::parseDistanceJointDef(distanceJointDef, bodyA->getBody(), bodyB->getBody(), event.jointNode);
 

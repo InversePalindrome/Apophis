@@ -10,7 +10,7 @@ InversePalindrome.com
 
 SpeedComponent::SpeedComponent(const pugi::xml_node& componentNode) :
 	maxLinearSpeed(10.f),
-	maxAngularSpeed(10.f)
+	maxAngularSpeed(5.f)
 {
 	if (const auto maxLinearSpeedAttribute = componentNode.attribute("linear"))
 	{

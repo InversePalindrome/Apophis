@@ -19,15 +19,11 @@ void ActionSystem::configure(entityx::EventManager& eventManager)
 
 void ActionSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
-
 }
 
 void ActionSystem::receive(const PlayAnimation& event)
 {
-	auto sprite = event.entity.component<SpriteComponent>();
-	auto animation = event.entity.component<AnimationComponent>();
-
-	if (sprite && animation && animation->hasAnimation(event.animation))
+	if (auto[sprite, animation] = event.entity.components<SpriteComponent, AnimationComponent>(); sprite && animation && animation->hasAnimation(event.animation))
 	{
 		auto* animate = cocos2d::Animate::create(animation->getAnimation(event.animation));
 

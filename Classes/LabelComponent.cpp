@@ -30,13 +30,11 @@ LabelComponent::LabelComponent(const pugi::xml_node& componentNode) :
 	{
 		setVerticalAlignment(static_cast<cocos2d::TextVAlignment>(VAlignmentAttribute.as_int()));
 	}
-	
-	const auto textRAttribute = componentNode.attribute("textR");
-	const auto textGAttribute = componentNode.attribute("textG");
-	const auto textBAttribute = componentNode.attribute("textB");
-	const auto textAAttribute = componentNode.attribute("textA");
-	
-	if (textRAttribute && textGAttribute && textBAttribute)
+	if (const auto textRAttribute = componentNode.attribute("textR"),
+	    textGAttribute = componentNode.attribute("textG"),
+	    textBAttribute = componentNode.attribute("textB"),
+	    textAAttribute = componentNode.attribute("textA"); 
+	    textRAttribute && textGAttribute && textBAttribute)
 	{
 		setTextColor(cocos2d::Color4B(textRAttribute.as_uint(), textGAttribute.as_uint(), textBAttribute.as_uint(), textAAttribute.as_uint()));
 	}

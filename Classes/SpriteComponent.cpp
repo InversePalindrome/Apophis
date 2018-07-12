@@ -16,13 +16,11 @@ SpriteComponent::SpriteComponent(const pugi::xml_node& componentNode) :
 	{
 		setSpriteFrame(spriteFrameAttribute.as_string());
 	}
-	
-	const auto textureXAttribute = componentNode.attribute("textureX");
-	const auto textureYAttribute = componentNode.attribute("textureR");
-	const auto textureWidthAttribute = componentNode.attribute("textureWidth");
-	const auto textureHeightAttribute = componentNode.attribute("textureHeight");
-	
-	if (textureXAttribute && textureYAttribute && textureWidthAttribute && textureHeightAttribute)
+	if (const auto textureXAttribute = componentNode.attribute("textureX"),
+	    textureYAttribute = componentNode.attribute("textureR"),
+	    textureWidthAttribute = componentNode.attribute("textureWidth"),
+	    textureHeightAttribute = componentNode.attribute("textureHeight"); 
+	    textureXAttribute && textureYAttribute && textureWidthAttribute && textureHeightAttribute)
 	{
 		setTextureRect(cocos2d::Rect(textureXAttribute.as_float(), textureYAttribute.as_float(), textureWidthAttribute.as_float(), textureHeightAttribute.as_float()));
 	}

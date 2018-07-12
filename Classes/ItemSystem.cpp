@@ -32,11 +32,8 @@ void ItemSystem::update(entityx::EntityManager& entityManager, entityx::EventMan
 void ItemSystem::receive(const entityx::EntityDestroyedEvent& event)
 {
 	auto destroyedEntity = event.entity;
-
-	auto destroyedDrop = destroyedEntity.component<DropComponent>();
-	const auto destroyedTransform = destroyedEntity.component<TransformComponent>();
-
-	if (destroyedDrop && destroyedTransform)
+	
+	if (auto[destroyedDrop, destroyedTransform] = destroyedEntity.components<DropComponent, TransformComponent>(); destroyedDrop && destroyedTransform)
 	{
 		auto itemEntity = entityFactory.createEntity(destroyedDrop->getItem());
 

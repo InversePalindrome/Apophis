@@ -72,6 +72,8 @@ bool GameNode::init()
     eventManager.emit(PlayAnimation{ coin, Animation::Alert, true });
     entityFactory.createEntity("BlueAsteroid");
 	entityFactory.createEntity("PlanetJoint");
+	entityFactory.createEntity("RockAsteroid");
+	entityFactory.createEntity("PlanetJoint2");
 
 	return true;
 }

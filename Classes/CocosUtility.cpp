@@ -16,10 +16,8 @@ InversePalindrome.com
 void CocosUtility::createSearchPaths(const std::string& filename)
 {
 	auto* files = cocos2d::FileUtils::getInstance();
-
-	pugi::xml_document doc;
 	
-	if (doc.load_file(files->fullPathForFilename(filename + ".xml").c_str()))
+	if (pugi::xml_document doc; doc.load_file(files->fullPathForFilename(filename + ".xml").c_str()))
 	{
 		if (const auto searchPathsNode = doc.child("SearchPaths"))
 		{
@@ -33,9 +31,7 @@ void CocosUtility::createSearchPaths(const std::string& filename)
 
 void CocosUtility::initSpriteFrames(const std::string& filename)
 {
-	pugi::xml_document doc;
-
-	if (doc.load_file(cocos2d::FileUtils::getInstance()->fullPathForFilename(filename + ".xml").c_str()))
+	if (pugi::xml_document doc; doc.load_file(cocos2d::FileUtils::getInstance()->fullPathForFilename(filename + ".xml").c_str()))
 	{
 		if (const auto spritesNode = doc.child("SpriteFrames"))
 		{

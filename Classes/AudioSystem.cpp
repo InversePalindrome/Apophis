@@ -41,9 +41,7 @@ void AudioSystem::receive(const entityx::ComponentRemovedEvent<SoundComponent>& 
 
 void AudioSystem::receive(const PlayAudio& event)
 {
-	auto sound = event.entity.component<SoundComponent>();
-
-	if (sound && sound->hasSoundFile(event.sound))
+	if (auto sound = event.entity.component<SoundComponent>(); sound && sound->hasSoundFile(event.sound))
 	{
 		auto soundID = cocos2d::experimental::AudioEngine::play2d(sound->getSoundFile(event.sound), event.loop, AppSettings::getInstance().getSoundVolume());
 
@@ -61,9 +59,7 @@ void AudioSystem::receive(const PlayAudio& event)
 
 void AudioSystem::receive(const StopAudio& event)
 {
-	auto sound = event.entity.component<SoundComponent>();
-
-	if (sound && sound->hasSoundID(event.sound))
+	if (auto sound = event.entity.component<SoundComponent>(); sound && sound->hasSoundID(event.sound))
 	{
 		cocos2d::experimental::AudioEngine::stop(sound->getSoundID(event.sound));
 

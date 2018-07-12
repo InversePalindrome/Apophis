@@ -28,15 +28,12 @@ ParticleComponent::ParticleComponent(const pugi::xml_node& componentNode) :
 	{
 		setEmissionRate(emissionRateAttribute.as_float());
 	}
-	
-	const auto xGravityAttribute = componentNode.attribute("xGravity");
-	const auto yGravityAttribute = componentNode.attribute("yGravity");
-
-	if (xGravityAttribute && yGravityAttribute)
+	if (const auto xGravityAttribute = componentNode.attribute("xGravity"),
+		yGravityAttribute = componentNode.attribute("yGravity"); 
+	    xGravityAttribute && yGravityAttribute)
 	{
 		setGravity({ xGravityAttribute.as_float(), yGravityAttribute.as_float() });
 	}
-	
 	if (const auto lifeAttribute = componentNode.attribute("life"))
 	{
 		setLife(lifeAttribute.as_float());
@@ -85,43 +82,35 @@ ParticleComponent::ParticleComponent(const pugi::xml_node& componentNode) :
 	{
 		setEndRadiusVar(endRadiusVarAttribute.as_float());
 	}
-
-	const auto startColorRAttribute = componentNode.attribute("startR");
-	const auto startColorGAttribute = componentNode.attribute("startG");
-	const auto startColorBAttribute = componentNode.attribute("startB");
-	const auto startColorAAttribute = componentNode.attribute("startA");
-
-	if (startColorRAttribute && startColorBAttribute && startColorGAttribute && startColorAAttribute)
+	if (const auto startColorRAttribute = componentNode.attribute("startR"),
+		startColorGAttribute = componentNode.attribute("startG"),
+		startColorBAttribute = componentNode.attribute("startB"),
+		startColorAAttribute = componentNode.attribute("startA");
+	startColorRAttribute && startColorBAttribute && startColorGAttribute && startColorAAttribute)
 	{
 		setStartColor(cocos2d::Color4F(startColorRAttribute.as_uint(), startColorGAttribute.as_uint(), startColorBAttribute.as_uint(), startColorAAttribute.as_uint()));
 	}
-
-	const auto startColorVarRAttribute = componentNode.attribute("startVarR");
-	const auto startColorVarGAttribute = componentNode.attribute("startVarG");
-	const auto startColorVarBAttribute = componentNode.attribute("startVarB");
-	const auto startColorVarAAttribute = componentNode.attribute("startVarA");
-
-	if (startColorVarRAttribute && startColorVarGAttribute && startColorVarBAttribute && startColorVarAAttribute)
+	if (const auto startColorVarRAttribute = componentNode.attribute("startVarR"),
+	    startColorVarGAttribute = componentNode.attribute("startVarG"),
+	    startColorVarBAttribute = componentNode.attribute("startVarB"),
+        startColorVarAAttribute = componentNode.attribute("startVarA");
+	    startColorVarRAttribute && startColorVarGAttribute && startColorVarBAttribute && startColorVarAAttribute)
 	{
 		setStartColorVar(cocos2d::Color4F(startColorVarRAttribute.as_uint(), startColorVarGAttribute.as_uint(), startColorVarBAttribute.as_uint(), startColorVarAAttribute.as_uint()));
 	}
-
-	const auto endColorRAttribute = componentNode.attribute("endR");
-	const auto endColorGAttribute = componentNode.attribute("endG");
-	const auto endColorBAttribute = componentNode.attribute("endB");
-	const auto endColorAAttribute = componentNode.attribute("endA");
-
-	if (endColorRAttribute && endColorBAttribute && endColorGAttribute && endColorAAttribute)
+	if (const auto endColorRAttribute = componentNode.attribute("endR"),
+	    endColorGAttribute = componentNode.attribute("endG"),
+	    endColorBAttribute = componentNode.attribute("endB"),
+	    endColorAAttribute = componentNode.attribute("endA"); 
+	    endColorRAttribute && endColorBAttribute && endColorGAttribute && endColorAAttribute)
 	{
 		setEndColor(cocos2d::Color4F(endColorRAttribute.as_uint(), endColorGAttribute.as_uint(), endColorBAttribute.as_uint(), endColorAAttribute.as_uint()));
 	}
-
-	const auto endColorVarRAttribute = componentNode.attribute("endVarR");
-	const auto endColorVarGAttribute = componentNode.attribute("endVarG");
-	const auto endColorVarBAttribute = componentNode.attribute("endVarB");
-	const auto endColorVarAAttribute = componentNode.attribute("endVarA");
-
-	if (endColorVarRAttribute && endColorVarBAttribute && endColorVarGAttribute && endColorVarAAttribute)
+	if (const auto endColorVarRAttribute = componentNode.attribute("endVarR"),
+	    endColorVarGAttribute = componentNode.attribute("endVarG"),
+	    endColorVarBAttribute = componentNode.attribute("endVarB"),
+		endColorVarAAttribute = componentNode.attribute("endVarA");
+	    endColorVarRAttribute && endColorVarBAttribute && endColorVarGAttribute && endColorVarAAttribute)
 	{
 		setEndColorVar(cocos2d::Color4F(endColorVarRAttribute.as_uint(), endColorVarGAttribute.as_uint(), endColorVarBAttribute.as_uint(), endColorVarAAttribute.as_uint()));
 	}

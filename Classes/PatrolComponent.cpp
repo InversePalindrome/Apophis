@@ -13,12 +13,11 @@ PatrolComponent::PatrolComponent(const pugi::xml_node& componentNode) :
 {
 	for (const auto pointNode : componentNode.children("Point"))
 	{
-		const auto xAttribute = pointNode.attribute("x");
-		const auto yAttribute = pointNode.attribute("y");
-
-		if (xAttribute && yAttribute)
+		if (const auto xPositionAttribute = pointNode.attribute("x"),
+			yPositionAttribute = pointNode.attribute("y");
+		    xPositionAttribute && yPositionAttribute)
 		{
-			path.push_back({ xAttribute.as_float(), yAttribute.as_float() });
+			path.push_back({ xPositionAttribute.as_float(), yPositionAttribute.as_float() });
 		}
 	}
 }

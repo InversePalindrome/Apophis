@@ -39,10 +39,8 @@ void CombatSystem::receive(const entityx::EntityDestroyedEvent& event)
 {
 	auto destroyedEntity = event.entity;
 	
-	auto destroyedTransform = destroyedEntity.component<TransformComponent>();
-	const auto destroyedExplosion = destroyedEntity.component<ExplosionComponent>();
-	
-	if (destroyedTransform && destroyedExplosion)
+	if (const auto [destroyedTransform, destroyedExplosion] = destroyedEntity.components<TransformComponent, ExplosionComponent>();
+	    destroyedTransform && destroyedExplosion)
 	{
 		auto explosionEntity = entityFactory.createEntity(destroyedExplosion->getExplosionName());
 		
@@ -65,19 +63,13 @@ void CombatSystem::receive(const entityx::EntityDestroyedEvent& event)
 
 void CombatSystem::receive(const ShootProjectile& event)
 {
-	auto shooterWeapon = event.shooter.component<WeaponComponent>();
-
-	if (shooterWeapon && shooterWeapon->isReloaded())
+	if (auto [shooterWeapon, shooterBody] = event.shooter.components<WeaponComponent, BodyComponent>(); shooterWeapon && shooterBody && shooterWeapon->isReloaded())
 	{
 		shooterWeapon->setReloadStatus(false);
 
-		const auto shooterBody = event.shooter.component<BodyComponent>();
-
 		auto projectileEntity = entityFactory.createEntity(shooterWeapon->getProjectileName());
-		auto projectileBody = projectileEntity.component<BodyComponent>();
-		const auto projectileSpeed = projectileEntity.component<SpeedComponent>();
 		
-		if (shooterBody && projectileBody && projectileBody && projectileSpeed)
+		if (auto[projectileBody, projectileSpeed] = projectileEntity.components<BodyComponent, SpeedComponent>(); projectileBody && projectileSpeed)
 		{
 			const b2Vec2 shooterSize(shooterBody->getAABB().upperBound - shooterBody->getAABB().lowerBound);
 			const b2Vec2 projectileSize(projectileBody->getAABB().upperBound - projectileBody->getAABB().lowerBound);			

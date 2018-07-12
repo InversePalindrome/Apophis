@@ -77,10 +77,8 @@ EntityFactory::EntityFactory(entityx::EntityManager& entityManager, entityx::Eve
 entityx::Entity EntityFactory::createEntity(const std::string& filename)
 {
 	auto entity = entityManager.create();
-
-	pugi::xml_document doc;
 	
-	if (doc.load_file(cocos2d::FileUtils::getInstance()->fullPathForFilename(filename + ".xml").c_str()))
+	if (pugi::xml_document doc; doc.load_file(cocos2d::FileUtils::getInstance()->fullPathForFilename(filename + ".xml").c_str()))
 	{
 		if (const auto entityNode = doc.child("Entity"))
 		{
