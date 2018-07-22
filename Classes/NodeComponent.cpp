@@ -129,3 +129,13 @@ void NodeComponent::setColor(const cocos2d::Color3B& color)
 {
 	node->setColor(color);
 }
+
+bool NodeComponent::isVisible() const
+{
+	return node->isVisible();
+}
+
+void NodeComponent::setVisible(bool visible)
+{
+	node->setVisible(visible);
+}

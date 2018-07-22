@@ -31,7 +31,7 @@ public:
 	virtual void receive(const entityx::EntityDestroyedEvent& event);
 	virtual void receive(const entityx::ComponentRemovedEvent<BodyComponent>& event);
 	virtual void receive(const entityx::ComponentRemovedEvent<DistanceJointComponent>& event);
-	virtual void receive(const EntityCreated& event);
+	virtual void receive(const EntityParsed& event);
 	virtual void receive(const CreateBody& event);
 	virtual void receive(const CreateDistanceJoint& event);
 

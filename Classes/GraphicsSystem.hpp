@@ -10,7 +10,6 @@ InversePalindrome.com
 #include "Map.hpp"
 #include "Tags.hpp"
 #include "Events.hpp" 
-#include "HudNode.hpp"
 #include "LabelComponent.hpp"
 #include "SpriteComponent.hpp"
 #include "HealthComponent.hpp"
@@ -32,7 +31,7 @@ public:
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
-	virtual void receive(const EntityCreated& event);
+	virtual void receive(const EntityParsed& event);
 	virtual void receive(const entityx::ComponentAddedEvent<SpriteComponent>& event);
 	virtual void receive(const entityx::ComponentAddedEvent<LabelComponent>& event);
 	virtual void receive(const entityx::ComponentAddedEvent<ParticleComponent>& event);

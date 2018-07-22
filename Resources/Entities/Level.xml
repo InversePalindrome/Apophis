@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entities>
+  <Entity>
+    <Tags>
+      <Player></Player>
+    </Tags>
+    <Components>
+      <Sprite frame="Spaceship4"></Sprite>
+      <Transform x="0" y="10"></Transform>
+      <Weapon reloadTime="400" projectileName="Laser"></Weapon>
+      <Speed angular="100" linear="35"></Speed>
+      <Object>Player</Object>
+      <Body type="2" linearDamping="0.4">
+        <Circle x="0" y="0" radius="1.5" density="0.1"></Circle>
+      </Body>
+      <Acceleration linear="2"></Acceleration>
+      <Explosion name="Boom" time="2000"></Explosion>
+      <Sound>
+        <Shoot>Laser.mp3</Shoot>
+      </Sound>
+      <Health>100</Health>
+      <Vision>5</Vision>
+    </Components>
+  </Entity>
+  
+  <Entity>
+    <Tags>
+      <Striker></Striker>
+    </Tags>
+    <Components>
+      <Transform x="10" y="10" width="1.6" height="1.6"> </Transform>
+      <Sprite frame="Spaceship3"></Sprite>
+      <Object>Enemy</Object>
+      <Body type="2" x="-5" y="-18" fixedRotation="false">
+        <Circle x="0" y="0" radius="1.4" density="0.3"></Circle>
+      </Body>
+      <Speed angular="10"></Speed>
+      <Weapon projectileName="Laser" projectileVelocity="16" reloadTime="2000"></Weapon>
+      <Explosion name="Boom" time="2000"></Explosion>
+      <Drop>
+        <SpeedBoost>1</SpeedBoost>
+        <RegenBoost>1</RegenBoost>
+      </Drop>
+      <Health>80</Health>
+      <Vision>25</Vision>
+      <Acceleration linear="2"></Acceleration>
+      <Avoid distance="5" force="30"></Avoid>
+      <Wander></Wander>
+      <Queue></Queue>
+      <Flock id="1"></Flock>
+      <Patrol>
+        <Point x="15" y="15"></Point>
+        <Point x="15" y="-15"></Point>
+        <Point x="0" y="-15"></Point>
+        <Point x="0" y="15"></Point>
+      </Patrol>
+      <Movement>20</Movement>
+    </Components>
+  </Entity>
+
+  <Entity>
+    <Components>
+      <Transform></Transform>
+      <Body type="0" density="0.3">
+        <Circle radius="8.5"></Circle>
+      </Body>
+      <Sprite frame="Planet_D"></Sprite>
+      <Object>Asteroid</Object>
+    </Components>
+  </Entity>
+
+  <Entity>
+    <Components>
+      <Transform x="20"></Transform>
+      <Sprite frame="BlueAsteroid"></Sprite>
+      <Object>Asteroid</Object>
+      <Body type="2">
+        <Circle radius="1.8" density="0.3"></Circle>
+      </Body>
+      <Speed linear="10" angular="25"></Speed>
+      <Satellite primaryID="1"></Satellite>
+    </Components>
+  </Entity>
+
+  <Entity>
+    <Components>
+      <Transform x="-30"></Transform>
+      <Sprite frame="RockAsteroid"></Sprite>
+      <Object>Asteroid</Object>
+      <Body type="2">
+        <Circle radius="2" density="0.3"></Circle>
+      </Body>
+      <Speed linear="15" angular="2"></Speed>
+      <Satellite primaryID="1" direction="1"></Satellite>
+    </Components>
+  </Entity>
+
+  <Entity>
+    <Components>
+      <DistanceJoint IDA="2" IDB="3" collideConnected="true"></DistanceJoint>
+    </Components>
+  </Entity>
+
+  <Entity>
+    <Components>
+      <DistanceJoint IDA="2" IDB="4" collideConnected="true"></DistanceJoint>
+    </Components>
+  </Entity>
+</Entities>

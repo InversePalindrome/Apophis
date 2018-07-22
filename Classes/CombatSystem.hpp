@@ -31,4 +31,6 @@ private:
 	entityx::EventManager* eventManager;
 
 	CppTime::Timer timer;
+
+	void handleExplosion(entityx::Entity destroyedEntity);
 };

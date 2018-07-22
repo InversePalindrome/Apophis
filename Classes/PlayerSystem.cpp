@@ -52,44 +52,39 @@ PlayerSystem::PlayerSystem(cocos2d::Node* gameNode) :
 
 void PlayerSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
-	entityx::ComponentHandle<Player> player;
-	entityx::ComponentHandle<BodyComponent> body;
-	entityx::ComponentHandle<SpeedComponent> speed;
-	entityx::ComponentHandle<AccelerationComponent> acceleration;
-
-	for (auto entity : entityManager.entities_with_components(player, body, speed, acceleration))
+	entityManager.each<Player, BodyComponent, SpeedComponent, AccelerationComponent>([this, &eventManager](auto entity, const auto& player, auto& body, const auto& speed, const auto& acceleration)
 	{
 		updateMovement(body, speed, acceleration);
 		updateRotation(body);
 		updateShooting(eventManager, entity);
-	}
+	});
 }
 
-void PlayerSystem::updateMovement(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<SpeedComponent> speed, entityx::ComponentHandle<AccelerationComponent> acceleration)
+void PlayerSystem::updateMovement(BodyComponent& body, const SpeedComponent& speed, const AccelerationComponent& acceleration)
 {
 	for (auto keyAction : keyActions)
 	{
 		switch (keyAction)
 		{
 		case KeyAction::MoveRight:
-			body->applyLinearImpulse({ body->getMass() * (b2Min(body->getLinearVelocity().x + acceleration->getLinearAcceleration(), speed->getMaxLinearSpeed()) - body->getLinearVelocity().x), 0.f });
+			body.applyLinearImpulse({ body.getMass() * (b2Min(body.getLinearVelocity().x + acceleration.getLinearAcceleration(), speed.getMaxLinearSpeed()) - body.getLinearVelocity().x), 0.f });
 			break;
 		case KeyAction::MoveLeft:
-			body->applyLinearImpulse({ body->getMass() * (b2Max(body->getLinearVelocity().x - acceleration->getLinearAcceleration(), -speed->getMaxLinearSpeed()) - body->getLinearVelocity().x), 0.f });
+			body.applyLinearImpulse({ body.getMass() * (b2Max(body.getLinearVelocity().x - acceleration.getLinearAcceleration(), -speed.getMaxLinearSpeed()) - body.getLinearVelocity().x), 0.f });
 			break;
 		case KeyAction::MoveUp:
-			body->applyLinearImpulse({ 0.f, body->getMass() * (b2Min(body->getLinearVelocity().y + acceleration->getLinearAcceleration(), speed->getMaxLinearSpeed()) - body->getLinearVelocity().y) });
+			body.applyLinearImpulse({ 0.f, body.getMass() * (b2Min(body.getLinearVelocity().y + acceleration.getLinearAcceleration(), speed.getMaxLinearSpeed()) - body.getLinearVelocity().y) });
 			break;
 		case KeyAction::MoveDown:
-			body->applyLinearImpulse({ 0.f, body->getMass() * (b2Max(body->getLinearVelocity().y - acceleration->getLinearAcceleration(), -speed->getMaxLinearSpeed()) - body->getLinearVelocity().y) });
+			body.applyLinearImpulse({ 0.f, body.getMass() * (b2Max(body.getLinearVelocity().y - acceleration.getLinearAcceleration(), -speed.getMaxLinearSpeed()) - body.getLinearVelocity().y) });
 			break;
 		}
 	}
 }
 
-void PlayerSystem::updateRotation(entityx::ComponentHandle<BodyComponent> body)
+void PlayerSystem::updateRotation(BodyComponent& body)
 {
-	body->applyAngularImpulse(SteeringBehaviors::face(body->getPosition(), { playerFocusPoint.x / Constants::PTM_RATIO, playerFocusPoint.y / Constants::PTM_RATIO }, body->getAngle(), body->getAngularVelocity(), body->getInertia()));
+	body.applyAngularImpulse(SteeringBehaviors::face(body.getPosition(), { playerFocusPoint.x / Constants::PTM_RATIO, playerFocusPoint.y / Constants::PTM_RATIO }, body.getAngle(), body.getAngularVelocity(), body.getInertia()));
 }
 
 void PlayerSystem::updateShooting(entityx::EventManager& eventManager, entityx::Entity entity)

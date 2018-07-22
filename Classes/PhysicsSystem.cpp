@@ -29,7 +29,7 @@ void PhysicsSystem::configure(entityx::EventManager& eventManager)
 	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
 	eventManager.subscribe<entityx::ComponentRemovedEvent<BodyComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentRemovedEvent<DistanceJointComponent>>(*this);
-	eventManager.subscribe<EntityCreated>(*this);
+	eventManager.subscribe<EntityParsed>(*this);
 	eventManager.subscribe<CreateBody>(*this);
 	eventManager.subscribe<CreateDistanceJoint>(*this);
 }
@@ -38,14 +38,11 @@ void PhysicsSystem::update(entityx::EntityManager& entityManager, entityx::Event
 {
 	updateWorldCallbacks();
 
-	entityx::ComponentHandle<BodyComponent> body;
-	entityx::ComponentHandle<TransformComponent> transform;
-	
-	for (auto entity : entityManager.entities_with_components(body, transform))
+	entityManager.each<TransformComponent, BodyComponent>([](auto entity, auto& transform, const auto& body)
 	{
-		transform->setPosition(body->getPosition());
-		transform->setAngle(Conversions::radiansToDegrees(body->getAngle()));
-	}
+		transform.setPosition(body.getPosition());
+		transform.setAngle(Conversions::radiansToDegrees(body.getAngle()));
+	});
 
 	world.Step(Constants::TIMESTEP, Constants::VELOCITY_ITERATIONS, Constants::POSITION_ITERATIONS);
 }
@@ -103,7 +100,7 @@ void PhysicsSystem::receive(const entityx::ComponentRemovedEvent<DistanceJointCo
 	}
 }
 
-void PhysicsSystem::receive(const EntityCreated& event)
+void PhysicsSystem::receive(const EntityParsed& event)
 {
 	auto setupTransform = [event]()
 	{

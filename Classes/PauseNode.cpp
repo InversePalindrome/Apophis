@@ -18,7 +18,6 @@ InversePalindrome.com
 #include <cocos/base/CCEventListenerCustom.h>
 
 
-
 bool PauseNode::init()
 {
 	if (!Node::init())
@@ -63,8 +62,6 @@ bool PauseNode::init()
 	addChild(menu);
 
 	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("pause", [this](auto* event) { setVisible(true); }), this);
-
-	setVisible(false);
 
 	return true;
 }

@@ -23,7 +23,7 @@ GraphicsSystem::GraphicsSystem(cocos2d::Node* gameNode, Map& map) :
 
 void GraphicsSystem::configure(entityx::EventManager& eventManager)
 {
-	eventManager.subscribe<EntityCreated>(*this);
+	eventManager.subscribe<EntityParsed>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<SpriteComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<LabelComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<ParticleComponent>>(*this);
@@ -32,17 +32,12 @@ void GraphicsSystem::configure(entityx::EventManager& eventManager)
 void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
 	brigand::for_each<Renderables>([&entityManager](auto renderableElement)
-	{    
-		using RenderableComponent = decltype(renderableElement)::type;
-
-		entityx::ComponentHandle<RenderableComponent> renderable;
-		entityx::ComponentHandle<TransformComponent> transform;
-
-		for (auto entity : entityManager.entities_with_components(renderable, transform))
+	{
+		entityManager.each<decltype(renderableElement)::type, TransformComponent>([](auto entity, auto& renderable, auto& transform)
 		{
-			renderable->setPosition({ transform->getPosition().x * Constants::PTM_RATIO, transform->getPosition().y * Constants::PTM_RATIO });
-			renderable->setRotation(-transform->getAngle());
-		}
+			renderable.setPosition({ transform.getPosition().x * Constants::PTM_RATIO, transform.getPosition().y * Constants::PTM_RATIO });
+			renderable.setRotation(-transform.getAngle());
+		});
 	});
 
 	updateNodeCallbacks();
@@ -50,7 +45,7 @@ void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::Even
 	updateHealthBar();
 }
 
-void GraphicsSystem::receive(const EntityCreated& event)
+void GraphicsSystem::receive(const EntityParsed& event)
 {
 	if (event.entity.has_component<Player>())
 	{

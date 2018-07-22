@@ -11,7 +11,6 @@ InversePalindrome.com
 
 #include <string>
 #include <vector>
-#include <random>
 
 
 class DropComponent
@@ -19,7 +18,8 @@ class DropComponent
 public:
 	explicit DropComponent(const pugi::xml_node& componentNode);
 
-	std::string getItem();
+	const std::vector<std::string>& getItems() const;
+	const std::vector<int>& getWeights() const;
 
 	void addItem(const std::string& item, int weight);
 	void removeItem(const std::string& item);
@@ -27,6 +27,4 @@ public:
 private:
 	std::vector<std::string> items;
 	std::vector<int> weights;
-
-	std::mt19937 randomEngine;
 };

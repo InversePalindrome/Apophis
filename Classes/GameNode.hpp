@@ -19,13 +19,14 @@ InversePalindrome.com
 #include <entityx/System.h>
 
 
-class GameNode : public cocos2d::Node
+class GameNode : public cocos2d::Node, public entityx::Receiver<GameNode>
 {
 public:
 	GameNode();
 
 	virtual bool init() override;
 	virtual void update(float dt) override;
+	virtual void receive(const entityx::EntityDestroyedEvent& event);
 	
 	CREATE_FUNC(GameNode);
 

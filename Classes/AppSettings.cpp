@@ -15,8 +15,8 @@ InversePalindrome.com
 AppSettings::AppSettings() :
 	soundVolume(1.f),
 	musicVolume(1.f),
-	keyBindings({ { cocos2d::EventKeyboard::KeyCode::KEY_D, KeyAction::MoveRight}, { cocos2d::EventKeyboard::KeyCode::KEY_A, KeyAction::MoveLeft } ,
-				  { cocos2d::EventKeyboard::KeyCode::KEY_W, KeyAction::MoveUp }, { cocos2d::EventKeyboard::KeyCode::KEY_S, KeyAction::MoveDown } })
+	keyBindings{ { cocos2d::EventKeyboard::KeyCode::KEY_D, KeyAction::MoveRight}, { cocos2d::EventKeyboard::KeyCode::KEY_A, KeyAction::MoveLeft } ,
+				 { cocos2d::EventKeyboard::KeyCode::KEY_W, KeyAction::MoveUp }, { cocos2d::EventKeyboard::KeyCode::KEY_S, KeyAction::MoveDown } }
 {
 	load("Settings.xml");
 }

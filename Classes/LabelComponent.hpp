@@ -5,7 +5,6 @@ InversePalindrome.com
 */
 
 
-
 #pragma once
 
 #include "NodeComponent.hpp"

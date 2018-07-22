@@ -15,19 +15,15 @@ InversePalindrome.com
 
 void OrbitalSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
-	entityx::ComponentHandle<SatelliteComponent> satellite;
-	entityx::ComponentHandle<BodyComponent> body;
-	entityx::ComponentHandle<SpeedComponent> speed;
-	
-	for (auto entity : entityManager.entities_with_components(satellite, body, speed))
+	entityManager.each<BodyComponent, SatelliteComponent, SpeedComponent>([&entityManager](auto entity, auto& body, const auto& satellite, const auto& speed)
 	{
-		if (auto primaryEntity = entityManager.get(entityManager.create_id(satellite->getPrimaryID())))
+		if (auto primaryEntity = entityManager.get(entityManager.create_id(satellite.getPrimaryID())))
 		{
 			if (auto primaryBody = primaryEntity.component<BodyComponent>())
 			{
-				body->applyLinearImpulse(SteeringBehaviors::orbit(body->getPosition(), primaryBody->getPosition(), body->getLinearVelocity(), satellite->getOrbitDirection() * speed->getMaxLinearSpeed()));
-				body->applyAngularImpulse(body->getInertia() * (satellite->getOrbitDirection() * speed->getMaxAngularSpeed() - body->getAngularVelocity()) / Constants::FPS);
+				body.applyLinearImpulse(SteeringBehaviors::orbit(body.getPosition(), primaryBody->getPosition(), body.getLinearVelocity(), satellite.getOrbitDirection() * speed.getMaxLinearSpeed()));
+				body.applyAngularImpulse(body.getInertia() * (satellite.getOrbitDirection() * speed.getMaxAngularSpeed() - body.getAngularVelocity()) / Constants::FPS);
 			}
 		}
-	}
+	});
 }

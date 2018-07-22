@@ -6,7 +6,6 @@ InversePalindrome.com
 
 
 #include "Map.hpp"
-#include "Events.hpp"
 #include "Constants.hpp"
 
 #include <cocos/2d/CCSprite.h>
@@ -14,21 +13,20 @@ InversePalindrome.com
 
 #include <pugixml.hpp>
 
-#include <boost/math/constants/constants.hpp>
 
-
-Map::Map(EntityFactory& entityFactory, entityx::EventManager& eventManager) :
-	entityFactory(entityFactory),
-	eventManager(eventManager),
-	maxEntityCount(0u)
+Map::Map() :
+	dimensions(0.f, 0.f)
 {
+}
+
+void Map::init(cocos2d::Node* gameNode)
+{
+	this->gameNode = gameNode;
 }
 
 void Map::load(const std::string& fileName)
 {
-    pugi::xml_document doc;
-
-	if (doc.load_file(cocos2d::FileUtils::getInstance()->fullPathForFilename(fileName + ".xml").c_str()))
+	if (pugi::xml_document doc; doc.load_file(cocos2d::FileUtils::getInstance()->fullPathForFilename(fileName + ".xml").c_str()))
 	{
 		if (const auto mapNode = doc.child("Map"))
 		{
@@ -46,52 +44,13 @@ void Map::load(const std::string& fileName)
 				sprite->getTexture()->setTexParameters({ GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT });
 				sprite->setTextureRect({ 0.f, 0.f, dimensions.x * Constants::PTM_RATIO, dimensions.y * Constants::PTM_RATIO });
 
-				mainNode->addChild(sprite);
-			}
-			if (const auto maxEntityCountAttribute = mapNode.attribute("maxEntityCount"))
-			{
-				maxEntityCount = maxEntityCountAttribute.as_ullong();
-			}
-			for (const auto entitiesNode : mapNode.children("Entities"))
-			{
-				for (const auto entityNode : entitiesNode.children())
-				{
-					std::vector<std::string> entities;
-					std::vector<int> weights;
-
-					for (const auto entityNode : entitiesNode.children())
-					{
-						entities.push_back(entityNode.name());
-						weights.push_back(entityNode.text().as_int());
-					}
-
-					generateMap(entities, weights);
-				}
+				gameNode->addChild(sprite);
 			}
 		}
 	}
 }
 
-void Map::setMainNode(cocos2d::Node* mainNode)
-{
-	this->mainNode = mainNode;
-}
-
 b2Vec2 Map::getDimensions() const
 {
 	return dimensions;
-}
-
-void Map::generateMap(const std::vector<std::string>& entities, const std::vector<int>& weights)
-{
-	std::random_device rd;
-	std::mt19937 randomEngine(rd());
-	std::discrete_distribution<> distribution(std::cbegin(weights), std::cend(weights));
-
-	for (std::size_t i = 0; i < maxEntityCount; ++i)
-	{ 
-		//auto entity = entityFactory.createEntity(entities.at(distribution(randomEngine)));
-
-
-	}
 }

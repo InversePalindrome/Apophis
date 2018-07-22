@@ -29,8 +29,7 @@ InversePalindrome.com
 GameNode::GameNode() :
 	entityManager(eventManager),
 	systemManager(entityManager, eventManager),
-	entityFactory(entityManager, eventManager),
-	map(entityFactory, eventManager)
+	entityFactory(entityManager, eventManager)
 {
 }
 
@@ -40,11 +39,6 @@ bool GameNode::init()
 	{
 		return false;
 	}
-
-	scheduleUpdate();
-
-	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("resume", [this](auto* event) { scheduleUpdate(); }), this);
-	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("gameOver", [this](auto* event){ entityManager.reset(); }), this);
 
 	auto* keyboardListener = cocos2d::EventListenerKeyboard::create();
 
@@ -57,23 +51,16 @@ bool GameNode::init()
 		}
 	};
 
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);
+	getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, this);
+	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("resume", [this](auto* event) { scheduleUpdate(); }), this);
 
 	initSystems();
+	scheduleUpdate();
 	
-	map.setMainNode(this);
-
+	map.init(this);
 	map.load("Andromeda");
-    entityFactory.createEntity("UFO");
-	entityFactory.createEntity("Planet");
-	entityFactory.createEntity("SpaceCruiser");
-	entityFactory.createEntity("Billboard");
-	auto coin = entityFactory.createEntity("Coin");
-    eventManager.emit(PlayAnimation{ coin, Animation::Alert, true });
-    entityFactory.createEntity("BlueAsteroid");
-	entityFactory.createEntity("PlanetJoint");
-	entityFactory.createEntity("RockAsteroid");
-	entityFactory.createEntity("PlanetJoint2");
+   
+	entityFactory.createEntities("Level");
 
 	return true;
 }
@@ -83,14 +70,32 @@ void GameNode::update(float dt)
 	systemManager.update_all(dt);
 }
 
+void GameNode::receive(const entityx::EntityDestroyedEvent& event)
+{
+	if (event.entity.has_component<Player>())
+	{
+		scheduleOnce([this](auto dt) { entityManager.reset(); }, 0.f, "Reset Game");
+
+		getEventDispatcher()->dispatchCustomEvent("gameOver");
+	}
+}
+
 cocos2d::Scene* GameNode::scene()
 {
 	auto* scene = cocos2d::Scene::create();
 
 	scene->addChild(GameNode::create());
 	scene->addChild(HudNode::create());
-	scene->addChild(PauseNode::create());
-	scene->addChild(GameOverNode::create());
+
+	auto* pauseNode = PauseNode::create();
+	pauseNode->setVisible(false);
+
+	scene->addChild(pauseNode);
+
+	auto* gameOverNode = GameOverNode::create();
+	gameOverNode->setVisible(false);
+
+	scene->addChild(gameOverNode);
 
 	return scene;
 }
@@ -107,5 +112,7 @@ void GameNode::initSystems()
 	systemManager.add<CombatSystem>(entityFactory);
 	systemManager.add<GraphicsSystem>(this, map);
 
+	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
+	
 	systemManager.configure();
 }

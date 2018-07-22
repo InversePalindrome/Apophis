@@ -17,6 +17,8 @@ InversePalindrome.com
 
 #include <cpptime.h>
 
+#include <random>
+
 
 class ItemSystem : public entityx::System<ItemSystem>, public entityx::Receiver<ItemSystem>
 {
@@ -32,6 +34,8 @@ private:
 	EntityFactory& entityFactory;
 
 	CppTime::Timer timer;
+
+	std::mt19937 randomEngine;
 
 	static void addWeapon(entityx::Entity entity, entityx::ComponentHandle<WeaponComponent> weapon);
 	void addRegenBoost(entityx::Entity entity, const entityx::ComponentHandle<RegenBoostComponent> regenBoost);

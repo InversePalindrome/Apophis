@@ -42,6 +42,9 @@ public:
 	cocos2d::Color3B getColor() const;
 	void setColor(const cocos2d::Color3B& color);
 
+	bool isVisible() const;
+	void setVisible(bool visible);
+
 private:
 	cocos2d::Node* node;
 };

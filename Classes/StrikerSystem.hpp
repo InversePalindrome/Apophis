@@ -22,11 +22,11 @@ InversePalindrome.com
 struct StrikerContext
 {
 	entityx::Entity striker;
-	entityx::ComponentHandle<BodyComponent> body;
-	entityx::ComponentHandle<SpeedComponent> speed;
-	entityx::ComponentHandle<WanderComponent> wander;
-	entityx::ComponentHandle<VisionComponent> vision;
-	entityx::ComponentHandle<HealthComponent> health;
+	BodyComponent& body;
+	const SpeedComponent& speed;
+	WanderComponent& wander;
+	const VisionComponent& vision;
+	const HealthComponent& health;
 };
 
 class StrikerSystem : public entityx::System<StrikerSystem>, public entityx::Receiver<StrikerSystem>
@@ -36,7 +36,7 @@ public:
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
-	virtual void receive(const EntityCreated& event);
+	virtual void receive(const EntityParsed& event);
 
 private:
 	entityx::EventManager* eventManager;

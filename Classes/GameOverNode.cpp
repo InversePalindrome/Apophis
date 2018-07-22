@@ -26,7 +26,7 @@ bool GameOverNode::init()
 	}
 
 	auto* director = cocos2d::Director::getInstance();
-	auto windowSize = director->getWinSize();
+	const auto windowSize = director->getWinSize();
 	
 	auto* gameOverLabel = cocos2d::Label::createWithTTF("game over", "Zian.ttf", 80.f);
 	gameOverLabel->enableOutline(cocos2d::Color4B(30.f, 144.f, 255.f, 255.f), 6);
@@ -69,8 +69,6 @@ bool GameOverNode::init()
 	addChild(menu);
 
 	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("gameOver", [this](auto* event) { setVisible(true); }), this);
-
-	setVisible(false);
 
 	return true;
 }

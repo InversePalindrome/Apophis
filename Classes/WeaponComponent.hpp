@@ -9,14 +9,13 @@ InversePalindrome.com
 
 #include <pugixml.hpp>
 
-#include <string>
 #include <chrono>
 
 
 class WeaponComponent
 {
 public:
-	explicit WeaponComponent(const pugi::xml_node& componentNode);
+    explicit WeaponComponent(const pugi::xml_node& componentNode);
 
 	std::string getProjectileName() const;
 	void setProjectileName(const std::string& projectileName);
@@ -29,6 +28,7 @@ public:
 
 private:
 	std::string projectileName;
+
 	std::chrono::milliseconds reloadTime;
 	bool reloadStatus;
 };

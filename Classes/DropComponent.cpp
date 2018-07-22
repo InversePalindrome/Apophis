@@ -8,21 +8,22 @@ InversePalindrome.com
 #include "DropComponent.hpp"
 
 
-DropComponent::DropComponent(const pugi::xml_node& componentNode) :
-	randomEngine(std::random_device()())
+DropComponent::DropComponent(const pugi::xml_node& componentNode) 
 {
 	for (const auto itemNode : componentNode.children())
 	{
-		items.push_back(itemNode.name());
-		weights.push_back(itemNode.text().as_int());
+		addItem(itemNode.name(), itemNode.text().as_int());
 	}
 }
 
-std::string DropComponent::getItem()
+const std::vector<std::string>& DropComponent::getItems() const
 {
-	std::discrete_distribution<> distribution(std::cbegin(weights), std::cend(weights));
+	return items;
+}
 
-	return items.at(distribution(randomEngine));
+const std::vector<int>& DropComponent::getWeights() const
+{
+	return weights;
 }
 
 void DropComponent::addItem(const std::string& item, int weight)

@@ -9,7 +9,6 @@ InversePalindrome.com
 
 #include <pugixml.hpp>
 
-#include <string>
 #include <chrono>
 
 
@@ -26,5 +25,6 @@ public:
 
 private:
 	std::string explosionName;
+
 	std::chrono::milliseconds explosionTime;
 };

@@ -7,13 +7,9 @@ InversePalindrome.com
 
 #pragma once
 
-#include "EntityFactory.hpp"
-
 #include <cocos/2d/CCNode.h>
 
 #include <Box2D/Common/b2Math.h>
-
-#include <entityx/Event.h>
 
 #include <string>
 
@@ -21,21 +17,16 @@ InversePalindrome.com
 class Map
 {
 public:
-	Map(EntityFactory& entityFactory, entityx::EventManager& eventManager);
+	Map();
+
+	void init(cocos2d::Node* gameNode);
 
 	void load(const std::string& fileName);
-
-	void setMainNode(cocos2d::Node* mainNode);
 
 	b2Vec2 getDimensions() const;
 
 private: 
-	cocos2d::Node* mainNode;
-	EntityFactory& entityFactory;
-	entityx::EventManager& eventManager;
+	cocos2d::Node* gameNode;
 
 	b2Vec2 dimensions;
-	std::size_t maxEntityCount;
-
-	void generateMap(const std::vector<std::string>& entities, const std::vector<int>& weights);
 };

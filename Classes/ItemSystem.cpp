@@ -14,7 +14,8 @@ InversePalindrome.com
 
 
 ItemSystem::ItemSystem(EntityFactory& entityFactory) :
-	entityFactory(entityFactory)
+	entityFactory(entityFactory),
+	randomEngine(std::random_device()())
 {
 }
 
@@ -26,20 +27,26 @@ void ItemSystem::configure(entityx::EventManager& eventManager)
 
 void ItemSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
-
 }
 
 void ItemSystem::receive(const entityx::EntityDestroyedEvent& event)
 {
-	auto destroyedEntity = event.entity;
+	const auto destroyedEntity = event.entity;
 	
-	if (auto[destroyedDrop, destroyedTransform] = destroyedEntity.components<DropComponent, TransformComponent>(); destroyedDrop && destroyedTransform)
+	if (const auto[destroyedDrop, destroyedTransform] = destroyedEntity.components<DropComponent, TransformComponent>(); destroyedDrop && destroyedTransform)
 	{
-		auto itemEntity = entityFactory.createEntity(destroyedDrop->getItem());
-
-		if (auto itemGeometry = itemEntity.component<TransformComponent>())
+		if (const auto& destroyedItems = destroyedDrop->getItems(); !destroyedItems.empty())
 		{
-			itemGeometry->setPosition(destroyedTransform->getPosition());
+			const auto& destroyedWeights = destroyedDrop->getWeights();
+
+			std::discrete_distribution<> discreteDistribution(std::cbegin(destroyedWeights), std::cend(destroyedWeights));
+
+			auto itemEntity = entityFactory.createEntity(destroyedItems.at(discreteDistribution(randomEngine)));
+
+			if (auto itemGeometry = itemEntity.component<TransformComponent>())
+			{
+				itemGeometry->setPosition(destroyedTransform->getPosition());
+			}
 		}
 	}
 }

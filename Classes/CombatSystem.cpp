@@ -5,6 +5,7 @@ InversePalindrome.com
 */
 
 
+#include "Tags.hpp"
 #include "Constants.hpp"
 #include "Conversions.hpp"
 #include "CombatSystem.hpp"
@@ -13,8 +14,8 @@ InversePalindrome.com
 #include "HealthComponent.hpp"
 #include "DamageComponent.hpp"
 #include "WeaponComponent.hpp"
-#include "TransformComponent.hpp"
 #include "ExplosionComponent.hpp"
+#include "TransformComponent.hpp"
 
 
 CombatSystem::CombatSystem(EntityFactory& entityFactory) :
@@ -37,28 +38,7 @@ void CombatSystem::update(entityx::EntityManager& entityManager, entityx::EventM
 
 void CombatSystem::receive(const entityx::EntityDestroyedEvent& event)
 {
-	auto destroyedEntity = event.entity;
-	
-	if (const auto [destroyedTransform, destroyedExplosion] = destroyedEntity.components<TransformComponent, ExplosionComponent>();
-	    destroyedTransform && destroyedExplosion)
-	{
-		auto explosionEntity = entityFactory.createEntity(destroyedExplosion->getExplosionName());
-		
-		if (auto explosionTransform = explosionEntity.component<TransformComponent>())
-		{
-			explosionTransform->setPosition(destroyedTransform->getPosition());
-			
-			timer.add(destroyedExplosion->getExplosionTime(), [explosionEntity](auto id) mutable
-			{
-				if (explosionEntity)
-				{
-					explosionEntity.destroy();
-				}
-			});
-		}
-
-		eventManager->emit(PlayAudio{ explosionEntity, Sound::Explode, false });
-	}
+	handleExplosion(event.entity);
 }
 
 void CombatSystem::receive(const ShootProjectile& event)
@@ -66,9 +46,9 @@ void CombatSystem::receive(const ShootProjectile& event)
 	if (auto [shooterWeapon, shooterBody] = event.shooter.components<WeaponComponent, BodyComponent>(); shooterWeapon && shooterBody && shooterWeapon->isReloaded())
 	{
 		shooterWeapon->setReloadStatus(false);
-
-		auto projectileEntity = entityFactory.createEntity(shooterWeapon->getProjectileName());
 		
+		auto projectileEntity = entityFactory.createEntity(shooterWeapon->getProjectileName());
+
 		if (auto[projectileBody, projectileSpeed] = projectileEntity.components<BodyComponent, SpeedComponent>(); projectileBody && projectileSpeed)
 		{
 			const b2Vec2 shooterSize(shooterBody->getAABB().upperBound - shooterBody->getAABB().lowerBound);
@@ -109,5 +89,29 @@ void CombatSystem::receive(const CombatOcurred& event)
 		{
 			event.victim.destroy();
 		}
+	}
+}
+
+void CombatSystem::handleExplosion(entityx::Entity destroyedEntity)
+{
+	if (const auto [destroyedTransform, destroyedExplosion] = destroyedEntity.components<TransformComponent, ExplosionComponent>();
+     	destroyedTransform && destroyedExplosion)
+	{
+		auto explosionEntity = entityFactory.createEntity(destroyedExplosion->getExplosionName());
+
+		if (auto explosionTransform = explosionEntity.component<TransformComponent>())
+		{
+			explosionTransform->setPosition(destroyedTransform->getPosition());
+
+			timer.add(destroyedExplosion->getExplosionTime(), [explosionEntity](auto id) mutable
+			{
+				if (explosionEntity)
+				{
+					explosionEntity.destroy();
+				}
+			});
+		}
+
+		eventManager->emit(PlayAudio{ explosionEntity, Sound::Explode, false });
 	}
 }

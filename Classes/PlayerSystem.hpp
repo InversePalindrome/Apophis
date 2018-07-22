@@ -33,7 +33,7 @@ private:
 	cocos2d::Vec2 playerFocusPoint;
 	bool isShooting;
 
-	void updateMovement(entityx::ComponentHandle<BodyComponent> body, entityx::ComponentHandle<SpeedComponent> speed, entityx::ComponentHandle<AccelerationComponent> acceleration);
-	void updateRotation(entityx::ComponentHandle<BodyComponent> body);
+	void updateMovement(BodyComponent& body, const SpeedComponent& speed, const AccelerationComponent& acceleration);
+	void updateRotation(BodyComponent& body);
 	void updateShooting(entityx::EventManager& eventManager, entityx::Entity entity);
 };
