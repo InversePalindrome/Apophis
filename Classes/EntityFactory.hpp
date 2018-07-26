@@ -24,7 +24,7 @@ public:
 	EntityFactory(const EntityFactory&) = delete;
 	EntityFactory& operator=(const EntityFactory&) = delete;
 
-	entityx::Entity createEntity(const std::string& filename);
+	entityx::Entity createEntity(const std::string& name);
 	entityx::Entity createEntity(const pugi::xml_node& entityNode);
 
 	void createEntities(const std::string& filename);
@@ -34,7 +34,6 @@ private:
 	entityx::EventManager& eventManager;
 
 	const std::unordered_map<std::string, std::function<void(entityx::Entity&, const pugi::xml_node&)>> componentParsers;
-	const std::unordered_map<std::string, std::function<void(entityx::Entity&)>> tagParsers;
 	
 	void parseEntity(entityx::Entity& entity, const pugi::xml_node& entityNode);
 };

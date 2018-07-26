@@ -16,6 +16,16 @@ SoundComponent::SoundComponent(const pugi::xml_node& componentNode)
 	}
 }
 
+void SoundComponent::save(pugi::xml_node& componentNode) const
+{
+	componentNode.set_name("Sound");
+
+	for (const auto&[soundID, soundFile] : soundFiles)
+	{
+		componentNode.append_child(soundID._to_string()).text().set(soundFile.c_str());
+	}
+}
+
 std::string SoundComponent::getSoundFile(Sound sound) const
 {
 	return soundFiles.at(sound);

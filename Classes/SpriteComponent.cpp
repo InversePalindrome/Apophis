@@ -17,13 +17,42 @@ SpriteComponent::SpriteComponent(const pugi::xml_node& componentNode) :
 		setSpriteFrame(spriteFrameAttribute.as_string());
 	}
 	if (const auto textureXAttribute = componentNode.attribute("textureX"),
-	    textureYAttribute = componentNode.attribute("textureR"),
+	    textureYAttribute = componentNode.attribute("textureY"),
 	    textureWidthAttribute = componentNode.attribute("textureWidth"),
 	    textureHeightAttribute = componentNode.attribute("textureHeight"); 
 	    textureXAttribute && textureYAttribute && textureWidthAttribute && textureHeightAttribute)
 	{
-		setTextureRect(cocos2d::Rect(textureXAttribute.as_float(), textureYAttribute.as_float(), textureWidthAttribute.as_float(), textureHeightAttribute.as_float()));
+		setTextureRect({ textureXAttribute.as_float(), textureYAttribute.as_float(), textureWidthAttribute.as_float(), textureHeightAttribute.as_float() });
 	}
+}
+
+void SpriteComponent::save(pugi::xml_node& componentNode) const
+{
+	NodeComponent::save(componentNode);
+	
+	componentNode.set_name("Sprite");
+	
+	if (!spriteFrameName.empty())
+	{
+		componentNode.append_attribute("frame") = spriteFrameName.c_str();
+	}
+
+	componentNode.append_attribute("textureX") = getTextureRect().origin.x;
+	componentNode.append_attribute("textureY") = getTextureRect().origin.y;
+	componentNode.append_attribute("textureWidth") = getTextureRect().size.width;
+	componentNode.append_attribute("textureHeight") = getTextureRect().size.height;
+}
+
+cocos2d::SpriteFrame* SpriteComponent::getSpriteFrame() const
+{
+	return sprite->getSpriteFrame();
+}
+
+void SpriteComponent::setSpriteFrame(const std::string& spriteFrameName)
+{
+	this->spriteFrameName = spriteFrameName;
+
+	sprite->setSpriteFrame(spriteFrameName);
 }
 
 cocos2d::Rect SpriteComponent::getTextureRect() const
@@ -34,14 +63,4 @@ cocos2d::Rect SpriteComponent::getTextureRect() const
 void SpriteComponent::setTextureRect(const cocos2d::Rect& textureRect)
 {
 	sprite->setTextureRect(textureRect);
-}
-
-cocos2d::SpriteFrame* SpriteComponent::getSpriteFrame() const
-{
-	return sprite->getSpriteFrame();
-}
-
-void SpriteComponent::setSpriteFrame(const std::string& spriteFrameName)
-{
-	sprite->setSpriteFrame(spriteFrameName);
 }

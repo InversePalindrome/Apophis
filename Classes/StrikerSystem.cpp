@@ -5,9 +5,10 @@ InversePalindrome.com
 */
 
 
-#include "Tags.hpp"
 #include "Events.hpp"
 #include "StrikerSystem.hpp"
+#include "PlayerComponent.hpp"
+#include "StrikerComponent.hpp"
 #include "SteeringBehaviors.hpp"
 
 
@@ -59,7 +60,7 @@ void StrikerSystem::update(entityx::EntityManager& entityManager, entityx::Event
 {
 	if (playerTransform)
 	{
-		entityManager.each<Striker, BodyComponent, SpeedComponent, WanderComponent, VisionComponent, HealthComponent>([this](auto entity, const auto& striker, auto& body, const auto& speed, auto& wander, const auto& vision, const auto& health) 
+		entityManager.each<StrikerComponent, BodyComponent, SpeedComponent, WanderComponent, VisionComponent, HealthComponent>([this](auto entity, const auto& striker, auto& body, const auto& speed, auto& wander, const auto& vision, const auto& health) 
 		{
 			strikerTree.process(StrikerContext{ entity, body, speed, wander, vision, health });
 		});
@@ -68,7 +69,7 @@ void StrikerSystem::update(entityx::EntityManager& entityManager, entityx::Event
 
 void StrikerSystem::receive(const EntityParsed& event)
 {
-	if (event.entity.has_component<Player>())
+	if (event.entity.has_component<PlayerComponent>())
 	{
 		playerTransform = event.entity.component<TransformComponent>();
 	}

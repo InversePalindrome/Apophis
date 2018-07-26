@@ -29,7 +29,8 @@ struct CreateBody
 	pugi::xml_node bodyNode;
 };
 
-struct CreateDistanceJoint
+template<typename T>
+struct CreateJoint
 {
 	mutable entityx::Entity entity;
 	pugi::xml_node jointNode;

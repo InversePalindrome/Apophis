@@ -17,6 +17,8 @@ class SpeedBoostComponent
 public:
 	explicit SpeedBoostComponent(const pugi::xml_node& componentNode);
 
+	void save(pugi::xml_node& componentNode) const;
+
 	float getSpeedBoostRatio() const;
 	void setSpeedBoostRatio(float speedBoostRatio);
 

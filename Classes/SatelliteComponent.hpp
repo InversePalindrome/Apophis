@@ -15,6 +15,8 @@ class SatelliteComponent
 public:
 	explicit SatelliteComponent(const pugi::xml_node& componentNode);
 
+	void save(pugi::xml_node& componentNode) const;
+
 	int getPrimaryID() const;
 	void setPrimaryID(int primaryID);
 

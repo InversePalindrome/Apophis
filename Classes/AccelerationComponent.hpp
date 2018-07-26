@@ -15,6 +15,8 @@ class AccelerationComponent
 public:
 	explicit AccelerationComponent(const pugi::xml_node& componentNode);
 
+	void save(pugi::xml_node& componentNode) const;
+
 	float getLinearAcceleration() const;
 	void setLinearAcceleration(float linearAcceleration);
 

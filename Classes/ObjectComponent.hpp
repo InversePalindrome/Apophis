@@ -17,6 +17,8 @@ class ObjectComponent
 public:
 	explicit ObjectComponent(const pugi::xml_node& componentNode);
 
+	void save(pugi::xml_node& componentNode) const;
+
 	ObjectType getObjectType() const;
 	void setObjectType(ObjectType objectType);
 

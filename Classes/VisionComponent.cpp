@@ -13,6 +13,13 @@ VisionComponent::VisionComponent(const pugi::xml_node& componentNode) :
 {
 }
 
+void VisionComponent::save(pugi::xml_node& componentNode) const
+{
+	componentNode.set_name("Vision");
+
+	componentNode.text().set(getVisionDistance());
+}
+
 float VisionComponent::getVisionDistance() const
 {
 	return visionDistance;

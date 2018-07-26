@@ -17,6 +17,8 @@ class RegenBoostComponent
 public:
 	explicit RegenBoostComponent(const pugi::xml_node& componentNode);
 
+	void save(pugi::xml_node& componentNode) const;
+
 	float getHitpointBoost() const;
 	void setHitpointBoost(float hitpointBoost);
 

@@ -22,6 +22,14 @@ AccelerationComponent::AccelerationComponent(const pugi::xml_node& componentNode
 	}
 }
 
+void AccelerationComponent::save(pugi::xml_node& componentNode) const
+{
+	componentNode.set_name("Acceleration");
+
+	componentNode.append_attribute("linear") = getLinearAcceleration();
+	componentNode.append_attribute("angular") = getAngularAcceleration();
+}
+
 float AccelerationComponent::getLinearAcceleration() const
 {
 	return linearAcceleration;

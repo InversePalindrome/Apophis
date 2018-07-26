@@ -20,6 +20,7 @@ InversePalindrome.com
 #include "OrbitalSystem.hpp"
 #include "StrikerSystem.hpp"
 #include "GraphicsSystem.hpp"
+#include "PlayerComponent.hpp"
 
 #include <cocos/base/CCEventDispatcher.h>
 #include <cocos/base/CCEventListenerCustom.h>
@@ -29,7 +30,8 @@ InversePalindrome.com
 GameNode::GameNode() :
 	entityManager(eventManager),
 	systemManager(entityManager, eventManager),
-	entityFactory(entityManager, eventManager)
+	entityFactory(entityManager, eventManager),
+	entitySerializer(entityManager)
 {
 }
 
@@ -39,7 +41,7 @@ bool GameNode::init()
 	{
 		return false;
 	}
-
+	
 	auto* keyboardListener = cocos2d::EventListenerKeyboard::create();
 
 	keyboardListener->onKeyPressed = [this](const auto keyCode, auto* event)
@@ -47,6 +49,7 @@ bool GameNode::init()
 		if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_ESCAPE)
 		{
 			unscheduleUpdate();
+			
 			getEventDispatcher()->dispatchCustomEvent("pause");
 		}
 	};
@@ -60,7 +63,7 @@ bool GameNode::init()
 	map.init(this);
 	map.load("Andromeda");
    
-	entityFactory.createEntities("Level");
+	entityFactory.createEntities("Level.xml");
 
 	return true;
 }
@@ -72,7 +75,7 @@ void GameNode::update(float dt)
 
 void GameNode::receive(const entityx::EntityDestroyedEvent& event)
 {
-	if (event.entity.has_component<Player>())
+	if (event.entity.has_component<PlayerComponent>())
 	{
 		scheduleOnce([this](auto dt) { entityManager.reset(); }, 0.f, "Reset Game");
 

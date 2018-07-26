@@ -132,8 +132,6 @@ void AppSettings::save(const std::string& filename)
 
 	auto musicNode = settingsNode.append_child("Music");
 	musicNode.append_attribute("volume") = musicVolume;
-
-	auto path = cocos2d::FileUtils::getInstance()->getWritablePath() + filename;
 	
-	doc.save_file(path.c_str());
+	doc.save_file((cocos2d::FileUtils::getInstance()->getWritablePath() + filename).c_str());
 }

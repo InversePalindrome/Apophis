@@ -19,13 +19,14 @@ class PatrolComponent
 public:
 	explicit PatrolComponent(const pugi::xml_node& componentNode);
 
-	void nextPoint();
+	void save(pugi::xml_node& componentNode) const;
 
-	b2Vec2 getCurrentPoint() const;
+	const std::vector<b2Vec2>& getPatrolPoints() const;
 
-	bool hasPoints() const;
+	std::size_t getPatrolIndex() const;
+	void setPatrolIndex(std::size_t patrolIndex);
 
 private:
-	std::vector<b2Vec2> path;
-	std::size_t currentIndex;
+	std::vector<b2Vec2> patrolPoints;
+	std::size_t patrolIndex;
 };

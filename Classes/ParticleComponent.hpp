@@ -19,7 +19,11 @@ class ParticleComponent : public NodeComponent
 public:
 	explicit ParticleComponent(const pugi::xml_node& componentNode);
 
+	void save(pugi::xml_node& componentNode) const;
+
 	void initWithFile(const std::string& filename);
+
+	void setDisplayFrame(const std::string& spriteFrameName);
 
 	cocos2d::ParticleSystem::Mode getMode() const;
 	void setMode(cocos2d::ParticleSystem::Mode mode);
@@ -83,4 +87,7 @@ public:
 
 private:
 	cocos2d::ParticleSystemQuad* emitter;
+
+	std::string filename;
+	std::string spriteFrameName;
 };

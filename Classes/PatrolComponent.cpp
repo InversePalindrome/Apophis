@@ -9,7 +9,7 @@ InversePalindrome.com
 
 
 PatrolComponent::PatrolComponent(const pugi::xml_node& componentNode) :
-	currentIndex(0u)
+	patrolIndex(0u)
 {
 	for (const auto pointNode : componentNode.children("Point"))
 	{
@@ -17,25 +17,37 @@ PatrolComponent::PatrolComponent(const pugi::xml_node& componentNode) :
 			yPositionAttribute = pointNode.attribute("y");
 		    xPositionAttribute && yPositionAttribute)
 		{
-			path.push_back({ xPositionAttribute.as_float(), yPositionAttribute.as_float() });
+			patrolPoints.push_back({ xPositionAttribute.as_float(), yPositionAttribute.as_float() });
 		}
 	}
 }
 
-void PatrolComponent::nextPoint()
+void PatrolComponent::save(pugi::xml_node& componentNode) const
 {
-	if (++currentIndex == path.size())
+	componentNode.set_name("Point");
+
+	componentNode.append_attribute("patrolIndex") = getPatrolIndex();
+
+	for (const auto& patrolPoint : patrolPoints)
 	{
-		currentIndex = 0u;
+		auto pointNode = componentNode.append_child("Point");
+
+		pointNode.append_attribute("x") = patrolPoint.x;
+		pointNode.append_attribute("y") = patrolPoint.y;
 	}
 }
 
-b2Vec2 PatrolComponent::getCurrentPoint() const
+const std::vector<b2Vec2>& PatrolComponent::getPatrolPoints() const
 {
-	return path.at(currentIndex);
+	return patrolPoints;
 }
 
-bool PatrolComponent::hasPoints() const
+std::size_t PatrolComponent::getPatrolIndex() const
 {
-	return !path.empty();
+	return patrolIndex;
+}
+
+void PatrolComponent::setPatrolIndex(std::size_t patrolIndex)
+{
+	this->patrolIndex = patrolIndex;
 }

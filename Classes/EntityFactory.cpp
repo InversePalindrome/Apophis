@@ -5,7 +5,6 @@ InversePalindrome.com
 */
 
 
-#include "Tags.hpp"
 #include "Events.hpp"
 #include "EntityFactory.hpp"
 #include "DropComponent.hpp"
@@ -16,6 +15,7 @@ InversePalindrome.com
 #include "QueueComponent.hpp"
 #include "LabelComponent.hpp"
 #include "ObjectComponent.hpp"
+#include "PlayerComponent.hpp"
 #include "WeaponComponent.hpp"
 #include "VisionComponent.hpp"
 #include "WanderComponent.hpp"
@@ -25,6 +25,7 @@ InversePalindrome.com
 #include "DamageComponent.hpp"
 #include "PursueComponent.hpp"
 #include "SpriteComponent.hpp"
+#include "StrikerComponent.hpp"
 #include "ParticleComponent.hpp"
 #include "TransformComponent.hpp"
 #include "AnimationComponent.hpp"
@@ -46,7 +47,7 @@ EntityFactory::EntityFactory(entityx::EntityManager& entityManager, entityx::Eve
 	                   { "Label", [](auto entity, const auto& componentNode) { entity.assign<LabelComponent>(componentNode); } },
 		               { "Particle", [](auto entity, const auto& componentNode) { entity.assign<ParticleComponent>(componentNode); } },
                        { "Body", [&eventManager](auto entity, const auto& componentNode) { eventManager.emit(CreateBody{ entity, componentNode }); }},
-               		   { "DistanceJoint", [&eventManager](auto entity, const auto& componentNode) { eventManager.emit(CreateDistanceJoint{ entity, componentNode }); } },
+               		   { "DistanceJoint", [&eventManager](auto entity, const auto& componentNode) { eventManager.emit(CreateJoint<DistanceJointComponent>{ entity, componentNode }); } },
                 	   { "Transform", [](auto entity, const auto& componentNode) { entity.assign<TransformComponent>(componentNode); } },
                        { "Object", [](auto entity, const auto& componentNode) { entity.assign<ObjectComponent>(componentNode); }},
                        { "Pursue", [](auto entity, const auto& componentNode) { entity.assign<PursueComponent>(componentNode); }},
@@ -68,20 +69,18 @@ EntityFactory::EntityFactory(entityx::EntityManager& entityManager, entityx::Eve
                        { "Speed", [](auto entity, const auto& componentNode) { entity.assign<SpeedComponent>(componentNode); }},
                        { "Acceleration", [](auto entity, const auto& componentNode) { entity.assign<AccelerationComponent>(componentNode); }},
 	                   { "SpeedBoost", [](auto entity, const auto& componentNode) { entity.assign<SpeedBoostComponent>(componentNode); } },
-                       { "RegenBoost", [](auto entity, const auto& componentNode) { entity.assign<RegenBoostComponent>(componentNode); }} 
-                   },
-	tagParsers{ 
-		         { "Player", [](auto entity) { entity.assign<Player>(); } },
-			     { "Striker", [](auto entity) { entity.assign<Striker>(); } } 
-              }
+                       { "RegenBoost", [](auto entity, const auto& componentNode) { entity.assign<RegenBoostComponent>(componentNode); }},
+					   { "Player", [](auto entity, const auto&) {entity.assign<PlayerComponent>(); }},
+                       { "Striker", [](auto entity, const auto&) { entity.assign<StrikerComponent>(); } },
+                   }
 {
 }
 
-entityx::Entity EntityFactory::createEntity(const std::string& filename)
+entityx::Entity EntityFactory::createEntity(const std::string& name)
 {
 	auto entity = entityManager.create();
 
-	if (pugi::xml_document doc; doc.load_file(cocos2d::FileUtils::getInstance()->fullPathForFilename(filename + ".xml").c_str()))
+	if (pugi::xml_document doc; doc.load_file(cocos2d::FileUtils::getInstance()->fullPathForFilename(name + ".xml").c_str()))
 	{
 		if (const auto entityNode = doc.child("Entity"))
 		{
@@ -103,7 +102,7 @@ entityx::Entity EntityFactory::createEntity(const pugi::xml_node& entityNode)
 
 void EntityFactory::createEntities(const std::string& filename)
 {
-	if (pugi::xml_document doc; doc.load_file(cocos2d::FileUtils::getInstance()->fullPathForFilename(filename + ".xml").c_str()))
+	if (pugi::xml_document doc; doc.load_file(cocos2d::FileUtils::getInstance()->fullPathForFilename(filename).c_str()))
 	{
 		if (const auto entitiesNode = doc.child("Entities"))
 		{
@@ -117,25 +116,11 @@ void EntityFactory::createEntities(const std::string& filename)
 
 void EntityFactory::parseEntity(entityx::Entity& entity, const pugi::xml_node& entityNode)
 {
-	for (const auto componentsNode : entityNode.children("Components"))
+	for (const auto componentNode : entityNode.children())
 	{
-		for (const auto componentNode : componentsNode.children())
+		if (componentParsers.count(componentNode.name()))
 		{
-			if (componentParsers.count(componentNode.name()))
-			{
-				componentParsers.at(componentNode.name())(entity, componentNode);
-			}
-		}
-
-		for (const auto tagsNode : entityNode.children("Tags"))
-		{
-			for (const auto tagNode : tagsNode.children())
-			{
-				if (tagParsers.count(tagNode.name()))
-				{
-					tagParsers.at(tagNode.name())(entity);
-				}
-			}
+			componentParsers.at(componentNode.name())(entity, componentNode);
 		}
 	}
 

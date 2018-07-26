@@ -8,7 +8,6 @@ InversePalindrome.com
 #pragma once
 
 #include "Map.hpp"
-#include "Tags.hpp"
 #include "Events.hpp" 
 #include "LabelComponent.hpp"
 #include "SpriteComponent.hpp"

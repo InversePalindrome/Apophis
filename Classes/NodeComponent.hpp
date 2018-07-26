@@ -18,6 +18,8 @@ public:
 	NodeComponent(cocos2d::Node* node, const pugi::xml_node& componentNode);
 	~NodeComponent();
 
+	void save(pugi::xml_node& componentNode) const;
+
 	void addChild(cocos2d::Node* child);
 	void removeChild(cocos2d::Node* child);
 

@@ -15,6 +15,8 @@ class SpeedComponent
 public:
 	explicit SpeedComponent(const pugi::xml_node& componentNode);
 
+	void save(pugi::xml_node& componentNode) const;
+
 	float getMaxLinearSpeed() const;
 	void setMaxLinearSpeed(float maxLinearSpeed);
 

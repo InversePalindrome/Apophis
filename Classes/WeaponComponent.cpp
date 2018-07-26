@@ -22,6 +22,14 @@ WeaponComponent::WeaponComponent(const pugi::xml_node& componentNode) :
 	}
 }
 
+void WeaponComponent::save(pugi::xml_node& componentNode) const
+{
+	componentNode.set_name("Weapon");
+
+	componentNode.append_attribute("projectileName") = getProjectileName().c_str();
+	componentNode.append_attribute("reloadTime") = getReloadTime().count();
+}
+
 std::string WeaponComponent::getProjectileName() const
 {
 	return projectileName;

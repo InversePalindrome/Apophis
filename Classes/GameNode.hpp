@@ -10,6 +10,7 @@ InversePalindrome.com
 #include "Map.hpp"
 #include "Events.hpp"
 #include "EntityFactory.hpp"
+#include "EntitySerializer.hpp"
 
 #include <cocos/2d/CCNode.h>
 #include <cocos/2d/CCScene.h>
@@ -38,6 +39,7 @@ private:
 	entityx::SystemManager systemManager;
 
 	EntityFactory entityFactory;
+	EntitySerializer entitySerializer;
 
 	Map map;
 

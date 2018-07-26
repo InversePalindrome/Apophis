@@ -14,7 +14,7 @@ QueueComponent::QueueComponent(const pugi::xml_node& componentNode) :
 	brakeFactor(0.8f),
 	velocityShrinkFactor(0.3f)
 {
-	if (const auto queueAheadDistanceAttribute = componentNode.attribute("distance"))
+	if (const auto queueAheadDistanceAttribute = componentNode.attribute("aheadDistance"))
 	{
 		setQueueAheadDistance(queueAheadDistanceAttribute.as_float());
 	}
@@ -22,14 +22,24 @@ QueueComponent::QueueComponent(const pugi::xml_node& componentNode) :
 	{
 		setQueueRadius(queueRadiusAttribute.as_float());
 	}
-	if (const auto brakeFactorAttribute = componentNode.attribute("brake"))
+	if (const auto brakeFactorAttribute = componentNode.attribute("brakeFactor"))
 	{
 		setBrakeFactor(brakeFactorAttribute.as_float());
 	}
-	if (const auto velocityShrinkFactorAttribute = componentNode.attribute("shrink"))
+	if (const auto velocityShrinkFactorAttribute = componentNode.attribute("velocityShrinkFactor"))
 	{
        setVelocityShrinkFactor(velocityShrinkFactorAttribute.as_float());
 	}
+}
+
+void QueueComponent::save(pugi::xml_node& componentNode) const
+{
+	componentNode.set_name("Queue");
+
+	componentNode.append_attribute("aheadDistance") = getQueueAheadDistance();
+	componentNode.append_attribute("radius") = getQueueRadius();
+	componentNode.append_attribute("brakeFactor") = getBrakeFactor();
+	componentNode.append_attribute("velocityShrinkFactor") = getVelocityShrinkFactor();
 }
 
 float QueueComponent::getQueueAheadDistance() const

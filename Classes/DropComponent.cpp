@@ -7,12 +7,24 @@ InversePalindrome.com
 
 #include "DropComponent.hpp"
 
+#include <boost/range/combine.hpp>
+
 
 DropComponent::DropComponent(const pugi::xml_node& componentNode) 
 {
 	for (const auto itemNode : componentNode.children())
 	{
 		addItem(itemNode.name(), itemNode.text().as_int());
+	}
+}
+
+void DropComponent::save(pugi::xml_node& componentNode) const
+{
+	componentNode.set_name("Drop");
+
+	for (const auto& itemAndWeight : boost::combine(items, weights))
+	{
+		componentNode.append_child(boost::get<0>(itemAndWeight).c_str()).text().set(boost::get<1>(itemAndWeight));
 	}
 }
 

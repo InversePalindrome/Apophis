@@ -15,6 +15,8 @@ class AvoidComponent
 public:
 	explicit AvoidComponent(const pugi::xml_node& componentNode);
 
+	void save(pugi::xml_node& componentNode) const;
+
 	float getAvoidanceAheadDistance() const;
 	void setAvoidanceAheadDistance(float avoidanceAheadDistance);
 

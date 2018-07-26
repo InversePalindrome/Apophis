@@ -17,6 +17,8 @@ class ExplosionComponent
 public:
 	explicit ExplosionComponent(const pugi::xml_node& componentNode);
 
+	void save(pugi::xml_node& componentNode) const;
+
 	std::string getExplosionName() const;
 	void setExplosionName(const std::string& explosionName);
 

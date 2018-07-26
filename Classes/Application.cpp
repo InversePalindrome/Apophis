@@ -11,8 +11,14 @@ InversePalindrome.com
 
 #include <cocos/base/CCDirector.h>
 #include <cocos/platform/CCFileUtils.h>
+#include <cocos/audio/include/AudioEngine.h>
 #include <cocos/platform/desktop/CCGLViewImpl-desktop.h>
 
+
+Application::~Application()
+{
+	cocos2d::experimental::AudioEngine::end();
+}
 
 bool Application::applicationDidFinishLaunching()
 {
@@ -20,9 +26,8 @@ bool Application::applicationDidFinishLaunching()
 
 	if (auto* view = director->getOpenGLView(); !view)
 	{
-		view = cocos2d::GLViewImpl::create("Apophis");
-		view->setFrameSize(2048.f, 1536.f);
-     	view->setDesignResolutionSize(2048.f, 1536.f, ResolutionPolicy::EXACT_FIT);
+		view = cocos2d::GLViewImpl::createWithRect("Apophis", { 0, 0, 2048, 1536 });
+		view->setDesignResolutionSize(2048.f, 1536.f, ResolutionPolicy::EXACT_FIT);
 	
 		director->setOpenGLView(view);
 		director->setClearColor(cocos2d::Color4F::WHITE);
@@ -42,9 +47,11 @@ bool Application::applicationDidFinishLaunching()
 void Application::applicationDidEnterBackground()
 {
 	cocos2d::Director::getInstance()->stopAnimation();
+    cocos2d::experimental::AudioEngine::pauseAll();
 }
 
 void Application::applicationWillEnterForeground()
 {
 	cocos2d::Director::getInstance()->startAnimation();
+	cocos2d::experimental::AudioEngine::resumeAll();
 }

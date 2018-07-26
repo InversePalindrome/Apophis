@@ -19,6 +19,8 @@ class LabelComponent : public NodeComponent
 public:
 	explicit LabelComponent(const pugi::xml_node& componentNode);
 
+	void save(pugi::xml_node& componentNode) const;
+
 	std::string getText() const;
 	void setText(const std::string& text);
 

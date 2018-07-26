@@ -15,6 +15,8 @@ class FlockComponent
 public:
 	explicit FlockComponent(const pugi::xml_node& componentNode);
 
+	void save(pugi::xml_node& componentNode) const;
+
 	int getGroupID() const;
 	void setGroupID(int groupID);
 

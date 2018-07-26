@@ -18,6 +18,8 @@ class DropComponent
 public:
 	explicit DropComponent(const pugi::xml_node& componentNode);
 
+	void save(pugi::xml_node& componentNode) const;
+
 	const std::vector<std::string>& getItems() const;
 	const std::vector<int>& getWeights() const;
 

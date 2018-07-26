@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
-  <Components>
     <Transform></Transform>
     <Object>Projectile</Object>
        <Sprite frame="RedBlast03"></Sprite>
@@ -10,5 +9,4 @@
     <Speed linear="40"></Speed>
     <Impulse linear="30"></Impulse>
     <Damage>10</Damage>
-  </Components>
 </Entity>

@@ -22,6 +22,14 @@ AvoidComponent::AvoidComponent(const pugi::xml_node& componentNode) :
 	}
 }
 
+void AvoidComponent::save(pugi::xml_node& componentNode) const
+{
+	componentNode.set_name("Avoid");
+
+	componentNode.append_attribute("distance") = getAvoidanceAheadDistance();
+	componentNode.append_attribute("force") = getAvoidanceForce();
+}
+
 float AvoidComponent::getAvoidanceAheadDistance() const
 {
 	return avoidanceAheadDistance;

@@ -14,12 +14,20 @@ SatelliteComponent::SatelliteComponent(const pugi::xml_node& componentNode) :
 {
 	if (const auto primaryIDAttribute = componentNode.attribute("primaryID"))
 	{
-		primaryID = primaryIDAttribute.as_int();
+		setPrimaryID(primaryIDAttribute.as_int());
 	}
 	if (const auto orbitDirectionAttribute = componentNode.attribute("direction"))
 	{
-		orbitDirection = orbitDirectionAttribute.as_int();
+		setOrbitDirection(orbitDirectionAttribute.as_int());
 	}
+}
+
+void SatelliteComponent::save(pugi::xml_node& componentNode) const
+{
+	componentNode.set_name("Satellite");
+	
+	componentNode.append_attribute("primaryID") = getPrimaryID();
+	componentNode.append_attribute("direction") = getOrbitDirection();
 }
 
 int SatelliteComponent::getPrimaryID() const

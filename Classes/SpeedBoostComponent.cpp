@@ -22,6 +22,14 @@ SpeedBoostComponent::SpeedBoostComponent(const pugi::xml_node& componentNode) :
 	}
 }
 
+void SpeedBoostComponent::save(pugi::xml_node& componentNode) const
+{
+	componentNode.set_name("SpeedBoost");
+
+	componentNode.append_attribute("ratio") = getSpeedBoostRatio();
+	componentNode.append_attribute("duration") = getSpeedBoostDuration().count();
+}
+
 float SpeedBoostComponent::getSpeedBoostRatio() const
 {
 	return speedBoostRatio;

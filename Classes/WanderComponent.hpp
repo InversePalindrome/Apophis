@@ -15,6 +15,8 @@ class WanderComponent
 public:
 	explicit WanderComponent(const pugi::xml_node& componentNode);
 
+	void save(pugi::xml_node& componentNode) const;
+
 	float getWanderDistance() const;
 	void setWanderDistance(float wanderDistance);
 

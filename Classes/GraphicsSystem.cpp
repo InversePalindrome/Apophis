@@ -8,6 +8,7 @@ InversePalindrome.com
 #include "Constants.hpp"
 #include "Renderables.hpp"
 #include "GraphicsSystem.hpp"
+#include "PlayerComponent.hpp"
 
 #include <cocos/base/CCDirector.h>
 #include <cocos/base/CCEventDispatcher.h>
@@ -47,7 +48,7 @@ void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::Even
 
 void GraphicsSystem::receive(const EntityParsed& event)
 {
-	if (event.entity.has_component<Player>())
+	if (event.entity.has_component<PlayerComponent>())
 	{
 		playerTransform = event.entity.component<TransformComponent>();
 		playerHealth = event.entity.component<HealthComponent>();

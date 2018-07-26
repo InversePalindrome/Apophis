@@ -9,15 +9,19 @@ InversePalindrome.com
 
 #include <pugixml.hpp>
 
+#include <chrono>
+
 
 class PursueComponent
 {
 public:
 	explicit PursueComponent(const pugi::xml_node& componentNode);
 
-	float getPredictionTime() const;
-	void setPredictionTime(float predictionTime);
+	void save(pugi::xml_node& componentNode) const;
+
+	std::chrono::milliseconds getPredictionTime() const;
+	void setPredictionTime(const std::chrono::milliseconds& predictionTime);
 
 private:
-	float predictionTime;
+	std::chrono::milliseconds predictionTime;
 };

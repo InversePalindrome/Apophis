@@ -19,12 +19,16 @@ class SpriteComponent : public NodeComponent
 public:
 	explicit SpriteComponent(const pugi::xml_node& componentNode);
 
-	cocos2d::Rect getTextureRect() const;
-	void setTextureRect(const cocos2d::Rect& textureRect);
+	void save(pugi::xml_node& componentNode) const;
 
 	cocos2d::SpriteFrame* getSpriteFrame() const;
 	void setSpriteFrame(const std::string& spriteFrameName);
 
+	cocos2d::Rect getTextureRect() const;
+	void setTextureRect(const cocos2d::Rect& textureRect);
+
 private:
 	cocos2d::Sprite* sprite;
+
+	std::string spriteFrameName;
 };

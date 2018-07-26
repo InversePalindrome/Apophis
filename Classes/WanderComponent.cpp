@@ -32,6 +32,15 @@ WanderComponent::WanderComponent(const pugi::xml_node& componentNode) :
 	}
 }
 
+void WanderComponent::save(pugi::xml_node& componentNode) const
+{
+	componentNode.set_name("Wander");
+
+	componentNode.append_attribute("distance") = getWanderDistance();
+	componentNode.append_attribute("radius") = getWanderRadius();
+	componentNode.append_attribute("rate") = getWanderRadius();
+}
+
 float WanderComponent::getWanderDistance() const
 {
 	return wanderDistance;

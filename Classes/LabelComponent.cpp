@@ -34,11 +34,28 @@ LabelComponent::LabelComponent(const pugi::xml_node& componentNode) :
 	    textGAttribute = componentNode.attribute("textG"),
 	    textBAttribute = componentNode.attribute("textB"),
 	    textAAttribute = componentNode.attribute("textA"); 
-	    textRAttribute && textGAttribute && textBAttribute)
+	    textRAttribute && textGAttribute && textBAttribute && textAAttribute)
 	{
 		setTextColor(cocos2d::Color4B(textRAttribute.as_uint(), textGAttribute.as_uint(), textBAttribute.as_uint(), textAAttribute.as_uint()));
 	}
 } 
+
+void LabelComponent::save(pugi::xml_node& componentNode) const
+{
+	NodeComponent::save(componentNode);
+
+	componentNode.set_name("Label");
+
+	componentNode.text().set(getText().c_str());
+	componentNode.append_attribute("font") = getFontName().c_str();
+	componentNode.append_attribute("size") = getFontSize();
+	componentNode.append_attribute("HAlignment") = static_cast<int>(getHorizontalAlignment());
+	componentNode.append_attribute("VAlignment") = static_cast<int>(getVerticalAlignment());
+	componentNode.append_attribute("textR") = getTextColor().r;
+	componentNode.append_attribute("textG") = getTextColor().g;
+	componentNode.append_attribute("textB") = getTextColor().b;
+	componentNode.append_attribute("textA") = getTextColor().a;
+}
 
 std::string LabelComponent::getText() const
 {

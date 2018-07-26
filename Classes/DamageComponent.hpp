@@ -15,6 +15,8 @@ class DamageComponent
 public:
 	explicit DamageComponent(const pugi::xml_node& componentNode);
 
+	void save(pugi::xml_node& componentNode) const;
+
 	float getDamageHitpoints() const;
 	void setDamageHitpoints(float hitpoints);
 

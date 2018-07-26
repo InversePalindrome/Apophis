@@ -21,6 +21,14 @@ ExplosionComponent::ExplosionComponent(const pugi::xml_node& componentNode) :
 	}
 }
 
+void ExplosionComponent::save(pugi::xml_node& componentNode) const
+{
+	componentNode.set_name("Explosion");
+
+	componentNode.append_attribute("name") = explosionName.c_str();
+	componentNode.append_attribute("time") = explosionTime.count();
+}
+
 std::string ExplosionComponent::getExplosionName() const
 {
 	return explosionName;

@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entities>
   <Entity>
-    <Tags>
       <Player></Player>
-    </Tags>
-    <Components>
       <Sprite frame="Spaceship4"></Sprite>
       <Transform x="0" y="10"></Transform>
       <Weapon reloadTime="400" projectileName="Laser"></Weapon>
@@ -20,14 +17,10 @@
       </Sound>
       <Health>100</Health>
       <Vision>5</Vision>
-    </Components>
   </Entity>
   
   <Entity>
-    <Tags>
       <Striker></Striker>
-    </Tags>
-    <Components>
       <Transform x="10" y="10" width="1.6" height="1.6"> </Transform>
       <Sprite frame="Spaceship3"></Sprite>
       <Object>Enemy</Object>
@@ -55,22 +48,18 @@
         <Point x="0" y="15"></Point>
       </Patrol>
       <Movement>20</Movement>
-    </Components>
   </Entity>
 
   <Entity>
-    <Components>
-      <Transform></Transform>
-      <Body type="0" density="0.3">
-        <Circle radius="8.5"></Circle>
-      </Body>
-      <Sprite frame="Planet_D"></Sprite>
-      <Object>Asteroid</Object>
-    </Components>
+    <Transform></Transform>
+    <Body type="0" density="0.3">
+      <Circle radius="8.5"></Circle>
+    </Body>
+    <Sprite frame="Planet_D"></Sprite>
+    <Object>Asteroid</Object>
   </Entity>
 
   <Entity>
-    <Components>
       <Transform x="20"></Transform>
       <Sprite frame="BlueAsteroid"></Sprite>
       <Object>Asteroid</Object>
@@ -79,11 +68,9 @@
       </Body>
       <Speed linear="10" angular="25"></Speed>
       <Satellite primaryID="1"></Satellite>
-    </Components>
   </Entity>
 
   <Entity>
-    <Components>
       <Transform x="-30"></Transform>
       <Sprite frame="RockAsteroid"></Sprite>
       <Object>Asteroid</Object>
@@ -92,18 +79,13 @@
       </Body>
       <Speed linear="15" angular="2"></Speed>
       <Satellite primaryID="1" direction="1"></Satellite>
-    </Components>
   </Entity>
 
   <Entity>
-    <Components>
       <DistanceJoint IDA="2" IDB="3" collideConnected="true"></DistanceJoint>
-    </Components>
   </Entity>
 
   <Entity>
-    <Components>
       <DistanceJoint IDA="2" IDB="4" collideConnected="true"></DistanceJoint>
-    </Components>
   </Entity>
 </Entities>

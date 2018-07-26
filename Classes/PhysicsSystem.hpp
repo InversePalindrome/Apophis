@@ -33,7 +33,7 @@ public:
 	virtual void receive(const entityx::ComponentRemovedEvent<DistanceJointComponent>& event);
 	virtual void receive(const EntityParsed& event);
 	virtual void receive(const CreateBody& event);
-	virtual void receive(const CreateDistanceJoint& event);
+	virtual void receive(const CreateJoint<DistanceJointComponent>& event);
 
 private:
 	b2World world;
@@ -45,4 +45,26 @@ private:
 	entityx::EntityManager& entityManager;
 
 	void updateWorldCallbacks();
+
+	template<typename TJoint, typename TJointDef>
+	void createJoint(entityx::Entity entity, TJointDef jointDef);
+
+	void destroyBody(b2Body* body);
+	void destroyJoint(b2Joint* joint);
 };
+
+
+template<typename TJoint, typename TJointDef>
+void PhysicsSystem::createJoint(entityx::Entity entity, TJointDef jointDef)
+{
+	auto createJoint = [this, entity, jointDef]() mutable { entity.assign<TJoint>(world.CreateJoint(&jointDef)); };
+
+	if (world.IsLocked())
+	{
+		worldCallbacks.push_back(createJoint);
+	}
+	else
+	{
+		createJoint();
+	}
+}

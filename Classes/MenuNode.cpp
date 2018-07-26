@@ -58,7 +58,7 @@ bool MenuNode::init()
 
 	addChild(background);
 	addChild(menu);
-	
+
 	return true;
 }
 

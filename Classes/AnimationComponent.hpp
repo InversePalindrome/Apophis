@@ -23,7 +23,9 @@ public:
 	explicit AnimationComponent(const pugi::xml_node& componentNode);
 	~AnimationComponent();
 
-	void addAnimation(Animation animationName, cocos2d::Animation* animation);
+	void save(pugi::xml_node& componentNode) const;
+
+	void addAnimation(Animation animationName, const std::vector<std::string>& spriteFrameNames, float delay = 0.f);
 	void removeAnimation(Animation animationName);
 
 	cocos2d::Animation* getAnimation(Animation animationName) const;
@@ -31,5 +33,5 @@ public:
 	bool hasAnimation(Animation animationName) const;
 
 private:
-	std::unordered_map<Animation, cocos2d::Animation*, EnumHash<Animation>> animations;
+	std::unordered_map<Animation, std::pair<cocos2d::Animation*, std::vector<std::string>>, EnumHash<Animation>> animations;
 };

@@ -26,6 +26,15 @@ TransformComponent::TransformComponent(const pugi::xml_node& componentNode) :
 	}
 }
 
+void TransformComponent::save(pugi::xml_node& componentNode) const
+{
+	componentNode.set_name("Transform");
+
+	componentNode.append_attribute("x") = getPosition().x;
+	componentNode.append_attribute("y") = getPosition().y;
+	componentNode.append_attribute("angle") = getAngle();
+}
+
 b2Vec2 TransformComponent::getPosition() const
 {
 	return position;

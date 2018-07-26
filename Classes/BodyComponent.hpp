@@ -10,6 +10,8 @@ InversePalindrome.com
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2Fixture.h>
 
+#include <pugixml.hpp>
+
 #include <any>
 #include <vector>
 
@@ -19,6 +21,8 @@ class BodyComponent
 public:
 	explicit BodyComponent(b2Body* body);
 
+	void save(pugi::xml_node& componentNode) const;
+
 	void createFixture(const b2FixtureDef& fixtureDef);
 	void destroyFixture(b2Fixture* fixture);
 
@@ -26,7 +30,10 @@ public:
 	b2Body* getBody() const;
 
 	std::any getUserData() const;
-	void setUserData(std::any userData);
+	void setUserData(const std::any& userData);
+
+	b2BodyType getBodyType() const;
+	void setBodyType(b2BodyType bodyType);
 
 	b2Vec2 getPosition() const;
 	void setPosition(const b2Vec2& position);
@@ -43,6 +50,12 @@ public:
 	float getMass() const;
 	float getInertia() const;
 
+	float getLinearDamping() const;
+	void setLinearDamping(float linearDamping);
+
+	float getAngularDamping() const;
+	void setAngularDamping(float angularDamping);
+
 	b2AABB getAABB() const;
 	void computeAABB();
 
@@ -51,6 +64,12 @@ public:
 
 	void applyLinearForce(const b2Vec2& linearForce);
 	void applyAngularForce(float angularForce);
+
+	bool isRotationFixed() const;
+	void setRotationFixed(bool rotationFixed);
+
+	bool isBullet() const;
+	void setBullet(bool bullet);
 
 	bool contains(const b2Vec2& point) const;
 	bool raycast(b2RayCastOutput& output, const b2RayCastInput& input) const;

@@ -13,6 +13,12 @@ DamageComponent::DamageComponent(const pugi::xml_node& componentNode) :
 {
 }
 
+void DamageComponent::save(pugi::xml_node& componentNode) const
+{
+	componentNode.set_name("Damage");
+	componentNode.text().set(damageHitpoints);
+}
+
 float DamageComponent::getDamageHitpoints() const
 {
 	return damageHitpoints;

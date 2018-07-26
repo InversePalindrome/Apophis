@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "ParticleComponent.hpp"
 
+#include <cocos/2d/CCSpriteFrameCache.h>
+
 
 ParticleComponent::ParticleComponent(const pugi::xml_node& componentNode) :
 	NodeComponent(cocos2d::ParticleSystemQuad::create(), componentNode),
@@ -15,6 +17,10 @@ ParticleComponent::ParticleComponent(const pugi::xml_node& componentNode) :
 	if (const auto filenameAttribute = componentNode.attribute("filename"))
 	{
 	     initWithFile(filenameAttribute.as_string());
+	}
+	if (const auto spriteFrameName = componentNode.attribute("frame"))
+	{
+		setDisplayFrame(spriteFrameName.as_string());
 	}
 	if (const auto modeAttribute = componentNode.attribute("mode"))
 	{
@@ -86,7 +92,7 @@ ParticleComponent::ParticleComponent(const pugi::xml_node& componentNode) :
 		startColorGAttribute = componentNode.attribute("startG"),
 		startColorBAttribute = componentNode.attribute("startB"),
 		startColorAAttribute = componentNode.attribute("startA");
-	startColorRAttribute && startColorBAttribute && startColorGAttribute && startColorAAttribute)
+	    startColorRAttribute && startColorBAttribute && startColorGAttribute && startColorAAttribute)
 	{
 		setStartColor(cocos2d::Color4F(startColorRAttribute.as_uint(), startColorGAttribute.as_uint(), startColorBAttribute.as_uint(), startColorAAttribute.as_uint()));
 	}
@@ -116,9 +122,69 @@ ParticleComponent::ParticleComponent(const pugi::xml_node& componentNode) :
 	}
 }
 
+void ParticleComponent::save(pugi::xml_node& componentNode) const
+{
+	NodeComponent::save(componentNode);
+
+	componentNode.set_name("Particle");
+
+	if (!filename.empty())
+	{
+		componentNode.append_attribute("filename") = filename.c_str();
+	}
+
+	if (!spriteFrameName.empty())
+	{
+		componentNode.append_attribute("frame") = spriteFrameName.c_str();
+	}
+
+	componentNode.append_attribute("mode") = static_cast<int>(getMode());
+	componentNode.append_attribute("duration") = getDuration();
+	componentNode.append_attribute("emissionRate") = getEmissionRate();
+	componentNode.append_attribute("xGravity") = getGravity().x;
+	componentNode.append_attribute("yGravity") = getGravity().y;
+	componentNode.append_attribute("life") = getLife();
+	componentNode.append_attribute("lifeVar") = getLifeVar();
+	componentNode.append_attribute("speed") = getSpeed();
+	componentNode.append_attribute("speedVar") = getSpeedVar();
+	componentNode.append_attribute("tangentialAcceleration") = getTangentialAcceleration();
+	componentNode.append_attribute("tangentialAccelerationVar") = getTangentialAccelerationVar();
+	componentNode.append_attribute("radialAcceleration") = getRadialAcceleration();
+	componentNode.append_attribute("radialAccelerationVar") = getRadialAccelerationVar();
+	componentNode.append_attribute("startRadius") = getStartRadius();
+	componentNode.append_attribute("startRadiusVar") = getStartRadiusVar();
+	componentNode.append_attribute("endRadius") = getEndRadius();
+	componentNode.append_attribute("endRadiusVar") = getEndRadiusVar();
+	componentNode.append_attribute("startR") = getStartColor().r;
+	componentNode.append_attribute("startG") = getStartColor().g;
+	componentNode.append_attribute("startB") = getStartColor().b;
+	componentNode.append_attribute("startA") = getStartColor().a;
+	componentNode.append_attribute("starVartR") = getStartColorVar().r;
+	componentNode.append_attribute("startVarG") = getStartColorVar().g;
+	componentNode.append_attribute("startVarB") = getStartColorVar().b;
+	componentNode.append_attribute("startVarA") = getStartColorVar().a;
+	componentNode.append_attribute("endR") = getEndColor().r;
+	componentNode.append_attribute("endG") = getEndColor().g;
+	componentNode.append_attribute("endB") = getEndColor().b;
+	componentNode.append_attribute("endA") = getEndColor().a;
+	componentNode.append_attribute("endVarR") = getEndColorVar().r;
+	componentNode.append_attribute("endVarG") = getEndColorVar().g;
+	componentNode.append_attribute("endVarB") = getEndColorVar().b;
+	componentNode.append_attribute("endVarA") = getEndColorVar().a;
+}
+
 void ParticleComponent::initWithFile(const std::string& filename)
 {
+	this->filename = filename;
+
 	emitter->initWithFile(filename + ".plist");
+}
+
+void ParticleComponent::setDisplayFrame(const std::string& spriteFrameName)
+{
+	this->spriteFrameName = spriteFrameName;
+
+	emitter->setDisplayFrame(cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFrameName));
 }
 
 cocos2d::ParticleSystem::Mode ParticleComponent::getMode() const

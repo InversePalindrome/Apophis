@@ -22,6 +22,14 @@ SpeedComponent::SpeedComponent(const pugi::xml_node& componentNode) :
 	}
 }
 
+void SpeedComponent::save(pugi::xml_node& componentNode) const
+{
+	componentNode.set_name("Speed");
+
+	componentNode.append_attribute("linear") = getMaxLinearSpeed();
+	componentNode.append_attribute("angular") = getMaxAngularSpeed();
+}
+
 float SpeedComponent::getMaxLinearSpeed() const
 {
 	return maxLinearSpeed;

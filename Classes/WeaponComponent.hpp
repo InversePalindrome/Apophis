@@ -17,6 +17,8 @@ class WeaponComponent
 public:
     explicit WeaponComponent(const pugi::xml_node& componentNode);
 
+	void save(pugi::xml_node& componentNode) const;
+
 	std::string getProjectileName() const;
 	void setProjectileName(const std::string& projectileName);
 

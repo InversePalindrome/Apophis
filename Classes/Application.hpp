@@ -17,6 +17,8 @@ public:
 	Application(const Application&) = delete;
 	Application& operator= (const Application&) = delete;
 
+	~Application();
+
 	virtual bool applicationDidFinishLaunching() override;
 	virtual void applicationDidEnterBackground() override;
 	virtual void applicationWillEnterForeground() override;

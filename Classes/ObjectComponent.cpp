@@ -13,6 +13,13 @@ ObjectComponent::ObjectComponent(const pugi::xml_node& componentNode) :
 {
 }
 
+void ObjectComponent::save(pugi::xml_node& componentNode) const
+{
+	componentNode.set_name("Object");
+
+	componentNode.text().set(objectType._to_string());
+}
+
 ObjectType ObjectComponent::getObjectType() const
 {
 	return objectType;

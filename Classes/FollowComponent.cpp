@@ -13,6 +13,13 @@ FollowComponent::FollowComponent(const pugi::xml_node& componentNode) :
 {
 }
 
+void FollowComponent::save(pugi::xml_node& componentNode) const
+{
+	componentNode.set_name("Follow");
+
+	componentNode.text().set(distanceFromLeader);
+}
+
 float FollowComponent::getDistanceFromLeader() const
 {
 	return distanceFromLeader;

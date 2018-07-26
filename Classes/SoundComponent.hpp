@@ -21,6 +21,8 @@ class SoundComponent
 public:
 	explicit SoundComponent(const pugi::xml_node& componentNode);
 
+	void save(pugi::xml_node& componentNode) const;
+
 	std::string getSoundFile(Sound sound) const;
 
 	int getSoundID(Sound sound) const;

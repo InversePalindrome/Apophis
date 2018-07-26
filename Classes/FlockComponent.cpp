@@ -22,6 +22,14 @@ FlockComponent::FlockComponent(const pugi::xml_node& componentNode) :
 	}
 }
 
+void FlockComponent::save(pugi::xml_node& componentNode) const
+{
+	componentNode.set_name("Flock");
+
+	componentNode.append_attribute("id") = getGroupID();
+	componentNode.append_attribute("radius") = getGroupRadius();
+}
+
 int FlockComponent::getGroupID() const
 {
 	return groupID;

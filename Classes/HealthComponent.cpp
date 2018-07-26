@@ -14,6 +14,13 @@ HealthComponent::HealthComponent(const pugi::xml_node& componentNode) :
 {
 }
 
+void HealthComponent::save(pugi::xml_node& componentNode) const
+{
+	componentNode.set_name("Health");
+
+	componentNode.text().set(maxHitpoints);
+}
+
 float HealthComponent::getMaxHitpoints() const
 {
 	return maxHitpoints;
