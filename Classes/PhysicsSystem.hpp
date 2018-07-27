@@ -47,7 +47,7 @@ private:
 	void updateWorldCallbacks();
 
 	template<typename TJoint, typename TJointDef>
-	void createJoint(entityx::Entity entity, TJointDef jointDef);
+	void createJoint(entityx::Entity entity, TJointDef jointDef, std::size_t entityIDA, std::size_t entityIDB);
 
 	void destroyBody(b2Body* body);
 	void destroyJoint(b2Joint* joint);
@@ -55,9 +55,9 @@ private:
 
 
 template<typename TJoint, typename TJointDef>
-void PhysicsSystem::createJoint(entityx::Entity entity, TJointDef jointDef)
+void PhysicsSystem::createJoint(entityx::Entity entity, TJointDef jointDef, std::size_t entityIDA, std::size_t entityIDB)
 {
-	auto createJoint = [this, entity, jointDef]() mutable { entity.assign<TJoint>(world.CreateJoint(&jointDef)); };
+	auto createJoint = [this, entity, jointDef, entityIDA, entityIDB]() mutable { entity.assign<TJoint>(world.CreateJoint(&jointDef), entityIDA, entityIDB);	};
 
 	if (world.IsLocked())
 	{

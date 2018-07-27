@@ -17,7 +17,7 @@ InversePalindrome.com
 class DistanceJointComponent : public JointComponent
 {
 public:
-	explicit DistanceJointComponent(b2Joint* distanceJoint);
+	DistanceJointComponent(b2Joint* distanceJoint, std::size_t entityIDA, std::size_t entityIDB);
 
 	void save(pugi::xml_node& componentNode) const;
 

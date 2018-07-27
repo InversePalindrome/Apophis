@@ -162,30 +162,30 @@ void PhysicsSystem::receive(const CreateBody& event)
 
 void PhysicsSystem::receive(const CreateJoint<DistanceJointComponent>& event)
 {
-	b2DistanceJointDef distanceJointDef;
-	
-	std::size_t idA = 0u, idB = 0u;
-	
-	if (const auto idAAttribute = event.jointNode.attribute("IDA"))
+	std::size_t entityIDA = 0u, entityIDB = 0u;
+
+	if (const auto entityIDAAttribute = event.jointNode.attribute("idA"))
 	{
-		idA = idAAttribute.as_uint();
+		entityIDA = entityIDAAttribute.as_uint();
 	}
-	if (const auto idBAttribute = event.jointNode.attribute("IDB"))
+	if (const auto entityIDBAttribute = event.jointNode.attribute("idB"))
 	{
-		idB = idBAttribute.as_uint();
+		entityIDB = entityIDBAttribute.as_uint();
 	}
 
-	if (auto entityA = entityManager.get(entityManager.create_id(idA)),
-        entityB = entityManager.get(entityManager.create_id(idB)); 
-	    entityA && entityB)
+	if (auto entityA = entityManager.get(entityManager.create_id(entityIDA)),
+		entityB = entityManager.get(entityManager.create_id(entityIDB));
+     	entityA && entityB)
 	{
 		if (auto bodyA = entityA.component<BodyComponent>(),
-		    bodyB = entityB.component<BodyComponent>(); 
+			bodyB = entityB.component<BodyComponent>();
 		    bodyA && bodyB)
 		{
+			b2DistanceJointDef distanceJointDef;
+
 			JointParser::parseDistanceJointDef(distanceJointDef, bodyA->getBody(), bodyB->getBody(), event.jointNode);
 
-			createJoint<DistanceJointComponent, b2DistanceJointDef>(event.entity, distanceJointDef);
+			createJoint<DistanceJointComponent, b2DistanceJointDef>(event.entity, distanceJointDef, entityIDA, entityIDB);
 		}
 	}
 }

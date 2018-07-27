@@ -20,25 +20,25 @@ void JointParser::parseDistanceJointDef(b2DistanceJointDef& distanceJointDef, b2
 {
 	parseJointDef(distanceJointDef, jointNode);
 
-	b2Vec2 localAnchorA(0.f, 0.f);
-	b2Vec2 localAnchorB(0.f, 0.f);
+	b2Vec2 anchorA(0.f, 0.f);
+	b2Vec2 anchorB(0.f, 0.f);
 
 	if (const auto anchorAXAttribute = jointNode.attribute("anchorAX"))
 	{
-		localAnchorA.x = anchorAXAttribute.as_float();
+		anchorA.x = anchorAXAttribute.as_float();
 	}
 	if (const auto anchorAYAttribute = jointNode.attribute("anchorAY"))
 	{
-		localAnchorA.y = anchorAYAttribute.as_float();
+		anchorA.y = anchorAYAttribute.as_float();
 	}
 	if (const auto anchorBXAttribute = jointNode.attribute("anchorBX"))
 	{
-		localAnchorB.x = anchorBXAttribute.as_float();
+		anchorB.x = anchorBXAttribute.as_float();
 	}
 	if (const auto anchorBYAttribute = jointNode.attribute("anchorBY"))
 	{
-		localAnchorB.y = anchorBYAttribute.as_float();
+		anchorB.y = anchorBYAttribute.as_float();
 	}
 
-	distanceJointDef.Initialize(bodyA, bodyB, localAnchorA, localAnchorB);
+	distanceJointDef.Initialize(bodyA, bodyB, anchorA, anchorB);
 }

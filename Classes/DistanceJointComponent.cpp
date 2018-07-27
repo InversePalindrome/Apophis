@@ -8,8 +8,8 @@ InversePalindrome.com
 #include "DistanceJointComponent.hpp"
 
 
-DistanceJointComponent::DistanceJointComponent(b2Joint* distanceJoint) :
-	JointComponent(distanceJoint),
+DistanceJointComponent::DistanceJointComponent(b2Joint* distanceJoint, std::size_t entityIDA, std::size_t entityIDB) :
+	JointComponent(distanceJoint, entityIDA, entityIDB),
 	distanceJoint(static_cast<b2DistanceJoint*>(distanceJoint))
 {
 }

@@ -42,36 +42,36 @@ InversePalindrome.com
 EntityFactory::EntityFactory(entityx::EntityManager& entityManager, entityx::EventManager& eventManager) :
 	entityManager(entityManager),
 	eventManager(eventManager),
-	componentParsers{ 
-		               { "Sprite", [](auto entity, const auto& componentNode) { entity.assign<SpriteComponent>(componentNode); } },
-	                   { "Label", [](auto entity, const auto& componentNode) { entity.assign<LabelComponent>(componentNode); } },
-		               { "Particle", [](auto entity, const auto& componentNode) { entity.assign<ParticleComponent>(componentNode); } },
-                       { "Body", [&eventManager](auto entity, const auto& componentNode) { eventManager.emit(CreateBody{ entity, componentNode }); }},
-               		   { "DistanceJoint", [&eventManager](auto entity, const auto& componentNode) { eventManager.emit(CreateJoint<DistanceJointComponent>{ entity, componentNode }); } },
-                	   { "Transform", [](auto entity, const auto& componentNode) { entity.assign<TransformComponent>(componentNode); } },
-                       { "Object", [](auto entity, const auto& componentNode) { entity.assign<ObjectComponent>(componentNode); }},
-                       { "Pursue", [](auto entity, const auto& componentNode) { entity.assign<PursueComponent>(componentNode); }},
-                       { "Avoid", [](auto entity, const auto& componentNode) { entity.assign<AvoidComponent>(componentNode); }},
-		               { "Wander", [](auto entity, const auto& componentNode) { entity.assign<WanderComponent>(componentNode); } },
-	                   { "Patrol", [](auto entity, const auto& componentNode) { entity.assign<PatrolComponent>(componentNode); } },
-		               { "Flock", [](auto entity, const auto& componentNode) { entity.assign<FlockComponent>(componentNode); } },
-		               { "Follow", [](auto entity, const auto& componentNode) { entity.assign<FollowComponent>(componentNode); } },
-                       { "Queue", [](auto entity, const auto& componentNode) { entity.assign<QueueComponent>(componentNode); }},
-                       { "Satellite", [](auto entity, const auto& componentNode) { entity.assign<SatelliteComponent>(componentNode); }},
-	                   { "Drop", [](auto entity, const auto& componentNode) { entity.assign<DropComponent>(componentNode); } },
-                       { "Health", [](auto entity, const auto& componentNode) { entity.assign<HealthComponent>(componentNode); }},
-                       { "Damage", [](auto entity, const auto& componentNode) { entity.assign<DamageComponent>(componentNode); }},
-                       { "Vision", [](auto entity, const auto& componentNode) { entity.assign<VisionComponent>(componentNode); }},
-		               { "Sound", [](auto entity, const auto& componentNode) { entity.assign<SoundComponent>(componentNode); } },
-	                   { "Animation", [](auto entity, const auto& componentNode) { entity.assign<AnimationComponent>(componentNode); } },
-                       { "Weapon", [](auto entity, const auto& componentNode) { entity.assign<WeaponComponent>(componentNode); }},
-	                   { "Explosion", [](auto entity, const auto& componentNode) { entity.assign<ExplosionComponent>(componentNode); } },
-                       { "Speed", [](auto entity, const auto& componentNode) { entity.assign<SpeedComponent>(componentNode); }},
-                       { "Acceleration", [](auto entity, const auto& componentNode) { entity.assign<AccelerationComponent>(componentNode); }},
-	                   { "SpeedBoost", [](auto entity, const auto& componentNode) { entity.assign<SpeedBoostComponent>(componentNode); } },
-                       { "RegenBoost", [](auto entity, const auto& componentNode) { entity.assign<RegenBoostComponent>(componentNode); }},
+	componentParsers{
+					   { "Sprite", [](auto entity, const auto& componentNode) { entity.assign<SpriteComponent>(componentNode); } },
+					   { "Label", [](auto entity, const auto& componentNode) { entity.assign<LabelComponent>(componentNode); } },
+					   { "Particle", [](auto entity, const auto& componentNode) { entity.assign<ParticleComponent>(componentNode); } },
+					   { "Body", [&eventManager](auto entity, const auto& componentNode) { eventManager.emit(CreateBody{ entity, componentNode }); }},
+					   { "DistanceJoint", [&eventManager](auto entity, const auto& componentNode) { eventManager.emit(CreateJoint<DistanceJointComponent>{ entity, componentNode }); } },
+					   { "Transform", [](auto entity, const auto& componentNode) { entity.assign<TransformComponent>(componentNode); } },
+					   { "Object", [](auto entity, const auto& componentNode) { entity.assign<ObjectComponent>(componentNode); }},
+					   { "Pursue", [](auto entity, const auto& componentNode) { entity.assign<PursueComponent>(componentNode); }},
+					   { "Avoid", [](auto entity, const auto& componentNode) { entity.assign<AvoidComponent>(componentNode); }},
+					   { "Wander", [](auto entity, const auto& componentNode) { entity.assign<WanderComponent>(componentNode); } },
+					   { "Patrol", [](auto entity, const auto& componentNode) { entity.assign<PatrolComponent>(componentNode); } },
+					   { "Flock", [](auto entity, const auto& componentNode) { entity.assign<FlockComponent>(componentNode); } },
+					   { "Follow", [](auto entity, const auto& componentNode) { entity.assign<FollowComponent>(componentNode); } },
+					   { "Queue", [](auto entity, const auto& componentNode) { entity.assign<QueueComponent>(componentNode); }},
+					   { "Satellite", [](auto entity, const auto& componentNode) { entity.assign<SatelliteComponent>(componentNode); }},
+					   { "Drop", [](auto entity, const auto& componentNode) { entity.assign<DropComponent>(componentNode); } },
+					   { "Health", [](auto entity, const auto& componentNode) { entity.assign<HealthComponent>(componentNode); }},
+					   { "Damage", [](auto entity, const auto& componentNode) { entity.assign<DamageComponent>(componentNode); }},
+					   { "Vision", [](auto entity, const auto& componentNode) { entity.assign<VisionComponent>(componentNode); }},
+					   { "Sound", [](auto entity, const auto& componentNode) { entity.assign<SoundComponent>(componentNode); } },
+					   { "Animation", [](auto entity, const auto& componentNode) { entity.assign<AnimationComponent>(componentNode); } },
+					   { "Weapon", [](auto entity, const auto& componentNode) { entity.assign<WeaponComponent>(componentNode); }},
+					   { "Explosion", [](auto entity, const auto& componentNode) { entity.assign<ExplosionComponent>(componentNode); } },
+					   { "Speed", [](auto entity, const auto& componentNode) { entity.assign<SpeedComponent>(componentNode); }},
+					   { "Acceleration", [](auto entity, const auto& componentNode) { entity.assign<AccelerationComponent>(componentNode); }},
+					   { "SpeedBoost", [](auto entity, const auto& componentNode) { entity.assign<SpeedBoostComponent>(componentNode); } },
+					   { "RegenBoost", [](auto entity, const auto& componentNode) { entity.assign<RegenBoostComponent>(componentNode); }},
 					   { "Player", [](auto entity, const auto&) {entity.assign<PlayerComponent>(); }},
-                       { "Striker", [](auto entity, const auto&) { entity.assign<StrikerComponent>(); } },
+					   { "Striker", [](auto entity, const auto&) { entity.assign<StrikerComponent>(); } }
                    }
 {
 }
@@ -87,7 +87,7 @@ entityx::Entity EntityFactory::createEntity(const std::string& name)
 			parseEntity(entity, entityNode);
 		}
 	}
-
+	
 	return entity;
 }
 

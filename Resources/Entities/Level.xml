@@ -82,10 +82,10 @@
   </Entity>
 
   <Entity>
-      <DistanceJoint IDA="2" IDB="3" collideConnected="true"></DistanceJoint>
+      <DistanceJoint idA="2" idB="3" collideConnected="true"></DistanceJoint>
   </Entity>
 
   <Entity>
-      <DistanceJoint IDA="2" IDB="4" collideConnected="true"></DistanceJoint>
+      <DistanceJoint idA="2" idB="4" collideConnected="true"></DistanceJoint>
   </Entity>
 </Entities>

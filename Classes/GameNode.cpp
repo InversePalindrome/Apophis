@@ -30,8 +30,7 @@ InversePalindrome.com
 GameNode::GameNode() :
 	entityManager(eventManager),
 	systemManager(entityManager, eventManager),
-	entityFactory(entityManager, eventManager),
-	entitySerializer(entityManager)
+	entityFactory(entityManager, eventManager)
 {
 }
 
@@ -49,7 +48,7 @@ bool GameNode::init()
 		if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_ESCAPE)
 		{
 			unscheduleUpdate();
-			
+		
 			getEventDispatcher()->dispatchCustomEvent("pause");
 		}
 	};
