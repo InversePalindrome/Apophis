@@ -23,7 +23,7 @@ BodyComponent::BodyComponent(b2Body* body) :
 void BodyComponent::save(pugi::xml_node& componentNode) const
 {
 	componentNode.set_name("Body");
-	
+
 	componentNode.append_attribute("type") = getBodyType();
 	componentNode.append_attribute("x") = getPosition().x;
 	componentNode.append_attribute("y") = getPosition().y;
@@ -32,7 +32,7 @@ void BodyComponent::save(pugi::xml_node& componentNode) const
 	componentNode.append_attribute("fixedRotation") = isRotationFixed();
 	componentNode.append_attribute("bullet") = isBullet();
 
-	for (const auto& fixture : fixtures)
+	for (const auto* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
 	{
 		auto fixtureNode = componentNode.append_child();
 
@@ -40,12 +40,12 @@ void BodyComponent::save(pugi::xml_node& componentNode) const
 		fixtureNode.append_attribute("friction") = fixture->GetFriction();
 		fixtureNode.append_attribute("restitution") = fixture->GetRestitution();
 		fixtureNode.append_attribute("sensor") = fixture->IsSensor();
-
+		
 		switch (fixture->GetType())
 		{
 		case b2Shape::e_circle:
 		{
-			const auto* circleShape = static_cast<b2CircleShape*>(fixture->GetShape());
+			const auto* circleShape = static_cast<const b2CircleShape*>(fixture->GetShape());
 
 			fixtureNode.set_name("Circle");
 			fixtureNode.append_attribute("x") = circleShape->m_p.x;
@@ -56,7 +56,7 @@ void BodyComponent::save(pugi::xml_node& componentNode) const
 
 		case b2Shape::e_polygon:
 		{
-			const auto* polygonShape = static_cast<b2PolygonShape*>(fixture->GetShape());
+			const auto* polygonShape = static_cast<const b2PolygonShape*>(fixture->GetShape());
 
 			fixtureNode.set_name("Polygon");
 
@@ -72,15 +72,13 @@ void BodyComponent::save(pugi::xml_node& componentNode) const
 	}
 }
 
-void BodyComponent::createFixture(const b2FixtureDef& fixtureDef)
+b2Fixture* BodyComponent::createFixture(const b2FixtureDef& fixtureDef)
 {
-	fixtures.push_back(body->CreateFixture(&fixtureDef));
+	return body->CreateFixture(&fixtureDef);
 }
 
 void BodyComponent::destroyFixture(b2Fixture* fixture)
 {
-	fixtures.erase(std::remove(std::begin(fixtures), std::end(fixtures), fixture), std::end(fixtures));
-
 	body->DestroyFixture(fixture);
 }
 
@@ -92,6 +90,26 @@ b2Body* BodyComponent::getBody()
 b2Body* BodyComponent::getBody() const
 {
 	return body;
+}
+
+b2Fixture* BodyComponent::getFixtureList()
+{
+	return body->GetFixtureList();
+}
+
+const b2Fixture* BodyComponent::getFixtureList() const
+{
+	return body->GetFixtureList();
+}
+
+b2JointEdge* BodyComponent::getJointList()
+{
+	return body->GetJointList();
+}
+
+const b2JointEdge* BodyComponent::getJointList() const
+{
+	return body->GetJointList();
 }
 
 std::any BodyComponent::getUserData() const
@@ -191,7 +209,7 @@ b2AABB BodyComponent::getAABB() const
 
 void BodyComponent::computeAABB()
 {
-	for (const auto& fixture : fixtures)
+	for (const auto* fixture = getFixtureList(); fixture; fixture = fixture->GetNext())
 	{
 		for (int child = 0; child < fixture->GetShape()->GetChildCount(); ++child)
 		{
@@ -248,7 +266,7 @@ void BodyComponent::setBullet(bool bullet)
 
 bool BodyComponent::contains(const b2Vec2& point) const
 {
-	for (const auto& fixture : fixtures)
+	for (const auto* fixture = getFixtureList(); fixture; fixture = fixture->GetNext())
 	{
 		if (fixture->TestPoint(point))
 		{
@@ -261,7 +279,7 @@ bool BodyComponent::contains(const b2Vec2& point) const
 
 bool BodyComponent::raycast(b2RayCastOutput& output, const b2RayCastInput& input) const
 {
-	for (const auto& fixture : fixtures)
+	for (const auto* fixture = getFixtureList(); fixture; fixture = fixture->GetNext())
 	{
 		if (fixture->RayCast(&output, input, 0))
 		{

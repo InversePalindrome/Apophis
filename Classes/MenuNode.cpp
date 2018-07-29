@@ -8,6 +8,7 @@ InversePalindrome.com
 #include "MenuNode.hpp"
 #include "GameNode.hpp"
 #include "SettingsNode.hpp"
+#include "LevelEditorNode.hpp"
 
 #include <cocos/2d/CCMenu.h>
 #include <cocos/2d/CCLabel.h>
@@ -36,6 +37,14 @@ bool MenuNode::init()
 	playLabel->setPosition(playItem->getContentSize().width / 2.f, playItem->getContentSize().height / 2.f);
 	playItem->addChild(playLabel);
 
+	auto* createItem = cocos2d::MenuItemSprite::create(cocos2d::Sprite::createWithSpriteFrameName("RegularRectangleButton"), cocos2d::Sprite::createWithSpriteFrameName("SelectedRectangleButton"),
+		[director](auto* sender) { director->replaceScene(LevelEditorNode::scene()); });
+
+	auto* createLabel = cocos2d::Label::createWithTTF("create", "Zian.ttf", 60.f);
+	createLabel->setTextColor(cocos2d::Color4B(135, 206, 250, 255));
+	createLabel->setPosition(playItem->getContentSize().width / 2.f, playItem->getContentSize().height / 2.f);
+	createItem->addChild(createLabel);
+
 	auto* settingsItem = cocos2d::MenuItemSprite::create(cocos2d::Sprite::createWithSpriteFrameName("RegularRectangleButton"), cocos2d::Sprite::createWithSpriteFrameName("SelectedRectangleButton"), 
 		[director](auto* sender) { director->pushScene(SettingsNode::scene()); });
 
@@ -52,7 +61,7 @@ bool MenuNode::init()
 	exitLabel->setPosition(exitItem->getContentSize().width / 2.f, exitItem->getContentSize().height / 2.f);
 	exitItem->addChild(exitLabel);
 
-	auto* menu = cocos2d::Menu::create(playItem, settingsItem, exitItem, nullptr);
+	auto* menu = cocos2d::Menu::create(playItem, createItem, settingsItem, exitItem, nullptr);
 	menu->alignItemsVertically();
 	menu->setPosition(director->getWinSize().width / 2.f, director->getWinSize().height / 2.f);
 

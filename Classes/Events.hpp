@@ -36,6 +36,12 @@ struct CreateJoint
 	pugi::xml_node jointNode;
 };
 
+template<typename T>
+struct DestroyJoint
+{
+	entityx::ComponentHandle<T> joint;
+};
+
 struct ShootProjectile
 {
 	mutable entityx::Entity shooter;

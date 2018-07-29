@@ -9,11 +9,11 @@ InversePalindrome.com
 
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2Fixture.h>
+#include <Box2D/Dynamics/Joints/b2Joint.h>
 
 #include <pugixml.hpp>
 
 #include <any>
-#include <vector>
 
 
 class BodyComponent
@@ -23,11 +23,17 @@ public:
 
 	void save(pugi::xml_node& componentNode) const;
 
-	void createFixture(const b2FixtureDef& fixtureDef);
+	b2Fixture* createFixture(const b2FixtureDef& fixtureDef);
 	void destroyFixture(b2Fixture* fixture);
 
 	b2Body* getBody();
 	b2Body* getBody() const;
+
+	b2Fixture* getFixtureList();
+	const b2Fixture* getFixtureList() const;
+
+	b2JointEdge* getJointList();
+	const b2JointEdge* getJointList() const;
 
 	std::any getUserData() const;
 	void setUserData(const std::any& userData);
@@ -76,7 +82,6 @@ public:
 
 private:
 	b2Body* body;
-	std::vector<b2Fixture*> fixtures;
 
 	b2AABB AABB;
 

@@ -11,6 +11,7 @@ InversePalindrome.com
 #include "BodyComponent.hpp"
 #include "CollisionFilter.hpp"
 #include "CollisionManager.hpp"
+#include "DestructionListener.hpp"
 #include "DistanceJointComponent.hpp"
 
 #include <Box2D/Dynamics/b2World.h>
@@ -30,15 +31,16 @@ public:
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
 	virtual void receive(const entityx::EntityDestroyedEvent& event);
 	virtual void receive(const entityx::ComponentRemovedEvent<BodyComponent>& event);
-	virtual void receive(const entityx::ComponentRemovedEvent<DistanceJointComponent>& event);
 	virtual void receive(const EntityParsed& event);
 	virtual void receive(const CreateBody& event);
 	virtual void receive(const CreateJoint<DistanceJointComponent>& event);
+	virtual void receive(const DestroyJoint<DistanceJointComponent>& event);
 
 private:
 	b2World world;
 	CollisionManager collisionManager;
 	CollisionFilter collisionFilter;
+	DestructionListener destructionListener;
 
 	std::vector<std::function<void()>> worldCallbacks;
 
@@ -46,25 +48,8 @@ private:
 
 	void updateWorldCallbacks();
 
-	template<typename TJoint, typename TJointDef>
-	void createJoint(entityx::Entity entity, TJointDef jointDef, std::size_t entityIDA, std::size_t entityIDB);
-
 	void destroyBody(b2Body* body);
 	void destroyJoint(b2Joint* joint);
+
+	void modifyWorld(const std::function<void()>& function);
 };
-
-
-template<typename TJoint, typename TJointDef>
-void PhysicsSystem::createJoint(entityx::Entity entity, TJointDef jointDef, std::size_t entityIDA, std::size_t entityIDB)
-{
-	auto createJoint = [this, entity, jointDef, entityIDA, entityIDB]() mutable { entity.assign<TJoint>(world.CreateJoint(&jointDef), entityIDA, entityIDB);	};
-
-	if (world.IsLocked())
-	{
-		worldCallbacks.push_back(createJoint);
-	}
-	else
-	{
-		createJoint();
-	}
-}

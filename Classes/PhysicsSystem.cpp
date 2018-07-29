@@ -21,20 +21,22 @@ InversePalindrome.com
 PhysicsSystem::PhysicsSystem(entityx::EntityManager& entityManager, entityx::EventManager& eventManager) :
 	world({ 0.f, 0.f }),
 	collisionManager(eventManager),
+	destructionListener(entityManager),
 	entityManager(entityManager)
 {
 	world.SetContactListener(&collisionManager);
 	world.SetContactFilter(&collisionFilter);
+	world.SetDestructionListener(&destructionListener);
 }
 
 void PhysicsSystem::configure(entityx::EventManager& eventManager)
 {
 	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
 	eventManager.subscribe<entityx::ComponentRemovedEvent<BodyComponent>>(*this);
-	eventManager.subscribe<entityx::ComponentRemovedEvent<DistanceJointComponent>>(*this);
 	eventManager.subscribe<EntityParsed>(*this);
 	eventManager.subscribe<CreateBody>(*this);
 	eventManager.subscribe<CreateJoint<DistanceJointComponent>>(*this);
+	eventManager.subscribe<DestroyJoint<DistanceJointComponent>>(*this);
 }
 
 void PhysicsSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
@@ -53,12 +55,7 @@ void PhysicsSystem::update(entityx::EntityManager& entityManager, entityx::Event
 void PhysicsSystem::receive(const entityx::EntityDestroyedEvent& event)
 {
 	auto entity = event.entity;
-
-	if (auto body = entity.component<BodyComponent>())
-	{
-		destroyBody(body->getBody());
-	}
-
+	
 	brigand::for_each<Joints>([this, entity](auto jointElement) mutable
 	{
 		if (auto joint = entity.component<decltype(jointElement)::type>())
@@ -66,6 +63,11 @@ void PhysicsSystem::receive(const entityx::EntityDestroyedEvent& event)
 			destroyJoint(joint->getJoint());
 		}
 	});
+
+	if (auto body = entity.component<BodyComponent>())
+	{
+		destroyBody(body->getBody());
+	}
 }
 
 void PhysicsSystem::receive(const entityx::ComponentRemovedEvent<BodyComponent>& event)
@@ -73,30 +75,16 @@ void PhysicsSystem::receive(const entityx::ComponentRemovedEvent<BodyComponent>&
 	destroyBody(event.component->getBody());
 }
 
-void PhysicsSystem::receive(const entityx::ComponentRemovedEvent<DistanceJointComponent>& event)
-{
-	destroyJoint(event.component->getJoint());
-}
-
 void PhysicsSystem::receive(const EntityParsed& event)
 {
-	auto setupTransform = [event]()
+	modifyWorld([event]()
 	{
 		if (auto[body, transform] = event.entity.components<BodyComponent, TransformComponent>(); body && transform)
 		{
 			body->setPosition(transform->getPosition());
 			body->setAngle(Conversions::degreesToRadians(transform->getAngle()));
 		}
-	};
-
-	if (world.IsLocked())
-	{
-		worldCallbacks.push_back(setupTransform);
-	}
-	else
-	{
-		setupTransform();
-	}
+	});
 }
 
 void PhysicsSystem::receive(const CreateBody& event)
@@ -135,7 +123,7 @@ void PhysicsSystem::receive(const CreateBody& event)
 		fixtures.push_back({ fixtureDef, shape });
 	}
 
-    auto createBody = [this, event, bodyDef, fixtures]()
+    modifyWorld([this, event, bodyDef, fixtures]()
 	{
 		auto body = event.entity.assign<BodyComponent>(world.CreateBody(&bodyDef));
 		body->setUserData(event.entity);
@@ -148,22 +136,13 @@ void PhysicsSystem::receive(const CreateBody& event)
 		}
 
 		body->computeAABB();
-	};
-
-	if (world.IsLocked())
-	{
-		worldCallbacks.push_back(createBody);
-	}
-	else
-	{
-		createBody();
-	}
+	});
 }
 
 void PhysicsSystem::receive(const CreateJoint<DistanceJointComponent>& event)
 {
 	std::size_t entityIDA = 0u, entityIDB = 0u;
-
+	
 	if (const auto entityIDAAttribute = event.jointNode.attribute("idA"))
 	{
 		entityIDA = entityIDAAttribute.as_uint();
@@ -185,9 +164,21 @@ void PhysicsSystem::receive(const CreateJoint<DistanceJointComponent>& event)
 
 			JointParser::parseDistanceJointDef(distanceJointDef, bodyA->getBody(), bodyB->getBody(), event.jointNode);
 
-			createJoint<DistanceJointComponent, b2DistanceJointDef>(event.entity, distanceJointDef, entityIDA, entityIDB);
+			modifyWorld([this, event, distanceJointDef, entityIDA, entityIDB]() mutable
+			{
+				event.entity.assign<DistanceJointComponent>(world.CreateJoint(&distanceJointDef), entityIDA, entityIDB);
+			});
 		}
 	}
+}
+
+void PhysicsSystem::receive(const DestroyJoint<DistanceJointComponent>& event)
+{
+	auto joint = event.joint;
+
+	destroyJoint(joint->getJoint());
+
+	joint.remove();
 }
 
 void PhysicsSystem::updateWorldCallbacks()
@@ -202,28 +193,22 @@ void PhysicsSystem::updateWorldCallbacks()
 
 void PhysicsSystem::destroyBody(b2Body* body)
 {
-	auto destroyBody = [this, body]() { world.DestroyBody(body); };
-
-	if (world.IsLocked())
-	{
-		worldCallbacks.push_back(destroyBody);
-	}
-	else
-	{
-		destroyBody();
-	}
+    modifyWorld([this, body]() { world.DestroyBody(body); });
 }
 
 void PhysicsSystem::destroyJoint(b2Joint* joint)
 {
-	auto destroyJoint = [this, joint] { world.DestroyJoint(joint); };
+	modifyWorld([this, joint] { world.DestroyJoint(joint); });
+}
 
+void PhysicsSystem::modifyWorld(const std::function<void()>& function)
+{
 	if (world.IsLocked())
 	{
-		worldCallbacks.push_back(destroyJoint);
+		worldCallbacks.push_back(function);
 	}
 	else
 	{
-		destroyJoint();
+		function();
 	}
 }
