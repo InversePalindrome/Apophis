@@ -7,14 +7,16 @@ InversePalindrome.com
 
 #include "ItemSystem.hpp"
 #include "Conversions.hpp"
+#include "EntityParser.hpp"
 #include "DropComponent.hpp"
 #include "SpeedComponent.hpp"
 #include "HealthComponent.hpp"
 #include "TransformComponent.hpp"
 
 
-ItemSystem::ItemSystem(EntityFactory& entityFactory) :
-	entityFactory(entityFactory),
+ItemSystem::ItemSystem(entityx::EntityManager& entityManager, entityx::EventManager& eventManager) :
+	entityManager(entityManager),
+	eventManager(eventManager),
 	randomEngine(std::random_device()())
 {
 }
@@ -41,7 +43,8 @@ void ItemSystem::receive(const entityx::EntityDestroyedEvent& event)
 
 			std::discrete_distribution<> discreteDistribution(std::cbegin(destroyedWeights), std::cend(destroyedWeights));
 
-			auto itemEntity = entityFactory.createEntity(destroyedItems.at(discreteDistribution(randomEngine)));
+			auto itemEntity = entityManager.create();
+			EntityParser::parseEntity(itemEntity, eventManager, destroyedItems.at(discreteDistribution(randomEngine)));
 
 			if (auto itemGeometry = itemEntity.component<TransformComponent>())
 			{

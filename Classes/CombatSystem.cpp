@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #include "Constants.hpp"
 #include "Conversions.hpp"
+#include "EntityParser.hpp"
 #include "CombatSystem.hpp"
 #include "BodyComponent.hpp"
 #include "SpeedComponent.hpp"
@@ -17,15 +18,14 @@ InversePalindrome.com
 #include "TransformComponent.hpp"
 
 
-CombatSystem::CombatSystem(EntityFactory& entityFactory) :
-	entityFactory(entityFactory)
+CombatSystem::CombatSystem(entityx::EntityManager& entityManager, entityx::EventManager& eventManager) : 
+	entityManager(entityManager),
+	eventManager(eventManager)
 {
 }
 
 void CombatSystem::configure(entityx::EventManager& eventManager)
 {
-	this->eventManager = &eventManager;
-
 	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
 	eventManager.subscribe<ShootProjectile>(*this);
 	eventManager.subscribe<CombatOcurred>(*this);
@@ -46,7 +46,8 @@ void CombatSystem::receive(const ShootProjectile& event)
 	{
 		shooterWeapon->setReloadStatus(false);
 		
-		auto projectileEntity = entityFactory.createEntity(shooterWeapon->getProjectileName());
+		auto projectileEntity = entityManager.create();
+		EntityParser::parseEntity(projectileEntity, eventManager, shooterWeapon->getProjectileName());
 
 		if (auto[projectileBody, projectileSpeed] = projectileEntity.components<BodyComponent, SpeedComponent>(); projectileBody && projectileSpeed)
 		{
@@ -71,7 +72,7 @@ void CombatSystem::receive(const ShootProjectile& event)
 			});
 		}
 
-		eventManager->emit(PlayAudio{ event.shooter, Sound::Shoot, false });
+		eventManager.emit(PlayAudio{ event.shooter, Sound::Shoot, false });
 	}
 }
 
@@ -96,7 +97,8 @@ void CombatSystem::handleExplosion(entityx::Entity destroyedEntity)
 	if (const auto [destroyedTransform, destroyedExplosion] = destroyedEntity.components<TransformComponent, ExplosionComponent>();
      	destroyedTransform && destroyedExplosion)
 	{
-		auto explosionEntity = entityFactory.createEntity(destroyedExplosion->getExplosionName());
+		auto explosionEntity = entityManager.create();
+		EntityParser::parseEntity(explosionEntity, eventManager, destroyedExplosion->getExplosionName());
 
 		if (auto explosionTransform = explosionEntity.component<TransformComponent>())
 		{
@@ -111,6 +113,6 @@ void CombatSystem::handleExplosion(entityx::Entity destroyedEntity)
 			});
 		}
 
-		eventManager->emit(PlayAudio{ explosionEntity, Sound::Explode, false });
+		eventManager.emit(PlayAudio{ explosionEntity, Sound::Explode, false });
 	}
 }

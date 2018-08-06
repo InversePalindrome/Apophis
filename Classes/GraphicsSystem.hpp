@@ -7,7 +7,6 @@ InversePalindrome.com
 
 #pragma once
 
-#include "Map.hpp"
 #include "Events.hpp" 
 #include "LabelComponent.hpp"
 #include "SpriteComponent.hpp"
@@ -26,7 +25,7 @@ InversePalindrome.com
 class GraphicsSystem : public entityx::System<GraphicsSystem>, public entityx::Receiver<GraphicsSystem>
 {
 public:
-	GraphicsSystem(cocos2d::Node* gameNode, Map& map);
+	GraphicsSystem(cocos2d::Node* gameNode, const b2Vec2& mapDimensions);
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
@@ -40,7 +39,7 @@ private:
 
 	std::vector<std::function<void()>> nodeCallbacks;
 
-	Map& map;
+	const b2Vec2& mapDimensions;
 
 	entityx::ComponentHandle<TransformComponent> playerTransform;
 	entityx::ComponentHandle<HealthComponent> playerHealth;

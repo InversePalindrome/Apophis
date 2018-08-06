@@ -8,11 +8,11 @@ InversePalindrome.com
 #pragma once
 
 #include "Events.hpp"
-#include "EntityFactory.hpp"
 #include "WeaponComponent.hpp"
 #include "SpeedBoostComponent.hpp"
 #include "RegenBoostComponent.hpp"
 
+#include <entityx/Entity.h>
 #include <entityx/System.h>
 
 #include <cpptime.h>
@@ -23,7 +23,7 @@ InversePalindrome.com
 class ItemSystem : public entityx::System<ItemSystem>, public entityx::Receiver<ItemSystem>
 {
 public:
-	explicit ItemSystem(EntityFactory& entityFactory);
+	ItemSystem(entityx::EntityManager& entityManager, entityx::EventManager& eventManager);
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
@@ -31,7 +31,8 @@ public:
 	virtual void receive(const PickedUpItem& event);
 
 private:
-	EntityFactory& entityFactory;
+	entityx::EntityManager& entityManager;
+	entityx::EventManager& eventManager;
 
 	CppTime::Timer timer;
 

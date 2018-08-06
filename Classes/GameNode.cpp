@@ -10,6 +10,7 @@ InversePalindrome.com
 #include "GameNode.hpp"
 #include "PauseNode.hpp"
 #include "ItemSystem.hpp"
+#include "LevelParser.hpp"
 #include "AudioSystem.hpp"
 #include "ActionSystem.hpp"
 #include "PlayerSystem.hpp"
@@ -30,7 +31,7 @@ InversePalindrome.com
 GameNode::GameNode() :
 	entityManager(eventManager),
 	systemManager(entityManager, eventManager),
-	entityFactory(entityManager, eventManager)
+	mapDimensions(0.f, 0.f)
 {
 }
 
@@ -56,13 +57,10 @@ bool GameNode::init()
 	getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, this);
 	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("resume", [this](auto* event) { scheduleUpdate(); }), this);
 
-	initSystems();
 	scheduleUpdate();
-	
-	map.init(this);
-	map.load("Andromeda");
+	initSystems();
    
-	entityFactory.createEntities("Level.xml");
+	LevelParser::parseLevel(entityManager, eventManager, mapDimensions, "Level.xml");
 
 	return true;
 }
@@ -109,10 +107,10 @@ void GameNode::initSystems()
 	systemManager.add<AudioSystem>();
 	systemManager.add<ActionSystem>();
 	systemManager.add<OrbitalSystem>();
-	systemManager.add<ItemSystem>(entityFactory);
+	systemManager.add<ItemSystem>(entityManager, eventManager);
 	systemManager.add<PhysicsSystem>(entityManager, eventManager);
-	systemManager.add<CombatSystem>(entityFactory);
-	systemManager.add<GraphicsSystem>(this, map);
+	systemManager.add<CombatSystem>(entityManager, eventManager);
+	systemManager.add<GraphicsSystem>(this, mapDimensions);
 
 	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
 	

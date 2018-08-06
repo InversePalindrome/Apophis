@@ -1,12 +1,12 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-Apophis - EntitySerializer.cpp
+Apophis - LevelSerializer.cpp
 InversePalindrome.com
 */
 
 
 #include "Components.hpp"
-#include "EntitySerializer.hpp"
+#include "LevelSerializer.hpp"
 
 #include <pugixml.hpp>
 
@@ -17,12 +17,7 @@ InversePalindrome.com
 #include <unordered_map>
 
 
-EntitySerializer::EntitySerializer(entityx::EntityManager& entityManager) :
-	entityManager(entityManager)
-{
-}
-
-void EntitySerializer::saveEntities(const std::string& filename)
+void LevelSerializer::saveLevel(entityx::EntityManager& entityManager, const b2Vec2& mapDimensions, const std::string& filename)
 {
 	pugi::xml_document doc;
 
@@ -30,17 +25,20 @@ void EntitySerializer::saveEntities(const std::string& filename)
 	declaration.append_attribute("version") = "1.0";
 	declaration.append_attribute("encoding") = "UTF-8";
 
-	auto entitiesNode = doc.append_child("Entities");
+	auto levelNode = doc.append_child("Level");
+
+	levelNode.append_attribute("width") = mapDimensions.x;
+	levelNode.append_attribute("height") = mapDimensions.y;
 
 	std::unordered_map<entityx::Entity, pugi::xml_node> entityNodes;
 	
-	brigand::for_each<Components>([this, &entitiesNode, &entityNodes](auto componentElement)
+	brigand::for_each<Components>([&entityManager, &levelNode, &entityNodes](auto componentElement)
 	{
-		entityManager.each<decltype(componentElement)::type>([&entitiesNode, &entityNodes](auto entity, const auto& component)
+		entityManager.each<decltype(componentElement)::type>([&levelNode, &entityNodes](auto entity, const auto& component)
 		{
 			if (!entityNodes.count(entity))
 			{
-				entityNodes.emplace(entity, entitiesNode.append_child("Entity"));
+				entityNodes.emplace(entity, levelNode.append_child("Entity"));
 			}
 
 			component.save(entityNodes.at(entity).append_child());

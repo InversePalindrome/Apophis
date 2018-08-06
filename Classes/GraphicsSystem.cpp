@@ -16,9 +16,9 @@ InversePalindrome.com
 #include <brigand/algorithms/for_each.hpp>
 
 
-GraphicsSystem::GraphicsSystem(cocos2d::Node* gameNode, Map& map) :
+GraphicsSystem::GraphicsSystem(cocos2d::Node* gameNode, const b2Vec2& mapDimensions) :
 	gameNode(gameNode),
-	map(map)
+	mapDimensions(mapDimensions)
 {
 }
 
@@ -106,11 +106,11 @@ void GraphicsSystem::updateView()
 		const auto worldPoint = gameNode->convertToWorldSpace(playerNodePosition);
 		const auto windowSize = cocos2d::Director::getInstance()->getWinSize();
 		
-		if (std::abs(playerNodePosition.x) < map.getDimensions().x * Constants::PTM_RATIO / 2.f - windowSize.width / 2.f)
+		if (std::abs(playerNodePosition.x) < mapDimensions.x * Constants::PTM_RATIO / 2.f - windowSize.width / 2.f)
 		{
 			gameNode->setPositionX(gameNode->getPosition().x - worldPoint.x + windowSize.width / 2.f);
 		}
-		if (std::abs(playerNodePosition.y) < map.getDimensions().y * Constants::PTM_RATIO / 2.f - windowSize.height / 2.f)
+		if (std::abs(playerNodePosition.y) < mapDimensions.y * Constants::PTM_RATIO / 2.f - windowSize.height / 2.f)
 		{
 			gameNode->setPositionY(gameNode->getPosition().y - worldPoint.y + windowSize.height / 2.f);
 		}

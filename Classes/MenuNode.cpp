@@ -8,7 +8,7 @@ InversePalindrome.com
 #include "MenuNode.hpp"
 #include "GameNode.hpp"
 #include "SettingsNode.hpp"
-#include "LevelEditorNode.hpp"
+#include "LevelEditorScene.hpp"
 
 #include <cocos/2d/CCMenu.h>
 #include <cocos/2d/CCLabel.h>
@@ -38,7 +38,7 @@ bool MenuNode::init()
 	playItem->addChild(playLabel);
 
 	auto* createItem = cocos2d::MenuItemSprite::create(cocos2d::Sprite::createWithSpriteFrameName("RegularRectangleButton"), cocos2d::Sprite::createWithSpriteFrameName("SelectedRectangleButton"),
-		[director](auto* sender) { director->replaceScene(LevelEditorNode::scene()); });
+		[director](auto* sender) { director->replaceScene(LevelEditorScene::create()); });
 
 	auto* createLabel = cocos2d::Label::createWithTTF("create", "Zian.ttf", 60.f);
 	createLabel->setTextColor(cocos2d::Color4B(135, 206, 250, 255));

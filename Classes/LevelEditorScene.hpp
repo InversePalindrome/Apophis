@@ -1,43 +1,40 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-Apophis - GameNode.hpp
+Apophis - LevelEditorScene.hpp
 InversePalindrome.com
 */
 
 
 #pragma once
 
-#include "Events.hpp"
+#include "fairygui/GRoot.h"
 
-#include <cocos/2d/CCNode.h>
 #include <cocos/2d/CCScene.h>
-
-#include <Box2D/Common/b2Math.h>
 
 #include <entityx/Event.h>
 #include <entityx/Entity.h>
 #include <entityx/System.h>
 
 
-class GameNode : public cocos2d::Node, public entityx::Receiver<GameNode>
+class LevelEditorScene : public cocos2d::Scene
 {
 public:
-	GameNode();
+	LevelEditorScene();
+	~LevelEditorScene();
 
 	virtual bool init() override;
 	virtual void update(float dt) override;
-	virtual void receive(const entityx::EntityDestroyedEvent& event);
-	
-	CREATE_FUNC(GameNode);
 
-	static cocos2d::Scene* scene();
+	CREATE_FUNC(LevelEditorScene);
 
 private:
 	entityx::EventManager eventManager;
 	entityx::EntityManager entityManager;
 	entityx::SystemManager systemManager;
 
-	b2Vec2 mapDimensions;
+	fairygui::GRoot* gui;
+
+	fairygui::GComponent* view;
 
 	void initSystems();
 };
