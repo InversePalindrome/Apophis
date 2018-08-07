@@ -9,6 +9,8 @@ InversePalindrome.com
 #include "Application.hpp"
 #include "CocosUtility.hpp"
 
+#include "CCIMGUIGLViewImpl.h"
+
 #include <cocos/base/CCDirector.h>
 #include <cocos/platform/CCFileUtils.h>
 #include <cocos/audio/include/AudioEngine.h>
@@ -26,9 +28,9 @@ bool Application::applicationDidFinishLaunching()
 
 	if (auto* view = director->getOpenGLView(); !view)
 	{
-		view = cocos2d::GLViewImpl::createWithRect("Apophis", { 0, 0, 2048, 1536 });
+		view = cocos2d::IMGUIGLViewImpl::createWithRect("Apophis", { 0, 0, 2048, 1536 });
 		view->setDesignResolutionSize(2048.f, 1536.f, ResolutionPolicy::EXACT_FIT);
-	
+
 		director->setOpenGLView(view);
 		director->setClearColor(cocos2d::Color4F::WHITE);
 	}

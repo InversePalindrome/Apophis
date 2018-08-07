@@ -12,9 +12,10 @@ InversePalindrome.com
 #include <Box2D/Common/b2Math.h>
 
 #include <string>
+#include <vector>
 
 
 namespace LevelSerializer
 {
-	void saveLevel(entityx::EntityManager& entityManager, const b2Vec2& mapDimensions, const std::string& filename);
+	void saveLevel(const std::vector<entityx::Entity>& entities, const b2Vec2& mapDimensions, const std::string& filename);
 };

@@ -5,19 +5,15 @@ InversePalindrome.com
 */
 
 
-#include "Components.hpp"
 #include "LevelSerializer.hpp"
-
-#include <pugixml.hpp>
+#include "EntitySerializer.hpp"
 
 #include <cocos/platform/CCFileUtils.h>
 
-#include <brigand/algorithms/for_each.hpp>
-
-#include <unordered_map>
+#include <pugixml.hpp>
 
 
-void LevelSerializer::saveLevel(entityx::EntityManager& entityManager, const b2Vec2& mapDimensions, const std::string& filename)
+void LevelSerializer::saveLevel(const std::vector<entityx::Entity>& entities, const b2Vec2& mapDimensions, const std::string& filename)
 {
 	pugi::xml_document doc;
 
@@ -30,20 +26,10 @@ void LevelSerializer::saveLevel(entityx::EntityManager& entityManager, const b2V
 	levelNode.append_attribute("width") = mapDimensions.x;
 	levelNode.append_attribute("height") = mapDimensions.y;
 
-	std::unordered_map<entityx::Entity, pugi::xml_node> entityNodes;
-	
-	brigand::for_each<Components>([&entityManager, &levelNode, &entityNodes](auto componentElement)
+	for (auto entity : entities)
 	{
-		entityManager.each<decltype(componentElement)::type>([&levelNode, &entityNodes](auto entity, const auto& component)
-		{
-			if (!entityNodes.count(entity))
-			{
-				entityNodes.emplace(entity, levelNode.append_child("Entity"));
-			}
-
-			component.save(entityNodes.at(entity).append_child());
-		});
-	});
+		EntitySerializer::saveEntity(entity, levelNode.append_child("Entity"));
+	}
 
 	doc.save_file((cocos2d::FileUtils::getInstance()->getWritablePath() + filename).c_str());
 }
