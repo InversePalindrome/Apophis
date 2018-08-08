@@ -16,6 +16,8 @@ public:
 	explicit HealthComponent(const pugi::xml_node& componentNode);
 
 	void save(pugi::xml_node& componentNode) const;
+
+	void display();
 	
 	float getMaxHitpoints() const;
 	void setMaxHitpoints(float maxHitpoints);

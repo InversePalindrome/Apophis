@@ -23,6 +23,8 @@ public:
 
 	void save(pugi::xml_node& componentNode) const;
 
+	void display();
+
 	b2Fixture* createFixture(const b2FixtureDef& fixtureDef);
 	void destroyFixture(b2Fixture* fixture);
 

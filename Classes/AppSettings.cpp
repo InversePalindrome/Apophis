@@ -23,7 +23,7 @@ AppSettings::AppSettings() :
 
 AppSettings::~AppSettings()
 {
-	save("Settings.xml");
+	save(cocos2d::FileUtils::getInstance()->getWritablePath() + "Settings.xml");
 }
 
 AppSettings& AppSettings::getInstance()
@@ -133,5 +133,5 @@ void AppSettings::save(const std::string& filename)
 	auto musicNode = settingsNode.append_child("Music");
 	musicNode.append_attribute("volume") = musicVolume;
 	
-	doc.save_file((cocos2d::FileUtils::getInstance()->getWritablePath() + filename).c_str());
+	doc.save_file(filename.c_str());
 }

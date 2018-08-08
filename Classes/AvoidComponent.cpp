@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "AvoidComponent.hpp"
 
+#include <imgui.h>
+
 
 AvoidComponent::AvoidComponent(const pugi::xml_node& componentNode) :
 	avoidanceAheadDistance(10.f),
@@ -28,6 +30,17 @@ void AvoidComponent::save(pugi::xml_node& componentNode) const
 
 	componentNode.append_attribute("distance") = getAvoidanceAheadDistance();
 	componentNode.append_attribute("force") = getAvoidanceForce();
+}
+
+void AvoidComponent::display()
+{
+	if (ImGui::TreeNode("Avoid"))
+	{
+		ImGui::InputFloat("distance", &avoidanceForce);
+		ImGui::InputFloat("force", &avoidanceForce);
+
+		ImGui::TreePop();
+	}
 }
 
 float AvoidComponent::getAvoidanceAheadDistance() const

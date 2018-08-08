@@ -17,6 +17,8 @@ public:
 
 	void save(pugi::xml_node& componentNode) const;
 
+	void display();
+
 	float getDistanceFromLeader() const;
 	void setDistanceFromLeader(float distanceFromLeader);
 

@@ -19,6 +19,8 @@ public:
 
 	void save(pugi::xml_node& componentNode) const;
 
+	void display();
+
 	std::string getProjectileName() const;
 	void setProjectileName(const std::string& projectileName);
 

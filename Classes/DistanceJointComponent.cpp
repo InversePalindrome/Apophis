@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "DistanceJointComponent.hpp"
 
+#include <imgui.h>
+
 
 DistanceJointComponent::DistanceJointComponent(b2Joint* distanceJoint, std::size_t entityIDA, std::size_t entityIDB) :
 	JointComponent(distanceJoint, entityIDA, entityIDB),
@@ -26,6 +28,13 @@ void DistanceJointComponent::save(pugi::xml_node& componentNode) const
 	componentNode.append_attribute("anchorBY") = distanceJoint->GetAnchorB().y;
 }
 
+void DistanceJointComponent::display()
+{
+	if (ImGui::TreeNode("DistanceJoint"))
+	{
+		ImGui::TreePop();
+	}
+}
 
 b2Vec2 DistanceJointComponent::getAnchorA() const
 {

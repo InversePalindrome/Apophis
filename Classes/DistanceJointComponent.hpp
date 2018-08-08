@@ -21,6 +21,8 @@ public:
 
 	void save(pugi::xml_node& componentNode) const;
 
+	void display();
+
 	b2Vec2 getAnchorA() const;
 	b2Vec2 getAnchorB() const;
 

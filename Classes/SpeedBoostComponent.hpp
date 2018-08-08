@@ -19,6 +19,8 @@ public:
 
 	void save(pugi::xml_node& componentNode) const;
 
+	void display();
+
 	float getSpeedBoostRatio() const;
 	void setSpeedBoostRatio(float speedBoostRatio);
 

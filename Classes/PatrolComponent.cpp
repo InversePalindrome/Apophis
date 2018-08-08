@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "PatrolComponent.hpp"
 
+#include <imgui.h>
+
 
 PatrolComponent::PatrolComponent(const pugi::xml_node& componentNode) :
 	patrolIndex(0u)
@@ -34,6 +36,14 @@ void PatrolComponent::save(pugi::xml_node& componentNode) const
 
 		pointNode.append_attribute("x") = patrolPoint.x;
 		pointNode.append_attribute("y") = patrolPoint.y;
+	}
+}
+
+void PatrolComponent::display()
+{
+	if (ImGui::TreeNode("Patrol"))
+	{
+		ImGui::TreePop();
 	}
 }
 

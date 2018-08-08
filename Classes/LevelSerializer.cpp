@@ -31,5 +31,5 @@ void LevelSerializer::saveLevel(const std::vector<entityx::Entity>& entities, co
 		EntitySerializer::saveEntity(entity, levelNode.append_child("Entity"));
 	}
 
-	doc.save_file((cocos2d::FileUtils::getInstance()->getWritablePath() + filename).c_str());
+	doc.save_file(filename.c_str());
 }

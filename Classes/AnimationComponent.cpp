@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "AnimationComponent.hpp"
 
+#include <imgui.h>
+
 #include <cocos/2d/CCSpriteFrameCache.h>
 
 
@@ -55,6 +57,14 @@ void AnimationComponent::save(pugi::xml_node& componentNode) const
 		{
 			animationNode.append_child("Frame").text().set(animationFrame.c_str());
 		}
+	}
+}
+
+void AnimationComponent::display()
+{
+	if (ImGui::TreeNode("Animation"))
+	{
+		ImGui::TreePop();
 	}
 }
 

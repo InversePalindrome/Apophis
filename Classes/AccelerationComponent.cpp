@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "AccelerationComponent.hpp"
 
+#include <imgui.h>
+
 
 AccelerationComponent::AccelerationComponent(const pugi::xml_node& componentNode) :
 	linearAcceleration(1.f),
@@ -28,6 +30,17 @@ void AccelerationComponent::save(pugi::xml_node& componentNode) const
 
 	componentNode.append_attribute("linear") = getLinearAcceleration();
 	componentNode.append_attribute("angular") = getAngularAcceleration();
+}
+
+void AccelerationComponent::display()
+{
+	if (ImGui::TreeNode("Acceleration"))
+	{
+		ImGui::InputFloat("Linear Acceleration", &linearAcceleration);
+		ImGui::InputFloat("Angular Acceleration", &angularAcceleration);
+
+		ImGui::TreePop();
+	}
 }
 
 float AccelerationComponent::getLinearAcceleration() const

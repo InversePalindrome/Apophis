@@ -19,6 +19,8 @@ public:
 
 	void save(pugi::xml_node& componentNode) const;
 
+	void display();
+
 	ObjectType getObjectType() const;
 	void setObjectType(ObjectType objectType);
 

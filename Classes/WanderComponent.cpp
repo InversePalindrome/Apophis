@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "WanderComponent.hpp"
 
+#include <imgui.h>
+
 #include <cocos/base/ccRandom.h>
 
 #include <boost/math/constants/constants.hpp>
@@ -38,7 +40,19 @@ void WanderComponent::save(pugi::xml_node& componentNode) const
 
 	componentNode.append_attribute("distance") = getWanderDistance();
 	componentNode.append_attribute("radius") = getWanderRadius();
-	componentNode.append_attribute("rate") = getWanderRadius();
+	componentNode.append_attribute("rate") = getWanderRate();
+}
+
+void WanderComponent::display()
+{
+	if (ImGui::TreeNode("Wander"))
+	{
+		ImGui::InputFloat("Distance", &wanderDistance);
+		ImGui::InputFloat("Radius", &wanderRadius);
+		ImGui::InputFloat("Rate", &wanderRate);
+
+		ImGui::TreePop();
+	}
 }
 
 float WanderComponent::getWanderDistance() const

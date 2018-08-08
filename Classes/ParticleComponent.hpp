@@ -21,6 +21,8 @@ public:
 
 	void save(pugi::xml_node& componentNode) const;
 
+	void display();
+
 	void initWithFile(const std::string& filename);
 
 	void setDisplayFrame(const std::string& spriteFrameName);

@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "RegenBoostComponent.hpp"
 
+#include <imgui.h>
+
 
 RegenBoostComponent::RegenBoostComponent(const pugi::xml_node& componentNode) :
 	hitpointBoost(1.f),
@@ -34,6 +36,14 @@ void RegenBoostComponent::save(pugi::xml_node& componentNode) const
 	componentNode.append_attribute("boost") = getHitpointBoost();
 	componentNode.append_attribute("rate") = getRegenRate().count();
 	componentNode.append_attribute("duration") = getRegenDuration().count();
+}
+
+void RegenBoostComponent::display()
+{
+	if (ImGui::TreeNode("RegenBoost"))
+	{
+		ImGui::TreePop();
+	}
 }
 
 float RegenBoostComponent::getHitpointBoost() const

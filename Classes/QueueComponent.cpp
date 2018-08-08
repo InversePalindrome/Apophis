@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "QueueComponent.hpp"
 
+#include <imgui.h>
+
 
 QueueComponent::QueueComponent(const pugi::xml_node& componentNode) :
 	queueAheadDistance(5.f),
@@ -40,6 +42,19 @@ void QueueComponent::save(pugi::xml_node& componentNode) const
 	componentNode.append_attribute("radius") = getQueueRadius();
 	componentNode.append_attribute("brakeFactor") = getBrakeFactor();
 	componentNode.append_attribute("velocityShrinkFactor") = getVelocityShrinkFactor();
+}
+
+void QueueComponent::display()
+{
+	if (ImGui::TreeNode("Queue"))
+	{
+		ImGui::InputFloat("Ahead Distance", &queueAheadDistance);
+		ImGui::InputFloat("Radius", &queueRadius);
+		ImGui::InputFloat("Brake Factor", &brakeFactor);
+		ImGui::InputFloat("Velocity Shrink Factor", &velocityShrinkFactor);
+
+		ImGui::TreePop();
+	}
 }
 
 float QueueComponent::getQueueAheadDistance() const

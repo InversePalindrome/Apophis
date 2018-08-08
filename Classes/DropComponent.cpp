@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "DropComponent.hpp"
 
+#include <imgui.h>
+
 #include <boost/range/combine.hpp>
 
 
@@ -25,6 +27,14 @@ void DropComponent::save(pugi::xml_node& componentNode) const
 	for (const auto& itemAndWeight : boost::combine(items, weights))
 	{
 		componentNode.append_child(boost::get<0>(itemAndWeight).c_str()).text().set(boost::get<1>(itemAndWeight));
+	}
+}
+
+void DropComponent::display()
+{
+	if (ImGui::TreeNode("Drop"))
+	{
+		ImGui::TreePop();
 	}
 }
 

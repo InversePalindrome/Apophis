@@ -17,6 +17,8 @@ public:
 
 	void save(pugi::xml_node& componentNode) const;
 
+	void display();
+
 	int getGroupID() const;
 	void setGroupID(int groupID);
 

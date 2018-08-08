@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "ExplosionComponent.hpp"
 
+#include <imgui.h>
+
 
 ExplosionComponent::ExplosionComponent(const pugi::xml_node& componentNode) :
 	explosionTime(1000)
@@ -27,6 +29,14 @@ void ExplosionComponent::save(pugi::xml_node& componentNode) const
 
 	componentNode.append_attribute("name") = explosionName.c_str();
 	componentNode.append_attribute("time") = explosionTime.count();
+}
+
+void ExplosionComponent::display()
+{
+	if (ImGui::TreeNode("Explosion"))
+	{
+		ImGui::TreePop();
+	}
 }
 
 std::string ExplosionComponent::getExplosionName() const

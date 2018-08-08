@@ -17,6 +17,8 @@ public:
 
 	void save(pugi::xml_node& componentNode) const;
 
+	void display();
+
 	float getVisionDistance() const;
 	void setVisionDistance(float visionDistance);
 

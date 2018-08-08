@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "LabelComponent.hpp"
 
+#include <imgui.h>
+
 
 LabelComponent::LabelComponent(const pugi::xml_node& componentNode) :
 	NodeComponent(cocos2d::Label::create(), componentNode),
@@ -55,6 +57,14 @@ void LabelComponent::save(pugi::xml_node& componentNode) const
 	componentNode.append_attribute("textG") = getTextColor().g;
 	componentNode.append_attribute("textB") = getTextColor().b;
 	componentNode.append_attribute("textA") = getTextColor().a;
+}
+
+void LabelComponent::display()
+{
+	if (ImGui::TreeNode("Label"))
+	{
+		ImGui::TreePop();
+	}
 }
 
 std::string LabelComponent::getText() const

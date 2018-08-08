@@ -21,6 +21,8 @@ public:
 
 	void save(pugi::xml_node& componentNode) const;
 
+	void display();
+
 	const std::vector<b2Vec2>& getPatrolPoints() const;
 
 	std::size_t getPatrolIndex() const;

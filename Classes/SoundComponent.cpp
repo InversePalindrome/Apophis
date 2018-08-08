@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "SoundComponent.hpp"
 
+#include <imgui.h>
+
 
 SoundComponent::SoundComponent(const pugi::xml_node& componentNode)
 {
@@ -23,6 +25,14 @@ void SoundComponent::save(pugi::xml_node& componentNode) const
 	for (const auto&[soundID, soundFile] : soundFiles)
 	{
 		componentNode.append_child(soundID._to_string()).text().set(soundFile.c_str());
+	}
+}
+
+void SoundComponent::display()
+{
+	if (ImGui::TreeNode("Sound"))
+	{
+		ImGui::TreePop();
 	}
 }
 

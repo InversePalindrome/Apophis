@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "SpeedComponent.hpp"
 
+#include <imgui.h>
+
 
 SpeedComponent::SpeedComponent(const pugi::xml_node& componentNode) :
 	maxLinearSpeed(10.f),
@@ -28,6 +30,17 @@ void SpeedComponent::save(pugi::xml_node& componentNode) const
 
 	componentNode.append_attribute("linear") = getMaxLinearSpeed();
 	componentNode.append_attribute("angular") = getMaxAngularSpeed();
+}
+
+void SpeedComponent::display()
+{
+	if (ImGui::TreeNode("Speed"))
+	{
+		ImGui::InputFloat("Max Linear Speed", &maxLinearSpeed);
+		ImGui::InputFloat("Max Angular Speed", &maxAngularSpeed);
+
+		ImGui::TreePop();
+	}
 }
 
 float SpeedComponent::getMaxLinearSpeed() const

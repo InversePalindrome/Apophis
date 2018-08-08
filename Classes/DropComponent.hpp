@@ -20,6 +20,8 @@ public:
 
 	void save(pugi::xml_node& componentNode) const;
 
+	void display();
+
 	const std::vector<std::string>& getItems() const;
 	const std::vector<int>& getWeights() const;
 

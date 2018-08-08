@@ -23,7 +23,7 @@ void EntitySerializer::saveEntity(entityx::Entity entity, const std::string& fil
 
 	saveEntity(entity, doc.append_child("Entity"));
 	
-	doc.save_file((cocos2d::FileUtils::getInstance()->getWritablePath() + filename).c_str());
+	doc.save_file(filename.c_str());
 }
 
 void EntitySerializer::saveEntity(entityx::Entity entity, pugi::xml_node& entityNode)

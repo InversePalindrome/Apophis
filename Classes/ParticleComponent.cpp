@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "ParticleComponent.hpp"
 
+#include <imgui.h>
+
 #include <cocos/2d/CCSpriteFrameCache.h>
 
 
@@ -171,6 +173,14 @@ void ParticleComponent::save(pugi::xml_node& componentNode) const
 	componentNode.append_attribute("endVarG") = getEndColorVar().g;
 	componentNode.append_attribute("endVarB") = getEndColorVar().b;
 	componentNode.append_attribute("endVarA") = getEndColorVar().a;
+}
+
+void ParticleComponent::display()
+{
+	if (ImGui::TreeNode("Particle"))
+	{
+		ImGui::TreePop();
+	}
 }
 
 void ParticleComponent::initWithFile(const std::string& filename)

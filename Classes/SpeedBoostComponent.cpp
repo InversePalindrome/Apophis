@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "SpeedBoostComponent.hpp"
 
+#include <imgui.h>
+
 
 SpeedBoostComponent::SpeedBoostComponent(const pugi::xml_node& componentNode) :
 	speedBoostRatio(2.f),
@@ -28,6 +30,14 @@ void SpeedBoostComponent::save(pugi::xml_node& componentNode) const
 
 	componentNode.append_attribute("ratio") = getSpeedBoostRatio();
 	componentNode.append_attribute("duration") = getSpeedBoostDuration().count();
+}
+
+void SpeedBoostComponent::display()
+{
+	if (ImGui::TreeNode("SpeedBoost"))
+	{
+		ImGui::TreePop();
+	}
 }
 
 float SpeedBoostComponent::getSpeedBoostRatio() const

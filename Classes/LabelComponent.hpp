@@ -21,6 +21,8 @@ public:
 
 	void save(pugi::xml_node& componentNode) const;
 
+	void display();
+
 	std::string getText() const;
 	void setText(const std::string& text);
 

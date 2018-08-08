@@ -13,6 +13,8 @@ InversePalindrome.com
 #include <entityx/Entity.h>
 #include <entityx/System.h>
 
+#include <Box2D/Common/b2Math.h>
+
 #include <vector>
 
 
@@ -35,6 +37,8 @@ private:
 	entityx::EntityManager entityManager;
 	entityx::SystemManager systemManager;
 	
+	b2Vec2 mapDimensions;
+
 	std::vector<entityx::Entity> entities;
 
 	void initSystems();

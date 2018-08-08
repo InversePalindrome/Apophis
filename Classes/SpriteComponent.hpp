@@ -21,6 +21,8 @@ public:
 
 	void save(pugi::xml_node& componentNode) const;
 
+	void display();
+
 	cocos2d::SpriteFrame* getSpriteFrame() const;
 	void setSpriteFrame(const std::string& spriteFrameName);
 

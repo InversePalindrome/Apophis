@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "BodyComponent.hpp"
 
+#include <imgui.h>
+
 #include <Box2D/Collision/Shapes/b2CircleShape.h>
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
@@ -69,6 +71,14 @@ void BodyComponent::save(pugi::xml_node& componentNode) const
 		}
 		break;
 		}
+	}
+}
+
+void BodyComponent::display()
+{
+	if (ImGui::TreeNode("Body"))
+	{
+		ImGui::TreePop();
 	}
 }
 

@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "SatelliteComponent.hpp"
 
+#include <imgui.h>
+
 
 SatelliteComponent::SatelliteComponent(const pugi::xml_node& componentNode) :
 	primaryID(-1),
@@ -28,6 +30,14 @@ void SatelliteComponent::save(pugi::xml_node& componentNode) const
 	
 	componentNode.append_attribute("primaryID") = getPrimaryID();
 	componentNode.append_attribute("direction") = getOrbitDirection();
+}
+
+void SatelliteComponent::display()
+{
+	if (ImGui::TreeNode("Satellite"))
+	{
+		ImGui::TreePop();
+	}
 }
 
 int SatelliteComponent::getPrimaryID() const

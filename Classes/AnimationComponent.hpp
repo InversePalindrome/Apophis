@@ -25,6 +25,8 @@ public:
 
 	void save(pugi::xml_node& componentNode) const;
 
+	void display();
+
 	void addAnimation(Animation animationName, const std::vector<std::string>& spriteFrameNames, float delay = 0.f);
 	void removeAnimation(Animation animationName);
 

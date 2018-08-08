@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "SpriteComponent.hpp"
 
+#include <imgui.h>
+
 
 SpriteComponent::SpriteComponent(const pugi::xml_node& componentNode) :
 	NodeComponent(cocos2d::Sprite::create(), componentNode),
@@ -47,6 +49,14 @@ void SpriteComponent::save(pugi::xml_node& componentNode) const
 	componentNode.append_attribute("textureY") = getTextureRect().origin.y;
 	componentNode.append_attribute("textureWidth") = getTextureRect().size.width;
 	componentNode.append_attribute("textureHeight") = getTextureRect().size.height;
+}
+
+void SpriteComponent::display()
+{
+	if (ImGui::TreeNode("Sprite"))
+	{
+		ImGui::TreePop();
+	}
 }
 
 cocos2d::SpriteFrame* SpriteComponent::getSpriteFrame() const

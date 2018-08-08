@@ -42,6 +42,14 @@ NodeComponent::NodeComponent(cocos2d::Node* node, const pugi::xml_node& componen
 	node->retain();
 }
 
+NodeComponent::~NodeComponent()
+{
+	node->removeFromParent();
+	node->removeAllChildren();
+
+	node->release();
+}
+
 void NodeComponent::save(pugi::xml_node& componentNode) const
 {
 	componentNode.append_attribute("x") = getPosition().x;
@@ -52,14 +60,6 @@ void NodeComponent::save(pugi::xml_node& componentNode) const
 	componentNode.append_attribute("R") = getColor().r;
 	componentNode.append_attribute("G") = getColor().g;
 	componentNode.append_attribute("B") = getColor().b;
-}
-
-NodeComponent::~NodeComponent()
-{
-	node->removeFromParent();
-	node->removeAllChildren();
-
-	node->release();
 }
 
 void NodeComponent::addChild(cocos2d::Node* child)

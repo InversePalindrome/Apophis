@@ -19,6 +19,8 @@ public:
 
 	void save(pugi::xml_node& componentNode) const;
 
+	void display();
+
 	std::chrono::milliseconds getPredictionTime() const;
 	void setPredictionTime(const std::chrono::milliseconds& predictionTime);
 

@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "WeaponComponent.hpp"
 
+#include <imgui.h>
+
 
 WeaponComponent::WeaponComponent(const pugi::xml_node& componentNode) :
 	reloadTime(1000),
@@ -28,6 +30,14 @@ void WeaponComponent::save(pugi::xml_node& componentNode) const
 
 	componentNode.append_attribute("projectileName") = getProjectileName().c_str();
 	componentNode.append_attribute("reloadTime") = getReloadTime().count();
+}
+
+void WeaponComponent::display()
+{
+	if (ImGui::TreeNode("Weapon"))
+	{
+		ImGui::TreePop();
+	}
 }
 
 std::string WeaponComponent::getProjectileName() const

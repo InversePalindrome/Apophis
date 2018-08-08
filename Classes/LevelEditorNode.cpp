@@ -5,7 +5,8 @@ InversePalindrome.com
 */
 
 
-#include "ActionSystem.hpp"
+#include "Components.hpp"
+#include "LevelParser.hpp"
 #include "GraphicsSystem.hpp"
 #include "LevelSerializer.hpp"
 #include "LevelEditorNode.hpp"
@@ -13,10 +14,15 @@ InversePalindrome.com
 #include "CCIMGUI.h"
 #include "CCImGuiLayer.h"
 
+#include <nfd.h>
+
+#include <brigand/algorithms/for_each.hpp>
+
 
 LevelEditorNode::LevelEditorNode() :
 	entityManager(eventManager),
-	systemManager(entityManager, eventManager)
+	systemManager(entityManager, eventManager),
+	mapDimensions(0.f, 0.f)
 {
 }
 
@@ -32,7 +38,7 @@ bool LevelEditorNode::init()
 
 	auto* font = ImGui::GetIO().Fonts->AddFontFromFileTTF("Fonts/OpenSans-Regular.ttf", 40.f);
 
-	CCIMGUI::getInstance()->addImGUI([font]()
+	CCIMGUI::getInstance()->addImGUI([this, font]()
 	{
 		ImGui::PushFont(font);
 
@@ -42,11 +48,21 @@ bool LevelEditorNode::init()
 			{
 				if (ImGui::MenuItem("Open"))
 				{
-
+					nfdchar_t* filename = nullptr;
+					
+					if (NFD_OpenDialog("xml", nullptr, &filename) == NFD_OKAY)
+					{
+						LevelParser::parseLevel(entityManager, eventManager, mapDimensions, filename);
+					}
 				}
 				if (ImGui::MenuItem("Save"))
 				{
+					nfdchar_t* filename = nullptr;
 					
+					if (NFD_SaveDialog("xml", nullptr, &filename) == NFD_OKAY)
+					{
+						LevelSerializer::saveLevel(entities, mapDimensions, filename);
+					}
 				}
 
 				ImGui::EndMenu();
@@ -56,6 +72,22 @@ bool LevelEditorNode::init()
 		}
 
 		ImGui::Begin("Entities");
+
+		for (auto entity : entities)
+		{
+			if (ImGui::TreeNode(std::to_string(entity.id().index()).c_str()))
+			{
+				brigand::for_each<Components>([entity](auto componentElement) mutable
+				{
+					if (auto component = entity.component<decltype(componentElement)::type>())
+					{
+						component->display();
+					}
+				});
+
+				ImGui::TreePop();
+			}
+		}
 
 		ImGui::End();
 
@@ -91,7 +123,7 @@ cocos2d::Scene* LevelEditorNode::scene()
 
 void LevelEditorNode::initSystems()
 {
-	systemManager.add<ActionSystem>();
+	systemManager.add<GraphicsSystem>(this, mapDimensions);
 
 	eventManager.subscribe<entityx::EntityCreatedEvent>(*this);
 	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);

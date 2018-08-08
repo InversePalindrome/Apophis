@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "FlockComponent.hpp"
 
+#include <imgui.h>
+
 
 FlockComponent::FlockComponent(const pugi::xml_node& componentNode) :
 	groupID(-1),
@@ -28,6 +30,17 @@ void FlockComponent::save(pugi::xml_node& componentNode) const
 
 	componentNode.append_attribute("id") = getGroupID();
 	componentNode.append_attribute("radius") = getGroupRadius();
+}
+
+void FlockComponent::display()
+{
+	if (ImGui::TreeNode("Flock"))
+	{
+		ImGui::InputInt("id", &groupID);
+		ImGui::InputFloat("float", &groupRadius);
+
+		ImGui::TreePop();
+	}
 }
 
 int FlockComponent::getGroupID() const

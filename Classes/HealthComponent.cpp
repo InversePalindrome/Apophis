@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "HealthComponent.hpp"
 
+#include <imgui.h>
+
 
 HealthComponent::HealthComponent(const pugi::xml_node& componentNode) :
 	maxHitpoints(componentNode.text().as_float(5.f)),
@@ -19,6 +21,16 @@ void HealthComponent::save(pugi::xml_node& componentNode) const
 	componentNode.set_name("Health");
 
 	componentNode.text().set(maxHitpoints);
+}
+
+void HealthComponent::display()
+{
+	if (ImGui::TreeNode("Health"))
+	{
+		ImGui::InputFloat("Max Hitpoints", &maxHitpoints);
+
+		ImGui::TreePop();
+	}
 }
 
 float HealthComponent::getMaxHitpoints() const

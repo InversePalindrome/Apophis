@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "TransformComponent.hpp"
 
+#include <imgui.h>
+
 
 TransformComponent::TransformComponent(const pugi::xml_node& componentNode) :
 	position(0.f, 0.f),
@@ -33,6 +35,17 @@ void TransformComponent::save(pugi::xml_node& componentNode) const
 	componentNode.append_attribute("x") = getPosition().x;
 	componentNode.append_attribute("y") = getPosition().y;
 	componentNode.append_attribute("angle") = getAngle();
+}
+
+void TransformComponent::display()
+{
+	if (ImGui::TreeNode("Transform"))
+	{
+		ImGui::InputFloat2("Position(X, Y)", &position.x);
+		ImGui::InputFloat("Angle", &angle);
+
+		ImGui::TreePop();
+	}
 }
 
 b2Vec2 TransformComponent::getPosition() const

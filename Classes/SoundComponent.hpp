@@ -23,6 +23,8 @@ public:
 
 	void save(pugi::xml_node& componentNode) const;
 
+	void display();
+
 	std::string getSoundFile(Sound sound) const;
 
 	int getSoundID(Sound sound) const;
