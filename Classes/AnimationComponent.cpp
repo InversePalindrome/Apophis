@@ -64,6 +64,15 @@ void AnimationComponent::display()
 {
 	if (ImGui::TreeNode("Animation"))
 	{
+		for (auto& [name, animation] : animations)
+		{
+			if (ImGui::TreeNode(name._to_string()))
+			{
+
+				ImGui::TreePop();
+			}
+		}
+
 		ImGui::TreePop();
 	}
 }

@@ -26,7 +26,7 @@ void DamageComponent::display()
 {
 	if (ImGui::TreeNode("Damage"))
 	{
-		ImGui::InputFloat("hitpoints", &damageHitpoints);
+		ImGui::InputFloat("Hitpoints", &damageHitpoints);
 
 		ImGui::TreePop();
 	}

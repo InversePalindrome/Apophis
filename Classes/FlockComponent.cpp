@@ -36,8 +36,8 @@ void FlockComponent::display()
 {
 	if (ImGui::TreeNode("Flock"))
 	{
-		ImGui::InputInt("id", &groupID);
-		ImGui::InputFloat("float", &groupRadius);
+		ImGui::InputInt("Group ID", &groupID);
+		ImGui::InputFloat("Radius", &groupRadius);
 
 		ImGui::TreePop();
 	}

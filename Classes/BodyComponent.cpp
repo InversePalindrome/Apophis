@@ -29,6 +29,7 @@ void BodyComponent::save(pugi::xml_node& componentNode) const
 	componentNode.append_attribute("type") = getBodyType();
 	componentNode.append_attribute("x") = getPosition().x;
 	componentNode.append_attribute("y") = getPosition().y;
+	componentNode.append_attribute("angle") = getAngle();
 	componentNode.append_attribute("linearDamping") = getLinearDamping();
 	componentNode.append_attribute("angularDamping") = getAngularDamping();
 	componentNode.append_attribute("fixedRotation") = isRotationFixed();
@@ -48,7 +49,7 @@ void BodyComponent::save(pugi::xml_node& componentNode) const
 		case b2Shape::e_circle:
 		{
 			const auto* circleShape = static_cast<const b2CircleShape*>(fixture->GetShape());
-
+		
 			fixtureNode.set_name("Circle");
 			fixtureNode.append_attribute("x") = circleShape->m_p.x;
 			fixtureNode.append_attribute("y") = circleShape->m_p.y;
@@ -78,6 +79,48 @@ void BodyComponent::display()
 {
 	if (ImGui::TreeNode("Body"))
 	{
+		const char* bodyTypes[] = { "Static", "Kinematic", "Dynamic" };
+
+		if (auto bodyType = static_cast<int>(getBodyType()); ImGui::Combo("Type", &bodyType, bodyTypes, 3))
+		{
+			setBodyType(static_cast<b2BodyType>(bodyType));
+		}
+
+		if (auto position = getPosition(); ImGui::InputFloat2("Position(X, Y)", &position.x))
+		{
+			setPosition(position);
+		}
+		if (auto angle = getAngle(); ImGui::InputFloat("Angle", &angle))
+		{
+			setAngle(angle);
+		}
+		if (auto linearDamping = getLinearDamping(); ImGui::InputFloat("Linear Damping", &linearDamping))
+		{
+			setLinearDamping(linearDamping);
+		}
+		if (auto angularDamping = getAngularDamping(); ImGui::InputFloat("Angular Damping", &angularDamping))
+		{
+			setAngularDamping(angularDamping);
+		}
+		if (auto rotationFixed = isRotationFixed(); ImGui::Checkbox("Rotation Fixed", &rotationFixed))
+		{
+			setRotationFixed(rotationFixed);
+		}
+		if (auto bullet = isBullet(); ImGui::Checkbox("Bullet", &bullet))
+		{
+			setBullet(bullet);
+		}
+
+		if (ImGui::TreeNode("Fixtures"))
+		{
+			for (auto* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
+			{
+
+			}
+
+			ImGui::TreePop();
+		}
+
 		ImGui::TreePop();
 	}
 }

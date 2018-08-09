@@ -36,6 +36,13 @@ void SpeedBoostComponent::display()
 {
 	if (ImGui::TreeNode("SpeedBoost"))
 	{
+		ImGui::InputFloat("Ratio", &speedBoostRatio);
+
+		if (auto durationCount = static_cast<int>(getSpeedBoostDuration().count()); ImGui::InputInt("Duration(milliseconds)", &durationCount))
+		{
+			setSpeedBoostDuration(std::chrono::milliseconds(durationCount));
+		}
+
 		ImGui::TreePop();
 	}
 }

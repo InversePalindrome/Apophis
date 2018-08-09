@@ -34,6 +34,28 @@ void DropComponent::display()
 {
 	if (ImGui::TreeNode("Drop"))
 	{
+		std::size_t i = 0;
+
+		for (auto& itemAndWeight : boost::combine(items, weights))
+		{
+			ImGui::PushID(i++);
+			ImGui::PushItemWidth(220.f);
+
+			auto& item = boost::get<0>(itemAndWeight);
+			item.resize(64);
+
+			ImGui::InputText("Name", item.data(), item.length());
+
+			ImGui::SameLine();
+
+			auto& weight = boost::get<1>(itemAndWeight);
+
+			ImGui::InputInt("Weight", &weight);
+			
+			ImGui::PopID();
+			ImGui::PopItemWidth();
+		}
+
 		ImGui::TreePop();
 	}
 }

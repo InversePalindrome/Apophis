@@ -63,6 +63,38 @@ void LabelComponent::display()
 {
 	if (ImGui::TreeNode("Label"))
 	{
+		auto text = getText();
+		text.resize(64);
+
+		if (ImGui::InputText("Text", text.data(), text.length()))
+		{
+			setText(text);
+		}
+
+		if (auto fontSize = getFontSize(); ImGui::InputFloat("Font Size", &fontSize))
+		{
+			setFontSize(fontSize);
+		}
+		
+		const char* horizontalAlignments[] = { "Left", "Center", "Right" };
+
+		if (auto HAlignment = static_cast<int>(getHorizontalAlignment()); ImGui::Combo("Horizontal Alignment", &HAlignment, horizontalAlignments, 3))
+		{
+			setHorizontalAlignment(static_cast<cocos2d::TextHAlignment>(HAlignment));
+		}
+
+		const char* verticalAlignments[] = { "Top", "Center", "Bottom" };
+
+		if (auto VAlignment = static_cast<int>(getVerticalAlignment()); ImGui::Combo("Vertical Alignment", &VAlignment, verticalAlignments, 3))
+		{
+			setVerticalAlignment(static_cast<cocos2d::TextVAlignment>(VAlignment));
+		}
+
+		if (auto textColor = cocos2d::Color4F(getTextColor()); ImGui::ColorEdit3("Text Color", &textColor.r))
+		{
+			setTextColor(cocos2d::Color4B(textColor));
+		}
+
 		ImGui::TreePop();
 	}
 }

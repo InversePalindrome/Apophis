@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #include "Components.hpp"
 #include "LevelParser.hpp"
+#include "PhysicsSystem.hpp"
 #include "GraphicsSystem.hpp"
 #include "LevelSerializer.hpp"
 #include "LevelEditorNode.hpp"
@@ -124,6 +125,7 @@ cocos2d::Scene* LevelEditorNode::scene()
 void LevelEditorNode::initSystems()
 {
 	systemManager.add<GraphicsSystem>(this, mapDimensions);
+	systemManager.add<PhysicsSystem>(entityManager, eventManager);
 
 	eventManager.subscribe<entityx::EntityCreatedEvent>(*this);
 	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);

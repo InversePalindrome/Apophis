@@ -26,6 +26,19 @@ void ObjectComponent::display()
 {
 	if (ImGui::TreeNode("Object"))
 	{
+		if (ImGui::BeginCombo("Type", objectType._to_string()))
+		{
+			for (const auto objectTypeValue : ObjectType::_values())
+			{
+				if (ImGui::Selectable(objectTypeValue._to_string()))
+				{
+					objectType = objectTypeValue;
+				}
+			}
+
+			ImGui::EndCombo();
+		}
+
 		ImGui::TreePop();
 	}
 }

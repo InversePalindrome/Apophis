@@ -38,8 +38,8 @@ bool Application::applicationDidFinishLaunching()
 	auto* files = cocos2d::FileUtils::getInstance();
 	files->addSearchPath(files->getWritablePath());
 
-	CocosUtility::createSearchPaths("SearchPaths");
-	CocosUtility::initSpriteFrames("SpriteFrames");
+	CocosUtility::createSearchPaths("SearchPaths.xml");
+	CocosUtility::initSpriteFrames("SpriteFrames.xml");
 
 	director->runWithScene(SplashNode::scene());
 

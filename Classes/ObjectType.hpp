@@ -18,4 +18,4 @@ BETTER_ENUM(ObjectType, int,
 	Asteroid = (1 << 4),
 	Item = (1 << 5),
 	Alive = Player | Enemy,
-	Obstacle = Asteroid)
+	Obstacle = Asteroid | Item)

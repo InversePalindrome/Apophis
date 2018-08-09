@@ -17,7 +17,7 @@ void CocosUtility::createSearchPaths(const std::string& filename)
 {
 	auto* files = cocos2d::FileUtils::getInstance();
 	
-	if (pugi::xml_document doc; doc.load_file(files->fullPathForFilename(filename + ".xml").c_str()))
+	if (pugi::xml_document doc; doc.load_file(files->fullPathForFilename(filename).c_str()))
 	{
 		if (const auto searchPathsNode = doc.child("SearchPaths"))
 		{
@@ -31,7 +31,7 @@ void CocosUtility::createSearchPaths(const std::string& filename)
 
 void CocosUtility::initSpriteFrames(const std::string& filename)
 {
-	if (pugi::xml_document doc; doc.load_file(cocos2d::FileUtils::getInstance()->fullPathForFilename(filename + ".xml").c_str()))
+	if (pugi::xml_document doc; doc.load_file(cocos2d::FileUtils::getInstance()->fullPathForFilename(filename).c_str()))
 	{
 		if (const auto spritesNode = doc.child("SpriteFrames"))
 		{

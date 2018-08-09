@@ -36,8 +36,8 @@ void AvoidComponent::display()
 {
 	if (ImGui::TreeNode("Avoid"))
 	{
-		ImGui::InputFloat("distance", &avoidanceForce);
-		ImGui::InputFloat("force", &avoidanceForce);
+		ImGui::InputFloat("Distance", &avoidanceForce);
+		ImGui::InputFloat("Force", &avoidanceForce);
 
 		ImGui::TreePop();
 	}

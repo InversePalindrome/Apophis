@@ -42,6 +42,18 @@ void RegenBoostComponent::display()
 {
 	if (ImGui::TreeNode("RegenBoost"))
 	{
+		ImGui::InputFloat("Boost", &hitpointBoost);
+
+		if (auto rateCount = static_cast<int>(getRegenRate().count()); ImGui::InputInt("Rate", &rateCount))
+		{
+			setRegenRate(std::chrono::milliseconds(rateCount));
+		}
+
+		if (auto durationCount = static_cast<int>(getRegenDuration().count()); ImGui::InputInt("Duration(milliseconds)", &durationCount))
+		{
+			setRegenDuration(std::chrono::milliseconds(durationCount));
+		}
+
 		ImGui::TreePop();
 	}
 }

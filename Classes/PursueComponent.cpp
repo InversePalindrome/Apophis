@@ -11,7 +11,7 @@ InversePalindrome.com
 
 
 PursueComponent::PursueComponent(const pugi::xml_node& componentNode) :
-	predictionTime(componentNode.text().as_int(5.f))
+	predictionTime(componentNode.text().as_int(5000))
 {
 }
 
@@ -26,6 +26,11 @@ void PursueComponent::display()
 {
 	if (ImGui::TreeNode("Pursue"))
 	{
+		if (auto predictionTimeCount = static_cast<int>(getPredictionTime().count()); ImGui::InputInt("Prediction Time(milliseconds)", &predictionTimeCount))
+		{
+			setPredictionTime(std::chrono::milliseconds(predictionTimeCount));
+		}
+
 		ImGui::TreePop();
 	}
 }

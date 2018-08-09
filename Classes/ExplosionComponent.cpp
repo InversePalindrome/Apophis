@@ -35,6 +35,14 @@ void ExplosionComponent::display()
 {
 	if (ImGui::TreeNode("Explosion"))
 	{
+		explosionName.resize(64);
+		ImGui::InputText("Name", explosionName.data(), explosionName.length());
+
+		if (auto explosionTimeCount = static_cast<int>(explosionTime.count()); ImGui::InputInt("Time(milliseconds)", &explosionTimeCount))
+		{
+			setExplosionTime(std::chrono::milliseconds(explosionTimeCount));
+		}
+
 		ImGui::TreePop();
 	}
 }

@@ -43,6 +43,15 @@ void PatrolComponent::display()
 {
 	if (ImGui::TreeNode("Patrol"))
 	{
+		for (std::size_t i = 0; i < patrolPoints.size(); ++i)
+		{
+			ImGui::PushID(i);
+
+			ImGui::InputFloat2("Point(X, Y)", &patrolPoints[i].x);
+
+			ImGui::PopID();
+		}
+
 		ImGui::TreePop();
 	}
 }
