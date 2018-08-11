@@ -7,7 +7,7 @@ InversePalindrome.com
 
 #include "SplashNode.hpp"
 #include "Application.hpp"
-#include "CocosUtility.hpp"
+#include "ResourceParser.hpp"
 
 #include "CCIMGUIGLViewImpl.h"
 
@@ -36,10 +36,13 @@ bool Application::applicationDidFinishLaunching()
 	}
 
 	auto* files = cocos2d::FileUtils::getInstance();
-	files->addSearchPath(files->getWritablePath());
-
-	CocosUtility::createSearchPaths("SearchPaths.xml");
-	CocosUtility::initSpriteFrames("SpriteFrames.xml");
+	files->addSearchPath("Entities");
+	files->addSearchPath("Sprites");
+	files->addSearchPath("Particles");
+	files->addSearchPath("Fonts");
+	files->addSearchPath("Sounds");
+	
+	ResourceParser::parseResources("Resources.xml");
 
 	director->runWithScene(SplashNode::scene());
 

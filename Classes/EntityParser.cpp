@@ -28,7 +28,6 @@ InversePalindrome.com
 #include "StrikerComponent.hpp"
 #include "ParticleComponent.hpp"
 #include "TransformComponent.hpp"
-#include "AnimationComponent.hpp"
 #include "ExplosionComponent.hpp"
 #include "SatelliteComponent.hpp"
 #include "SpeedBoostComponent.hpp"
@@ -61,7 +60,6 @@ const std::unordered_map<std::string, std::function<void(entityx::Entity&, entit
     { "Damage", [](auto entity, auto&, const auto& componentNode) { entity.assign<DamageComponent>(componentNode); } },
     { "Vision", [](auto entity, auto&, const auto& componentNode) { entity.assign<VisionComponent>(componentNode); } },
     { "Sound", [](auto entity, auto&, const auto& componentNode) { entity.assign<SoundComponent>(componentNode); } },
-    { "Animation", [](auto entity, auto&, const auto& componentNode) { entity.assign<AnimationComponent>(componentNode); } },
     { "Weapon", [](auto entity, auto&, const auto& componentNode) { entity.assign<WeaponComponent>(componentNode); } },
     { "Explosion", [](auto entity, auto&, const auto& componentNode) { entity.assign<ExplosionComponent>(componentNode); } },
     { "Speed", [](auto entity, auto&, const auto& componentNode) { entity.assign<SpeedComponent>(componentNode); } },

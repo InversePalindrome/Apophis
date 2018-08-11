@@ -12,7 +12,6 @@ InversePalindrome.com
 #include "ItemSystem.hpp"
 #include "LevelParser.hpp"
 #include "AudioSystem.hpp"
-#include "ActionSystem.hpp"
 #include "PlayerSystem.hpp"
 #include "SettingsNode.hpp"
 #include "CombatSystem.hpp"
@@ -105,7 +104,6 @@ void GameNode::initSystems()
 	systemManager.add<StrikerSystem>();
 	systemManager.add<PlayerSystem>(this);
 	systemManager.add<AudioSystem>();
-	systemManager.add<ActionSystem>();
 	systemManager.add<OrbitalSystem>();
 	systemManager.add<ItemSystem>(entityManager, eventManager);
 	systemManager.add<PhysicsSystem>(entityManager, eventManager);

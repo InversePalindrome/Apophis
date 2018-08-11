@@ -95,4 +95,9 @@
     <Impulse linear="30"></Impulse>
      <Label x="400" y="400" font="BEBAS" size="100" angle="90" textR="17" textG="231" textB="242" textA="255">Hello World</Label>
 </Entity>
+
+  <Entity>
+    <Particle filename="Supernova.plist"></Particle>
+  </Entity>
+
 </Level>

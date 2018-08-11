@@ -36,12 +36,6 @@ ParticleComponent::ParticleComponent(const pugi::xml_node& componentNode) :
 	{
 		setEmissionRate(emissionRateAttribute.as_float());
 	}
-	if (const auto xGravityAttribute = componentNode.attribute("xGravity"),
-		yGravityAttribute = componentNode.attribute("yGravity"); 
-	    xGravityAttribute && yGravityAttribute)
-	{
-		setGravity({ xGravityAttribute.as_float(), yGravityAttribute.as_float() });
-	}
 	if (const auto lifeAttribute = componentNode.attribute("life"))
 	{
 		setLife(lifeAttribute.as_float());
@@ -50,46 +44,59 @@ ParticleComponent::ParticleComponent(const pugi::xml_node& componentNode) :
 	{
 		setLifeVar(lifeVarAttribute.as_float());
 	}
-	if (const auto speedAttribute = componentNode.attribute("speed"))
+	if (getMode() == cocos2d::ParticleSystem::Mode::GRAVITY)
 	{
-		setSpeed(speedAttribute.as_float());
+		if (const auto xGravityAttribute = componentNode.attribute("xGravity"),
+			yGravityAttribute = componentNode.attribute("yGravity");
+		xGravityAttribute && yGravityAttribute)
+		{
+			setGravity({ xGravityAttribute.as_float(), yGravityAttribute.as_float() });
+		}
+		if (const auto speedAttribute = componentNode.attribute("speed"))
+		{
+			setSpeed(speedAttribute.as_float());
+		}
+		if (const auto speedVarAttribute = componentNode.attribute("speedVar"))
+		{
+			setSpeedVar(speedVarAttribute.as_float());
+		}
+		if (const auto tangentialAccelerationAttribute = componentNode.attribute("tangentialAcceleration"))
+		{
+			setTangentialAcceleration(tangentialAccelerationAttribute.as_float());
+		}
+		if (const auto tangentialAccelerationAttribute = componentNode.attribute("tangentialAccelerationVar"))
+		{
+			setTangentialAccelerationVar(tangentialAccelerationAttribute.as_float());
+		}
+		if (const auto radialAccelerationAttribute = componentNode.attribute("radialAcceleration"))
+		{
+			setRadialAcceleration(radialAccelerationAttribute.as_float());
+		}
+		if (const auto radialAccelerationVarAttribute = componentNode.attribute("radialAccelerationVar"))
+		{
+			setRadialAccelerationVar(radialAccelerationVarAttribute.as_float());
+		}
 	}
-	if (const auto speedVarAttribute = componentNode.attribute("speedVar"))
+	else if (getMode() == cocos2d::ParticleSystem::Mode::RADIUS)
 	{
-		setSpeedVar(speedVarAttribute.as_float());
+		if (const auto startRadiusAttribute = componentNode.attribute("startRadius"))
+		{
+			setStartRadius(startRadiusAttribute.as_float());
+		}
+		if (const auto startRadiusVarAttribute = componentNode.attribute("startRadiusVar"))
+		{
+			setStartRadiusVar(startRadiusVarAttribute.as_float());
+		}
+		if (const auto endRadiusAttribute = componentNode.attribute("endRadius"))
+		{
+			setEndRadius(endRadiusAttribute.as_float());
+		}
+		if (const auto endRadiusVarAttribute = componentNode.attribute("endRadiusVar"))
+		{
+			setEndRadiusVar(endRadiusVarAttribute.as_float());
+		}
 	}
-	if (const auto tangentialAccelerationAttribute = componentNode.attribute("tangentialAcceleration"))
-	{
-		setTangentialAcceleration(tangentialAccelerationAttribute.as_float());
-	}
-	if (const auto tangentialAccelerationAttribute = componentNode.attribute("tangentialAccelerationVar"))
-	{
-		setTangentialAccelerationVar(tangentialAccelerationAttribute.as_float());
-	}
-	if (const auto radialAccelerationAttribute = componentNode.attribute("radialAcceleration"))
-	{
-		setRadialAcceleration(radialAccelerationAttribute.as_float());
-	}
-	if (const auto radialAccelerationVarAttribute = componentNode.attribute("radialAccelerationVar"))
-	{
-		setRadialAccelerationVar(radialAccelerationVarAttribute.as_float());
-	}
-	if (const auto startRadiusAttribute = componentNode.attribute("startRadius"))
-	{
-		setStartRadius(startRadiusAttribute.as_float());
-	}
-	if (const auto startRadiusVarAttribute = componentNode.attribute("startRadiusVar"))
-	{
-		setStartRadiusVar(startRadiusVarAttribute.as_float());
-	}
-	if (const auto endRadiusAttribute = componentNode.attribute("endRadius"))
-	{
-		setEndRadius(endRadiusAttribute.as_float());
-	}
-	if (const auto endRadiusVarAttribute = componentNode.attribute("endRadiusVar"))
-	{
-		setEndRadiusVar(endRadiusVarAttribute.as_float());
-	}
+
 	if (const auto startColorRAttribute = componentNode.attribute("startR"),
 		startColorGAttribute = componentNode.attribute("startG"),
 		startColorBAttribute = componentNode.attribute("startB"),
@@ -143,20 +150,28 @@ void ParticleComponent::save(pugi::xml_node& componentNode) const
 	componentNode.append_attribute("mode") = static_cast<int>(getMode());
 	componentNode.append_attribute("duration") = getDuration();
 	componentNode.append_attribute("emissionRate") = getEmissionRate();
-	componentNode.append_attribute("xGravity") = getGravity().x;
-	componentNode.append_attribute("yGravity") = getGravity().y;
 	componentNode.append_attribute("life") = getLife();
 	componentNode.append_attribute("lifeVar") = getLifeVar();
-	componentNode.append_attribute("speed") = getSpeed();
-	componentNode.append_attribute("speedVar") = getSpeedVar();
-	componentNode.append_attribute("tangentialAcceleration") = getTangentialAcceleration();
-	componentNode.append_attribute("tangentialAccelerationVar") = getTangentialAccelerationVar();
-	componentNode.append_attribute("radialAcceleration") = getRadialAcceleration();
-	componentNode.append_attribute("radialAccelerationVar") = getRadialAccelerationVar();
-	componentNode.append_attribute("startRadius") = getStartRadius();
-	componentNode.append_attribute("startRadiusVar") = getStartRadiusVar();
-	componentNode.append_attribute("endRadius") = getEndRadius();
-	componentNode.append_attribute("endRadiusVar") = getEndRadiusVar();
+
+	if (getMode() == cocos2d::ParticleSystem::Mode::GRAVITY)
+	{
+		componentNode.append_attribute("xGravity") = getGravity().x;
+		componentNode.append_attribute("yGravity") = getGravity().y;
+		componentNode.append_attribute("speed") = getSpeed();
+		componentNode.append_attribute("speedVar") = getSpeedVar();
+		componentNode.append_attribute("tangentialAcceleration") = getTangentialAcceleration();
+		componentNode.append_attribute("tangentialAccelerationVar") = getTangentialAccelerationVar();
+		componentNode.append_attribute("radialAcceleration") = getRadialAcceleration();
+		componentNode.append_attribute("radialAccelerationVar") = getRadialAccelerationVar();
+	}
+	else if (getMode() == cocos2d::ParticleSystem::Mode::RADIUS)
+	{
+		componentNode.append_attribute("startRadius") = getStartRadius();
+		componentNode.append_attribute("startRadiusVar") = getStartRadiusVar();
+		componentNode.append_attribute("endRadius") = getEndRadius();
+		componentNode.append_attribute("endRadiusVar") = getEndRadiusVar();
+	}
+		
 	componentNode.append_attribute("startR") = getStartColor().r;
 	componentNode.append_attribute("startG") = getStartColor().g;
 	componentNode.append_attribute("startB") = getStartColor().b;
@@ -179,6 +194,108 @@ void ParticleComponent::display()
 {
 	if (ImGui::TreeNode("Particle"))
 	{
+		NodeComponent::display();
+
+		const char* modes[] = { "Gravity", "Radius" };
+
+		if (auto mode = static_cast<int>(getMode()); ImGui::Combo("Mode", &mode, modes, 2))
+		{
+			setMode(static_cast<cocos2d::ParticleSystem::Mode>(mode));
+		}
+		
+		if (auto duration = getDuration(); ImGui::InputFloat("Duration", &duration))
+		{
+			setDuration(duration);
+		}
+
+		if (auto emissionRate = getEmissionRate(); ImGui::InputFloat("Emission Rate", &emissionRate))
+		{
+			setEmissionRate(emissionRate);
+		}
+
+		if (auto life = getLife(); ImGui::InputFloat("Life", &life))
+		{
+			setLife(life);
+		}
+		ImGui::SameLine();
+		if (auto lifeVar = getLifeVar(); ImGui::InputFloat("Life Variance", &lifeVar))
+		{
+			setLifeVar(lifeVar);
+		}
+
+		if (getMode() == cocos2d::ParticleSystem::Mode::GRAVITY)
+		{
+			if (auto gravity = getGravity(); ImGui::InputFloat2("Gravity", &gravity.x))
+			{
+				setGravity(gravity);
+			}
+			if (auto speed = getSpeed(); ImGui::InputFloat("Speed", &speed))
+			{
+				setSpeed(speed);
+			}
+			ImGui::SameLine();
+			if (auto speedVar = getSpeedVar(); ImGui::InputFloat("Speed Variance", &speedVar))
+			{
+				setSpeedVar(speedVar);
+			}
+			if (auto tangentialAcceleration = getTangentialAcceleration(); ImGui::InputFloat("Tangential  Acceleration", &tangentialAcceleration))
+			{
+				setTangentialAcceleration(tangentialAcceleration);
+			}
+			ImGui::SameLine();
+			if (auto tangentialAccelerationVar = getTangentialAccelerationVar(); ImGui::InputFloat("Tangential Acceleration Variance", &tangentialAccelerationVar))
+			{
+				setTangentialAccelerationVar(tangentialAccelerationVar);
+			}
+			if (auto radialAcceleration = getRadialAcceleration(); ImGui::InputFloat("Radial Acceleration", &radialAcceleration))
+			{
+				setRadialAcceleration(radialAcceleration);
+			}
+			ImGui::SameLine();
+			if (auto radialAccelerationVar = getRadialAccelerationVar(); ImGui::InputFloat("Radial Acceleration Variance", &radialAccelerationVar))
+			{
+				setRadialAccelerationVar(radialAccelerationVar);
+			}
+		}
+		else if (getMode() == cocos2d::ParticleSystem::Mode::RADIUS)
+		{
+			if (auto startRadius = getStartRadius(); ImGui::InputFloat("Start Radius", &startRadius))
+			{
+				setStartRadius(startRadius);
+			}
+			ImGui::SameLine();
+			if (auto startRadiusVar = getStartRadiusVar(); ImGui::InputFloat("Start Radius Variance", &startRadiusVar))
+			{
+				setStartRadiusVar(startRadiusVar);
+			}
+			if (auto endRadius = getEndRadius(); ImGui::InputFloat("End Radius", &endRadius))
+			{
+				setEndRadius(endRadius);
+			}
+			ImGui::SameLine();
+			if (auto endRadiusVar = getEndRadiusVar(); ImGui::InputFloat("End Radius Var", &endRadiusVar))
+			{
+				setEndRadius(endRadiusVar);
+			}
+		}
+
+		if (auto startColor = getStartColor(); ImGui::ColorEdit4("Start Color", &startColor.r))
+		{
+			setStartColor(startColor);
+		}
+		if (auto startColorVar = getStartColorVar(); ImGui::ColorEdit4("Start Color Variance", &startColorVar.r))
+		{
+			setStartColorVar(startColorVar);
+		}
+		if (auto endColor = getEndColor(); ImGui::ColorEdit4("End Color", &endColor.r))
+		{
+			setEndColor(endColor);
+		}
+		if (auto endColorVar = getEndColorVar(); ImGui::ColorEdit4("End Color Variance", &endColorVar.r))
+		{
+			setEndColorVar(endColorVar);
+		}
+		
 		ImGui::TreePop();
 	}
 }
@@ -187,7 +304,7 @@ void ParticleComponent::initWithFile(const std::string& filename)
 {
 	this->filename = filename;
 
-	emitter->initWithFile(filename + ".plist");
+	emitter->initWithFile(filename);
 }
 
 void ParticleComponent::setDisplayFrame(const std::string& spriteFrameName)
@@ -227,16 +344,6 @@ void ParticleComponent::setEmissionRate(float emissionRate)
 	emitter->setEmissionRate(emissionRate);
 }
 
-cocos2d::Vec2 ParticleComponent::getGravity() const
-{
-	return emitter->getGravity();
-}
-
-void ParticleComponent::setGravity(const cocos2d::Vec2& gravity)
-{
-	emitter->setGravity(gravity);
-}
-
 float ParticleComponent::getLife() const
 {
 	return emitter->getLife();
@@ -255,6 +362,16 @@ float ParticleComponent::getLifeVar() const
 void ParticleComponent::setLifeVar(float lifeVar)
 {
 	emitter->setLifeVar(lifeVar);
+}
+
+cocos2d::Vec2 ParticleComponent::getGravity() const
+{
+	return emitter->getGravity();
+}
+
+void ParticleComponent::setGravity(const cocos2d::Vec2& gravity)
+{
+	emitter->setGravity(gravity);
 }
 
 float ParticleComponent::getSpeed() const

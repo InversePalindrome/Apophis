@@ -18,7 +18,7 @@ AppSettings::AppSettings() :
 	keyBindings{ { cocos2d::EventKeyboard::KeyCode::KEY_D, KeyAction::MoveRight}, { cocos2d::EventKeyboard::KeyCode::KEY_A, KeyAction::MoveLeft } ,
 				 { cocos2d::EventKeyboard::KeyCode::KEY_W, KeyAction::MoveUp }, { cocos2d::EventKeyboard::KeyCode::KEY_S, KeyAction::MoveDown } }
 {
-	load("Settings.xml");
+	load(cocos2d::FileUtils::getInstance()->getWritablePath() + "Settings.xml");
 }
 
 AppSettings::~AppSettings()
@@ -74,10 +74,8 @@ bool AppSettings::hasKeyAction(cocos2d::EventKeyboard::KeyCode keyCode) const
 }
 
 void AppSettings::load(const std::string& filename)
-{
-	pugi::xml_document doc;
-	
-	if (doc.load_file(cocos2d::FileUtils::getInstance()->fullPathForFilename(filename).c_str()))
+{	
+	if (pugi::xml_document doc; doc.load_file(cocos2d::FileUtils::getInstance()->fullPathForFilename(filename).c_str()))
 	{
 		if (const auto settingsNode = doc.child("Settings"))
 		{

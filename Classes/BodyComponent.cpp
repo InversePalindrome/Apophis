@@ -111,14 +111,66 @@ void BodyComponent::display()
 			setBullet(bullet);
 		}
 
-		if (ImGui::TreeNode("Fixtures"))
+		for (auto* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
 		{
-			for (auto* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
+			if (ImGui::TreeNode("Fixture"))
 			{
+				if (auto density = fixture->GetDensity(); ImGui::InputFloat("Density", &density))
+				{
+					fixture->SetDensity(density);
+				}
+				if (auto friction = fixture->GetFriction(); ImGui::InputFloat("Friction", &friction))
+				{
+					fixture->SetFriction(friction);
+				}
+				if (auto restitution = fixture->GetRestitution(); ImGui::InputFloat("Restitution", &restitution))
+				{
+					fixture->SetRestitution(restitution);
+				}
+				if (auto sensor = fixture->IsSensor(); ImGui::Checkbox("Sensor", &sensor))
+				{
+					fixture->SetSensor(sensor);
+				}
 
+				switch (fixture->GetType())
+				{
+				case b2Shape::e_circle:
+				{
+					if(ImGui::TreeNode("Circle"))
+					{
+						auto* circleShape = static_cast<b2CircleShape*>(fixture->GetShape());
+
+						ImGui::InputFloat2("Origin", &circleShape->m_p.x);
+						ImGui::InputFloat("Radius", &circleShape->m_radius);
+
+						ImGui::TreePop();
+					}
+				}
+				break;
+
+				case b2Shape::e_polygon:
+				{
+					if (ImGui::TreeNode("Polygon"))
+					{
+						auto* polygonShape = static_cast<b2PolygonShape*>(fixture->GetShape());
+
+						for (std::size_t i = 0; i < polygonShape->GetVertexCount(); ++i)
+						{
+					    	ImGui::PushID(i);
+
+							ImGui::InputFloat2("Point", &polygonShape->m_vertices[i].x);
+
+							ImGui::PopID();
+						}
+
+						ImGui::TreePop();
+					}
+				}
+				break;
+				}
+
+				ImGui::TreePop();
 			}
-
-			ImGui::TreePop();
 		}
 
 		ImGui::TreePop();

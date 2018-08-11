@@ -36,14 +36,14 @@ public:
 	float getEmissionRate() const;
 	void setEmissionRate(float emissionRate);
 
-	cocos2d::Vec2 getGravity() const;
-	void setGravity(const cocos2d::Vec2& gravity);
-
 	float getLife() const;
 	void setLife(float life);
 
 	float getLifeVar() const;
 	void setLifeVar(float lifeVar);
+
+	cocos2d::Vec2 getGravity() const;
+	void setGravity(const cocos2d::Vec2& gravity);
 
 	float getSpeed() const;
 	void setSpeed(float speed);

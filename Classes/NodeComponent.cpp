@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "NodeComponent.hpp"
 
+#include <imgui.h>
+
 
 NodeComponent::NodeComponent(cocos2d::Node* node, const pugi::xml_node& componentNode) :
 	node(node)
@@ -62,6 +64,31 @@ void NodeComponent::save(pugi::xml_node& componentNode) const
 	componentNode.append_attribute("B") = getColor().b;
 }
 
+void NodeComponent::display()
+{
+	if (ImGui::TreeNode("Node"))
+	{
+		if (auto position = getPosition(); ImGui::InputFloat2("Position(X, Y)", &position.x))
+		{
+			setPosition(position);
+		}
+		if (auto rotation = getRotation(); ImGui::InputFloat("Rotation", &rotation))
+		{
+			setRotation(rotation);
+		}
+		if (auto scale = getScale(); ImGui::InputFloat2("Scale(Width, Height)", &scale.x))
+		{
+			setScale(scale);
+		}
+		if (auto color = cocos2d::Color4F(getColor()); ImGui::ColorEdit3("Color", &color.r))
+		{
+			setColor(cocos2d::Color3B(color));
+		}
+
+		ImGui::TreePop();
+	}
+}
+
 void NodeComponent::addChild(cocos2d::Node* child)
 {
 	node->addChild(child);
@@ -92,26 +119,6 @@ cocos2d::Node* NodeComponent::getNode() const
 	return node;
 }
 
-cocos2d::Size NodeComponent::getContentSize() const
-{
-	return node->getContentSize();
-}
-
-void NodeComponent::setContentSize(const cocos2d::Size& contentSize)
-{
-	node->setContentSize(contentSize);
-}
-
-cocos2d::Vec2 NodeComponent::getScale() const
-{
-	return { node->getScaleX(), node->getScaleY() };
-}
-
-void NodeComponent::setScale(const cocos2d::Vec2& scale)
-{
-	node->setScale(scale.x, scale.y);
-}
-
 cocos2d::Vec2 NodeComponent::getPosition() const
 {
 	return node->getPosition();
@@ -130,6 +137,26 @@ float NodeComponent::getRotation() const
 void NodeComponent::setRotation(float angle)
 {
 	node->setRotation(angle);
+}
+
+cocos2d::Vec2 NodeComponent::getScale() const
+{
+	return { node->getScaleX(), node->getScaleY() };
+}
+
+void NodeComponent::setScale(const cocos2d::Vec2& scale)
+{
+	node->setScale(scale.x, scale.y);
+}
+
+cocos2d::Size NodeComponent::getContentSize() const
+{
+	return node->getContentSize();
+}
+
+void NodeComponent::setContentSize(const cocos2d::Size& contentSize)
+{
+	node->setContentSize(contentSize);
 }
 
 cocos2d::Color3B NodeComponent::getColor() const

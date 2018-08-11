@@ -31,7 +31,6 @@ InversePalindrome.com
 #include "StrikerComponent.hpp"
 #include "ParticleComponent.hpp"
 #include "TransformComponent.hpp"
-#include "AnimationComponent.hpp"
 #include "ExplosionComponent.hpp"
 #include "SatelliteComponent.hpp"
 #include "SpeedBoostComponent.hpp"
@@ -41,7 +40,7 @@ InversePalindrome.com
 
 
 using Components = brigand::list<TransformComponent, ObjectComponent, BodyComponent, DistanceJointComponent, SpeedComponent, 
-                               	 AccelerationComponent, SpriteComponent, LabelComponent, ParticleComponent, AnimationComponent,
+                               	 AccelerationComponent, SpriteComponent, LabelComponent, ParticleComponent,
                                  SoundComponent, HealthComponent, DamageComponent,  WeaponComponent, DropComponent, SpeedBoostComponent, 
                                  RegenBoostComponent, ExplosionComponent, VisionComponent, WanderComponent, PatrolComponent, 
 	                             FollowComponent, PursueComponent, AvoidComponent, FlockComponent, QueueComponent, SatelliteComponent,

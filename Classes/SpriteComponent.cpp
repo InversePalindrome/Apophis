@@ -9,6 +9,8 @@ InversePalindrome.com
 
 #include <imgui.h>
 
+#include <cocos/base/ccUtils.h>
+
 
 SpriteComponent::SpriteComponent(const pugi::xml_node& componentNode) :
 	NodeComponent(cocos2d::Sprite::create(), componentNode),
@@ -19,10 +21,6 @@ SpriteComponent::SpriteComponent(const pugi::xml_node& componentNode) :
 	{
 		setSpriteFrame(spriteFrameAttribute.as_string());
 	}
-	if (const auto repeatAttribute = componentNode.attribute("repeat"))
-	{
-		setRepeatedTexture(repeatAttribute.as_bool());
-	}
 	if (const auto textureXAttribute = componentNode.attribute("textureX"),
 	    textureYAttribute = componentNode.attribute("textureY"),
 	    textureWidthAttribute = componentNode.attribute("textureWidth"),
@@ -30,6 +28,10 @@ SpriteComponent::SpriteComponent(const pugi::xml_node& componentNode) :
 	    textureXAttribute && textureYAttribute && textureWidthAttribute && textureHeightAttribute)
 	{
 		setTextureRect({ textureXAttribute.as_float(), textureYAttribute.as_float(), textureWidthAttribute.as_float(), textureHeightAttribute.as_float() });
+	}
+	if (const auto repeatAttribute = componentNode.attribute("repeat"))
+	{
+		setTextureRepeated(repeatAttribute.as_bool());
 	}
 }
 
@@ -44,17 +46,29 @@ void SpriteComponent::save(pugi::xml_node& componentNode) const
 		componentNode.append_attribute("frame") = spriteFrameName.c_str();
 	}
 
-	componentNode.append_attribute("repeat") = isTextureRepeated();
 	componentNode.append_attribute("textureX") = getTextureRect().origin.x;
 	componentNode.append_attribute("textureY") = getTextureRect().origin.y;
 	componentNode.append_attribute("textureWidth") = getTextureRect().size.width;
 	componentNode.append_attribute("textureHeight") = getTextureRect().size.height;
+
+	componentNode.append_attribute("repeat") = isTextureRepeated();
 }
 
 void SpriteComponent::display()
 {
 	if (ImGui::TreeNode("Sprite"))
 	{
+		NodeComponent::display();
+
+		if (auto textureRect = cocos2d::Vec4(getTextureRect().origin.x, getTextureRect().origin.y, getTextureRect().size.width, getTextureRect().size.height); ImGui::InputFloat4("Texture(X, Y, Width, Height)", &textureRect.x))
+		{
+			setTextureRect(cocos2d::Rect(textureRect.x, textureRect.y, textureRect.z, textureRect.w));
+		}
+		if (auto textureRepeat = isTextureRepeated(); ImGui::Checkbox("Texture Repeated", &textureRepeat))
+		{
+			setTextureRepeated(textureRepeat);
+		}
+
 		ImGui::TreePop();
 	}
 }
@@ -96,12 +110,14 @@ bool SpriteComponent::isTextureRepeated() const
 	return repeatTexture;
 }
 
-void SpriteComponent::setRepeatedTexture(bool repeatTexture)
+void SpriteComponent::setTextureRepeated(bool repeatTexture)
 {
 	this->repeatTexture = repeatTexture;
-
-	if (repeatTexture)
+	
+	if (repeatTexture && 
+		(getTexture()->getPixelsWide() & (getTexture()->getPixelsWide() - 1)) == 0 &&
+		(getTexture()->getPixelsHigh() & (getTexture()->getPixelsHigh() - 1)) == 0)
 	{
 		getTexture()->setTexParameters({ GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_REPEAT });
 	}
-}
+} 

@@ -63,6 +63,8 @@ void LabelComponent::display()
 {
 	if (ImGui::TreeNode("Label"))
 	{
+		NodeComponent::display();
+
 		auto text = getText();
 		text.resize(64);
 

@@ -33,7 +33,7 @@ public:
 	void setTextureRect(const cocos2d::Rect& textureRect);
 
 	bool isTextureRepeated() const;
-	void setRepeatedTexture(bool repeatTexture);
+	void setTextureRepeated(bool repeatTexture);
 
 private:
 	cocos2d::Sprite* sprite;
