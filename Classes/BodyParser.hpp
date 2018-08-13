@@ -8,6 +8,8 @@ InversePalindrome.com
 #pragma once
 
 #include <Box2D/Dynamics/b2Fixture.h>
+#include <Box2D/Collision/Shapes/b2EdgeShape.h>
+#include <Box2D/Collision/Shapes/b2ChainShape.h>
 #include <Box2D/Collision/Shapes/b2CircleShape.h>
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
@@ -17,8 +19,9 @@ InversePalindrome.com
 namespace BodyParser
 {
 	void parseBodyDef(b2BodyDef& bodyDef, const pugi::xml_node& bodyNode);
-    void parseFixtureDef(b2FixtureDef& fixtureDef, const pugi::xml_node& fixtureNode);
-	void parseCircleShape(b2CircleShape& circleDef, const pugi::xml_node& circleNode);
-	void parseRectangleShape(b2PolygonShape& rectangleShape, const pugi::xml_node& rectangleNode);
-	void parsePolygonShape(b2PolygonShape& polygonShape, const pugi::xml_node& polygonNode);
+	void parseFixtureDef(b2FixtureDef& fixtureDef, const pugi::xml_node& fixtureNode);
+	void parseCircleShape(b2CircleShape& circle, const pugi::xml_node& circleNode);
+	void parseEdgeShape(b2EdgeShape& edge, const pugi::xml_node& edgeNode);
+	void parsePolygonShape(b2PolygonShape& polygon, const pugi::xml_node& polygonNode);
+	void parseChainShape(b2ChainShape& chain, const pugi::xml_node& chainNode);
 }

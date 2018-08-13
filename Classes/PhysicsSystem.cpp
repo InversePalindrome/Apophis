@@ -92,32 +92,38 @@ void PhysicsSystem::receive(const CreateBody& event)
 	b2BodyDef bodyDef;
 	BodyParser::parseBodyDef(bodyDef, event.bodyNode);
 
-	std::vector<std::pair<b2FixtureDef, std::variant<b2CircleShape, b2PolygonShape>>> fixtures;
+	std::vector<std::pair<b2FixtureDef, std::variant<b2CircleShape, b2EdgeShape, b2PolygonShape, b2ChainShape>>> fixtures;
 
 	for (const auto fixtureNode : event.bodyNode.children())
 	{
 		b2FixtureDef fixtureDef;
 		BodyParser::parseFixtureDef(fixtureDef, fixtureNode);
 
-		std::variant<b2CircleShape, b2PolygonShape> shape;
+		std::variant<b2CircleShape, b2EdgeShape, b2PolygonShape, b2ChainShape> shape;
 
 		if (std::strcmp(fixtureNode.name(), "Circle") == 0)
 		{
-			b2CircleShape circleShape;
-			BodyParser::parseCircleShape(circleShape, fixtureNode);
-			shape = circleShape;
+			b2CircleShape circle;
+			BodyParser::parseCircleShape(circle, fixtureNode);
+			shape = circle;
 		}
-		else if (std::strcmp(fixtureNode.name(), "Rectangle") == 0)
+		else if (std::strcmp(fixtureNode.name(), "Edge") == 0)
 		{
-			b2PolygonShape rectangleShape;
-			BodyParser::parseRectangleShape(rectangleShape, fixtureNode);
-			shape = rectangleShape;
+			b2EdgeShape edge;
+			BodyParser::parseEdgeShape(edge, fixtureNode);
+			shape = edge;
 		}
 		else if (std::strcmp(fixtureNode.name(), "Polygon") == 0)
 		{
-			b2PolygonShape polygonShape;
-			BodyParser::parsePolygonShape(polygonShape, fixtureNode);
-			shape = polygonShape;
+			b2PolygonShape polygon;
+			BodyParser::parsePolygonShape(polygon, fixtureNode);
+			shape = polygon;
+		}
+		else if (std::strcmp(fixtureNode.name(), "Chain") == 0)
+		{
+			b2ChainShape chain;
+			BodyParser::parseChainShape(chain, fixtureNode);
+			shape = chain;
 		}
 
 		fixtures.push_back({ fixtureDef, shape });

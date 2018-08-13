@@ -9,11 +9,16 @@ InversePalindrome.com
 
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2Fixture.h>
-#include <Box2D/Dynamics/Joints/b2Joint.h>
+#include <Box2d/Dynamics/Joints/b2Joint.h>
+#include <Box2D/Collision/Shapes/b2EdgeShape.h>
+#include <Box2D/Collision/Shapes/b2ChainShape.h>
+#include <Box2D/Collision/Shapes/b2CircleShape.h>
+#include <Box2D/Collision/Shapes/b2PolygonShape.h>
 
 #include <pugixml.hpp>
 
 #include <any>
+#include <variant>
 
 
 class BodyComponent
@@ -88,4 +93,7 @@ private:
 	b2AABB AABB;
 
 	std::any userData;
+
+	int fixtureShapeToAdd;
+	std::variant<b2CircleShape, b2EdgeShape, b2PolygonShape, b2ChainShape> shapeToAdd;	
 };

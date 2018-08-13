@@ -66,52 +66,85 @@ void BodyParser::parseFixtureDef(b2FixtureDef& fixtureDef, const pugi::xml_node&
 	}
 }
 
-void BodyParser::parseCircleShape(b2CircleShape& circleShape, const pugi::xml_node& circleNode)
+void BodyParser::parseCircleShape(b2CircleShape& circle, const pugi::xml_node& circleNode)
 {
 	if (const auto xAttribute = circleNode.attribute("x"))
 	{
-		circleShape.m_p.x = xAttribute.as_float();
+		circle.m_p.x = xAttribute.as_float();
 	}
 	if (const auto yAttribute = circleNode.attribute("y"))
 	{
-		circleShape.m_p.y = yAttribute.as_float();
+		circle.m_p.y = yAttribute.as_float();
 	}
 	if (const auto radiusAttribute = circleNode.attribute("radius"))
 	{
-		circleShape.m_radius = radiusAttribute.as_float();
+		circle.m_radius = radiusAttribute.as_float();
 	}
 }
 
-void BodyParser::parseRectangleShape(b2PolygonShape& rectangleShape, const pugi::xml_node& rectangleNode)
+void BodyParser::parseEdgeShape(b2EdgeShape& edge, const pugi::xml_node& edgeNode)
 {
-	b2Vec2 center(0.f, 0.f);
-	float width = 1.f, height = 1.f, angle = 0.f;
+	if (const auto hasVertex0Attribute = edgeNode.attribute("hasVertex0"))
+	{
+		if (hasVertex0Attribute.as_bool())
+		{
+			edge.m_hasVertex0 = true;
 
-	if (const auto xAttribute = rectangleNode.attribute("x"))
-	{
-		center.x = xAttribute.as_float();
+			if (const auto vertex0XAttribute = edgeNode.attribute("vertex0X"))
+			{
+				edge.m_vertex0.x = vertex0XAttribute.as_float();
+			}
+			if (const auto vertex0YAttribute = edgeNode.attribute("vertex0Y"))
+			{
+				edge.m_vertex0.y = vertex0YAttribute.as_float();
+			}
+		}
+		else
+		{
+			edge.m_hasVertex0 = false;
+		}
 	}
-	if (const auto yAttribute = rectangleNode.attribute("y"))
+
+	if (const auto vertex1XAttribute = edgeNode.attribute("vertex1X"))
 	{
-		center.y = yAttribute.as_float();
+		edge.m_vertex1.x = vertex1XAttribute.as_float();
 	}
-	if (const auto widthAttribute = rectangleNode.attribute("width"))
+	if (const auto vertex1YAttribute = edgeNode.attribute("vertex1Y"))
 	{
-		width = widthAttribute.as_float();
+		edge.m_vertex1.y = vertex1YAttribute.as_float();
 	}
-	if (const auto heightAttribute = rectangleNode.attribute("height"))
+	if (const auto vertex2XAttribute = edgeNode.attribute("vertex2X"))
 	{
-		height = heightAttribute.as_float();
+		edge.m_vertex2.x = vertex2XAttribute.as_float();
 	}
-	if (const auto angleAttribute = rectangleNode.attribute("angle"))
+	if (const auto vertex2YAttribute = edgeNode.attribute("vertex2Y"))
 	{
-		angle = angleAttribute.as_float();
+		edge.m_vertex2.y = vertex2YAttribute.as_float();
 	}
-	
-	rectangleShape.SetAsBox(width, height, center, angle);
+
+	if (const auto hasVertex3Attribute = edgeNode.attribute("hasVertex3"))
+	{
+		if (hasVertex3Attribute.as_bool())
+		{
+			edge.m_hasVertex3 = true;
+
+			if (const auto vertex3XAttribute = edgeNode.attribute("vertex3X"))
+			{
+				edge.m_vertex3.x = vertex3XAttribute.as_float();
+			}
+			if (const auto vertex3YAttribute = edgeNode.attribute("vertex3Y"))
+			{
+				edge.m_vertex3.y = vertex3YAttribute.as_float();
+			}
+		}
+		else
+		{
+			edge.m_hasVertex3 = false;
+		}
+	}
 }
 
-void BodyParser::parsePolygonShape(b2PolygonShape& polygonShape, const pugi::xml_node& polygonNode)
+void BodyParser::parsePolygonShape(b2PolygonShape& polygon, const pugi::xml_node& polygonNode)
 {
 	std::vector<b2Vec2> points;
 
@@ -130,6 +163,29 @@ void BodyParser::parsePolygonShape(b2PolygonShape& polygonShape, const pugi::xml
 
 		points.push_back(point);
 	}
+	
+	polygon.Set(points.data(), points.size());
+}
 
-	polygonShape.Set(points.data(), points.size());
+void BodyParser::parseChainShape(b2ChainShape& chain, const pugi::xml_node& chainNode)
+{
+	std::vector<b2Vec2> points;
+
+	for (const auto pointNode : chainNode.children("Point"))
+	{
+		b2Vec2 point(0.f, 0.f);
+
+		if (const auto xAttribute = pointNode.attribute("x"))
+		{
+			point.x = xAttribute.as_float();
+		}
+		if (const auto yAttribute = pointNode.attribute("y"))
+		{
+			point.y = yAttribute.as_float();
+		}
+
+		points.push_back(point);
+	}
+
+	chain.CreateChain(points.data(), points.size());
 }

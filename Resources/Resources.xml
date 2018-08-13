@@ -12,4 +12,5 @@
   <SpriteSheet>GreenProjectiles.plist</SpriteSheet>
   <SpriteSheet>YellowProjectiles.plist</SpriteSheet>
   <SpriteSheet>Planets.plist</SpriteSheet>
+  <SpriteSheet>GUI.plist</SpriteSheet>
 </Resources>

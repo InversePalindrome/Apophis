@@ -76,7 +76,7 @@ bool LevelEditorNode::init()
 
 		for (auto entity : entities)
 		{
-			if (ImGui::TreeNode(std::to_string(entity.id().index()).c_str()))
+			if (ImGui::TreeNode(("Entity " + std::to_string(entity.id().index())).c_str()))
 			{
 				brigand::for_each<Components>([entity](auto componentElement) mutable
 				{

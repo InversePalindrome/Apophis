@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "PatrolComponent.hpp"
 
+#include "CCIMGUI.h"
+
 #include <imgui.h>
 
 
@@ -19,7 +21,7 @@ PatrolComponent::PatrolComponent(const pugi::xml_node& componentNode) :
 			yPositionAttribute = pointNode.attribute("y");
 		    xPositionAttribute && yPositionAttribute)
 		{
-			patrolPoints.push_back({ xPositionAttribute.as_float(), yPositionAttribute.as_float() });
+			addPatrolPoint({ xPositionAttribute.as_float(), yPositionAttribute.as_float() });
 		}
 	}
 }
@@ -43,11 +45,25 @@ void PatrolComponent::display()
 {
 	if (ImGui::TreeNode("Patrol"))
 	{
+		ImGui::SameLine();
+
+		if (CCIMGUI::getInstance()->imageButton("#AddButton", 50, 50))
+		{
+			addPatrolPoint({ 0.f, 0.f });
+		}
+		
 		for (std::size_t i = 0; i < patrolPoints.size(); ++i)
 		{
 			ImGui::PushID(i);
 
 			ImGui::InputFloat2("Point(X, Y)", &patrolPoints[i].x);
+
+			ImGui::SameLine();
+
+			if (CCIMGUI::getInstance()->imageButton("#RemoveButton", 50, 50))
+			{
+				removePatrolPoint(i);
+			}
 
 			ImGui::PopID();
 		}
@@ -69,4 +85,14 @@ std::size_t PatrolComponent::getPatrolIndex() const
 void PatrolComponent::setPatrolIndex(std::size_t patrolIndex)
 {
 	this->patrolIndex = patrolIndex;
+}
+
+void PatrolComponent::addPatrolPoint(const b2Vec2& patrolPoint)
+{
+	patrolPoints.push_back(patrolPoint);
+}
+
+void PatrolComponent::removePatrolPoint(std::size_t patrolPointIndex)
+{
+	patrolPoints.erase(std::begin(patrolPoints) + patrolPointIndex);
 }

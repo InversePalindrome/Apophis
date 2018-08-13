@@ -60,6 +60,11 @@ void SpriteComponent::display()
 	{
 		NodeComponent::display();
 
+		spriteFrameName.resize(64);
+		if (ImGui::InputText("Sprite Frame Name", spriteFrameName.data(), spriteFrameName.length()))
+		{
+			setSpriteFrame(spriteFrameName);
+		}
 		if (auto textureRect = cocos2d::Vec4(getTextureRect().origin.x, getTextureRect().origin.y, getTextureRect().size.width, getTextureRect().size.height); ImGui::InputFloat4("Texture(X, Y, Width, Height)", &textureRect.x))
 		{
 			setTextureRect(cocos2d::Rect(textureRect.x, textureRect.y, textureRect.z, textureRect.w));
