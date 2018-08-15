@@ -45,27 +45,32 @@ void PatrolComponent::display()
 {
 	if (ImGui::TreeNode("Patrol"))
 	{
+		auto isPointsOpen = ImGui::TreeNode("Points");
 		ImGui::SameLine();
-
 		if (CCIMGUI::getInstance()->imageButton("#AddButton", 50, 50))
 		{
 			addPatrolPoint({ 0.f, 0.f });
 		}
 		
-		for (std::size_t i = 0; i < patrolPoints.size(); ++i)
+		if (isPointsOpen)
 		{
-			ImGui::PushID(i);
-
-			ImGui::InputFloat2("Point(X, Y)", &patrolPoints[i].x);
-
-			ImGui::SameLine();
-
-			if (CCIMGUI::getInstance()->imageButton("#RemoveButton", 50, 50))
+			for (std::size_t i = 0; i < patrolPoints.size(); ++i)
 			{
-				removePatrolPoint(i);
+				ImGui::PushID(i);
+
+				ImGui::InputFloat2("Point(X, Y)", &patrolPoints[i].x);
+
+				ImGui::SameLine();
+
+				if (CCIMGUI::getInstance()->imageButton("#RemoveButton", 50, 50))
+				{
+					removePatrolPoint(i);
+				}
+
+				ImGui::PopID();
 			}
 
-			ImGui::PopID();
+			ImGui::TreePop();
 		}
 
 		ImGui::TreePop();

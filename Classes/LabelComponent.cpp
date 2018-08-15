@@ -73,6 +73,13 @@ void LabelComponent::display()
 			setText(text);
 		}
 
+		auto fontName = getFontName();
+		fontName.resize(64);
+
+		if (ImGui::InputText("Font Name", fontName.data(), fontName.length()))
+		{
+			setFontName(fontName);
+		}
 		if (auto fontSize = getFontSize(); ImGui::InputFloat("Font Size", &fontSize))
 		{
 			setFontSize(fontSize);

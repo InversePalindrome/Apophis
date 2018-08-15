@@ -11,6 +11,8 @@ InversePalindrome.com
 
 #include <cocos/2d/CCSpriteFrameCache.h>
 
+#include <nfd.h>
+
 
 ParticleComponent::ParticleComponent(const pugi::xml_node& componentNode) :
 	NodeComponent(cocos2d::ParticleSystemQuad::create(), componentNode),
@@ -194,6 +196,17 @@ void ParticleComponent::display()
 {
 	if (ImGui::TreeNode("Particle"))
 	{
+		ImGui::SameLine();
+		if (ImGui::Button("Init With File"))
+		{
+			nfdchar_t* filename = nullptr;
+
+			if (NFD_OpenDialog("plist", nullptr, &filename) == NFD_OKAY)
+			{
+				initWithFile(filename);
+			}
+		}
+
 		NodeComponent::display();
 
 		const char* modes[] = { "Gravity", "Radius" };

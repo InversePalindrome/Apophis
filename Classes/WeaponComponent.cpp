@@ -9,14 +9,16 @@ InversePalindrome.com
 
 #include <imgui.h>
 
+#include <nfd.h>
+
 
 WeaponComponent::WeaponComponent(const pugi::xml_node& componentNode) :
 	reloadTime(1000),
 	reloadStatus(true)
 {
-	if (const auto projectileNameAttribute = componentNode.attribute("projectileName"))
+	if (const auto projectileNameAttribute = componentNode.attribute("projectileFilename"))
 	{
-		setProjectileName(projectileNameAttribute.as_string());
+		setProjectileFilename(projectileNameAttribute.as_string());
 	}
 	if (const auto reloadTimeAttribute = componentNode.attribute("reloadTime"))
 	{
@@ -28,7 +30,7 @@ void WeaponComponent::save(pugi::xml_node& componentNode) const
 {
 	componentNode.set_name("Weapon");
 
-	componentNode.append_attribute("projectileName") = getProjectileName().c_str();
+	componentNode.append_attribute("projectileFilename") = getProjectileFilename().c_str();
 	componentNode.append_attribute("reloadTime") = getReloadTime().count();
 }
 
@@ -36,18 +38,36 @@ void WeaponComponent::display()
 {
 	if (ImGui::TreeNode("Weapon"))
 	{
+		projectileFilename.reserve(64);
+
+		ImGui::InputText("Projectile Filename", projectileFilename.data(), projectileFilename.length());
+		ImGui::SameLine();
+		if (ImGui::Button("Select"))
+		{
+			nfdchar_t* filename = nullptr;
+
+			if (NFD_OpenDialog("xml", nullptr, &filename) == NFD_OKAY)
+			{
+				setProjectileFilename(filename);
+			}
+		}
+		if (auto reloadTimeCount = static_cast<int>(getReloadTime().count()); ImGui::InputInt("Reload Time(Milliseconds)", &reloadTimeCount))
+		{
+			setReloadTime(std::chrono::milliseconds(reloadTimeCount));
+		}
+
 		ImGui::TreePop();
 	}
 }
 
-std::string WeaponComponent::getProjectileName() const
+std::string WeaponComponent::getProjectileFilename() const
 {
-	return projectileName;
+	return projectileFilename;
 }
 
-void WeaponComponent::setProjectileName(const std::string& projectileName)
+void WeaponComponent::setProjectileFilename(const std::string& projectileFilename)
 {
-	this->projectileName = projectileName;
+	this->projectileFilename = projectileFilename;
 }
 
 std::chrono::milliseconds WeaponComponent::getReloadTime() const

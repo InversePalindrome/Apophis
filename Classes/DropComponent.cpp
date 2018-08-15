@@ -7,16 +7,25 @@ InversePalindrome.com
 
 #include "DropComponent.hpp"
 
+#include "CCIMGUI.h"
+
 #include <imgui.h>
 
 #include <boost/range/combine.hpp>
 
+#include <nfd.h>
+
 
 DropComponent::DropComponent(const pugi::xml_node& componentNode) 
 {
-	for (const auto itemNode : componentNode.children())
+	for (const auto itemNode : componentNode.children("Item"))
 	{
-		addItem(itemNode.name(), itemNode.text().as_int());
+		if (const auto filenameAttribute = itemNode.attribute("filename"),
+			weightAttribute = itemNode.attribute("weight");
+		    filenameAttribute && weightAttribute)
+		{
+			addItem(filenameAttribute.as_string(), weightAttribute.as_int());
+		}
 	}
 }
 
@@ -24,45 +33,71 @@ void DropComponent::save(pugi::xml_node& componentNode) const
 {
 	componentNode.set_name("Drop");
 
-	for (const auto& itemAndWeight : boost::combine(items, weights))
+	for (const auto& itemAndWeight : boost::combine(itemFilenames, weights))
 	{
-		componentNode.append_child(boost::get<0>(itemAndWeight).c_str()).text().set(boost::get<1>(itemAndWeight));
+		auto itemNode = componentNode.append_child("Item");
+		itemNode.append_attribute("filename") = boost::get<0>(itemAndWeight).c_str();
+		itemNode.append_attribute("weight") = boost::get<1>(itemAndWeight);
 	}
 }
 
 void DropComponent::display()
 {
 	if (ImGui::TreeNode("Drop"))
-	{
-		std::size_t i = 0;
-
-		for (auto& itemAndWeight : boost::combine(items, weights))
+	{	
+		auto isItemsOpen = ImGui::TreeNode("Items");
+		ImGui::SameLine();
+		if (CCIMGUI::getInstance()->imageButton("#AddButton", 50, 50))
 		{
-			ImGui::PushID(i++);
-			ImGui::PushItemWidth(220.f);
+			addItem("", 1);
+		}
 
-			auto& item = boost::get<0>(itemAndWeight);
-			item.resize(64);
+		int i = 0;
 
-			ImGui::InputText("Name", item.data(), item.length());
+		if (isItemsOpen)
+		{
+			for (auto& itemAndWeight : boost::combine(itemFilenames, weights))
+			{
+				ImGui::PushID(i++);
 
-			ImGui::SameLine();
+				auto& itemFilename = boost::get<0>(itemAndWeight);
+				itemFilename.resize(64);
 
-			auto& weight = boost::get<1>(itemAndWeight);
+				ImGui::PushItemWidth(650.f);
+				ImGui::InputText("Item Filename", itemFilename.data(), itemFilename.length());
+				ImGui::PopItemWidth();
+				ImGui::SameLine();
+				if (ImGui::Button("Select"))
+				{
+					nfdchar_t* filename = nullptr;
 
-			ImGui::InputInt("Weight", &weight);
-			
-			ImGui::PopID();
-			ImGui::PopItemWidth();
+					if (NFD_OpenDialog("xml", nullptr, &filename) == NFD_OKAY)
+					{
+						itemFilename = filename;
+					}
+				}
+
+				ImGui::SameLine();
+
+				auto& weight = boost::get<1>(itemAndWeight);
+
+				ImGui::PushItemWidth(220.f);
+				ImGui::InputInt("Weight", &weight);
+				ImGui::PopItemWidth();
+
+				ImGui::PopID();
+			}
+
+			ImGui::TreePop();
 		}
 
 		ImGui::TreePop();
 	}
 }
 
-const std::vector<std::string>& DropComponent::getItems() const
+const std::vector<std::string>& DropComponent::getItemFilenames() const
 {
-	return items;
+	return itemFilenames;
 }
 
 const std::vector<int>& DropComponent::getWeights() const
@@ -70,16 +105,16 @@ const std::vector<int>& DropComponent::getWeights() const
 	return weights;
 }
 
-void DropComponent::addItem(const std::string& item, int weight)
+void DropComponent::addItem(const std::string& itemFilename, int weight)
 {
-	items.push_back(item);
+	itemFilenames.push_back(itemFilename);
 	weights.push_back(weight);
 }
 
-void DropComponent::removeItem(const std::string& item)
+void DropComponent::removeItem(const std::string& itemFilename)
 {
-	auto index = std::find(std::cbegin(items), std::cend(items), item) - std::cbegin(items);
+	auto index = std::find(std::cbegin(itemFilenames), std::cend(itemFilenames), itemFilename) - std::cbegin(itemFilenames);
 
-	items.erase(std::cbegin(items) + index);
+	itemFilenames.erase(std::cbegin(itemFilenames) + index);
 	weights.erase(std::cbegin(weights) + index);
 }

@@ -33,13 +33,13 @@ public:
 	static cocos2d::Scene* scene();
 
 private:
+	std::vector<entityx::Entity> entities;
+
 	entityx::EventManager eventManager;
 	entityx::EntityManager entityManager;
 	entityx::SystemManager systemManager;
 	
 	b2Vec2 mapDimensions;
-
-	std::vector<entityx::Entity> entities;
 
 	void initSystems();
 };

@@ -22,13 +22,13 @@ public:
 
 	void display();
 
-	const std::vector<std::string>& getItems() const;
+	const std::vector<std::string>& getItemFilenames() const;
 	const std::vector<int>& getWeights() const;
 
-	void addItem(const std::string& item, int weight);
-	void removeItem(const std::string& item);
+	void addItem(const std::string& itemFilename, int weight);
+	void removeItem(const std::string& itemFilename);
 
 private:
-	std::vector<std::string> items;
+	std::vector<std::string> itemFilenames;
 	std::vector<int> weights;
 };

@@ -17,8 +17,7 @@ InversePalindrome.com
 
 BodyComponent::BodyComponent(b2Body* body) :
 	body(body),
-	AABB({ {FLT_MAX, FLT_MAX}, {-FLT_MAX, -FLT_MAX} }),
-	fixtureShapeToAdd(0)
+	AABB({ {FLT_MAX, FLT_MAX}, {-FLT_MAX, -FLT_MAX} })
 {
 	body->SetUserData(&userData);
 }
@@ -64,121 +63,9 @@ void BodyComponent::display()
 
 		if (auto isOpen = true; ImGui::BeginPopupModal("Add Fixture", &isOpen, ImGuiWindowFlags_AlwaysAutoResize))
 		{
-			const char* shapes[] = { "Circle", "Edge", "Polygon", "Chain" };
-
-			if (ImGui::Combo("Shape", &fixtureShapeToAdd, shapes, 4))
-			{
-				switch (static_cast<b2Shape::Type>(fixtureShapeToAdd))
-				{
-				case b2Shape::e_circle:
-				{
-					b2CircleShape circle;
-					circle.m_radius = 1.f;
-
-					shapeToAdd = circle;
-				}
-					break;
-				case b2Shape::e_edge:
-				{
-					b2EdgeShape edge;
-
-					edge.m_vertex1.SetZero();
-					edge.m_vertex2.SetZero();
-
-					shapeToAdd = edge;
-				}
-					break;
-				case b2Shape::e_polygon:
-				{
-					b2PolygonShape polygon;
-
-					for (int i = 0; i < b2_maxPolygonVertices; ++i)
-					{
-						polygon.m_vertices[i].SetZero();
-					}
-
-					shapeToAdd = polygon;
-				}
-					break;
-				case b2Shape::e_chain:
-					b2ChainShape chain;
-
-					shapeToAdd = chain;
-					break;
-				}
-			}
-
-			ImGui::Text("Shape Data");
-
-			std::visit([](auto& shape)
-			{
-				using ShapeType = std::decay_t<decltype(shape)>;
-
-				if constexpr(std::is_same_v<ShapeType, b2CircleShape>)
-				{
-					ImGui::InputFloat2("Origin", &shape.m_p.x);
-					ImGui::InputFloat("Radius", &shape.m_radius);
-				}
-				else if constexpr(std::is_same_v<ShapeType, b2EdgeShape>)
-				{
-					ImGui::Checkbox("Has Vertex 0", &shape.m_hasVertex0);
-					ImGui::SameLine();
-					ImGui::Checkbox("Has Vertex 3", &shape.m_hasVertex3);
-
-					if (shape.m_hasVertex0)
-					{
-						ImGui::InputFloat2("Vertex 0(X, Y)", &shape.m_vertex0.x);
-					}
-
-					ImGui::InputFloat2("Vertex 1(X, Y)", &shape.m_vertex1.x);
-					ImGui::InputFloat2("Vertex 2(X, Y)", &shape.m_vertex2.x);
-
-					if (shape.m_hasVertex3)
-					{
-						ImGui::InputFloat2("Vertex 3(X, Y)", &shape.m_vertex3.x);
-					}
-				}
-				else if constexpr(std::is_same_v<ShapeType, b2PolygonShape>)
-				{
-					ImGui::SameLine();
-					if (CCIMGUI::getInstance()->imageButton("#AddButton", 50, 50))
-					{
-						++shape.m_count;
-					}
-
-					for (int i = 0; i < shape.GetVertexCount(); ++i)
-					{
-						ImGui::PushID(i);
-
-						ImGui::InputFloat2(("Point " + std::to_string(i)).c_str(), &shape.m_vertices[i].x);
-
-						ImGui::PopID();
-					}
-				}
-				else if constexpr(std::is_same_v<ShapeType, b2ChainShape>)
-				{
-					for (int i = 0; i < shape.m_count; ++i)
-					{
-						ImGui::PushID(i);
-
-						ImGui::InputFloat2(("Point " + std::to_string(i)).c_str(), &shape.m_vertices[i].x);
-
-						ImGui::PopID();
-					}
-				}
-			}, shapeToAdd);
-
 			if (ImGui::Button("Add"))
 			{
-				b2FixtureDef fixtureToAdd;
-
-				std::visit([&fixtureToAdd](auto& shape)
-				{
-					fixtureToAdd.shape = &shape;
-				}, shapeToAdd);
-
-				createFixture(fixtureToAdd);
-
+				
 				ImGui::CloseCurrentPopup();
 			}
 
@@ -251,34 +138,6 @@ void BodyComponent::display()
 				}
 		
 				ImGui::TreePop();
-
-				switch (fixture->GetShape()->m_type)
-				{
-				case b2Shape::e_circle:
-					if (ImGui::TreeNode("Circle"))
-					{
-						ImGui::TreePop();
-					}
-					break;
-				case b2Shape::e_edge:
-					if (ImGui::TreeNode("Edge"))
-					{
-
-					}
-					break;
-				case b2Shape::e_polygon :
-					if (ImGui::TreeNode("Polygon"))
-					{
-
-					}
-					break;
-				case b2Shape::e_chain :
-					if (ImGui::TreeNode("Chain"))
-					{
-
-					}
-					break;
-				}
 			}
 		}
 
@@ -286,8 +145,6 @@ void BodyComponent::display()
 		{
 			destroyFixture(fixture);
 		}
-
-		fixturesToDestroy.clear();
 
 		ImGui::TreePop();
 	}

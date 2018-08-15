@@ -7,10 +7,12 @@ InversePalindrome.com
 
 #include "Components.hpp"
 #include "LevelParser.hpp"
+#include "EntityParser.hpp"
 #include "PhysicsSystem.hpp"
 #include "GraphicsSystem.hpp"
 #include "LevelSerializer.hpp"
 #include "LevelEditorNode.hpp"
+#include "EntitySerializer.hpp"
 
 #include "CCIMGUI.h"
 #include "CCImGuiLayer.h"
@@ -72,24 +74,69 @@ bool LevelEditorNode::init()
 			ImGui::EndMainMenuBar();
 		}
 
-		ImGui::Begin("Entities");
+		ImGui::Begin("Level Data");
 
-		for (auto entity : entities)
+		auto isEntitiesOpen = ImGui::TreeNode("Entities");
+
+		if (isEntitiesOpen)
 		{
-			if (ImGui::TreeNode(("Entity " + std::to_string(entity.id().index())).c_str()))
+			std::vector<entityx::Entity> entitiesToRemove;
+
+			for (auto entity : entities)
 			{
-				brigand::for_each<Components>([entity](auto componentElement) mutable
+				ImGui::PushID(entity.id().index());
+
+				bool isEntityOpen = ImGui::TreeNode(("Entity " + std::to_string(entity.id().index())).c_str());
+
+				ImGui::SameLine();
+				if (ImGui::Button("Open"))
 				{
-					if (auto component = entity.component<decltype(componentElement)::type>())
+					nfdchar_t* filename = nullptr;
+
+					if (NFD_OpenDialog("xml", nullptr, &filename) == NFD_OKAY)
 					{
-						component->display();
+						EntityParser::parseEntity(entity, eventManager, filename);
 					}
-				});
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Save"))
+				{
+					nfdchar_t* filename = nullptr;
 
-				ImGui::TreePop();
+					if (NFD_SaveDialog("xml", nullptr, &filename) == NFD_OKAY)
+					{
+						EntitySerializer::saveEntity(entity, filename);
+					}
+				}
+				ImGui::SameLine();
+				if (CCIMGUI::getInstance()->imageButton("#RemoveButton", 50, 50))
+				{
+					entitiesToRemove.push_back(entity);
+				}
+
+				if (isEntityOpen)
+				{
+					brigand::for_each<Components>([entity](auto componentElement) mutable
+					{
+						if (auto component = entity.component<decltype(componentElement)::type>())
+						{
+							component->display();
+						}
+					});
+
+					ImGui::TreePop();
+				}
+
+				ImGui::PopID();
 			}
-		}
 
+			for (auto entity : entitiesToRemove)
+			{
+				entity.destroy();
+			}
+
+			ImGui::TreePop();
+		}
 		ImGui::End();
 
 		ImGui::PopFont();

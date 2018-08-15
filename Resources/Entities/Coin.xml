@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
-  <Components>
     <Transform x ="-10" y="-10">
   </Transform>
      <Sprite frame="Coin3"></Sprite>
@@ -16,5 +15,4 @@
       <Frame>Coin4</Frame>
     </Alert>
   </Animation>
-    </Components>
 </Entity>

@@ -21,14 +21,14 @@ public:
 
 	void display();
 
-	std::string getExplosionName() const;
-	void setExplosionName(const std::string& explosionName);
+	std::string getExplosionFilename() const;
+	void setExplosionFilename(const std::string& explosionFilename);
 
     std::chrono::milliseconds getExplosionTime() const;
 	void setExplosionTime(const std::chrono::milliseconds& explosionTime);
 
 private:
-	std::string explosionName;
+	std::string explosionFilename;
 
 	std::chrono::milliseconds explosionTime;
 };

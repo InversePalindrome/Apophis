@@ -72,7 +72,7 @@ const std::unordered_map<std::string, std::function<void(entityx::Entity&, entit
 
 void EntityParser::parseEntity(entityx::Entity entity, entityx::EventManager& eventManager, const std::string& filename)
 {
-	if (pugi::xml_document doc; doc.load_file(cocos2d::FileUtils::getInstance()->fullPathForFilename(filename + ".xml").c_str()))
+	if (pugi::xml_document doc; doc.load_file(cocos2d::FileUtils::getInstance()->fullPathForFilename(filename).c_str()))
 	{
 		if (const auto entityNode = doc.child("Entity"))
 		{

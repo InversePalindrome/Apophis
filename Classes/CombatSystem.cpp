@@ -47,7 +47,7 @@ void CombatSystem::receive(const ShootProjectile& event)
 		shooterWeapon->setReloadStatus(false);
 		
 		auto projectileEntity = entityManager.create();
-		EntityParser::parseEntity(projectileEntity, eventManager, shooterWeapon->getProjectileName());
+		EntityParser::parseEntity(projectileEntity, eventManager, shooterWeapon->getProjectileFilename());
 
 		if (auto[projectileBody, projectileSpeed] = projectileEntity.components<BodyComponent, SpeedComponent>(); projectileBody && projectileSpeed)
 		{
@@ -98,7 +98,7 @@ void CombatSystem::handleExplosion(entityx::Entity destroyedEntity)
      	destroyedTransform && destroyedExplosion)
 	{
 		auto explosionEntity = entityManager.create();
-		EntityParser::parseEntity(explosionEntity, eventManager, destroyedExplosion->getExplosionName());
+		EntityParser::parseEntity(explosionEntity, eventManager, destroyedExplosion->getExplosionFilename());
 
 		if (auto explosionTransform = explosionEntity.component<TransformComponent>())
 		{

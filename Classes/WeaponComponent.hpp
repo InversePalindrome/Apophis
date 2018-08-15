@@ -21,8 +21,8 @@ public:
 
 	void display();
 
-	std::string getProjectileName() const;
-	void setProjectileName(const std::string& projectileName);
+	std::string getProjectileFilename() const;
+	void setProjectileFilename(const std::string& projectileFilename);
 
 	std::chrono::milliseconds getReloadTime() const;
 	void setReloadTime(std::chrono::milliseconds reloadTime);
@@ -31,7 +31,7 @@ public:
 	void setReloadStatus(bool reloadStatus);
 
 private:
-	std::string projectileName;
+	std::string projectileFilename;
 
 	std::chrono::milliseconds reloadTime;
 	bool reloadStatus;

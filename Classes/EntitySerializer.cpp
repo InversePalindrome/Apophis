@@ -8,8 +8,6 @@ InversePalindrome.com
 #include "Components.hpp"
 #include "EntitySerializer.hpp"
 
-#include <cocos/platform/CCFileUtils.h>
-
 #include <brigand/algorithms/for_each.hpp>
 
 

@@ -37,14 +37,14 @@ void ItemSystem::receive(const entityx::EntityDestroyedEvent& event)
 	
 	if (const auto[destroyedDrop, destroyedTransform] = destroyedEntity.components<DropComponent, TransformComponent>(); destroyedDrop && destroyedTransform)
 	{
-		if (const auto& destroyedItems = destroyedDrop->getItems(); !destroyedItems.empty())
+		if (const auto& destroyedItemFilenames = destroyedDrop->getItemFilenames(); !destroyedItemFilenames.empty())
 		{
 			const auto& destroyedWeights = destroyedDrop->getWeights();
 
 			std::discrete_distribution<> discreteDistribution(std::cbegin(destroyedWeights), std::cend(destroyedWeights));
 
 			auto itemEntity = entityManager.create();
-			EntityParser::parseEntity(itemEntity, eventManager, destroyedItems.at(discreteDistribution(randomEngine)));
+			EntityParser::parseEntity(itemEntity, eventManager, destroyedItemFilenames.at(discreteDistribution(randomEngine)));
 
 			if (auto itemGeometry = itemEntity.component<TransformComponent>())
 			{

@@ -59,7 +59,7 @@ void SpriteComponent::display()
 	if (ImGui::TreeNode("Sprite"))
 	{
 		NodeComponent::display();
-
+		
 		spriteFrameName.resize(64);
 		if (ImGui::InputText("Sprite Frame Name", spriteFrameName.data(), spriteFrameName.length()))
 		{
