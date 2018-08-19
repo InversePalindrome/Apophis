@@ -11,6 +11,8 @@ InversePalindrome.com
 
 #include "CCIMGUIGLViewImpl.h"
 
+#include <imgui.h>
+
 #include <cocos/base/CCDirector.h>
 #include <cocos/platform/CCFileUtils.h>
 #include <cocos/audio/include/AudioEngine.h>
@@ -43,6 +45,8 @@ bool Application::applicationDidFinishLaunching()
 	files->addSearchPath("Sounds");
 	
 	ResourceParser::parseResources("Resources.xml");
+
+	ImGui::GetIO().Fonts->AddFontFromFileTTF("Fonts/OpenSans-Regular.ttf", 40.f);
 
 	director->runWithScene(SplashNode::scene());
 

@@ -19,13 +19,15 @@ InversePalindrome.com
 class SoundComponent
 {
 public:
-	explicit SoundComponent(const pugi::xml_node& componentNode);
-
+	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();
 
 	std::string getSoundFile(Sound sound) const;
+
+	void addSoundFile(Sound sound, const std::string& filename);
+	void removeSoundFile(Sound sound);
 
 	int getSoundID(Sound sound) const;
 	const std::unordered_map<Sound, int, EnumHash<Sound>>& getSoundIDs() const;

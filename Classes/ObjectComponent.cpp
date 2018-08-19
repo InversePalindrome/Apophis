@@ -10,9 +10,14 @@ InversePalindrome.com
 #include <imgui.h>
 
 
-ObjectComponent::ObjectComponent(const pugi::xml_node& componentNode) :
-	objectType(ObjectType::_from_string(componentNode.text().as_string()))
+ObjectComponent::ObjectComponent() :
+	objectType(ObjectType::Undefined)
 {
+}
+
+void ObjectComponent::load(const pugi::xml_node& componentNode)
+{
+	setObjectType(ObjectType::_from_string(componentNode.text().as_string()));
 }
 
 void ObjectComponent::save(pugi::xml_node& componentNode) const
@@ -28,11 +33,11 @@ void ObjectComponent::display()
 	{
 		if (ImGui::BeginCombo("Type", objectType._to_string()))
 		{
-			for (const auto objectTypeValue : ObjectType::_values())
+			for (const auto objectType : ObjectType::_values())
 			{
-				if (ImGui::Selectable(objectTypeValue._to_string()))
+				if (ImGui::Selectable(objectType._to_string()))
 				{
-					objectType = objectTypeValue;
+					setObjectType(objectType);
 				}
 			}
 

@@ -7,8 +7,8 @@ InversePalindrome.com
 
 #include "Constants.hpp"
 #include "Renderables.hpp"
+#include "TagsComponent.hpp"
 #include "GraphicsSystem.hpp"
-#include "PlayerComponent.hpp"
 
 #include <cocos/base/CCDirector.h>
 #include <cocos/base/CCEventDispatcher.h>
@@ -48,7 +48,7 @@ void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::Even
 
 void GraphicsSystem::receive(const EntityParsed& event)
 {
-	if (event.entity.has_component<PlayerComponent>())
+	if (auto tags = event.entity.component<TagsComponent>(); tags && tags->hasTag("Player"))
 	{
 		playerTransform = event.entity.component<TransformComponent>();
 		playerHealth = event.entity.component<HealthComponent>();

@@ -14,11 +14,15 @@ InversePalindrome.com
 #include <boost/math/constants/constants.hpp>
 
 
-WanderComponent::WanderComponent(const pugi::xml_node& componentNode) :
+WanderComponent::WanderComponent() :
 	wanderDistance(5.f),
 	wanderRadius(1.f),
 	wanderRate(1.f),
 	wanderAngle(cocos2d::RandomHelper::random_real(0.f, 2.f * boost::math::constants::pi<float>()))
+{
+}
+
+void WanderComponent::load(const pugi::xml_node& componentNode)
 {
 	if (const auto wanderDistanceAttribute = componentNode.attribute("distance"))
 	{

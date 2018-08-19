@@ -10,9 +10,13 @@ InversePalindrome.com
 #include <imgui.h>
 
 
-TransformComponent::TransformComponent(const pugi::xml_node& componentNode) :
+TransformComponent::TransformComponent() :
 	position(0.f, 0.f),
 	angle(0.f)
+{
+}
+
+void TransformComponent::load(const pugi::xml_node& componentNode)
 {
 	if (const auto xPositionAttribute = componentNode.attribute("x"))
 	{

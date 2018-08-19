@@ -17,8 +17,9 @@ InversePalindrome.com
 class PatrolComponent
 {
 public:
-	explicit PatrolComponent(const pugi::xml_node& componentNode);
+	PatrolComponent();
 
+	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();

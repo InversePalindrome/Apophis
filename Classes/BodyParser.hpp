@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #pragma once
 
+#include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2Fixture.h>
 #include <Box2D/Collision/Shapes/b2EdgeShape.h>
 #include <Box2D/Collision/Shapes/b2ChainShape.h>
@@ -18,7 +19,7 @@ InversePalindrome.com
 
 namespace BodyParser
 {
-	void parseBodyDef(b2BodyDef& bodyDef, const pugi::xml_node& bodyNode);
+	void parseBody(b2Body* body, const pugi::xml_node& bodyNode);
 	void parseFixtureDef(b2FixtureDef& fixtureDef, const pugi::xml_node& fixtureNode);
 	void parseCircleShape(b2CircleShape& circle, const pugi::xml_node& circleNode);
 	void parseEdgeShape(b2EdgeShape& edge, const pugi::xml_node& edgeNode);

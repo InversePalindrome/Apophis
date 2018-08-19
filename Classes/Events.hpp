@@ -22,17 +22,11 @@ struct EntityParsed
 	mutable entityx::Entity entity;
 };
 
-struct CreateBody
-{
-	mutable entityx::Entity entity;
-	pugi::xml_node bodyNode;
-};
-
 template<typename T>
-struct CreateJoint
+struct ComponentLoaded
 {
-	mutable entityx::Entity entity;
-	pugi::xml_node jointNode;
+	T component;
+	entityx::Entity entity;
 };
 
 template<typename T>

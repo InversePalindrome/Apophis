@@ -15,8 +15,9 @@ InversePalindrome.com
 class ExplosionComponent
 {
 public:
-	explicit ExplosionComponent(const pugi::xml_node& componentNode);
+	ExplosionComponent();
 
+	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();

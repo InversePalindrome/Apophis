@@ -13,8 +13,9 @@ InversePalindrome.com
 class SatelliteComponent
 {
 public:
-	explicit SatelliteComponent(const pugi::xml_node& componentNode);
+	SatelliteComponent();
 
+	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();

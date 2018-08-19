@@ -12,9 +12,13 @@ InversePalindrome.com
 #include <nfd.h>
 
 
-WeaponComponent::WeaponComponent(const pugi::xml_node& componentNode) :
+WeaponComponent::WeaponComponent() :
 	reloadTime(1000),
 	reloadStatus(true)
+{
+}
+
+void WeaponComponent::load(const pugi::xml_node& componentNode)
 {
 	if (const auto projectileNameAttribute = componentNode.attribute("projectileFilename"))
 	{

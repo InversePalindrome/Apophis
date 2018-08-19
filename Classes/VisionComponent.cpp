@@ -10,9 +10,14 @@ InversePalindrome.com
 #include <imgui.h>
 
 
-VisionComponent::VisionComponent(const pugi::xml_node& componentNode) :
-	visionDistance(componentNode.text().as_float(10.f))
+VisionComponent::VisionComponent() :
+	visionDistance(10.f)
 {
+}
+
+void VisionComponent::load(const pugi::xml_node& componentNode)
+{
+	setVisionDistance(componentNode.text().as_float());
 }
 
 void VisionComponent::save(pugi::xml_node& componentNode) const

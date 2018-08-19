@@ -15,8 +15,9 @@ InversePalindrome.com
 class RegenBoostComponent
 {
 public:
-	explicit RegenBoostComponent(const pugi::xml_node& componentNode);
+	RegenBoostComponent();
 
+	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();

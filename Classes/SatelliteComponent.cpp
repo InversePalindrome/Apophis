@@ -10,9 +10,13 @@ InversePalindrome.com
 #include <imgui.h>
 
 
-SatelliteComponent::SatelliteComponent(const pugi::xml_node& componentNode) :
+SatelliteComponent::SatelliteComponent() :
 	primaryID(-1),
 	orbitDirection(1)
+{
+}
+
+void SatelliteComponent::load(const pugi::xml_node& componentNode)
 {
 	if (const auto primaryIDAttribute = componentNode.attribute("primaryID"))
 	{

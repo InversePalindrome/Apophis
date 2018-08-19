@@ -10,9 +10,14 @@ InversePalindrome.com
 #include <imgui.h>
 
 
-PursueComponent::PursueComponent(const pugi::xml_node& componentNode) :
-	predictionTime(componentNode.text().as_int(5000))
+PursueComponent::PursueComponent() :
+	predictionTime(5000)
 {
+}
+
+void PursueComponent::load(const pugi::xml_node& componentNode)
+{
+	setPredictionTime(std::chrono::milliseconds(componentNode.text().as_int()));
 }
 
 void PursueComponent::save(pugi::xml_node& componentNode) const

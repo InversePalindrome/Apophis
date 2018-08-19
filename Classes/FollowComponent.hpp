@@ -13,8 +13,9 @@ InversePalindrome.com
 class FollowComponent
 {
 public:
-	explicit FollowComponent(const pugi::xml_node& componentNode);
+	FollowComponent();
 
+	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();

@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #pragma once
 
+#include "TagsComponent.hpp"
 #include "BodyComponent.hpp"
 #include "SpeedComponent.hpp"
 #include "WanderComponent.hpp"

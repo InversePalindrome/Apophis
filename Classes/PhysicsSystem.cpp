@@ -7,9 +7,7 @@ InversePalindrome.com
 
 #include "Joints.hpp"
 #include "Constants.hpp"
-#include "BodyParser.hpp"
 #include "Conversions.hpp"
-#include "JointParser.hpp"
 #include "PhysicsSystem.hpp"
 #include "TransformComponent.hpp"
 
@@ -32,10 +30,9 @@ PhysicsSystem::PhysicsSystem(entityx::EntityManager& entityManager, entityx::Eve
 void PhysicsSystem::configure(entityx::EventManager& eventManager)
 {
 	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
+	eventManager.subscribe<entityx::ComponentAddedEvent<BodyComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentRemovedEvent<BodyComponent>>(*this);
 	eventManager.subscribe<EntityParsed>(*this);
-	eventManager.subscribe<CreateBody>(*this);
-	eventManager.subscribe<CreateJoint<DistanceJointComponent>>(*this);
 	eventManager.subscribe<DestroyJoint<DistanceJointComponent>>(*this);
 }
 
@@ -70,6 +67,13 @@ void PhysicsSystem::receive(const entityx::EntityDestroyedEvent& event)
 	}
 }
 
+void PhysicsSystem::receive(const entityx::ComponentAddedEvent<BodyComponent>& event)
+{
+	auto body = event.component;
+
+	modifyWorld([this, body]() mutable { body->setBody(world.CreateBody(&b2BodyDef())); });
+}
+
 void PhysicsSystem::receive(const entityx::ComponentRemovedEvent<BodyComponent>& event)
 {
 	destroyBody(event.component->getBody());
@@ -85,97 +89,6 @@ void PhysicsSystem::receive(const EntityParsed& event)
 			body->setAngle(Conversions::degreesToRadians(transform->getAngle()));
 		}
 	});
-}
-
-void PhysicsSystem::receive(const CreateBody& event)
-{
-	b2BodyDef bodyDef;
-	BodyParser::parseBodyDef(bodyDef, event.bodyNode);
-
-	std::vector<std::pair<b2FixtureDef, std::variant<b2CircleShape, b2EdgeShape, b2PolygonShape, b2ChainShape>>> fixtures;
-
-	for (const auto fixtureNode : event.bodyNode.children())
-	{
-		b2FixtureDef fixtureDef;
-		BodyParser::parseFixtureDef(fixtureDef, fixtureNode);
-
-		std::variant<b2CircleShape, b2EdgeShape, b2PolygonShape, b2ChainShape> shape;
-
-		if (std::strcmp(fixtureNode.name(), "Circle") == 0)
-		{
-			b2CircleShape circle;
-			BodyParser::parseCircleShape(circle, fixtureNode);
-			shape = circle;
-		}
-		else if (std::strcmp(fixtureNode.name(), "Edge") == 0)
-		{
-			b2EdgeShape edge;
-			BodyParser::parseEdgeShape(edge, fixtureNode);
-			shape = edge;
-		}
-		else if (std::strcmp(fixtureNode.name(), "Polygon") == 0)
-		{
-			b2PolygonShape polygon;
-			BodyParser::parsePolygonShape(polygon, fixtureNode);
-			shape = polygon;
-		}
-		else if (std::strcmp(fixtureNode.name(), "Chain") == 0)
-		{
-			b2ChainShape chain;
-			BodyParser::parseChainShape(chain, fixtureNode);
-			shape = chain;
-		}
-
-		fixtures.push_back({ fixtureDef, shape });
-	}
-
-    modifyWorld([this, event, bodyDef, fixtures]()
-	{
-		auto body = event.entity.assign<BodyComponent>(world.CreateBody(&bodyDef));
-		body->setUserData(event.entity);
-
-		for (auto fixture : fixtures)
-		{
-			std::visit([&fixture](auto& shape) { fixture.first.shape = &shape; }, fixture.second);
-
-			body->createFixture(fixture.first);
-		}
-
-		body->computeAABB();
-	});
-}
-
-void PhysicsSystem::receive(const CreateJoint<DistanceJointComponent>& event)
-{
-	std::size_t entityIDA = 0u, entityIDB = 0u;
-	
-	if (const auto entityIDAAttribute = event.jointNode.attribute("idA"))
-	{
-		entityIDA = entityIDAAttribute.as_uint();
-	}
-	if (const auto entityIDBAttribute = event.jointNode.attribute("idB"))
-	{
-		entityIDB = entityIDBAttribute.as_uint();
-	}
-
-	if (auto entityA = entityManager.get(entityManager.create_id(entityIDA)),
-		entityB = entityManager.get(entityManager.create_id(entityIDB));
-     	entityA && entityB)
-	{
-		if (auto bodyA = entityA.component<BodyComponent>(),
-			bodyB = entityB.component<BodyComponent>();
-		    bodyA && bodyB)
-		{
-			b2DistanceJointDef distanceJointDef;
-
-			JointParser::parseDistanceJointDef(distanceJointDef, bodyA->getBody(), bodyB->getBody(), event.jointNode);
-
-			modifyWorld([this, event, distanceJointDef, entityIDA, entityIDB]() mutable
-			{
-				event.entity.assign<DistanceJointComponent>(world.CreateJoint(&distanceJointDef), entityIDA, entityIDB);
-			});
-		}
-	}
 }
 
 void PhysicsSystem::receive(const DestroyJoint<DistanceJointComponent>& event)

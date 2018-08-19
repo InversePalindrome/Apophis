@@ -10,9 +10,13 @@ InversePalindrome.com
 #include <imgui.h>
 
 
-FlockComponent::FlockComponent(const pugi::xml_node& componentNode) :
+FlockComponent::FlockComponent() :
 	groupID(-1),
 	groupRadius(25.f)
+{
+}
+
+void FlockComponent::load(const pugi::xml_node& componentNode)
 {
 	if (const auto groupIDAttribute = componentNode.attribute("id"))
 	{

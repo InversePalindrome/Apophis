@@ -13,8 +13,9 @@ InversePalindrome.com
 class VisionComponent
 {
 public:
-	explicit VisionComponent(const pugi::xml_node& componentNode);
+	VisionComponent();
 
+	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();

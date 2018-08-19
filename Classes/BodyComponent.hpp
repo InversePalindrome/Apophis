@@ -23,8 +23,9 @@ InversePalindrome.com
 class BodyComponent
 {
 public:
-	explicit BodyComponent(b2Body* body);
+	BodyComponent();
 
+	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();
@@ -34,6 +35,7 @@ public:
 
 	b2Body* getBody();
 	b2Body* getBody() const;
+	void setBody(b2Body* body);
 
 	b2Fixture* getFixtureList();
 	const b2Fixture* getFixtureList() const;

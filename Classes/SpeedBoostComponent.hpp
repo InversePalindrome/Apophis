@@ -15,8 +15,9 @@ InversePalindrome.com
 class SpeedBoostComponent
 {
 public:
-	explicit SpeedBoostComponent(const pugi::xml_node& componentNode);
+	SpeedBoostComponent();
 
+	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();

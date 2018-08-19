@@ -10,10 +10,14 @@ InversePalindrome.com
 #include <imgui.h>
 
 
-RegenBoostComponent::RegenBoostComponent(const pugi::xml_node& componentNode) :
+RegenBoostComponent::RegenBoostComponent() :
 	hitpointBoost(1.f),
 	regenRate(1000),
 	regenDuration(5000)
+{
+}
+
+void RegenBoostComponent::load(const pugi::xml_node& componentNode)
 {
 	if (const auto hitpointBoostAttribute = componentNode.attribute("boost"))
 	{

@@ -15,7 +15,7 @@ InversePalindrome.com
 class JointComponent
 {
 public:
-	explicit JointComponent(b2Joint* joint, std::size_t entityIDA, std::size_t entityIDB);
+	JointComponent();
 
 	void save(pugi::xml_node& componentNode) const;
 

@@ -10,12 +10,16 @@ InversePalindrome.com
 #include <imgui.h>
 
 
-LabelComponent::LabelComponent(const pugi::xml_node& componentNode) :
-	NodeComponent(cocos2d::Label::create(), componentNode),
+LabelComponent::LabelComponent() :
+	NodeComponent(cocos2d::Label::create()),
 	label(static_cast<cocos2d::Label*>(getNode()))
 {
+} 
+
+void LabelComponent::load(const pugi::xml_node& componentNode)
+{
 	setText(componentNode.text().as_string());
-	
+
 	if (const auto fontAttribute = componentNode.attribute("font"))
 	{
 		setFontName(fontAttribute.as_string());
@@ -33,15 +37,14 @@ LabelComponent::LabelComponent(const pugi::xml_node& componentNode) :
 		setVerticalAlignment(static_cast<cocos2d::TextVAlignment>(VAlignmentAttribute.as_int()));
 	}
 	if (const auto textRAttribute = componentNode.attribute("textR"),
-	    textGAttribute = componentNode.attribute("textG"),
-	    textBAttribute = componentNode.attribute("textB"),
-	    textAAttribute = componentNode.attribute("textA"); 
+		textGAttribute = componentNode.attribute("textG"),
+		textBAttribute = componentNode.attribute("textB"),
+		textAAttribute = componentNode.attribute("textA");
 	    textRAttribute && textGAttribute && textBAttribute && textAAttribute)
 	{
 		setTextColor(cocos2d::Color4B(textRAttribute.as_uint(), textGAttribute.as_uint(), textBAttribute.as_uint(), textAAttribute.as_uint()));
 	}
-} 
-
+}
 void LabelComponent::save(pugi::xml_node& componentNode) const
 {
 	NodeComponent::save(componentNode);

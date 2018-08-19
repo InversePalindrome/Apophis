@@ -10,10 +10,16 @@ InversePalindrome.com
 #include <imgui.h>
 
 
-HealthComponent::HealthComponent(const pugi::xml_node& componentNode) :
-	maxHitpoints(componentNode.text().as_float(5.f)),
-	currentHitpoints(maxHitpoints)
+HealthComponent::HealthComponent() :
+	maxHitpoints(5.f),
+	currentHitpoints(5.f)
 {
+}
+
+void HealthComponent::load(const pugi::xml_node& componentNode)
+{
+	setMaxHitpoints(componentNode.text().as_float());
+	setCurrentHitpoints(componentNode.text().as_float());
 }
 
 void HealthComponent::save(pugi::xml_node& componentNode) const

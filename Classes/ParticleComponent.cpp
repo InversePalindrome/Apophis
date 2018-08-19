@@ -14,13 +14,17 @@ InversePalindrome.com
 #include <nfd.h>
 
 
-ParticleComponent::ParticleComponent(const pugi::xml_node& componentNode) :
-	NodeComponent(cocos2d::ParticleSystemQuad::create(), componentNode),
+ParticleComponent::ParticleComponent() :
+	NodeComponent(cocos2d::ParticleSystemQuad::create()),
 	emitter(static_cast<cocos2d::ParticleSystemQuad*>(getNode()))
+{
+}
+
+void ParticleComponent::load(const pugi::xml_node& componentNode)
 {
 	if (const auto filenameAttribute = componentNode.attribute("filename"))
 	{
-	     initWithFile(filenameAttribute.as_string());
+		initWithFile(filenameAttribute.as_string());
 	}
 	if (const auto spriteFrameName = componentNode.attribute("frame"))
 	{
@@ -108,24 +112,24 @@ ParticleComponent::ParticleComponent(const pugi::xml_node& componentNode) :
 		setStartColor(cocos2d::Color4F(startColorRAttribute.as_uint(), startColorGAttribute.as_uint(), startColorBAttribute.as_uint(), startColorAAttribute.as_uint()));
 	}
 	if (const auto startColorVarRAttribute = componentNode.attribute("startVarR"),
-	    startColorVarGAttribute = componentNode.attribute("startVarG"),
-	    startColorVarBAttribute = componentNode.attribute("startVarB"),
-        startColorVarAAttribute = componentNode.attribute("startVarA");
+		startColorVarGAttribute = componentNode.attribute("startVarG"),
+		startColorVarBAttribute = componentNode.attribute("startVarB"),
+		startColorVarAAttribute = componentNode.attribute("startVarA");
 	    startColorVarRAttribute && startColorVarGAttribute && startColorVarBAttribute && startColorVarAAttribute)
 	{
 		setStartColorVar(cocos2d::Color4F(startColorVarRAttribute.as_uint(), startColorVarGAttribute.as_uint(), startColorVarBAttribute.as_uint(), startColorVarAAttribute.as_uint()));
 	}
 	if (const auto endColorRAttribute = componentNode.attribute("endR"),
-	    endColorGAttribute = componentNode.attribute("endG"),
-	    endColorBAttribute = componentNode.attribute("endB"),
-	    endColorAAttribute = componentNode.attribute("endA"); 
+		endColorGAttribute = componentNode.attribute("endG"),
+		endColorBAttribute = componentNode.attribute("endB"),
+		endColorAAttribute = componentNode.attribute("endA");
 	    endColorRAttribute && endColorBAttribute && endColorGAttribute && endColorAAttribute)
 	{
 		setEndColor(cocos2d::Color4F(endColorRAttribute.as_uint(), endColorGAttribute.as_uint(), endColorBAttribute.as_uint(), endColorAAttribute.as_uint()));
 	}
 	if (const auto endColorVarRAttribute = componentNode.attribute("endVarR"),
-	    endColorVarGAttribute = componentNode.attribute("endVarG"),
-	    endColorVarBAttribute = componentNode.attribute("endVarB"),
+		endColorVarGAttribute = componentNode.attribute("endVarG"),
+		endColorVarBAttribute = componentNode.attribute("endVarB"),
 		endColorVarAAttribute = componentNode.attribute("endVarA");
 	    endColorVarRAttribute && endColorVarBAttribute && endColorVarGAttribute && endColorVarAAttribute)
 	{

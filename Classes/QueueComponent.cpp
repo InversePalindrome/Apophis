@@ -10,11 +10,15 @@ InversePalindrome.com
 #include <imgui.h>
 
 
-QueueComponent::QueueComponent(const pugi::xml_node& componentNode) :
+QueueComponent::QueueComponent() :
 	queueAheadDistance(5.f),
 	queueRadius(1.f),
 	brakeFactor(0.8f),
 	velocityShrinkFactor(0.3f)
+{
+}
+
+void QueueComponent::load(const pugi::xml_node& componentNode)
 {
 	if (const auto queueAheadDistanceAttribute = componentNode.attribute("aheadDistance"))
 	{
@@ -30,7 +34,7 @@ QueueComponent::QueueComponent(const pugi::xml_node& componentNode) :
 	}
 	if (const auto velocityShrinkFactorAttribute = componentNode.attribute("velocityShrinkFactor"))
 	{
-       setVelocityShrinkFactor(velocityShrinkFactorAttribute.as_float());
+		setVelocityShrinkFactor(velocityShrinkFactorAttribute.as_float());
 	}
 }
 

@@ -12,14 +12,18 @@ InversePalindrome.com
 #include <imgui.h>
 
 
-PatrolComponent::PatrolComponent(const pugi::xml_node& componentNode) :
+PatrolComponent::PatrolComponent() :
 	patrolIndex(0u)
+{
+}
+
+void PatrolComponent::load(const pugi::xml_node& componentNode)
 {
 	for (const auto pointNode : componentNode.children("Point"))
 	{
 		if (const auto xPositionAttribute = pointNode.attribute("x"),
 			yPositionAttribute = pointNode.attribute("y");
-		    xPositionAttribute && yPositionAttribute)
+		xPositionAttribute && yPositionAttribute)
 		{
 			addPatrolPoint({ xPositionAttribute.as_float(), yPositionAttribute.as_float() });
 		}

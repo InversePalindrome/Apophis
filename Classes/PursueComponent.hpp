@@ -15,8 +15,9 @@ InversePalindrome.com
 class PursueComponent
 {
 public:
-	explicit PursueComponent(const pugi::xml_node& componentNode);
+	PursueComponent();
 
+	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();

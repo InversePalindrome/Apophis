@@ -15,9 +15,10 @@ InversePalindrome.com
 class NodeComponent
 {
 public:
-	NodeComponent(cocos2d::Node* node, const pugi::xml_node& componentNode);
+	NodeComponent(cocos2d::Node* node);
 	~NodeComponent();
 
+	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();

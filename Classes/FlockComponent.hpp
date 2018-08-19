@@ -13,8 +13,9 @@ InversePalindrome.com
 class FlockComponent
 {
 public:
-	explicit FlockComponent(const pugi::xml_node& componentNode);
+	FlockComponent();
 
+	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();

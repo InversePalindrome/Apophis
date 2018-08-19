@@ -13,8 +13,9 @@ InversePalindrome.com
 class AvoidComponent
 {
 public:
-	explicit AvoidComponent(const pugi::xml_node& componentNode);
+	AvoidComponent();
 
+	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();

@@ -17,8 +17,9 @@ InversePalindrome.com
 class SpriteComponent : public NodeComponent
 {
 public:
-	explicit SpriteComponent(const pugi::xml_node& componentNode);
+	SpriteComponent();
 
+	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();

@@ -5,6 +5,7 @@ InversePalindrome.com
 */
 
 
+#include "BodyParser.hpp"
 #include "BodyComponent.hpp"
 #include "BodySerializer.hpp"
 
@@ -12,14 +13,58 @@ InversePalindrome.com
 
 #include <imgui.h>
 
+#include <variant>
 #include <algorithm>
 
 
-BodyComponent::BodyComponent(b2Body* body) :
-	body(body),
+BodyComponent::BodyComponent() :
+	body(nullptr),
 	AABB({ {FLT_MAX, FLT_MAX}, {-FLT_MAX, -FLT_MAX} })
 {
-	body->SetUserData(&userData);
+}
+
+void BodyComponent::load(const pugi::xml_node& componentNode)
+{
+	BodyParser::parseBody(body, componentNode);
+
+	for (const auto fixtureNode : componentNode.children())
+	{
+		b2FixtureDef fixtureDef;
+		BodyParser::parseFixtureDef(fixtureDef, fixtureNode);
+
+		std::variant<b2CircleShape, b2EdgeShape, b2PolygonShape, b2ChainShape> shape;
+
+		if (std::strcmp(fixtureNode.name(), "Circle") == 0)
+		{
+			b2CircleShape circle;
+			BodyParser::parseCircleShape(circle, fixtureNode);
+			shape = circle;
+		}
+		else if (std::strcmp(fixtureNode.name(), "Edge") == 0)
+		{
+			b2EdgeShape edge;
+			BodyParser::parseEdgeShape(edge, fixtureNode);
+			shape = edge;
+		}
+		else if (std::strcmp(fixtureNode.name(), "Polygon") == 0)
+		{
+			b2PolygonShape polygon;
+			BodyParser::parsePolygonShape(polygon, fixtureNode);
+			shape = polygon;
+		}
+		else if (std::strcmp(fixtureNode.name(), "Chain") == 0)
+		{
+			b2ChainShape chain;
+			BodyParser::parseChainShape(chain, fixtureNode);
+			shape = chain;
+		}
+
+		std::visit([&fixtureDef](auto& shape) { fixtureDef.shape = &shape; }, shape);
+
+		createFixture(fixtureDef);
+	}
+
+	computeAABB();
 }
 
 void BodyComponent::save(pugi::xml_node& componentNode) const
@@ -163,6 +208,12 @@ void BodyComponent::destroyFixture(b2Fixture* fixture)
 b2Body* BodyComponent::getBody()
 {
 	return body;
+}
+
+void BodyComponent::setBody(b2Body* body)
+{
+	this->body = body;
+	body->SetUserData(&userData);
 }
 
 b2Body* BodyComponent::getBody() const

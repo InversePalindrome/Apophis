@@ -13,8 +13,9 @@ InversePalindrome.com
 class WanderComponent
 {
 public:
-	explicit WanderComponent(const pugi::xml_node& componentNode);
+	WanderComponent();
 
+	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();

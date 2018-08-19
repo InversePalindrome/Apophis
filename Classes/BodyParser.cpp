@@ -10,39 +10,37 @@ InversePalindrome.com
 #include <vector>
 
 
-void BodyParser::parseBodyDef(b2BodyDef& bodyDef, const pugi::xml_node& bodyNode)
+void BodyParser::parseBody(b2Body* body, const pugi::xml_node& bodyNode)
 {
 	if (const auto bodyTypeAttribute = bodyNode.attribute("type"))
 	{
-		bodyDef.type = static_cast<b2BodyType>(bodyTypeAttribute.as_int());
+		body->SetType(static_cast<b2BodyType>(bodyTypeAttribute.as_int()));
 	}
-	if (const auto xPositionAttribute = bodyNode.attribute("x"))
+	if (const auto xPositionAttribute = bodyNode.attribute("x"),
+		yPositionAttribute = bodyNode.attribute("y");
+	    xPositionAttribute && yPositionAttribute)
 	{
-		bodyDef.position.x = xPositionAttribute.as_float();
-	}
-	if (const auto yPositionAttribute = bodyNode.attribute("y"))
-	{
-		bodyDef.position.y = yPositionAttribute.as_float();
+		body->SetTransform({ xPositionAttribute.as_float(), yPositionAttribute.as_float() }, body->GetAngle()); 
 	}
 	if (const auto angleAttribute = bodyNode.attribute("angle"))
 	{
-		bodyDef.angle = angleAttribute.as_float();
+		body->SetTransform(body->GetPosition(), angleAttribute.as_float());
 	}
 	if (const auto linearDampingAttribute = bodyNode.attribute("linearDamping"))
 	{
-		bodyDef.linearDamping = linearDampingAttribute.as_float();
+		body->SetLinearDamping(linearDampingAttribute.as_float());
 	}
 	if (const auto angularDampingAttribute = bodyNode.attribute("angularDamping"))
 	{
-		bodyDef.angularDamping = angularDampingAttribute.as_float();
+		body->SetAngularVelocity(angularDampingAttribute.as_float());
 	}
 	if (const auto fixedRotationAttribute = bodyNode.attribute("fixedRotation"))
 	{
-		bodyDef.fixedRotation = fixedRotationAttribute.as_bool();
+		body->SetFixedRotation(fixedRotationAttribute.as_bool());
 	}
 	if (const auto bulletAttribute = bodyNode.attribute("bullet"))
 	{
-		bodyDef.bullet = bulletAttribute.as_bool();
+		body->SetBullet(bulletAttribute.as_bool());
 	}
 }
 

@@ -13,8 +13,9 @@ InversePalindrome.com
 class HealthComponent
 {
 public:
-	explicit HealthComponent(const pugi::xml_node& componentNode);
+    HealthComponent();
 
+	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();

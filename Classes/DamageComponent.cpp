@@ -10,9 +10,14 @@ InversePalindrome.com
 #include <imgui.h>
 
 
-DamageComponent::DamageComponent(const pugi::xml_node& componentNode) :
-	damageHitpoints(componentNode.text().as_float(1.f))
+DamageComponent::DamageComponent() :
+	damageHitpoints(1.f)
 {
+}
+
+void DamageComponent::load(const pugi::xml_node& componentNode)
+{
+	setDamageHitpoints(componentNode.text().as_float());
 }
 
 void DamageComponent::save(pugi::xml_node& componentNode) const

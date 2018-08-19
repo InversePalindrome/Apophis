@@ -17,8 +17,9 @@ InversePalindrome.com
 class ParticleComponent : public NodeComponent
 {
 public:
-	explicit ParticleComponent(const pugi::xml_node& componentNode);
+	ParticleComponent();
 
+	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();

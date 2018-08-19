@@ -10,9 +10,13 @@ InversePalindrome.com
 #include <imgui.h>
 
 
-AccelerationComponent::AccelerationComponent(const pugi::xml_node& componentNode) :
+AccelerationComponent::AccelerationComponent() :
 	linearAcceleration(1.f),
 	angularAcceleration(1.f)
+{
+}
+
+void AccelerationComponent::load(const pugi::xml_node& componentNode)
 {
 	if (const auto linearAccelerationAttribute = componentNode.attribute("linear"))
 	{

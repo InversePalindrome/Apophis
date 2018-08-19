@@ -15,8 +15,9 @@ InversePalindrome.com
 class ObjectComponent
 {
 public:
-	explicit ObjectComponent(const pugi::xml_node& componentNode);
+	ObjectComponent();
 
+	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();

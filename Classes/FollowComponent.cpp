@@ -10,9 +10,14 @@ InversePalindrome.com
 #include <imgui.h>
 
 
-FollowComponent::FollowComponent(const pugi::xml_node& componentNode) :
-	distanceFromLeader(componentNode.text().as_float(5.f))
+FollowComponent::FollowComponent() :
+	distanceFromLeader(5.f)
 {
+}
+
+void FollowComponent::load(const pugi::xml_node& componentNode)
+{
+	setDistanceFromLeader(componentNode.text().as_float());
 }
 
 void FollowComponent::save(pugi::xml_node& componentNode) const

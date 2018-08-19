@@ -30,10 +30,9 @@ public:
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
 	virtual void receive(const entityx::EntityDestroyedEvent& event);
+	virtual void receive(const entityx::ComponentAddedEvent<BodyComponent>& event);
 	virtual void receive(const entityx::ComponentRemovedEvent<BodyComponent>& event);
 	virtual void receive(const EntityParsed& event);
-	virtual void receive(const CreateBody& event);
-	virtual void receive(const CreateJoint<DistanceJointComponent>& event);
 	virtual void receive(const DestroyJoint<DistanceJointComponent>& event);
 
 private:

@@ -10,9 +10,13 @@ InversePalindrome.com
 #include <imgui.h>
 
 
-SpeedBoostComponent::SpeedBoostComponent(const pugi::xml_node& componentNode) :
+SpeedBoostComponent::SpeedBoostComponent() :
 	speedBoostRatio(2.f),
 	speedBoostDuration(1000)
+{
+}
+
+void SpeedBoostComponent::load(const pugi::xml_node& componentNode)
 {
 	if (const auto speedBoostRatioAttribute = componentNode.attribute("ratio"))
 	{

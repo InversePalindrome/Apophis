@@ -16,8 +16,7 @@ InversePalindrome.com
 class DropComponent
 {
 public:
-	explicit DropComponent(const pugi::xml_node& componentNode);
-
+	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();

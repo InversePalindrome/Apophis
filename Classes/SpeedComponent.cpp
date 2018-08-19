@@ -10,9 +10,13 @@ InversePalindrome.com
 #include <imgui.h>
 
 
-SpeedComponent::SpeedComponent(const pugi::xml_node& componentNode) :
+SpeedComponent::SpeedComponent() :
 	maxLinearSpeed(10.f),
 	maxAngularSpeed(5.f)
+{
+}
+
+void SpeedComponent::load(const pugi::xml_node& componentNode)
 {
 	if (const auto maxLinearSpeedAttribute = componentNode.attribute("linear"))
 	{

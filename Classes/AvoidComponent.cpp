@@ -10,9 +10,13 @@ InversePalindrome.com
 #include <imgui.h>
 
 
-AvoidComponent::AvoidComponent(const pugi::xml_node& componentNode) :
+AvoidComponent::AvoidComponent() :
 	avoidanceAheadDistance(10.f),
 	avoidanceForce(50.f)
+{
+}
+
+void AvoidComponent::load(const pugi::xml_node& componentNode)
 {
 	if (const auto distanceAttribute = componentNode.attribute("distance"))
 	{
@@ -20,7 +24,7 @@ AvoidComponent::AvoidComponent(const pugi::xml_node& componentNode) :
 	}
 	if (const auto avoidanceForceAttribute = componentNode.attribute("force"))
 	{
-	    setAvoidanceForce(avoidanceForceAttribute.as_float());
+		setAvoidanceForce(avoidanceForceAttribute.as_float());
 	}
 }
 

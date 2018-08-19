@@ -5,6 +5,7 @@ InversePalindrome.com
 */
 
 
+#include "MenuNode.hpp"
 #include "Components.hpp"
 #include "LevelParser.hpp"
 #include "EntityParser.hpp"
@@ -12,6 +13,7 @@ InversePalindrome.com
 #include "GraphicsSystem.hpp"
 #include "LevelSerializer.hpp"
 #include "LevelEditorNode.hpp"
+#include "ComponentParser.hpp"
 #include "EntitySerializer.hpp"
 
 #include "CCIMGUI.h"
@@ -38,15 +40,19 @@ bool LevelEditorNode::init()
 
 	scheduleUpdate();
 	initSystems();
-
-	auto* font = ImGui::GetIO().Fonts->AddFontFromFileTTF("Fonts/OpenSans-Regular.ttf", 40.f);
-
-	CCIMGUI::getInstance()->addImGUI([this, font]()
+	
+	std::string currentAddComponent;
+	
+	CCIMGUI::getInstance()->addImGUI([this, currentAddComponent]() mutable
 	{
-		ImGui::PushFont(font);
+		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[0]);
 
 		if (ImGui::BeginMainMenuBar())
 		{
+			if (ImGui::MenuItem("Exit"))
+			{
+				cocos2d::Director::getInstance()->replaceScene(MenuNode::scene());
+			}
 			if (ImGui::BeginMenu("File"))
 			{
 				if (ImGui::MenuItem("Open"))
@@ -78,6 +84,11 @@ bool LevelEditorNode::init()
 
 		auto isEntitiesOpen = ImGui::TreeNode("Entities");
 
+		ImGui::SameLine();
+		if (CCIMGUI::getInstance()->imageButton("#AddButton", 50, 50))
+		{
+			entityManager.create();
+		}
 		if (isEntitiesOpen)
 		{
 			std::vector<entityx::Entity> entitiesToRemove;
@@ -109,9 +120,39 @@ bool LevelEditorNode::init()
 					}
 				}
 				ImGui::SameLine();
+				if (CCIMGUI::getInstance()->imageButton("#AddButton", 50, 50))
+				{
+					ImGui::OpenPopup("Add Component");
+				}
+				ImGui::SameLine();
 				if (CCIMGUI::getInstance()->imageButton("#RemoveButton", 50, 50))
 				{
 					entitiesToRemove.push_back(entity);
+				}
+
+				if (auto isAddComponentOpen = true; ImGui::BeginPopupModal("Add Component", &isAddComponentOpen, ImGuiWindowFlags_AlwaysAutoResize))
+				{
+					if (ImGui::BeginCombo("Component", currentAddComponent.c_str()))
+					{
+						for (const auto& component : componentParser)
+						{
+							if (ImGui::Selectable(component.first.c_str()))
+							{
+								currentAddComponent = component.first;
+							}
+						}
+
+						ImGui::EndCombo();
+					}
+
+					if (ImGui::Button("Add"))
+					{
+						componentParser.at(currentAddComponent)(entity);
+
+						ImGui::CloseCurrentPopup();
+					}
+
+					ImGui::EndPopup();
 				}
 
 				if (isEntityOpen)

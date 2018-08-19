@@ -51,7 +51,7 @@ PlayerSystem::PlayerSystem(cocos2d::Node* gameNode) :
 
 void PlayerSystem::configure(entityx::EventManager& eventManager)
 {
-	eventManager.subscribe<entityx::ComponentAddedEvent<PlayerComponent>>(*this);
+	eventManager.subscribe<ComponentLoaded<entityx::ComponentHandle<TagsComponent>>>(*this);
 }
 
 void PlayerSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
@@ -67,9 +67,12 @@ void PlayerSystem::update(entityx::EntityManager& entityManager, entityx::EventM
 	}
 }
 
-void PlayerSystem::receive(const entityx::ComponentAddedEvent<PlayerComponent>& event)
+void PlayerSystem::receive(const ComponentLoaded<entityx::ComponentHandle<TagsComponent>>& event)
 {
-	player = event.entity;
+	if (event.component->hasTag("Player"))
+	{
+		player = event.entity;
+	}
 }
 
 void PlayerSystem::updateMovement(entityx::ComponentHandle<BodyComponent> body, const entityx::ComponentHandle<SpeedComponent> speed, const entityx::ComponentHandle<AccelerationComponent> acceleration)

@@ -13,8 +13,9 @@ InversePalindrome.com
 class QueueComponent
 {
 public:
-	explicit QueueComponent(const pugi::xml_node& componentNode);
+	QueueComponent();
 
+	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();

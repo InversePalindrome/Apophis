@@ -7,10 +7,11 @@ InversePalindrome.com
 
 #pragma once
 
+#include "Events.hpp"
 #include "KeyAction.hpp"
+#include "TagsComponent.hpp"
 #include "BodyComponent.hpp"
 #include "SpeedComponent.hpp"
-#include "PlayerComponent.hpp"
 #include "AccelerationComponent.hpp"
 
 #include <cocos/2d/CCNode.h>
@@ -27,7 +28,7 @@ public:
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
-	virtual void receive(const entityx::ComponentAddedEvent<PlayerComponent>& event);
+	virtual void receive(const ComponentLoaded<entityx::ComponentHandle<TagsComponent>>& event);
 
 private:
 	cocos2d::Node* gameNode;

@@ -10,10 +10,10 @@ InversePalindrome.com
 #include <imgui.h>
 
 
-JointComponent::JointComponent(b2Joint* joint, std::size_t entityIDA, std::size_t entityIDB) : 
-	joint(joint),
-	entityIDA(entityIDA),
-	entityIDB(entityIDB)
+JointComponent::JointComponent() : 
+	joint(nullptr),
+	entityIDA(0u),
+	entityIDB(0u)
 {
 }
 

@@ -12,8 +12,12 @@ InversePalindrome.com
 #include <nfd.h>
 
 
-ExplosionComponent::ExplosionComponent(const pugi::xml_node& componentNode) :
+ExplosionComponent::ExplosionComponent() :
 	explosionTime(1000)
+{
+}
+
+void ExplosionComponent::load(const pugi::xml_node& componentNode)
 {
 	if (const auto explosionFilenameAttribute = componentNode.attribute("filename"))
 	{

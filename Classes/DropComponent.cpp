@@ -16,7 +16,7 @@ InversePalindrome.com
 #include <nfd.h>
 
 
-DropComponent::DropComponent(const pugi::xml_node& componentNode) 
+void DropComponent::load(const pugi::xml_node& componentNode)
 {
 	for (const auto itemNode : componentNode.children("Item"))
 	{

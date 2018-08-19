@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-Apophis - DamageComponent.hpp
+Apophis - TagsComponent.hpp
 InversePalindrome.com
 */
 
@@ -9,20 +9,23 @@ InversePalindrome.com
 
 #include <pugixml.hpp>
 
+#include <string>
+#include <vector>
 
-class DamageComponent
+
+class TagsComponent
 {
 public:
-	DamageComponent();
-
 	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();
 
-	float getDamageHitpoints() const;
-	void setDamageHitpoints(float hitpoints);
+	void addTag(const std::string& tag = "");
+	void removeTag(const std::string& tag);
+
+	bool hasTag(const std::string& tag) const;
 
 private:
-	float damageHitpoints;
+	std::vector<std::string> tags;
 };

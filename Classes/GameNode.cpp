@@ -19,8 +19,8 @@ InversePalindrome.com
 #include "PhysicsSystem.hpp"
 #include "OrbitalSystem.hpp"
 #include "StrikerSystem.hpp"
+#include "TagsComponent.hpp"
 #include "GraphicsSystem.hpp"
-#include "PlayerComponent.hpp"
 
 #include <cocos/base/CCEventDispatcher.h>
 #include <cocos/base/CCEventListenerCustom.h>
@@ -71,7 +71,9 @@ void GameNode::update(float dt)
 
 void GameNode::receive(const entityx::EntityDestroyedEvent& event)
 {
-	if (event.entity.has_component<PlayerComponent>())
+	auto entity = event.entity;
+
+	if (auto tags = entity.component<TagsComponent>(); tags && tags->hasTag("Player"))
 	{
 		scheduleOnce([this](auto dt) { entityManager.reset(); }, 0.f, "Reset Game");
 

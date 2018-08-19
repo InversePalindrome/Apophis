@@ -10,9 +10,8 @@ InversePalindrome.com
 #include <imgui.h>
 
 
-DistanceJointComponent::DistanceJointComponent(b2Joint* distanceJoint, std::size_t entityIDA, std::size_t entityIDB) :
-	JointComponent(distanceJoint, entityIDA, entityIDB),
-	distanceJoint(static_cast<b2DistanceJoint*>(distanceJoint))
+DistanceJointComponent::DistanceJointComponent() :
+	distanceJoint(nullptr)
 {
 }
 

@@ -12,20 +12,24 @@ InversePalindrome.com
 #include <cocos/base/ccUtils.h>
 
 
-SpriteComponent::SpriteComponent(const pugi::xml_node& componentNode) :
-	NodeComponent(cocos2d::Sprite::create(), componentNode),
+SpriteComponent::SpriteComponent() :
+	NodeComponent(cocos2d::Sprite::create()),
 	sprite(static_cast<cocos2d::Sprite*>(getNode())),
 	repeatTexture(false)
+{
+}
+
+void SpriteComponent::load(const pugi::xml_node& componentNode)
 {
 	if (const auto spriteFrameAttribute = componentNode.attribute("frame"))
 	{
 		setSpriteFrame(spriteFrameAttribute.as_string());
 	}
 	if (const auto textureXAttribute = componentNode.attribute("textureX"),
-	    textureYAttribute = componentNode.attribute("textureY"),
-	    textureWidthAttribute = componentNode.attribute("textureWidth"),
-	    textureHeightAttribute = componentNode.attribute("textureHeight"); 
-	    textureXAttribute && textureYAttribute && textureWidthAttribute && textureHeightAttribute)
+		textureYAttribute = componentNode.attribute("textureY"),
+		textureWidthAttribute = componentNode.attribute("textureWidth"),
+		textureHeightAttribute = componentNode.attribute("textureHeight");
+	textureXAttribute && textureYAttribute && textureWidthAttribute && textureHeightAttribute)
 	{
 		setTextureRect({ textureXAttribute.as_float(), textureYAttribute.as_float(), textureWidthAttribute.as_float(), textureHeightAttribute.as_float() });
 	}
