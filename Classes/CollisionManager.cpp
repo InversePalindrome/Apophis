@@ -27,7 +27,7 @@ void CollisionManager::BeginContact(b2Contact* contact)
 	if (auto collisionPair = getCollisionPair(bodyA, bodyB, ObjectType::Projectile, ObjectType::Alive))
 	{
 		eventManager.emit(CombatOcurred{collisionPair->first, collisionPair->second });
-
+	
 		collisionPair->first.destroy();
 	}
 	else if (auto collisionPair = getCollisionPair(bodyA, bodyB, ObjectType::Player, ObjectType::Item))

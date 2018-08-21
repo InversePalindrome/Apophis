@@ -58,17 +58,23 @@ void PatrolComponent::display()
 		
 		if (isPointsOpen)
 		{
-			for (std::size_t i = 0; i < patrolPoints.size(); ++i)
-			{
-				ImGui::PushID(i);
+			int i = 0;
 
-				ImGui::InputFloat2("Point(X, Y)", &patrolPoints[i].x);
+			for (auto patrolPointItr = std::begin(patrolPoints); patrolPointItr != std::end(patrolPoints);)
+			{
+				ImGui::PushID(i++);
+
+				ImGui::InputFloat2("Point(X, Y)", &patrolPointItr->x);
 
 				ImGui::SameLine();
 
 				if (CCIMGUI::getInstance()->imageButton("#RemoveButton", 50, 50))
 				{
-					removePatrolPoint(i);
+					patrolPointItr = patrolPoints.erase(patrolPointItr);
+				}
+				else
+				{
+					++patrolPointItr;
 				}
 
 				ImGui::PopID();

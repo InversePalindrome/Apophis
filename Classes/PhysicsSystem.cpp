@@ -71,7 +71,11 @@ void PhysicsSystem::receive(const entityx::ComponentAddedEvent<BodyComponent>& e
 {
 	auto body = event.component;
 
-	modifyWorld([this, body]() mutable { body->setBody(world.CreateBody(&b2BodyDef())); });
+	modifyWorld([this, body, &event]() mutable
+	{ 
+		body->setBody(world.CreateBody(&b2BodyDef())); 
+		body->setUserData(event.entity);
+	});
 }
 
 void PhysicsSystem::receive(const entityx::ComponentRemovedEvent<BodyComponent>& event)

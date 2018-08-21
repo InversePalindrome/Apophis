@@ -18,6 +18,8 @@ InversePalindrome.com
 #include <pugixml.hpp>
 
 #include <any>
+#include <vector>
+#include <variant>
 
 
 class BodyComponent
@@ -94,4 +96,8 @@ private:
 	b2AABB AABB;
 
 	std::any userData;	
+
+	int shapeIndex;
+	std::variant<b2CircleShape, b2EdgeShape, b2PolygonShape, b2ChainShape> shapeToAdd;
+	std::vector<b2Vec2> verticesToAdd;
 };

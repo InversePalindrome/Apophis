@@ -19,7 +19,8 @@ InversePalindrome.com
 
 BodyComponent::BodyComponent() :
 	body(nullptr),
-	AABB({ {FLT_MAX, FLT_MAX}, {-FLT_MAX, -FLT_MAX} })
+	AABB({ {FLT_MAX, FLT_MAX}, {-FLT_MAX, -FLT_MAX} }),
+	shapeIndex(0)
 {
 }
 
@@ -108,9 +109,153 @@ void BodyComponent::display()
 
 		if (auto isOpen = true; ImGui::BeginPopupModal("Add Fixture", &isOpen, ImGuiWindowFlags_AlwaysAutoResize))
 		{
+			const char* shapes[] = { "Circle", "Edge", "Polygon", "Chain" };
+
+			if (ImGui::Combo("Shape", &shapeIndex, shapes, 4))
+			{
+				verticesToAdd.clear();
+
+				switch (static_cast<b2Shape::Type>(shapeIndex))
+				{
+				case b2Shape::e_circle:
+				{
+					b2CircleShape circle;
+					circle.m_radius = 1.f;
+
+					shapeToAdd = circle;
+				}
+					break;
+				case b2Shape::e_edge:
+				{
+					b2EdgeShape edge;
+					edge.m_vertex1.SetZero();
+					edge.m_vertex2.SetZero();
+
+					shapeToAdd = edge;
+				}
+					break;
+				case b2Shape::e_polygon:
+					shapeToAdd = b2PolygonShape();
+					break;
+				case b2Shape::e_chain:
+					shapeToAdd = b2ChainShape();
+					break;
+				}
+			}
+
+			std::visit([this](auto& shape)
+			{
+				using ShapeType = std::decay_t<decltype(shape)>;
+
+				if constexpr(std::is_same_v<ShapeType, b2CircleShape>)
+				{
+					ImGui::InputFloat("Radius", &shape.m_radius);
+					ImGui::InputFloat2("Center", &shape.m_p.x);
+				}
+				else if constexpr(std::is_same_v<ShapeType, b2EdgeShape>)
+				{
+					ImGui::Checkbox("Has Vertex 0", &shape.m_hasVertex0);
+					ImGui::SameLine();
+					ImGui::Checkbox("Has Vertex 3", &shape.m_hasVertex3);
+
+					if (shape.m_hasVertex0)
+					{
+						ImGui::InputFloat2("Vertex 0", &shape.m_vertex0.x);
+					}
+
+					ImGui::InputFloat2("Vertex 1", &shape.m_vertex1.x);
+					ImGui::InputFloat2("Vertex 2", &shape.m_vertex2.x);
+
+					if (shape.m_hasVertex3)
+					{
+						ImGui::InputFloat2("Vertex 3", &shape.m_vertex3.x);
+					}
+				
+				}
+				else if constexpr(std::is_same_v<ShapeType, b2PolygonShape>)
+				{
+					ImGui::Text("Vertices");
+					ImGui::SameLine();
+
+					if (CCIMGUI::getInstance()->imageButton("#AddButton", 50, 50))
+					{
+						verticesToAdd.push_back({ 0.f, 0.f });
+					}
+
+					int i = 0;
+
+					for (auto vertexItr = std::begin(verticesToAdd); vertexItr != std::end(verticesToAdd);)
+					{
+						ImGui::PushID(i++);
+
+						ImGui::InputFloat2(("Vertex " + std::to_string(i)).c_str(), &vertexItr->x);
+						ImGui::SameLine();
+						if (CCIMGUI::getInstance()->imageButton("#RemoveButton", 50, 50))
+						{
+							vertexItr = verticesToAdd.erase(vertexItr);
+						}
+						else
+						{
+							++vertexItr;
+						}
+
+						ImGui::PopID();
+					}
+				}
+				else if constexpr(std::is_same_v<ShapeType, b2ChainShape>)
+				{
+					ImGui::Text("Vertices");
+					ImGui::SameLine();
+
+					if (CCIMGUI::getInstance()->imageButton("#AddButton", 50, 50))
+					{
+						verticesToAdd.push_back({ 0.f, 0.f });
+					}
+
+					int i = 0;
+
+					for (auto vertexItr = std::begin(verticesToAdd); vertexItr != std::end(verticesToAdd);)
+					{
+						ImGui::PushID(i++);
+
+						ImGui::InputFloat2(("Vertex " + std::to_string(i)).c_str(), &vertexItr->x);
+						ImGui::SameLine();
+						if (CCIMGUI::getInstance()->imageButton("#RemoveButton", 50, 50))
+						{
+							vertexItr = verticesToAdd.erase(vertexItr);
+						}
+						else
+						{
+							++vertexItr;
+						}
+
+						ImGui::PopID();
+					}
+				}
+			}, shapeToAdd);
+
 			if (ImGui::Button("Add"))
 			{
+				b2FixtureDef fixtureDef;
 				
+				std::visit([this, &fixtureDef](auto& shape)
+				{
+					using ShapeType = std::decay_t<decltype(shape)>;
+
+					if constexpr(std::is_same_v<ShapeType, b2PolygonShape>)
+					{
+						shape.Set(verticesToAdd.data(), verticesToAdd.size());
+					}
+					else if constexpr(std::is_same_v<ShapeType, b2ChainShape>)
+					{
+						shape.CreateChain(verticesToAdd.data(), verticesToAdd.size());
+					}
+
+					fixtureDef.shape = &shape; 
+				}, shapeToAdd);
+
+				createFixture(fixtureDef);
+
 				ImGui::CloseCurrentPopup();
 			}
 
@@ -182,11 +327,73 @@ void BodyComponent::display()
 					fixture->SetSensor(sensor);
 				}
 		
+				switch (fixture->GetShape()->GetType())
+				{
+				case b2Shape::e_circle:
+					if (ImGui::TreeNode("Circle"))
+					{
+						const auto* circle = static_cast<const b2CircleShape*>(fixture->GetShape());
+
+						ImGui::Text(("Radius: " + std::to_string(circle->m_radius)).c_str());
+						ImGui::Text(("Center: (" + std::to_string(circle->m_p.x) + ", " + std::to_string(circle->m_p.y) + ')').c_str());
+
+						ImGui::TreePop();
+					}
+					break;
+				case b2Shape::e_edge:
+					if (ImGui::TreeNode("Edge"))
+					{
+						const auto* edge = static_cast<const b2EdgeShape*>(fixture->GetShape());
+
+						if (edge->m_hasVertex0)
+						{
+							ImGui::Text(("Vertex 0: (" + std::to_string(edge->m_vertex0.x) + ", " + std::to_string(edge->m_vertex0.y) + ')').c_str());
+						}
+
+						ImGui::Text(("Vertex 1: (" + std::to_string(edge->m_vertex1.x) + ", " + std::to_string(edge->m_vertex1.y) + ')').c_str());
+						ImGui::Text(("Vertex 2: (" + std::to_string(edge->m_vertex2.x) + ", " + std::to_string(edge->m_vertex2.y) + ')').c_str());
+
+						if (edge->m_hasVertex3)
+						{
+							ImGui::Text(("Vertex 3: (" + std::to_string(edge->m_vertex3.x) + ", " + std::to_string(edge->m_vertex3.y) + ')').c_str());
+						}
+
+						ImGui::TreePop();
+					}
+					break;
+				case b2Shape::e_polygon:
+					if (ImGui::TreeNode("Polygon"))
+					{
+						const auto* polygon = static_cast<const b2PolygonShape*>(fixture->GetShape());
+					   
+						for (int i = 0; i < polygon->m_count; ++i)
+						{
+							ImGui::Text(("Vertex " + std::to_string(i) + ": (" + std::to_string(polygon->m_vertices[i].x) + ", " + std::to_string(polygon->m_vertices[i].y) + ')').c_str());
+						}
+
+						ImGui::TreePop();
+					}
+					break;
+				case b2Shape::e_chain:
+					if (ImGui::TreeNode("Chain"))
+					{
+						const auto* chain = static_cast<const b2ChainShape*>(fixture->GetShape());
+						
+						for (int i = 0; i < chain->m_count; ++i)
+						{
+							ImGui::Text(("Vertex " + std::to_string(i) + ": (" + std::to_string(chain->m_vertices[i].x) + ", " + std::to_string(chain->m_vertices[i].y) + ')').c_str());
+						}
+
+						ImGui::TreePop();
+					}
+					break;
+				}
+
 				ImGui::TreePop();
 			}
 		}
 
-		for (auto* fixture : fixturesToDestroy)
+		for (const auto& fixture : fixturesToDestroy)
 		{
 			destroyFixture(fixture);
 		}

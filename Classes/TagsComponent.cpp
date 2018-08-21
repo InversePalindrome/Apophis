@@ -39,28 +39,26 @@ void TagsComponent::display()
 			addTag();
 		}
 
-		std::vector<std::string> tagsToRemove;
 		int i = 0;
 
-		for (auto& tag : tags)
+		for (auto tagItr = std::begin(tags); tagItr != std::end(tags);)
 		{
-			tag.resize(64);
+			tagItr->resize(64);
 
 			ImGui::PushID(i++);
 
-			ImGui::InputText("Tag", tag.data(), tag.length());
+			ImGui::InputText("Tag", tagItr->data(), tagItr->length());
 			ImGui::SameLine();
 			if (CCIMGUI::getInstance()->imageButton("#RemoveButton", 50, 50))
 			{
-				tagsToRemove.push_back(tag);
+				tagItr = tags.erase(tagItr);
+			}
+			else
+			{
+				++tagItr;
 			}
 
 			ImGui::PopID();
-		}
-		
-		for (const auto& tagToRemove : tagsToRemove)
-		{
-			removeTag(tagToRemove);
 		}
 
 		ImGui::TreePop();

@@ -48,7 +48,7 @@ void CombatSystem::receive(const ShootProjectile& event)
 		
 		auto projectileEntity = entityManager.create();
 		EntityParser::parseEntity(projectileEntity, eventManager, shooterWeapon->getProjectileFilename());
-
+		
 		if (auto[projectileBody, projectileSpeed] = projectileEntity.components<BodyComponent, SpeedComponent>(); projectileBody && projectileSpeed)
 		{
 			const b2Vec2 shooterSize(shooterBody->getAABB().upperBound - shooterBody->getAABB().lowerBound);
