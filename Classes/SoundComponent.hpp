@@ -7,7 +7,7 @@ InversePalindrome.com
 
 #pragma once
 
-#include "Sound.hpp"
+#include "State.hpp"
 #include "EnumHash.hpp"
 
 #include <pugixml.hpp>
@@ -19,27 +19,26 @@ InversePalindrome.com
 class SoundComponent
 {
 public:
+	SoundComponent();
+
 	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();
 
-	std::string getSoundFile(Sound sound) const;
+	int getSoundID() const;
+	void setSoundID(int soundID);
 
-	void addSoundFile(Sound sound, const std::string& filename);
-	void removeSoundFile(Sound sound);
+	void addSound(State state, const std::pair<std::string, bool>& soundFilename);
+	void removeSound(State state);
 
-	int getSoundID(Sound sound) const;
-	const std::unordered_map<Sound, int, EnumHash<Sound>>& getSoundIDs() const;
+	const std::pair<std::string, bool>& getSound(State state) const;
 
-	void addSoundID(Sound sound, int soundID);
-	void removeSoundID(Sound sound);
-	void clearSoundIDs();
-
-	bool hasSoundFile(Sound sound) const;
-	bool hasSoundID(Sound sound) const;
+	bool hasSound(State state) const;
 
 private:
-	std::unordered_map<Sound, std::string, EnumHash<Sound>> soundFiles;
-	std::unordered_map<Sound, int, EnumHash<Sound>> soundIDs;
+	int soundID;
+	std::unordered_map<State, std::pair<std::string, bool>, EnumHash<State>> sounds;
+
+	std::pair<State, std::pair<std::string, bool>> soundToAdd;
 };

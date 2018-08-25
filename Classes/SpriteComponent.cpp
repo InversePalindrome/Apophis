@@ -10,6 +10,7 @@ InversePalindrome.com
 #include <imgui.h>
 
 #include <cocos/base/ccUtils.h>
+#include <cocos/2d/CCSpriteFrameCache.h>
 
 
 SpriteComponent::SpriteComponent() :
@@ -29,7 +30,7 @@ void SpriteComponent::load(const pugi::xml_node& componentNode)
 		textureYAttribute = componentNode.attribute("textureY"),
 		textureWidthAttribute = componentNode.attribute("textureWidth"),
 		textureHeightAttribute = componentNode.attribute("textureHeight");
-	textureXAttribute && textureYAttribute && textureWidthAttribute && textureHeightAttribute)
+	    textureXAttribute && textureYAttribute && textureWidthAttribute && textureHeightAttribute)
 	{
 		setTextureRect({ textureXAttribute.as_float(), textureYAttribute.as_float(), textureWidthAttribute.as_float(), textureHeightAttribute.as_float() });
 	}
@@ -67,7 +68,7 @@ void SpriteComponent::display()
 		spriteFrameName.resize(64);
 		if (ImGui::InputText("Sprite Frame Name", spriteFrameName.data(), spriteFrameName.length()))
 		{
-			setSpriteFrame(spriteFrameName);
+			setSpriteFrame(spriteFrameName.c_str());
 		}
 		if (auto textureRect = cocos2d::Vec4(getTextureRect().origin.x, getTextureRect().origin.y, getTextureRect().size.width, getTextureRect().size.height); ImGui::InputFloat4("Texture(X, Y, Width, Height)", &textureRect.x))
 		{
@@ -90,8 +91,11 @@ cocos2d::SpriteFrame* SpriteComponent::getSpriteFrame() const
 void SpriteComponent::setSpriteFrame(const std::string& spriteFrameName)
 {
 	this->spriteFrameName = spriteFrameName;
-
-	sprite->setSpriteFrame(spriteFrameName);
+	
+	if (cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFrameName))
+	{
+		sprite->setSpriteFrame(spriteFrameName);
+	}
 }
 
 cocos2d::Texture2D* SpriteComponent::getTexture() const

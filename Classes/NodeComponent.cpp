@@ -49,9 +49,13 @@ void NodeComponent::load(const pugi::xml_node& componentNode)
 	if (const auto rAttribute = componentNode.attribute("R"),
 		gAttribute = componentNode.attribute("G"),
 		bAttribute = componentNode.attribute("B");
-	rAttribute && gAttribute && bAttribute)
+	    rAttribute && gAttribute && bAttribute)
 	{
 		setColor(cocos2d::Color3B(rAttribute.as_uint(), gAttribute.as_uint(), bAttribute.as_uint()));
+	}
+	if (const auto zOrderAttribute = componentNode.attribute("zOrder"))
+	{
+		setZOrder(zOrderAttribute.as_int());
 	}
 }
 
@@ -65,6 +69,7 @@ void NodeComponent::save(pugi::xml_node& componentNode) const
 	componentNode.append_attribute("R") = getColor().r;
 	componentNode.append_attribute("G") = getColor().g;
 	componentNode.append_attribute("B") = getColor().b;
+	componentNode.append_attribute("zOrder") = getZOrder();
 }
 
 void NodeComponent::display()
@@ -86,6 +91,10 @@ void NodeComponent::display()
 		if (auto color = cocos2d::Color4F(getColor()); ImGui::ColorEdit3("Color", &color.r))
 		{
 			setColor(cocos2d::Color3B(color));
+		}
+		if (auto zOrder = getZOrder(); ImGui::InputInt("Z Order", &zOrder))
+		{
+			setZOrder(zOrder);
 		}
 
 		ImGui::TreePop();
@@ -172,6 +181,15 @@ void NodeComponent::setColor(const cocos2d::Color3B& color)
 	node->setColor(color);
 }
 
+int NodeComponent::getZOrder() const
+{
+	return node->getZOrder();
+}
+
+void NodeComponent::setZOrder(int zorder) 
+{
+	node->setZOrder(zorder);
+}
 bool NodeComponent::isVisible() const
 {
 	return node->isVisible();

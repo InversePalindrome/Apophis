@@ -22,7 +22,9 @@ public:
 	void display();
 
 	void addTag(const std::string& tag = "");
+
 	void removeTag(const std::string& tag);
+	void clearTags();
 
 	bool hasTag(const std::string& tag) const;
 

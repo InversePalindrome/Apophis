@@ -30,7 +30,9 @@ public:
 	void setPatrolIndex(std::size_t patrolIndex);
 
 	void addPatrolPoint(const b2Vec2& patrolPoint);
+
 	void removePatrolPoint(std::size_t patrolPointIndex);
+	void clearPatrolPoints();
 
 private:
 	std::vector<b2Vec2> patrolPoints;

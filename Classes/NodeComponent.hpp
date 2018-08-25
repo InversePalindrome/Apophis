@@ -47,6 +47,9 @@ public:
 	cocos2d::Color3B getColor() const;
 	void setColor(const cocos2d::Color3B& color);
 
+	int getZOrder() const;
+	void setZOrder(int zorder);
+
 	bool isVisible() const;
 	void setVisible(bool visible);
 

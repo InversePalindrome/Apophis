@@ -211,6 +211,12 @@ void ParticleComponent::display()
 			}
 		}
 
+		spriteFrameName.resize(64);
+		if (ImGui::InputText("Display Frame", spriteFrameName.data(), spriteFrameName.length()))
+		{
+			setDisplayFrame(spriteFrameName.c_str());
+		}
+
 		NodeComponent::display();
 
 		const char* modes[] = { "Gravity", "Radius" };
@@ -328,7 +334,10 @@ void ParticleComponent::setDisplayFrame(const std::string& spriteFrameName)
 {
 	this->spriteFrameName = spriteFrameName;
 
-	emitter->setDisplayFrame(cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFrameName));
+	if (auto* spriteFrame = cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFrameName))
+	{
+		emitter->setDisplayFrame(cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFrameName));
+	}
 }
 
 cocos2d::ParticleSystem::Mode ParticleComponent::getMode() const

@@ -23,7 +23,7 @@ void PatrolComponent::load(const pugi::xml_node& componentNode)
 	{
 		if (const auto xPositionAttribute = pointNode.attribute("x"),
 			yPositionAttribute = pointNode.attribute("y");
-		xPositionAttribute && yPositionAttribute)
+		    xPositionAttribute && yPositionAttribute)
 		{
 			addPatrolPoint({ xPositionAttribute.as_float(), yPositionAttribute.as_float() });
 		}
@@ -49,38 +49,37 @@ void PatrolComponent::display()
 {
 	if (ImGui::TreeNode("Patrol"))
 	{
-		auto isPointsOpen = ImGui::TreeNode("Points");
 		ImGui::SameLine();
 		if (CCIMGUI::getInstance()->imageButton("#AddButton", 50, 50))
 		{
 			addPatrolPoint({ 0.f, 0.f });
 		}
-		
-		if (isPointsOpen)
+		ImGui::SameLine();
+		if (ImGui::Button("Clear"))
 		{
-			int i = 0;
+			clearPatrolPoints();
+		}
+		
+		int i = 0;
 
-			for (auto patrolPointItr = std::begin(patrolPoints); patrolPointItr != std::end(patrolPoints);)
+		for (auto patrolPointItr = std::begin(patrolPoints); patrolPointItr != std::end(patrolPoints);)
+		{
+			ImGui::PushID(i++);
+
+			ImGui::InputFloat2("Point(X, Y)", &patrolPointItr->x);
+
+			ImGui::SameLine();
+
+			if (CCIMGUI::getInstance()->imageButton("#RemoveButton", 50, 50))
 			{
-				ImGui::PushID(i++);
-
-				ImGui::InputFloat2("Point(X, Y)", &patrolPointItr->x);
-
-				ImGui::SameLine();
-
-				if (CCIMGUI::getInstance()->imageButton("#RemoveButton", 50, 50))
-				{
-					patrolPointItr = patrolPoints.erase(patrolPointItr);
-				}
-				else
-				{
-					++patrolPointItr;
-				}
-
-				ImGui::PopID();
+				patrolPointItr = patrolPoints.erase(patrolPointItr);
+			}
+			else
+			{
+				++patrolPointItr;
 			}
 
-			ImGui::TreePop();
+			ImGui::PopID();
 		}
 
 		ImGui::TreePop();
@@ -110,4 +109,9 @@ void PatrolComponent::addPatrolPoint(const b2Vec2& patrolPoint)
 void PatrolComponent::removePatrolPoint(std::size_t patrolPointIndex)
 {
 	patrolPoints.erase(std::begin(patrolPoints) + patrolPointIndex);
+}
+
+void PatrolComponent::clearPatrolPoints()
+{
+	patrolPoints.clear();
 }

@@ -20,10 +20,5 @@ public:
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
 	virtual void receive(const entityx::EntityDestroyedEvent& event);
 	virtual void receive(const entityx::ComponentRemovedEvent<SoundComponent>& event);
-	virtual void receive(const PlayAudio& event);
-	virtual void receive(const StopAudio& event);
-	virtual void receive(const StopAllAudio& event);
-
-private:
-	static void stopAllSounds(entityx::ComponentHandle<SoundComponent> sound);
+	virtual void receive(const StateChanged& event);
 };

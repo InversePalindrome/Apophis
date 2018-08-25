@@ -72,7 +72,7 @@ void CombatSystem::receive(const ShootProjectile& event)
 			});
 		}
 
-		eventManager.emit(PlayAudio{ event.shooter, Sound::Shoot, false });
+		eventManager.emit(ChangeState{ event.shooter, State::Attacking });
 	}
 }
 
@@ -112,7 +112,5 @@ void CombatSystem::handleExplosion(entityx::Entity destroyedEntity)
 				}
 			});
 		}
-
-		eventManager.emit(PlayAudio{ explosionEntity, Sound::Explode, false });
 	}
 }

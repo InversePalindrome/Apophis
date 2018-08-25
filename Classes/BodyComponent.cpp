@@ -255,6 +255,8 @@ void BodyComponent::display()
 				}, shapeToAdd);
 
 				createFixture(fixtureDef);
+				
+				verticesToAdd.clear();
 
 				ImGui::CloseCurrentPopup();
 			}

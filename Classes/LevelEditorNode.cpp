@@ -89,6 +89,11 @@ bool LevelEditorNode::init()
 		{
 			entityManager.create();
 		}
+		ImGui::SameLine();
+		if (ImGui::Button("Clear"))
+		{
+			entityManager.reset();
+		}
 		if (isEntitiesOpen)
 		{
 			int i = 0;
@@ -185,8 +190,14 @@ bool LevelEditorNode::init()
 			
 			ImGui::TreePop();
 		}
+		if (ImGui::TreeNode("Map"))
+		{
+			ImGui::InputFloat2("Dimensions(Width, Height)", &mapDimensions.x);
+
+			ImGui::TreePop();
+		}
 		ImGui::End();
-		
+
 		ImGui::PopFont();
 	}, "LevelEditor");
 

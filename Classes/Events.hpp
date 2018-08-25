@@ -7,7 +7,7 @@ InversePalindrome.com
 
 #pragma once
 
-#include "Sound.hpp"
+#include "State.hpp"
 #include "AreaQuery.hpp"
 #include "ObjectType.hpp"
 #include "RayCastQuery.hpp"
@@ -29,6 +29,18 @@ struct ComponentLoaded
 	entityx::Entity entity;
 };
 
+struct ChangeState
+{
+	mutable entityx::Entity entity;
+	State state;
+};
+
+struct StateChanged
+{
+	mutable entityx::Entity entity;
+	State state;
+};
+
 template<typename T>
 struct DestroyJoint
 {
@@ -38,24 +50,6 @@ struct DestroyJoint
 struct ShootProjectile
 {
 	mutable entityx::Entity shooter;
-};
-
-struct PlayAudio
-{
-	mutable entityx::Entity entity;
-	Sound sound;
-	bool loop;
-};
-
-struct StopAudio
-{
-	mutable entityx::Entity entity;
-	Sound sound;
-};
-
-struct StopAllAudio
-{
-	mutable entityx::Entity entity;
 };
 
 struct CombatOcurred

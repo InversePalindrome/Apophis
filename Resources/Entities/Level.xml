@@ -1,73 +1,64 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Level width="128" height="128">
-  <Entity>
-    <Tags>
-      <Tag>Player</Tag>
-    </Tags>
-      <Sprite frame="Spaceship4"></Sprite>
-      <Transform x="0" y="10"></Transform>
-      <Weapon reloadTime="400" projectileFilename="Laser.xml"></Weapon>
-      <Speed angular="100" linear="35"></Speed>
-      <Object>Player</Object>
-        <Body type="2" linearDamping="0.4">
-        <Circle x="0" y="0" radius="1.5" density="0.1"></Circle>
-      </Body>
-      <Acceleration></Acceleration>
-      <Explosion filename="Boom.xml" time="2000"></Explosion>
-      <Sound>
-        <Shoot>Laser.mp3</Shoot>
-      </Sound>
-      <Health>100</Health>
-      <Vision>5</Vision>
-  </Entity>
-
-  <Entity>
-    <Transform></Transform>
-    <Body type="0" density="0.3">
-      <Circle radius="8.5"></Circle>
-    </Body>
-    <Sprite frame="Planet_D"></Sprite>
-    <Object>Asteroid</Object>
-  </Entity>
-
-  <Entity>
-      <Transform x="20"></Transform>
-      <Sprite frame="BlueAsteroid"></Sprite>
-      <Object>Asteroid</Object>
-      <Body type="2">
-        <Circle radius="1.8" density="0.3"></Circle>
-      </Body>
-      <Speed linear="10" angular="25"></Speed>
-      <Satellite primaryID="1"></Satellite>
-  </Entity>
-
-  <Entity>
-      <Transform x="-30"></Transform>
-      <Sprite frame="RockAsteroid"></Sprite>
-      <Object>Asteroid</Object>
-      <Body type="2">
-        <Circle radius="2" density="0.3"></Circle>
-      </Body>
-      <Speed linear="15" angular="2"></Speed>
-      <Satellite primaryID="1" direction="1"></Satellite>
-  </Entity>
-
-  <Entity>
-      <DistanceJoint idA="2" idB="3" collideConnected="true"></DistanceJoint>
-  </Entity>
-
-  <Entity>
-      <DistanceJoint idA="2" idB="4" collideConnected="true"></DistanceJoint>
-  </Entity>
-  
-  <Entity>
-    <Speed linear="40"></Speed>
-    <Impulse linear="30"></Impulse>
-     <Label x="400" y="400" font="BEBAS" size="100" angle="90" textR="17" textG="231" textB="242" textA="255">Hello World</Label>
-</Entity>
-
-  <Entity>
-    <Particle filename="Supernova.plist"></Particle>
-  </Entity>
-
+	<Entity>
+		<Sprite x="0" y="0" rotation="0" xScale="1" yScale="1" R="255" G="255" B="255" zOrder="0" frame="Space" textureX="0" textureY="0" textureWidth="4096" textureHeight="4096" repeat="true" />
+	</Entity>
+	<Entity>
+		<Transform x="0" y="10" angle="0" />
+		<Object>Player</Object>
+		<Tags>
+			<Tag>Player</Tag>
+		</Tags>
+		<State>Undefined</State>
+		<Body type="2" x="0" y="10" angle="0" linearDamping="0.400000006" angularDamping="0" fixedRotation="false" bullet="false">
+			<Circle density="0.100000001" friction="0.200000003" restitution="0" sensor="false" x="0" y="0" radius="1.5" />
+		</Body>
+		<Speed linear="35" angular="100" />
+		<Acceleration linear="1" angular="1" />
+		<Sprite x="0" y="320" rotation="0" xScale="1" yScale="1" R="255" G="255" B="255" zOrder="0" frame="Spaceship4" textureX="0" textureY="0" textureWidth="96" textureHeight="86" repeat="false" />
+		<Sound>
+			<Sound state="Attacking" file="Laser.mp3" loop="false" />
+		</Sound>
+		<Health>100</Health>
+		<Weapon projectileFilename="Laser.xml" reloadTime="400" />
+		<Explosion filename="Boom.xml" time="2000" />
+		<Vision>5</Vision>
+	</Entity>
+	<Entity>
+		<Transform x="0" y="0" angle="0" />
+		<Object>Asteroid</Object>
+		<Body type="0" x="0" y="0" angle="0" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
+			<Circle density="0" friction="0.200000003" restitution="0" sensor="false" x="0" y="0" radius="8.5" />
+		</Body>
+		<Sprite x="0" y="0" rotation="0" xScale="1" yScale="1" R="255" G="255" B="255" zOrder="0" frame="Planet_D" textureX="668" textureY="0" textureWidth="550" textureHeight="550" repeat="false" />
+	</Entity>
+	<Entity>
+		<Transform x="20" y="0" angle="0" />
+		<Object>Asteroid</Object>
+		<Body type="2" x="20" y="0" angle="0" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
+			<Circle density="0.300000012" friction="0.200000003" restitution="0" sensor="false" x="0" y="0" radius="1.79999995" />
+		</Body>
+		<Speed linear="10" angular="25" />
+		<Sprite x="640" y="0" rotation="0" xScale="1" yScale="1" R="255" G="255" B="255" zOrder="0" frame="BlueAsteroid" textureX="228" textureY="0" textureWidth="171" textureHeight="171" repeat="false" />
+		<Satellite primaryID="1" direction="1" />
+	</Entity>
+	<Entity>
+		<Transform x="-30" y="0" angle="0" />
+		<Object>Asteroid</Object>
+		<Body type="2" x="-30" y="0" angle="0" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
+			<Circle density="0.300000012" friction="0.200000003" restitution="0" sensor="false" x="0" y="0" radius="2" />
+		</Body>
+		<Speed linear="15" angular="2" />
+		<Sprite x="-960" y="0" rotation="0" xScale="1" yScale="1" R="255" G="255" B="255" zOrder="0" frame="RockAsteroid" textureX="305" textureY="228" textureWidth="142" textureHeight="142" repeat="false" />
+		<Satellite primaryID="1" direction="1" />
+	</Entity>
+	<Entity />
+	<Entity />
+	<Entity>
+		<Speed linear="40" angular="5" />
+		<Label x="0" y="0" rotation="0" xScale="1" yScale="1" R="255" G="255" B="255" zOrder="0" font="BEBAS" size="100" HAlignment="0" VAlignment="0" textR="17" textG="231" textB="242" textA="255">Hello World</Label>
+	</Entity>
+	<Entity>
+		<Particle x="304" y="482" rotation="0" xScale="1" yScale="1" R="255" G="255" B="255" zOrder="0" filename="Supernova.plist" mode="1" duration="-1" emissionRate="165" life="0.400000006" lifeVar="0" startRadius="408" startRadiusVar="22" endRadius="0" endRadiusVar="0" startR="1" startG="0" startB="0" startA="0" starVartR="0" startVarG="0" startVarB="0.200000003" startVarA="0.100000001" endR="0" endG="0" endB="0" endA="0" endVarR="0" endVarG="0" endVarB="0" endVarA="0" />
+	</Entity>
 </Level>
