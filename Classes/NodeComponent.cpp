@@ -121,6 +121,11 @@ void NodeComponent::stopAction(cocos2d::Action* action)
 	node->stopAction(action);
 }
 
+void NodeComponent::stopAllActions()
+{
+	node->stopAllActions();
+}
+
 cocos2d::Node* NodeComponent::getNode()
 {
 	return node;

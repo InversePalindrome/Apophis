@@ -27,6 +27,8 @@ public:
 	void addItem(const std::string& itemFilename, int weight);
 	void removeItem(const std::string& itemFilename);
 
+	void clearItems();
+
 private:
 	std::vector<std::string> itemFilenames;
 	std::vector<int> weights;

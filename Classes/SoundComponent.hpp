@@ -31,6 +31,7 @@ public:
 
 	void addSound(State state, const std::pair<std::string, bool>& soundFilename);
 	void removeSound(State state);
+	void clearSounds();
 
 	const std::pair<std::string, bool>& getSound(State state) const;
 

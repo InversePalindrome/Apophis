@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
   <Tags>
-    <Striker></Striker>
+    <Tag>Striker</Tag>
   </Tags>
-  <Components>
     <Transform x="10" y="10" width="1.6" height="1.6"> </Transform>
     <Sprite frame="Spaceship3"></Sprite>
     <Object>Enemy</Object>
@@ -11,11 +10,11 @@
       <Circle x="0" y="0" radius="1.4" density="0.3"></Circle>
     </Body>
     <Speed angular="10"></Speed>
-    <Weapon projectileName="Laser" projectileVelocity="16" reloadTime="2000"></Weapon>
-    <Explosion name="Boom" time="2000"></Explosion>
+    <Weapon projectileFilename="Laser.xml" projectileVelocity="16" reloadTime="2000"></Weapon>
+    <Explosion filename="Boom.xml" time="2000"></Explosion>
     <Drop>
-      <SpeedBoost>1</SpeedBoost>
-      <RegenBoost>1</RegenBoost>
+      <Item filename="SpeedBoost.xml" weight="1"></Item>
+      <Item filename="RegenBoost.xml" weight="1"></Item>
     </Drop>
     <Health>80</Health>
     <Vision>25</Vision>
@@ -31,5 +30,4 @@
       <Point x="0" y="15"></Point>
     </Patrol>
     <Movement>20</Movement>
-  </Components>
 </Entity>

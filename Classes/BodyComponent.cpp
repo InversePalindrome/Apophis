@@ -336,8 +336,8 @@ void BodyComponent::display()
 					{
 						const auto* circle = static_cast<const b2CircleShape*>(fixture->GetShape());
 
-						ImGui::Text(("Radius: " + std::to_string(circle->m_radius)).c_str());
-						ImGui::Text(("Center: (" + std::to_string(circle->m_p.x) + ", " + std::to_string(circle->m_p.y) + ')').c_str());
+						ImGui::Text("Radius: %.2f", circle->m_radius);
+						ImGui::Text("Center(X, Y): (%.2f, %.2f)", circle->m_p.x, circle->m_p.y);
 
 						ImGui::TreePop();
 					}
@@ -349,15 +349,15 @@ void BodyComponent::display()
 
 						if (edge->m_hasVertex0)
 						{
-							ImGui::Text(("Vertex 0: (" + std::to_string(edge->m_vertex0.x) + ", " + std::to_string(edge->m_vertex0.y) + ')').c_str());
+							ImGui::Text("Vertex 0(X, Y): (%.2f, %.2f)", edge->m_vertex0.x, edge->m_vertex0.y);
 						}
 
-						ImGui::Text(("Vertex 1: (" + std::to_string(edge->m_vertex1.x) + ", " + std::to_string(edge->m_vertex1.y) + ')').c_str());
-						ImGui::Text(("Vertex 2: (" + std::to_string(edge->m_vertex2.x) + ", " + std::to_string(edge->m_vertex2.y) + ')').c_str());
+						ImGui::Text("Vertex 1(X, Y): (%.2f, %.2f)", edge->m_vertex1.x, edge->m_vertex1.y);
+						ImGui::Text("Vertex 2(X, Y): (%.2f, %.2f)", edge->m_vertex2.x, edge->m_vertex2.y);
 
 						if (edge->m_hasVertex3)
 						{
-							ImGui::Text(("Vertex 3: (" + std::to_string(edge->m_vertex3.x) + ", " + std::to_string(edge->m_vertex3.y) + ')').c_str());
+							ImGui::Text("Vertex 3(X, Y): (%.2f, %.2f)", edge->m_vertex3.x, edge->m_vertex3.y);
 						}
 
 						ImGui::TreePop();
@@ -370,7 +370,7 @@ void BodyComponent::display()
 					   
 						for (int i = 0; i < polygon->m_count; ++i)
 						{
-							ImGui::Text(("Vertex " + std::to_string(i) + ": (" + std::to_string(polygon->m_vertices[i].x) + ", " + std::to_string(polygon->m_vertices[i].y) + ')').c_str());
+							ImGui::Text("Vertex %d (X, Y): (%.2f, %.2f)", i, polygon->m_vertices[i].x, polygon->m_vertices[i].y);
 						}
 
 						ImGui::TreePop();
@@ -383,7 +383,7 @@ void BodyComponent::display()
 						
 						for (int i = 0; i < chain->m_count; ++i)
 						{
-							ImGui::Text(("Vertex " + std::to_string(i) + ": (" + std::to_string(chain->m_vertices[i].x) + ", " + std::to_string(chain->m_vertices[i].y) + ')').c_str());
+							ImGui::Text("Vertex %d (X, Y): (%.2f, %.2f)", i, chain->m_vertices[i].x, chain->m_vertices[i].y);
 						}
 
 						ImGui::TreePop();

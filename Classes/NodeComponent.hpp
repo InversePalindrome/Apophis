@@ -28,6 +28,7 @@ public:
 
 	cocos2d::Action* runAction(cocos2d::Action* action);
 	void stopAction(cocos2d::Action* action);
+	void stopAllActions();
 
 	cocos2d::Node* getNode();
 	cocos2d::Node* getNode() const;

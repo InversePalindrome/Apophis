@@ -57,6 +57,11 @@ void SoundComponent::display()
 		{
 			ImGui::OpenPopup("Add Sound");
 		}
+		ImGui::SameLine();
+		if (ImGui::Button("Clear"))
+		{
+			clearSounds();
+		}
 
 		if (auto isOpen = true; ImGui::BeginPopupModal("Add Sound", &isOpen, ImGuiWindowFlags_AlwaysAutoResize))
 		{
@@ -105,17 +110,13 @@ void SoundComponent::display()
 
 		int i = 0;
 
-		for (auto soundItr = std::begin(sounds); soundItr != std::end(sounds);)
+		for (auto soundItr = std::cbegin(sounds); soundItr != std::cend(sounds);)
 		{
 			ImGui::PushID(i++);
 
 			const auto&[state, soundData] = *soundItr;
 
-			ImGui::Text(("State: " + std::string(state._to_string()) + " | Filename: " + soundData.first).c_str());
-			ImGui::SameLine();
-			
-			auto isLoop = soundItr->second.second;
-			ImGui::Checkbox("Loop", &isLoop);
+			ImGui::Text("State: %s | Filename: %s | Loop: %s", state._to_string(), soundData.first.c_str(), soundData.second ? "True" : "False");
 		
 			ImGui::SameLine();
 
@@ -153,6 +154,11 @@ void SoundComponent::addSound(State state, const std::pair<std::string, bool>& s
 void SoundComponent::removeSound(State state)
 {
 	sounds.erase(state);
+}
+
+void SoundComponent::clearSounds()
+{
+	sounds.clear();
 }
 
 bool SoundComponent::hasSound(State state) const

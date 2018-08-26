@@ -40,6 +40,7 @@ bool Application::applicationDidFinishLaunching()
 	auto* files = cocos2d::FileUtils::getInstance();
 	files->addSearchPath("Entities");
 	files->addSearchPath("Sprites");
+	files->addSearchPath("Animations");
 	files->addSearchPath("Particles");
 	files->addSearchPath("Fonts");
 	files->addSearchPath("Sounds");
