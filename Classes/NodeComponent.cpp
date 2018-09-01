@@ -46,6 +46,12 @@ void NodeComponent::load(const pugi::xml_node& componentNode)
 	{
 		node->setScaleY(yScaleAttribute.as_float());
 	}
+	if (const auto xAnchorPoint = componentNode.attribute("xAnchorPoint"),
+		yAnchorPoint = componentNode.attribute("yAnchorPoint");
+	    xAnchorPoint && yAnchorPoint)
+	{
+		setAnchorPoint({ xAnchorPoint.as_float(), yAnchorPoint.as_float() });
+	}
 	if (const auto rAttribute = componentNode.attribute("R"),
 		gAttribute = componentNode.attribute("G"),
 		bAttribute = componentNode.attribute("B");
@@ -66,6 +72,8 @@ void NodeComponent::save(pugi::xml_node& componentNode) const
 	componentNode.append_attribute("rotation") = getRotation();
 	componentNode.append_attribute("xScale") = getScale().x;
 	componentNode.append_attribute("yScale") = getScale().y;
+	componentNode.append_attribute("xAnchorPoint") = getAnchorPoint().x;
+	componentNode.append_attribute("yAnchorPoint") = getAnchorPoint().y;
 	componentNode.append_attribute("R") = getColor().r;
 	componentNode.append_attribute("G") = getColor().g;
 	componentNode.append_attribute("B") = getColor().b;
@@ -87,6 +95,10 @@ void NodeComponent::display()
 		if (auto scale = getScale(); ImGui::InputFloat2("Scale(Width, Height)", &scale.x))
 		{
 			setScale(scale);
+		}
+		if (auto anchorPoint = getAnchorPoint(); ImGui::InputFloat2("Anchor Point(X, Y)", &anchorPoint.x))
+		{
+			setAnchorPoint(anchorPoint);
 		}
 		if (auto color = cocos2d::Color4F(getColor()); ImGui::ColorEdit3("Color", &color.r))
 		{
@@ -166,6 +178,16 @@ void NodeComponent::setScale(const cocos2d::Vec2& scale)
 	node->setScale(scale.x, scale.y);
 }
 
+cocos2d::Vec2 NodeComponent::getAnchorPoint() const
+{
+	return node->getAnchorPoint();
+}
+
+void NodeComponent::setAnchorPoint(const cocos2d::Vec2& anchorPoint)
+{
+	node->setAnchorPoint(anchorPoint);
+}
+
 cocos2d::Size NodeComponent::getContentSize() const
 {
 	return node->getContentSize();
@@ -188,12 +210,12 @@ void NodeComponent::setColor(const cocos2d::Color3B& color)
 
 int NodeComponent::getZOrder() const
 {
-	return node->getZOrder();
+	return node->getLocalZOrder();
 }
 
 void NodeComponent::setZOrder(int zorder) 
 {
-	node->setZOrder(zorder);
+	node->setLocalZOrder(zorder);
 }
 bool NodeComponent::isVisible() const
 {

@@ -42,6 +42,9 @@ public:
 	cocos2d::Vec2 getScale() const;
 	void setScale(const cocos2d::Vec2& scale);
 
+	cocos2d::Vec2 getAnchorPoint() const;
+	void setAnchorPoint(const cocos2d::Vec2& anchorPoint);
+
 	cocos2d::Size getContentSize() const;
 	void setContentSize(const cocos2d::Size& contentSize);
 

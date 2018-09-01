@@ -404,16 +404,6 @@ void BodyComponent::display()
 	}
 }
 
-b2Fixture* BodyComponent::createFixture(const b2FixtureDef& fixtureDef)
-{
-	return body->CreateFixture(&fixtureDef);
-}
-
-void BodyComponent::destroyFixture(b2Fixture* fixture)
-{
-	body->DestroyFixture(fixture);
-}
-
 b2Body* BodyComponent::getBody()
 {
 	return body;
@@ -423,11 +413,6 @@ void BodyComponent::setBody(b2Body* body)
 {
 	this->body = body;
 	body->SetUserData(&userData);
-}
-
-b2Body* BodyComponent::getBody() const
-{
-	return body;
 }
 
 b2Fixture* BodyComponent::getFixtureList()
@@ -560,6 +545,16 @@ void BodyComponent::computeAABB()
 			AABB.Combine(shapeAABB);
 		}
 	}
+}
+
+b2Fixture* BodyComponent::createFixture(const b2FixtureDef& fixtureDef)
+{
+	return body->CreateFixture(&fixtureDef);
+}
+
+void BodyComponent::destroyFixture(b2Fixture* fixture)
+{
+	body->DestroyFixture(fixture);
 }
 
 void BodyComponent::applyLinearImpulse(const b2Vec2& linearImpulse)

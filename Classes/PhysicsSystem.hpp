@@ -33,7 +33,8 @@ public:
 	virtual void receive(const entityx::ComponentAddedEvent<BodyComponent>& event);
 	virtual void receive(const entityx::ComponentRemovedEvent<BodyComponent>& event);
 	virtual void receive(const EntityParsed& event);
-	virtual void receive(const DestroyJoint<DistanceJointComponent>& event);
+	virtual void receive(const GameReset& event);
+	virtual void receive(const ComponentLoaded<entityx::ComponentHandle<DistanceJointComponent>>& event);
 
 private:
 	b2World world;

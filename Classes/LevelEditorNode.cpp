@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "MenuNode.hpp"
+#include "Constants.hpp"
 #include "Components.hpp"
 #include "LevelParser.hpp"
 #include "EntityParser.hpp"
@@ -33,14 +34,18 @@ LevelEditorNode::LevelEditorNode() :
 
 bool LevelEditorNode::init()
 {
-	if (!Node::init())
+	if (!PanZoomLayer::init())
 	{
 		return false;
 	}
 
-	scheduleUpdate();
+	schedule([this](auto dt) { 
+		systemManager.update_all(dt);
+		SetPanBoundsRect({ mapDimensions.x * Constants::PTM_RATIO * -0.5f, mapDimensions.y * Constants::PTM_RATIO * -0.5f, mapDimensions.x * Constants::PTM_RATIO, mapDimensions.y * Constants::PTM_RATIO });
+	}, 0.f, "update");
+
 	initSystems();
-	
+
 	std::string currentAddComponent;
 	
 	CCIMGUI::getInstance()->addImGUI([this, currentAddComponent]() mutable
@@ -82,20 +87,19 @@ bool LevelEditorNode::init()
 
 		ImGui::Begin("Level Data");
 
-		auto isEntitiesOpen = ImGui::TreeNode("Entities");
+		if (ImGui::TreeNode("Entities"))
+		{
+			ImGui::SameLine();
+			if (CCIMGUI::getInstance()->imageButton("#AddButton", 50, 50))
+			{
+				entityManager.create();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Clear"))
+			{
+				entityManager.reset();
+			}
 
-		ImGui::SameLine();
-		if (CCIMGUI::getInstance()->imageButton("#AddButton", 50, 50))
-		{
-			entityManager.create();
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Clear"))
-		{
-			entityManager.reset();
-		}
-		if (isEntitiesOpen)
-		{
 			int i = 0;
 			for (auto entityItr = std::begin(entities); entityItr != std::end(entities);)
 			{
@@ -193,7 +197,7 @@ bool LevelEditorNode::init()
 		if (ImGui::TreeNode("Map"))
 		{
 			ImGui::InputFloat2("Dimensions(Width, Height)", &mapDimensions.x);
-
+		
 			ImGui::TreePop();
 		}
 		ImGui::End();
@@ -202,11 +206,6 @@ bool LevelEditorNode::init()
 	}, "LevelEditor");
 
 	return true;
-}
-
-void LevelEditorNode::update(float dt)
-{
-	systemManager.update_all(dt);
 }
 
 void LevelEditorNode::receive(const entityx::EntityCreatedEvent& event)
@@ -230,7 +229,7 @@ cocos2d::Scene* LevelEditorNode::scene()
 
 void LevelEditorNode::initSystems()
 {
-	systemManager.add<GraphicsSystem>(this, mapDimensions);
+	systemManager.add<GraphicsSystem>(this);
 	systemManager.add<PhysicsSystem>(entityManager, eventManager);
 
 	eventManager.subscribe<entityx::EntityCreatedEvent>(*this);

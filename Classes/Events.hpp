@@ -17,6 +17,10 @@ InversePalindrome.com
 #include <pugixml.hpp>
 
 
+struct GameReset
+{
+};
+
 struct EntityParsed
 {
 	mutable entityx::Entity entity;
@@ -39,12 +43,6 @@ struct StateChanged
 {
 	mutable entityx::Entity entity;
 	State state;
-};
-
-template<typename T>
-struct DestroyJoint
-{
-	entityx::ComponentHandle<T> joint;
 };
 
 struct ShootProjectile

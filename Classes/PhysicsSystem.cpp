@@ -33,7 +33,8 @@ void PhysicsSystem::configure(entityx::EventManager& eventManager)
 	eventManager.subscribe<entityx::ComponentAddedEvent<BodyComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentRemovedEvent<BodyComponent>>(*this);
 	eventManager.subscribe<EntityParsed>(*this);
-	eventManager.subscribe<DestroyJoint<DistanceJointComponent>>(*this);
+	eventManager.subscribe<GameReset>(*this);
+	eventManager.subscribe<ComponentLoaded<entityx::ComponentHandle<DistanceJointComponent>>>(*this);
 }
 
 void PhysicsSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
@@ -71,7 +72,7 @@ void PhysicsSystem::receive(const entityx::ComponentAddedEvent<BodyComponent>& e
 {
 	auto body = event.component;
 
-	modifyWorld([this, body, &event]() mutable
+	modifyWorld([this, body, event]() mutable
 	{ 
 		body->setBody(world.CreateBody(&b2BodyDef())); 
 		body->setUserData(event.entity);
@@ -80,7 +81,9 @@ void PhysicsSystem::receive(const entityx::ComponentAddedEvent<BodyComponent>& e
 
 void PhysicsSystem::receive(const entityx::ComponentRemovedEvent<BodyComponent>& event)
 {
-	destroyBody(event.component->getBody());
+	auto body = event.component;
+
+	destroyBody(body->getBody());
 }
 
 void PhysicsSystem::receive(const EntityParsed& event)
@@ -95,13 +98,32 @@ void PhysicsSystem::receive(const EntityParsed& event)
 	});
 }
 
-void PhysicsSystem::receive(const DestroyJoint<DistanceJointComponent>& event)
+void PhysicsSystem::receive(const GameReset& event)
 {
-	auto joint = event.joint;
+	worldCallbacks.clear();
+}
 
-	destroyJoint(joint->getJoint());
+void PhysicsSystem::receive(const ComponentLoaded<entityx::ComponentHandle<DistanceJointComponent>>& event)
+{
+	modifyWorld([this, event]() mutable
+	{
+		auto joint = event.component;
 
-	joint.remove();
+		if (auto entityA = entityManager.get(entityManager.create_id(joint->getEntityIDA())),
+			entityB = entityManager.get(entityManager.create_id(joint->getEntityIDB()));
+		    entityA && entityB)
+		{
+			if (auto bodyA = entityA.component<BodyComponent>(),
+				bodyB = entityB.component<BodyComponent>();
+			    bodyA && bodyB)
+			{ 
+				b2DistanceJointDef distanceJointDef;
+				distanceJointDef.Initialize(bodyA->getBody(), bodyB->getBody(), joint->getLocalAnchorA(), joint->getLocalAnchorB());
+				joint->setDistanceJoint(static_cast<b2DistanceJoint*>(world.CreateJoint(&distanceJointDef)));
+				joint->setJoint(joint->getDistanceJoint());
+			}
+		}
+	});
 }
 
 void PhysicsSystem::updateWorldCallbacks()

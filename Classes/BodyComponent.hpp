@@ -32,11 +32,7 @@ public:
 
 	void display();
 
-	b2Fixture* createFixture(const b2FixtureDef& fixtureDef);
-	void destroyFixture(b2Fixture* fixture);
-
 	b2Body* getBody();
-	b2Body* getBody() const;
 	void setBody(b2Body* body);
 
 	b2Fixture* getFixtureList();
@@ -74,6 +70,9 @@ public:
 
 	b2AABB getAABB() const;
 	void computeAABB();
+
+	b2Fixture* createFixture(const b2FixtureDef& fixtureDef);
+	void destroyFixture(b2Fixture* fixture);
 
 	void applyLinearImpulse(const b2Vec2& linearImpulse);
 	void applyAngularImpulse(float angularImpulse);

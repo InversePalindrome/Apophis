@@ -44,18 +44,19 @@ InversePalindrome.com
 #include <variant>
 
 
-using Components = brigand::list<TransformComponent, ObjectComponent, TagsComponent, StateComponent, BodyComponent, DistanceJointComponent, SpeedComponent, 
+using Components = brigand::list<TransformComponent, ObjectComponent, TagsComponent, BodyComponent, DistanceJointComponent, SpeedComponent, 
                                	 AccelerationComponent, SpriteComponent, LabelComponent, ParticleComponent, AnimationComponent,
                                  SoundComponent, HealthComponent, DamageComponent,  WeaponComponent, DropComponent, SpeedBoostComponent, 
                                  RegenBoostComponent, ExplosionComponent, VisionComponent, WanderComponent, PatrolComponent, 
-	                             FollowComponent, PursueComponent, AvoidComponent, FlockComponent, QueueComponent, SatelliteComponent>;
+	                             FollowComponent, PursueComponent, AvoidComponent, FlockComponent, QueueComponent, SatelliteComponent, StateComponent>;
 
 using ComponentsVariant = std::variant<entityx::ComponentHandle<TransformComponent>, entityx::ComponentHandle<ObjectComponent>, entityx::ComponentHandle<TagsComponent>,
-	                                   entityx::ComponentHandle<StateComponent>, entityx::ComponentHandle<BodyComponent>, entityx::ComponentHandle<SpeedComponent>,
+	                                   entityx::ComponentHandle<BodyComponent>, entityx::ComponentHandle<SpeedComponent>, entityx::ComponentHandle<DistanceJointComponent>,
 	                                   entityx::ComponentHandle<AccelerationComponent>, entityx::ComponentHandle<SpriteComponent>, entityx::ComponentHandle<LabelComponent>,
 	                                   entityx::ComponentHandle<ParticleComponent>, entityx::ComponentHandle<AnimationComponent>, entityx::ComponentHandle<SoundComponent>, entityx::ComponentHandle<HealthComponent>,
 	                                   entityx::ComponentHandle<DamageComponent>, entityx::ComponentHandle<WeaponComponent>, entityx::ComponentHandle<DropComponent>,
 	                                   entityx::ComponentHandle<SpeedBoostComponent>, entityx::ComponentHandle<RegenBoostComponent>, entityx::ComponentHandle<ExplosionComponent>,
 	                                   entityx::ComponentHandle<VisionComponent>, entityx::ComponentHandle<WanderComponent>, entityx::ComponentHandle<PatrolComponent>,
 	                                   entityx::ComponentHandle<FollowComponent>, entityx::ComponentHandle<PursueComponent>, entityx::ComponentHandle<AvoidComponent>,
-	                                   entityx::ComponentHandle<FlockComponent>, entityx::ComponentHandle<QueueComponent>, entityx::ComponentHandle<SatelliteComponent>>;
+	                                   entityx::ComponentHandle<FlockComponent>, entityx::ComponentHandle<QueueComponent>, entityx::ComponentHandle<SatelliteComponent>,
+	                                   entityx::ComponentHandle<StateComponent>>;

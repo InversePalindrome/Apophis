@@ -40,6 +40,9 @@ void SatelliteComponent::display()
 {
 	if (ImGui::TreeNode("Satellite"))
 	{
+		ImGui::InputInt("Primary ID", &primaryID);
+		ImGui::InputInt("Orbit Direction", &orbitDirection);
+
 		ImGui::TreePop();
 	}
 }
@@ -54,12 +57,12 @@ void SatelliteComponent::setPrimaryID(int primaryID)
 	this->primaryID = primaryID;
 }
 
-std::int8_t SatelliteComponent::getOrbitDirection() const
+int SatelliteComponent::getOrbitDirection() const
 {
 	return orbitDirection;
 }
 
-void SatelliteComponent::setOrbitDirection(std::int8_t orbitDirection)
+void SatelliteComponent::setOrbitDirection(int orbitDirection)
 {
 	this->orbitDirection = orbitDirection;
 }

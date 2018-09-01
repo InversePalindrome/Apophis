@@ -18,6 +18,7 @@ InversePalindrome.com
 #include "SettingsNode.hpp"
 #include "CombatSystem.hpp"
 #include "GameOverNode.hpp"
+#include "CameraSystem.hpp"
 #include "PhysicsSystem.hpp"
 #include "OrbitalSystem.hpp"
 #include "StrikerSystem.hpp"
@@ -57,12 +58,20 @@ bool GameNode::init()
 
 	getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, this);
 	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("resume", [this](auto* event) { scheduleUpdate(); }), this);
+	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("playAgain", [this](auto* event) 
+	{ 
+		scheduleUpdate();
+	
+		eventManager.emit(GameReset{});
+
+		entityManager.reset();
+	}), this);
 
 	scheduleUpdate();
 	initSystems();
    
 	LevelParser::parseLevel(entityManager, eventManager, mapDimensions, "Level.xml");
-
+	
 	return true;
 }
 
@@ -75,10 +84,9 @@ void GameNode::receive(const entityx::EntityDestroyedEvent& event)
 {
 	auto entity = event.entity;
 
-	if (auto tags = entity.component<TagsComponent>(); tags && tags->hasTag("Player"))
+	if (const auto tags = entity.component<TagsComponent>(); tags && tags->hasTag("Player"))
 	{
-		scheduleOnce([this](auto dt) { entityManager.reset(); }, 0.f, "Reset Game");
-
+		unscheduleUpdate();
 		getEventDispatcher()->dispatchCustomEvent("gameOver");
 	}
 }
@@ -109,13 +117,14 @@ void GameNode::initSystems()
 	systemManager.add<PlayerSystem>(this);
 	systemManager.add<StateSystem>(eventManager);
 	systemManager.add<ActionSystem>();
+	systemManager.add<CameraSystem>(this, mapDimensions);
 	systemManager.add<AudioSystem>();
 	systemManager.add<OrbitalSystem>();
 	systemManager.add<ItemSystem>(entityManager, eventManager);
 	systemManager.add<PhysicsSystem>(entityManager, eventManager);
 	systemManager.add<CombatSystem>(entityManager, eventManager);
-	systemManager.add<GraphicsSystem>(this, mapDimensions);
-
+	systemManager.add<GraphicsSystem>(this);
+	
 	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
 	
 	systemManager.configure();

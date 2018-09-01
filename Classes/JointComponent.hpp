@@ -17,24 +17,34 @@ class JointComponent
 public:
 	JointComponent();
 
+	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
+
+	void display();
 
 	b2Joint* getJoint();
 	b2Joint* getJoint() const;
+	void setJoint(b2Joint* joint);
 
 	b2Body* getBodyA();
 	b2Body* getBodyB();
 
-	std::size_t getEntityIDA() const;
-	void setEntityIDA(std::size_t entityIDA);
+	int getEntityIDA() const;
+	void setEntityIDA(int entityIDA);
 
-	std::size_t getEntityIDB() const;
-	void setEntityIDB(std::size_t entityIDB);
+	int getEntityIDB() const;
+	void setEntityIDB(int entityIDB);
 
-	bool getCollideConnected() const;
+	b2Vec2 getLocalAnchorA() const;
+	void setLocalAnchorA(const b2Vec2& localAnchorA);
+
+	b2Vec2 getLocalAnchorB() const;
+	void setLocalAnchorB(const b2Vec2& localAnchorB);
 
 private:
 	b2Joint* joint;
-	std::size_t entityIDA;
-	std::size_t entityIDB;
+	int entityIDA;
+	int entityIDB;
+	b2Vec2 localAnchorA;
+	b2Vec2 localAnchorB;
 };
