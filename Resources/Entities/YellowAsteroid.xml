@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
-  <Components>
-    <Sprite>YellowAsteroid</Sprite>
-    <Body object="Asteroid" type="0">
-      <Fixture shape="circle" radius="1.8"></Fixture>
-    </Body>
-  </Components>
+   <Sprite>YellowAsteroid</Sprite>
 </Entity>

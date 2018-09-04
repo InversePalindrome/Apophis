@@ -40,7 +40,7 @@ bool GameOverNode::init()
 		getEventDispatcher()->dispatchCustomEvent("playAgain");
 	});
 
-	auto* playAgainLabel = cocos2d::Label::createWithTTF("continue", "Zian.ttf", 60.f);
+	auto* playAgainLabel = cocos2d::Label::createWithTTF("play again", "Zian.ttf", 60.f);
 	playAgainLabel->setTextColor(cocos2d::Color4B(135, 206, 250, 255));
 	playAgainLabel->setPosition(playAgainItem->getContentSize().width / 2.f, playAgainItem->getContentSize().height / 2.f);
 	playAgainItem->addChild(playAgainLabel);

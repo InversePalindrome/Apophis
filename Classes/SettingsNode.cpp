@@ -110,19 +110,19 @@ bool SettingsNode::init()
 	{
 		if (moveRightButton->isSelected())
 		{
-			appSettings.setKeyBinding(keyCode, KeyAction::MoveRight);
+			appSettings.addKeyBinding(keyCode, KeyAction::MoveRight);
 		}
 		else if (moveLeftButton->isSelected())
 		{
-			appSettings.setKeyBinding(keyCode, KeyAction::MoveLeft);
+			appSettings.addKeyBinding(keyCode, KeyAction::MoveLeft);
 		}
 		else if (moveUpButton->isSelected())
 		{
-			appSettings.setKeyBinding(keyCode, KeyAction::MoveUp);
+			appSettings.addKeyBinding(keyCode, KeyAction::MoveUp);
 		}
 		else if (moveDownButton->isSelected())
 		{
-			appSettings.setKeyBinding(keyCode, KeyAction::MoveDown);
+			appSettings.addKeyBinding(keyCode, KeyAction::MoveDown);
 		}
 	};
 

@@ -30,9 +30,10 @@ InversePalindrome.com
 #include <cocos/base/CCEventListenerKeyboard.h>
 
 
-GameNode::GameNode() :
+GameNode::GameNode(const std::string& level) :
 	entityManager(eventManager),
 	systemManager(entityManager, eventManager),
+	level(level),
 	mapDimensions(0.f, 0.f)
 {
 }
@@ -58,14 +59,7 @@ bool GameNode::init()
 
 	getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, this);
 	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("resume", [this](auto* event) { scheduleUpdate(); }), this);
-	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("playAgain", [this](auto* event) 
-	{ 
-		scheduleUpdate();
-	
-		eventManager.emit(GameReset{});
-
-		entityManager.reset();
-	}), this);
+	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("playAgain", [this](auto* event) { reloadGame(); }), this);
 
 	scheduleUpdate();
 	initSystems();
@@ -80,10 +74,10 @@ void GameNode::update(float dt)
 	systemManager.update_all(dt);
 }
 
-void GameNode::receive(const entityx::EntityDestroyedEvent& event)
+void GameNode::receive(const EntityDied& event)
 {
 	auto entity = event.entity;
-
+	
 	if (const auto tags = entity.component<TagsComponent>(); tags && tags->hasTag("Player"))
 	{
 		unscheduleUpdate();
@@ -91,11 +85,27 @@ void GameNode::receive(const entityx::EntityDestroyedEvent& event)
 	}
 }
 
-cocos2d::Scene* GameNode::scene()
+GameNode* GameNode::create(const std::string& level)
+{
+	auto* gameNode = new(std::nothrow)GameNode(level);
+
+	if (gameNode && gameNode->init())
+	{
+		gameNode->autorelease();
+		return gameNode;
+	}
+
+	delete gameNode;
+	gameNode = nullptr;
+
+	return nullptr;
+}
+
+cocos2d::Scene* GameNode::scene(const std::string& level)
 {
 	auto* scene = cocos2d::Scene::create();
 
-	scene->addChild(GameNode::create());
+	scene->addChild(GameNode::create(level));
 	scene->addChild(HudNode::create());
 
 	auto* pauseNode = PauseNode::create();
@@ -125,7 +135,18 @@ void GameNode::initSystems()
 	systemManager.add<CombatSystem>(entityManager, eventManager);
 	systemManager.add<GraphicsSystem>(this);
 	
-	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
+	eventManager.subscribe<EntityDied>(*this);
 	
 	systemManager.configure();
+}
+
+void GameNode::reloadGame()
+{
+	scheduleUpdate();
+
+	eventManager.emit(GameReset{});
+
+	entityManager.reset();
+
+	LevelParser::parseLevel(entityManager, eventManager, mapDimensions, level);
 }

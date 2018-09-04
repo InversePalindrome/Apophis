@@ -96,7 +96,7 @@ void ItemSystem::addRegenBoost(entityx::Entity entity, const entityx::ComponentH
 			}
 		}, regenBoost->getRegenRate());
 
-		timer.add(regenBoost->getRegenDuration(), [this, regenPeriodicTimerID](auto id) { timer.remove(regenPeriodicTimerID); });
+		timer.add(regenBoost->getRegenDuration(), [this, regenPeriodicTimerID](auto) { timer.remove(regenPeriodicTimerID); });
 	}
 }
 
@@ -108,7 +108,7 @@ void ItemSystem::addSpeedBoost(entityx::Entity entity, const entityx::ComponentH
 
 		entitySpeed->setMaxLinearSpeed(entitySpeed->getMaxLinearSpeed() * speedBoost->getSpeedBoostRatio());
 
-		timer.add(speedBoost->getSpeedBoostDuration(), [entitySpeed, originalSpeed](auto id) mutable
+		timer.add(speedBoost->getSpeedBoostDuration(), [entitySpeed, originalSpeed](auto) mutable
 		{
 			if (entitySpeed)
 			{

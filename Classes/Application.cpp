@@ -7,6 +7,8 @@ InversePalindrome.com
 
 #include "SplashNode.hpp"
 #include "Application.hpp"
+#include "AppSettings.hpp"
+#include "LevelManager.hpp"
 #include "ResourceParser.hpp"
 
 #include "CCIMGUIGLViewImpl.h"
@@ -21,6 +23,9 @@ InversePalindrome.com
 
 Application::~Application()
 {
+	AppSettings::getInstance().save(cocos2d::FileUtils::getInstance()->getWritablePath() + "Settings.xml");
+	LevelManager::getInstance().save(cocos2d::FileUtils::getInstance()->getWritablePath() + "Levels.xml");
+
 	cocos2d::experimental::AudioEngine::end();
 }
 
@@ -44,10 +49,13 @@ bool Application::applicationDidFinishLaunching()
 	files->addSearchPath("Particles");
 	files->addSearchPath("Fonts");
 	files->addSearchPath("Sounds");
+	files->addSearchPath(cocos2d::FileUtils::getInstance()->getWritablePath());
 	
 	ResourceParser::parseResources("Resources.xml");
-
 	ImGui::GetIO().Fonts->AddFontFromFileTTF("Fonts/OpenSans-Regular.ttf", 40.f);
+
+	AppSettings::getInstance().load("Settings.xml");
+	LevelManager::getInstance().load("Levels.xml");
 
 	director->runWithScene(SplashNode::scene());
 

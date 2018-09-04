@@ -21,9 +21,10 @@ public:
     AppSettings(const AppSettings&) = delete;
 	AppSettings& operator= (const AppSettings&) = delete;
 
-	~AppSettings();
-
 	static AppSettings& getInstance();
+
+	void load(const std::string& filename);
+	void save(const std::string& filename) const;
 
 	float getSoundVolume() const;
 	void setSoundVolume(float soundVolume);
@@ -32,7 +33,7 @@ public:
 	void setMusicVolume(float musicVolume);
 
 	KeyAction getKeyAction(cocos2d::EventKeyboard::KeyCode keyCode) const;
-	void setKeyBinding(cocos2d::EventKeyboard::KeyCode keyCode, KeyAction keyAction);
+	void addKeyBinding(cocos2d::EventKeyboard::KeyCode keyCode, KeyAction keyAction);
 
 	bool hasKeyAction(cocos2d::EventKeyboard::KeyCode keyCode) const;
 
@@ -41,7 +42,4 @@ private:
 	float musicVolume;
 
 	std::unordered_map<cocos2d::EventKeyboard::KeyCode, KeyAction> keyBindings;
-
-	void load(const std::string& filename);
-	void save(const std::string& filename);
 };

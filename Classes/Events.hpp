@@ -26,6 +26,11 @@ struct EntityParsed
 	mutable entityx::Entity entity;
 };
 
+struct EntityDied
+{
+	mutable entityx::Entity entity;
+};
+
 template<typename T>
 struct ComponentLoaded
 {

@@ -56,7 +56,7 @@ CollisionManager::getCollisionPair(const b2Body* bodyA, const b2Body* bodyB, Obj
 {
 	if (auto* userDataA = static_cast<std::any*>(bodyA->GetUserData()),
 	    *userDataB = static_cast<std::any*>(bodyB->GetUserData());
-	    userDataA->type() == typeid(entityx::Entity) && userDataB->type() == typeid(entityx::Entity))
+	    userDataA && userDataB && userDataA->type() == typeid(entityx::Entity) && userDataB->type() == typeid(entityx::Entity))
 	{
 		if (auto* entityA = std::any_cast<entityx::Entity>(userDataA),
 		    *entityB = std::any_cast<entityx::Entity>(userDataB); 

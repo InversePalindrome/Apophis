@@ -87,6 +87,8 @@ void CombatSystem::receive(const CombatOcurred& event)
 
 		if (victimHealth->getCurrentHitpoints() <= 0.f)
 		{
+			eventManager.emit(EntityDied{ event.victim });
+
 			event.victim.destroy();
 		}
 	}
