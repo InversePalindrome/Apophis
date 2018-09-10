@@ -6,8 +6,6 @@ InversePalindrome.com
 
 
 #include "PauseNode.hpp"
-#include "SettingsNode.hpp"
-#include "LevelSelectionNode.hpp"
 
 #include <cocos/2d/CCMenu.h>
 #include <cocos/2d/CCLabel.h>
@@ -52,7 +50,7 @@ bool PauseNode::init()
 	retryItem->addChild(retryLabel);
 
 	auto* settingsItem = cocos2d::MenuItemSprite::create(cocos2d::Sprite::createWithSpriteFrameName("RegularRectangleButton"), cocos2d::Sprite::createWithSpriteFrameName("SelectedRectangleButton"),
-		[director](auto* sender) { director->pushScene(SettingsNode::scene()); });
+		[director](auto* sender) { });
 
 	auto* settingsLabel = cocos2d::Label::createWithTTF("settings", "Zian.ttf", 60.f);
 	settingsLabel->setTextColor(cocos2d::Color4B(135, 206, 250, 255));
@@ -60,7 +58,7 @@ bool PauseNode::init()
 	settingsItem->addChild(settingsLabel);
 
 	auto* quitItem = cocos2d::MenuItemSprite::create(cocos2d::Sprite::createWithSpriteFrameName("RegularRectangleButton"), cocos2d::Sprite::createWithSpriteFrameName("SelectedRectangleButton"),
-		[director](auto* sender) { director->replaceScene(LevelSelectionNode::scene()); });
+		[director](auto* sender) { });
 
 	auto* quitLabel = cocos2d::Label::createWithTTF("quit", "Zian.ttf", 60.f);
 	quitLabel->setTextColor(cocos2d::Color4B(135, 206, 250, 255));

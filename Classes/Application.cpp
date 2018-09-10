@@ -5,7 +5,6 @@ InversePalindrome.com
 */
 
 
-#include "SplashNode.hpp"
 #include "Application.hpp"
 #include "AppSettings.hpp"
 #include "LevelManager.hpp"
@@ -14,6 +13,8 @@ InversePalindrome.com
 #include "CCIMGUIGLViewImpl.h"
 
 #include <imgui.h>
+
+#include <CreatorReader.h>
 
 #include <cocos/base/CCDirector.h>
 #include <cocos/platform/CCFileUtils.h>
@@ -57,7 +58,9 @@ bool Application::applicationDidFinishLaunching()
 	AppSettings::getInstance().load("Settings.xml");
 	LevelManager::getInstance().load("Levels.xml");
 
-	director->runWithScene(SplashNode::scene());
+	auto* reader = creator::CreatorReader::createWithFilename("Creator/Scenes/Splash.ccreator");
+	reader->setup();
+	director->runWithScene(reader->getSceneGraph());
 
 	return true;
 }

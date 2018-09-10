@@ -5,8 +5,6 @@ InversePalindrome.com
 */
 
 
-#include "MenuNode.hpp"
-#include "SettingsNode.hpp"
 #include "GameOverNode.hpp"
 
 #include <cocos/2d/CCMenu.h>
@@ -46,7 +44,7 @@ bool GameOverNode::init()
 	playAgainItem->addChild(playAgainLabel);
 
 	auto* settingsItem = cocos2d::MenuItemSprite::create(cocos2d::Sprite::createWithSpriteFrameName("RegularRectangleButton"), cocos2d::Sprite::createWithSpriteFrameName("SelectedRectangleButton"),
-		[director](auto* sender) { director->pushScene(SettingsNode::scene()); });
+		[director](auto* sender) {  });
 
 	auto* settingsLabel = cocos2d::Label::createWithTTF("settings", "Zian.ttf", 60.f);
 	settingsLabel->setTextColor(cocos2d::Color4B(135, 206, 250, 255));
@@ -54,7 +52,7 @@ bool GameOverNode::init()
 	settingsItem->addChild(settingsLabel);
 
 	auto* menuItem = cocos2d::MenuItemSprite::create(cocos2d::Sprite::createWithSpriteFrameName("RegularRectangleButton"), cocos2d::Sprite::createWithSpriteFrameName("SelectedRectangleButton"),
-		[director](auto* sender) { director->replaceScene(MenuNode::scene()); });
+		[director](auto* sender) { });
 
 	auto* menuLabel = cocos2d::Label::createWithTTF("menu", "Zian.ttf", 60.f);
 	menuLabel->setTextColor(cocos2d::Color4B(135, 206, 250, 255));

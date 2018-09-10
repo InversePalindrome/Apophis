@@ -6,7 +6,6 @@ InversePalindrome.com
 
 
 #include "HudNode.hpp"
-#include "MenuNode.hpp"
 #include "GameNode.hpp"
 #include "PauseNode.hpp"
 #include "ItemSystem.hpp"
@@ -15,7 +14,6 @@ InversePalindrome.com
 #include "AudioSystem.hpp"
 #include "ActionSystem.hpp"
 #include "PlayerSystem.hpp"
-#include "SettingsNode.hpp"
 #include "CombatSystem.hpp"
 #include "GameOverNode.hpp"
 #include "CameraSystem.hpp"
