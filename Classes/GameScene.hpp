@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-Apophis - GameNode.hpp
+Apophis - GameScene.hpp
 InversePalindrome.com
 */
 
@@ -9,7 +9,6 @@ InversePalindrome.com
 
 #include "Events.hpp"
 
-#include <cocos/2d/CCNode.h>
 #include <cocos/2d/CCScene.h>
 
 #include <Box2D/Common/b2Math.h>
@@ -19,18 +18,16 @@ InversePalindrome.com
 #include <entityx/System.h>
 
 
-class GameNode : public cocos2d::Node, public entityx::Receiver<GameNode>
+class GameScene : public cocos2d::Scene, public entityx::Receiver<GameScene>
 {
 public:
-	explicit GameNode(const std::string& level);
+	explicit GameScene(const std::string& level);
 
 	virtual bool init() override;
 	virtual void update(float dt) override;
 	virtual void receive(const EntityDied& event);
-	
-	static GameNode* create(const std::string& level);
 
-	static cocos2d::Scene* scene(const std::string& level);
+	static GameScene* create();
 
 private:
 	entityx::EventManager eventManager;

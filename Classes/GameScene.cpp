@@ -1,13 +1,12 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-Apophis - GameNode.cpp
+Apophis - GameScene.cpp
 InversePalindrome.com
 */
 
 
 #include "HudNode.hpp"
-#include "GameNode.hpp"
-#include "PauseNode.hpp"
+#include "GameScene.hpp"
 #include "ItemSystem.hpp"
 #include "LevelParser.hpp"
 #include "StateSystem.hpp"
@@ -15,7 +14,6 @@ InversePalindrome.com
 #include "ActionSystem.hpp"
 #include "PlayerSystem.hpp"
 #include "CombatSystem.hpp"
-#include "GameOverNode.hpp"
 #include "CameraSystem.hpp"
 #include "PhysicsSystem.hpp"
 #include "OrbitalSystem.hpp"
@@ -23,12 +21,14 @@ InversePalindrome.com
 #include "TagsComponent.hpp"
 #include "GraphicsSystem.hpp"
 
+#include <CreatorReader.h>
+
 #include <cocos/base/CCEventDispatcher.h>
 #include <cocos/base/CCEventListenerCustom.h>
 #include <cocos/base/CCEventListenerKeyboard.h>
 
 
-GameNode::GameNode(const std::string& level) :
+GameScene::GameScene(const std::string& level) :
 	entityManager(eventManager),
 	systemManager(entityManager, eventManager),
 	level(level),
@@ -36,9 +36,9 @@ GameNode::GameNode(const std::string& level) :
 {
 }
 
-bool GameNode::init()
+bool GameScene::init()
 {
-	if (!Node::init())
+	if (!Scene::init())
 	{
 		return false;
 	}
@@ -67,12 +67,12 @@ bool GameNode::init()
 	return true;
 }
 
-void GameNode::update(float dt)
+void GameScene::update(float dt)
 {
 	systemManager.update_all(dt);
 }
 
-void GameNode::receive(const EntityDied& event)
+void GameScene::receive(const EntityDied& event)
 {
 	auto entity = event.entity;
 	
@@ -83,43 +83,28 @@ void GameNode::receive(const EntityDied& event)
 	}
 }
 
-GameNode* GameNode::create(const std::string& level)
+GameScene* GameScene::create()
 {
-	auto* gameNode = new(std::nothrow)GameNode(level);
+	auto* reader = creator::CreatorReader::createWithFilename("Creator/Scenes/Game.ccreator");
+	reader->setup();
 
-	if (gameNode && gameNode->init())
+	auto* scene = static_cast<GameScene*>(reader->getSceneGraph());
+
+	if (scene && scene->init())
 	{
-		gameNode->autorelease();
-		return gameNode;
+		scene->autorelease();
+
+		auto* canvas = scene->getChildByName("Canvas");
+		auto* director = cocos2d::Director::getInstance();
+
+		return scene;
 	}
 
-	delete gameNode;
-	gameNode = nullptr;
-
+	scene = nullptr;
 	return nullptr;
 }
 
-cocos2d::Scene* GameNode::scene(const std::string& level)
-{
-	auto* scene = cocos2d::Scene::create();
-
-	scene->addChild(GameNode::create(level));
-	scene->addChild(HudNode::create());
-
-	auto* pauseNode = PauseNode::create();
-	pauseNode->setVisible(false);
-
-	scene->addChild(pauseNode);
-
-	auto* gameOverNode = GameOverNode::create();
-	gameOverNode->setVisible(false);
-
-	scene->addChild(gameOverNode);
-
-	return scene;
-}
-
-void GameNode::initSystems()
+void GameScene::initSystems()
 {
 	systemManager.add<StrikerSystem>();
 	systemManager.add<PlayerSystem>(this);
@@ -138,7 +123,7 @@ void GameNode::initSystems()
 	systemManager.configure();
 }
 
-void GameNode::reloadGame()
+void GameScene::reloadGame()
 {
 	scheduleUpdate();
 
