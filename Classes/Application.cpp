@@ -36,7 +36,7 @@ bool Application::applicationDidFinishLaunching()
 	if (auto* view = director->getOpenGLView(); !view)
 	{
 		view = cocos2d::IMGUIGLViewImpl::createWithRect("Apophis", { 0, 0, 2048, 1536 });
-		view->setDesignResolutionSize(2048.f, 1536.f, ResolutionPolicy::EXACT_FIT);
+		view->setDesignResolutionSize(1024.f, 768.f, ResolutionPolicy::EXACT_FIT);
 
 		director->setOpenGLView(view);
 		director->setClearColor(cocos2d::Color4F::WHITE);

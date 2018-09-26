@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "MenuScene.hpp"
+#include "GameScene.hpp"
 #include "LevelSelectionScene.hpp"
 
 #include <CreatorReader.h>
@@ -26,6 +27,14 @@ cocos2d::Scene* getLevelSelectionScene()
 	static_cast<cocos2d::ui::Button*>(canvas->getChildByName("backButton"))->addTouchEventListener([director](auto* sender, auto event) 
 	{ 
 		director->replaceScene(getMenuScene());
+	});
+
+	auto* button = cocos2d::ui::Button::create("RegularRectangleButton", "SelectedRectangleButton", "", cocos2d::ui::Widget::TextureResType::PLIST);
+	button->setPosition({ 300.f, 300.f });
+	canvas->addChild(button);
+	button->addTouchEventListener([director](auto* sender, auto event)
+	{
+		director->replaceScene(getGameScene("MilkyWay.xml"));
 	});
 
 	return scene;

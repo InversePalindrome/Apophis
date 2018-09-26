@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #include "MenuScene.hpp"
 #include "SettingsScene.hpp"
+#include "LevelEditorNode.hpp"
 #include "LevelSelectionScene.hpp"
 
 #include <CreatorReader.h>
@@ -27,6 +28,10 @@ cocos2d::Scene* getMenuScene()
 	static_cast<cocos2d::ui::Button*>(canvas->getChildByName("playButton"))->addTouchEventListener([director](auto* sender, auto event)
 	{ 
 	    director->replaceScene(getLevelSelectionScene());
+	});
+	static_cast<cocos2d::ui::Button*>(canvas->getChildByName("createButton"))->addTouchEventListener([director](auto* sender, auto event)
+	{
+		director->replaceScene(LevelEditorNode::scene());
 	});
 	static_cast<cocos2d::ui::Button*>(canvas->getChildByName("settingsButton"))->addTouchEventListener([director](auto* sender, auto event)
 	{

@@ -5,131 +5,68 @@ InversePalindrome.com
 */
 
 
-#include "HudNode.hpp"
+#include "GameNode.hpp"
 #include "GameScene.hpp"
-#include "ItemSystem.hpp"
-#include "LevelParser.hpp"
-#include "StateSystem.hpp"
-#include "AudioSystem.hpp"
-#include "ActionSystem.hpp"
-#include "PlayerSystem.hpp"
-#include "CombatSystem.hpp"
-#include "CameraSystem.hpp"
-#include "PhysicsSystem.hpp"
-#include "OrbitalSystem.hpp"
-#include "StrikerSystem.hpp"
-#include "TagsComponent.hpp"
-#include "GraphicsSystem.hpp"
+#include "SettingsScene.hpp"
+#include "LevelSelectionScene.hpp"
 
 #include <CreatorReader.h>
 
-#include <cocos/base/CCEventDispatcher.h>
-#include <cocos/base/CCEventListenerCustom.h>
-#include <cocos/base/CCEventListenerKeyboard.h>
+#include <cocos/base/CCDirector.h>
 
 
-GameScene::GameScene(const std::string& level) :
-	entityManager(eventManager),
-	systemManager(entityManager, eventManager),
-	level(level),
-	mapDimensions(0.f, 0.f)
-{
-}
-
-bool GameScene::init()
-{
-	if (!Scene::init())
-	{
-		return false;
-	}
-	
-	auto* keyboardListener = cocos2d::EventListenerKeyboard::create();
-
-	keyboardListener->onKeyPressed = [this](const auto keyCode, auto* event)
-	{
-		if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_ESCAPE)
-		{
-			unscheduleUpdate();
-		
-			getEventDispatcher()->dispatchCustomEvent("pause");
-		}
-	};
-
-	getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, this);
-	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("resume", [this](auto* event) { scheduleUpdate(); }), this);
-	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("playAgain", [this](auto* event) { reloadGame(); }), this);
-
-	scheduleUpdate();
-	initSystems();
-   
-	LevelParser::parseLevel(entityManager, eventManager, mapDimensions, "Level.xml");
-	
-	return true;
-}
-
-void GameScene::update(float dt)
-{
-	systemManager.update_all(dt);
-}
-
-void GameScene::receive(const EntityDied& event)
-{
-	auto entity = event.entity;
-	
-	if (const auto tags = entity.component<TagsComponent>(); tags && tags->hasTag("Player"))
-	{
-		unscheduleUpdate();
-		getEventDispatcher()->dispatchCustomEvent("gameOver");
-	}
-}
-
-GameScene* GameScene::create()
+cocos2d::Scene* getGameScene(const std::string& level)
 {
 	auto* reader = creator::CreatorReader::createWithFilename("Creator/Scenes/Game.ccreator");
-	reader->setup();
+    reader->setup();
 
-	auto* scene = static_cast<GameScene*>(reader->getSceneGraph());
+    auto* scene = reader->getSceneGraph();
+    auto* canvas = scene->getChildByName("Canvas");
+    auto* director = cocos2d::Director::getInstance();
 
-	if (scene && scene->init())
+	canvas->addChild(GameNode::create(level));
+
+	auto* pauseNode = canvas->getChildByName("pauseNode");
+	pauseNode->getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("pause", [pauseNode](auto* event) { pauseNode->setVisible(true); }), canvas);
+
+	static_cast<cocos2d::ui::Button*>(pauseNode->getChildByName("resumeButton"))->addTouchEventListener([scene, pauseNode](auto* sender, auto event)
 	{
-		scene->autorelease();
+		pauseNode->setVisible(false);
 
-		auto* canvas = scene->getChildByName("Canvas");
-		auto* director = cocos2d::Director::getInstance();
+		scene->getEventDispatcher()->dispatchCustomEvent("resume");
+	});
+	static_cast<cocos2d::ui::Button*>(pauseNode->getChildByName("retryButton"))->addTouchEventListener([scene, pauseNode](auto* sender, auto event)
+	{
+		pauseNode->setVisible(false);
 
-		return scene;
-	}
-
-	scene = nullptr;
-	return nullptr;
-}
-
-void GameScene::initSystems()
-{
-	systemManager.add<StrikerSystem>();
-	systemManager.add<PlayerSystem>(this);
-	systemManager.add<StateSystem>(eventManager);
-	systemManager.add<ActionSystem>();
-	systemManager.add<CameraSystem>(this, mapDimensions);
-	systemManager.add<AudioSystem>();
-	systemManager.add<OrbitalSystem>();
-	systemManager.add<ItemSystem>(entityManager, eventManager);
-	systemManager.add<PhysicsSystem>(entityManager, eventManager);
-	systemManager.add<CombatSystem>(entityManager, eventManager);
-	systemManager.add<GraphicsSystem>(this);
+		scene->getEventDispatcher()->dispatchCustomEvent("retry");
+	});
+	static_cast<cocos2d::ui::Button*>(pauseNode->getChildByName("settingsButton"))->addTouchEventListener([director](auto* sender, auto event)
+	{
+		director->pushScene(getSettingsScene());
+	});
+	static_cast<cocos2d::ui::Button*>(pauseNode->getChildByName("quitButton"))->addTouchEventListener([director](auto* sender, auto event)
+	{
+		director->replaceScene(getLevelSelectionScene());
+	});
 	
-	eventManager.subscribe<EntityDied>(*this);
-	
-	systemManager.configure();
-}
+	auto* gameOverNode = canvas->getChildByName("gameOverNode");
+	gameOverNode->getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("gameOver", [gameOverNode](auto* event) { gameOverNode->setVisible(true); }), canvas);
 
-void GameScene::reloadGame()
-{
-	scheduleUpdate();
+	static_cast<cocos2d::ui::Button*>(gameOverNode->getChildByName("retryButton"))->addTouchEventListener([scene, gameOverNode](auto* sender, auto event)
+	{
+		gameOverNode->setVisible(false);
 
-	eventManager.emit(GameReset{});
+		scene->getEventDispatcher()->dispatchCustomEvent("retry");
+	});
+	static_cast<cocos2d::ui::Button*>(gameOverNode->getChildByName("settingsButton"))->addTouchEventListener([director](auto* sender, auto event)
+	{
+		director->pushScene(getSettingsScene());
+	});
+	static_cast<cocos2d::ui::Button*>(gameOverNode->getChildByName("quitButton"))->addTouchEventListener([director](auto* sender, auto event)
+	{
+		director->replaceScene(getLevelSelectionScene());
+	});
 
-	entityManager.reset();
-
-	LevelParser::parseLevel(entityManager, eventManager, mapDimensions, level);
+    return scene;
 }

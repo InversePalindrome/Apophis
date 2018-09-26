@@ -33,7 +33,7 @@ void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::Even
 {
 	brigand::for_each<Renderables>([&entityManager](auto renderableElement)
 	{
-		entityManager.each<decltype(renderableElement)::type, TransformComponent>([](auto entity, auto& renderable, auto& transform)
+		entityManager.each<decltype(renderableElement)::type, TransformComponent>([](auto entity, auto& renderable, const auto& transform)
 		{
 			renderable.setPosition({ transform.getPosition().x * Constants::PTM_RATIO, transform.getPosition().y * Constants::PTM_RATIO });
 			renderable.setRotation(-transform.getAngle());

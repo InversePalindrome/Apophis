@@ -22,6 +22,8 @@ SpriteComponent::SpriteComponent() :
 
 void SpriteComponent::load(const pugi::xml_node& componentNode)
 {
+	NodeComponent::load(componentNode);
+
 	if (const auto spriteFrameAttribute = componentNode.attribute("frame"))
 	{
 		setSpriteFrame(spriteFrameAttribute.as_string());

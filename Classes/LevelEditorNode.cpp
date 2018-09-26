@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "Constants.hpp"
+#include "MenuScene.hpp"
 #include "Components.hpp"
 #include "LevelParser.hpp"
 #include "EntityParser.hpp"
@@ -55,7 +56,7 @@ bool LevelEditorNode::init()
 		{
 			if (ImGui::MenuItem("Exit"))
 			{
-				
+				cocos2d::Director::getInstance()->replaceScene(getMenuScene());
 			}
 			if (ImGui::BeginMenu("File"))
 			{

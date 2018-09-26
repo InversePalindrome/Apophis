@@ -18,6 +18,8 @@ LabelComponent::LabelComponent() :
 
 void LabelComponent::load(const pugi::xml_node& componentNode)
 {
+	NodeComponent::load(componentNode);
+
 	setText(componentNode.text().as_string());
 
 	if (const auto fontAttribute = componentNode.attribute("font"))

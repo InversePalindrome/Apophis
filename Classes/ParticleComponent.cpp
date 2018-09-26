@@ -22,6 +22,8 @@ ParticleComponent::ParticleComponent() :
 
 void ParticleComponent::load(const pugi::xml_node& componentNode)
 {
+	NodeComponent::load(componentNode);
+
 	if (const auto filenameAttribute = componentNode.attribute("filename"))
 	{
 		initWithFile(filenameAttribute.as_string());
@@ -211,13 +213,13 @@ void ParticleComponent::display()
 			}
 		}
 
+		NodeComponent::display();
+
 		spriteFrameName.resize(64);
 		if (ImGui::InputText("Display Frame", spriteFrameName.data(), spriteFrameName.length()))
 		{
 			setDisplayFrame(spriteFrameName.c_str());
 		}
-
-		NodeComponent::display();
 
 		const char* modes[] = { "Gravity", "Radius" };
 

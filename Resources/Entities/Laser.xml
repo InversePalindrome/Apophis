@@ -2,9 +2,9 @@
 <Entity>
     <Transform></Transform>
     <Object>Projectile</Object>
-       <Sprite frame="RedBlast03"></Sprite>
+       <Sprite xScale="0.5" yScale="0.5" frame="RedBlast03"></Sprite>
     <Body type="2" bullet="true">
-      <Rectangle width="1.5" height="1"></Rectangle>
+      <Rectangle width="0.75" height="0.5"></Rectangle>
     </Body>
     <Speed linear="40"></Speed>
     <Impulse linear="30"></Impulse>
