@@ -102,8 +102,8 @@
 	<real>0</real>
 	<key>tangentialAcceleration</key>
 	<real>0</real>
-	<key>textureFileName</key>
-	<string>particle_texture.png</string>
+	<key>spriteFrameName</key>
+	<string>StarParticle</string>
 	<key>textureImageData</key>
 	<string></string>
 </dict>

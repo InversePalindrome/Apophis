@@ -49,6 +49,7 @@ bool Application::applicationDidFinishLaunching()
 	files->addSearchPath("Particles");
 	files->addSearchPath("Fonts");
 	files->addSearchPath("Sounds");
+	files->addSearchPath("Music");
 	files->addSearchPath(cocos2d::FileUtils::getInstance()->getWritablePath());
 	
 	ResourceParser::parseResources("Resources.xml");

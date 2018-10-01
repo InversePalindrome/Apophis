@@ -5,12 +5,13 @@ InversePalindrome.com
 */
 
 
-#include "Events.hpp"
 #include "StrikerSystem.hpp"
+#include "TagsComponent.hpp"
 #include "SteeringBehaviors.hpp"
 
 
-StrikerSystem::StrikerSystem()  :
+StrikerSystem::StrikerSystem(entityx::EventManager& eventManager)  :
+	eventManager(eventManager),
 	strikerTree(beehive::Builder<StrikerContext>()
 	.selector()
 	.sequence()
@@ -26,12 +27,12 @@ StrikerSystem::StrikerSystem()  :
 
 		return context.health.getCurrentHitpoints() >= context.health.getMaxHitpoints() * healthBreakPercent;
 	})
-	.void_leaf([this](auto& context)
+	.void_leaf([this, &eventManager](auto& context)
 	{
 		context.body.applyLinearImpulse(SteeringBehaviors::seek(context.body.getPosition(), playerTransform->getPosition(), context.body.getLinearVelocity(), context.speed.getMaxLinearSpeed()));
 		context.body.applyAngularImpulse(SteeringBehaviors::face(context.body.getPosition(), playerTransform->getPosition(), context.body.getAngle(), context.body.getAngularVelocity(), context.body.getInertia()));
 
-		eventManager->emit(ShootProjectile{ context.striker });
+		eventManager.emit(ShootProjectile{ context.striker });
 	})
 	.end()
 	.void_leaf([this](auto& context)
@@ -49,8 +50,6 @@ StrikerSystem::StrikerSystem()  :
 	  
 void StrikerSystem::configure(entityx::EventManager& eventManager)
 {
-	this->eventManager = &eventManager;
-
 	eventManager.subscribe<EntityParsed>(*this);
 }
 

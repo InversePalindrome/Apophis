@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-Apophis - StrikerSystem.hpp
+Apophis - DroneSystem.hpp
 InversePalindrome.com
 */
 
@@ -8,18 +8,19 @@ InversePalindrome.com
 #pragma once
 
 #include "Events.hpp"
-#include "StrikerContext.hpp"
+#include "DroneContext.hpp"
 #include "TransformComponent.hpp"
 
+#include <entityx/Event.h>
 #include <entityx/System.h>
 
 #include <beehive/beehive.hpp>
 
 
-class StrikerSystem : public entityx::System<StrikerSystem>, public entityx::Receiver<StrikerSystem>
+class DroneSystem : public entityx::System<DroneSystem>, public entityx::Receiver<DroneSystem>
 {
 public:
-	explicit StrikerSystem(entityx::EventManager& eventManager);
+	explicit DroneSystem(entityx::EventManager& eventManager);
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
@@ -28,7 +29,7 @@ public:
 private:
 	entityx::EventManager& eventManager;
 
-	beehive::Tree<StrikerContext> strikerTree;
+	beehive::Tree<DroneContext> droneTree;
 
 	entityx::ComponentHandle<TransformComponent> playerTransform;
 };

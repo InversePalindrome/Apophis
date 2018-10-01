@@ -8,11 +8,10 @@ InversePalindrome.com
 #include "AudioSystem.hpp"
 #include "AppSettings.hpp"
 
-#include <cocos/audio/include/AudioEngine.h>
-
 
 void AudioSystem::configure(entityx::EventManager& eventManager) 
 {
+	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
 	eventManager.subscribe<entityx::ComponentRemovedEvent<SoundComponent>>(*this);
 	eventManager.subscribe<StateChanged>(*this);
 }
@@ -27,13 +26,13 @@ void AudioSystem::receive(const entityx::EntityDestroyedEvent& event)
 
 	if (auto sound = entity.component<SoundComponent>())
 	{
-		cocos2d::experimental::AudioEngine::stop(sound->getSoundID());
+		AppSettings::getInstance().stopSound(sound->getSoundID());
 	}
 }
 
 void AudioSystem::receive(const entityx::ComponentRemovedEvent<SoundComponent>& event)
 {
-	cocos2d::experimental::AudioEngine::stop(event.component->getSoundID());
+	AppSettings::getInstance().stopSound(event.component->getSoundID());
 }
 
 void AudioSystem::receive(const StateChanged& event)
@@ -42,7 +41,7 @@ void AudioSystem::receive(const StateChanged& event)
 	{
 		const auto& [file, loop] = sound->getSound(event.state);
 
-		cocos2d::experimental::AudioEngine::stop(sound->getSoundID());
-		sound->setSoundID(cocos2d::experimental::AudioEngine::play2d(file, loop, AppSettings::getInstance().getSoundVolume()));
+		AppSettings::getInstance().stopSound(sound->getSoundID());
+		sound->setSoundID(AppSettings::getInstance().playSound(file, loop));
 	}
 }

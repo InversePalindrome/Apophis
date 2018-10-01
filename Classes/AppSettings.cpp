@@ -8,6 +8,7 @@ InversePalindrome.com
 #include "AppSettings.hpp"
 
 #include <cocos/platform/CCFileUtils.h>
+#include <cocos/audio/include/AudioEngine.h>
 
 #include <pugixml.hpp>
 
@@ -35,10 +36,9 @@ void AppSettings::load(const std::string& filename)
 		{
 			for (const auto keyBindingNode : settingsNode.children("KeyBinding"))
 			{
-				const auto keyCodeAttribute = keyBindingNode.attribute("code");
-				const auto keyActionAttribute = keyBindingNode.attribute("action");
-
-				if (keyCodeAttribute && keyActionAttribute)
+				if (const auto keyCodeAttribute = keyBindingNode.attribute("code"),
+				    keyActionAttribute = keyBindingNode.attribute("action"); 
+				    keyCodeAttribute && keyActionAttribute)
 				{
 					addKeyBinding(cocos2d::EventKeyboard::KeyCode{ keyCodeAttribute.as_int() }, KeyAction::_from_string(keyActionAttribute.as_string()));
 				}
@@ -88,6 +88,60 @@ void AppSettings::save(const std::string& filename) const
 	doc.save_file(filename.c_str());
 }
 
+int AppSettings::playSound(const std::string& soundFilename, bool loop)
+{
+	auto soundID = cocos2d::experimental::AudioEngine::play2d(soundFilename, loop, soundVolume);
+
+	cocos2d::experimental::AudioEngine::setFinishCallback(soundID, [this](auto id, const auto& soundFilename) 
+	{
+		soundIDs.erase(std::find(std::cbegin(soundIDs), std::cend(soundIDs), id), std::end(soundIDs));
+	});
+
+	soundIDs.push_back(soundID);
+
+	return soundID;
+}
+
+int AppSettings::playMusic(const std::string& musicFilename, bool loop)
+{
+    auto musicID = cocos2d::experimental::AudioEngine::play2d(musicFilename, musicVolume, loop);
+
+	cocos2d::experimental::AudioEngine::setFinishCallback(musicID, [this](auto id, const auto& musicFilename)
+	{
+		musicIDs.erase(std::find(std::cbegin(musicIDs), std::cend(musicIDs), id), std::end(musicIDs));
+	});
+
+	musicIDs.push_back(musicID);
+
+	return musicID;
+}
+
+void AppSettings::stopSounds()
+{
+	for (const auto& soundID : soundIDs)
+	{
+		cocos2d::experimental::AudioEngine::stop(soundID);
+	}
+}
+
+void AppSettings::stopMusic()
+{
+	for (const auto& musicID : musicIDs)
+	{
+		cocos2d::experimental::AudioEngine::stop(musicID);
+	}
+}
+
+void AppSettings::stopSound(int soundID)
+{
+	cocos2d::experimental::AudioEngine::stop(soundID);
+}
+
+void AppSettings::stopMusic(int musicID)
+{
+	cocos2d::experimental::AudioEngine::stop(musicID);
+}
+
 float AppSettings::getSoundVolume() const
 {
 	return soundVolume;
@@ -96,6 +150,11 @@ float AppSettings::getSoundVolume() const
 void AppSettings::setSoundVolume(float soundVolume)
 {
 	this->soundVolume = soundVolume;
+
+	for (const auto& soundID : soundIDs)
+	{
+		cocos2d::experimental::AudioEngine::setVolume(soundID, soundVolume);
+	}
 }
 
 float AppSettings::getMusicVolume() const
@@ -106,6 +165,11 @@ float AppSettings::getMusicVolume() const
 void AppSettings::setMusicVolume(float musicVolume)
 {
 	this->musicVolume = musicVolume;
+
+	for (const auto& musicID : musicIDs)
+	{
+		cocos2d::experimental::AudioEngine::setVolume(musicID, musicVolume);
+	}
 }
 
 KeyAction AppSettings::getKeyAction(cocos2d::EventKeyboard::KeyCode keyCode) const
@@ -115,9 +179,7 @@ KeyAction AppSettings::getKeyAction(cocos2d::EventKeyboard::KeyCode keyCode) con
 
 void AppSettings::addKeyBinding(cocos2d::EventKeyboard::KeyCode keyCode, KeyAction keyAction)
 {
-	auto result = keyBindings.emplace(keyCode, keyAction);
-
-	if (!result.second)
+	if (auto result = keyBindings.emplace(keyCode, keyAction); !result.second)
 	{
 		result.first->second = keyAction;
 	}

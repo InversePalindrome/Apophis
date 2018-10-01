@@ -10,6 +10,7 @@ InversePalindrome.com
 #include "LevelParser.hpp"
 #include "StateSystem.hpp"
 #include "AudioSystem.hpp"
+#include "DroneSystem.hpp"
 #include "ActionSystem.hpp"
 #include "PlayerSystem.hpp"
 #include "CombatSystem.hpp"
@@ -39,7 +40,7 @@ bool GameNode::init()
 	{
 		return false;
 	}
-
+	
 	auto* keyboardListener = cocos2d::EventListenerKeyboard::create();
 
 	keyboardListener->onKeyPressed = [this](const auto keyCode, auto* event)
@@ -76,6 +77,7 @@ void GameNode::receive(const EntityDied& event)
 	if (const auto tags = entity.component<TagsComponent>(); tags && tags->hasTag("Player"))
 	{
 		unscheduleUpdate();
+
 		getEventDispatcher()->dispatchCustomEvent("gameOver");
 	}
 }
@@ -98,7 +100,8 @@ GameNode* GameNode::create(const std::string& level)
 
 void GameNode::initSystems()
 {
-	systemManager.add<StrikerSystem>();
+	systemManager.add<DroneSystem>(eventManager);
+	systemManager.add<StrikerSystem>(eventManager);
 	systemManager.add<PlayerSystem>(this);
 	systemManager.add<StateSystem>(eventManager);
 	systemManager.add<ActionSystem>();

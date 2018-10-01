@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #include "MenuScene.hpp"
 #include "StartScene.hpp"
+#include "AppSettings.hpp"
 
 #include <CreatorReader.h>
 
@@ -29,6 +30,8 @@ cocos2d::Scene* getStartScene()
 	};
 
 	scene->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, scene);
+
+	AppSettings::getInstance().playMusic("LightYearsMusic.mp3", true);
 
 	return scene;
 }
