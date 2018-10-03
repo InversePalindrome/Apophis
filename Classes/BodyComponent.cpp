@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #include "BodyParser.hpp"
+#include "BodyDisplay.hpp"
 #include "BodyComponent.hpp"
 #include "BodySerializer.hpp"
 
@@ -33,34 +34,40 @@ void BodyComponent::load(const pugi::xml_node& componentNode)
 		b2FixtureDef fixtureDef;
 		BodyParser::parseFixtureDef(fixtureDef, fixtureNode);
 
-		std::variant<b2CircleShape, b2EdgeShape, b2PolygonShape, b2ChainShape> shape;
-
 		if (std::strcmp(fixtureNode.name(), "Circle") == 0)
 		{
 			b2CircleShape circle;
-			BodyParser::parseCircleShape(circle, fixtureNode);
+
+			BodyParser::parseCircle(circle, fixtureNode);
+
 			shape = circle;
 		}
 		else if (std::strcmp(fixtureNode.name(), "Edge") == 0)
 		{
 			b2EdgeShape edge;
-			BodyParser::parseEdgeShape(edge, fixtureNode);
+
+			BodyParser::parseEdge(edge, fixtureNode);
+
 			shape = edge;
 		}
 		else if (std::strcmp(fixtureNode.name(), "Polygon") == 0)
 		{
 			b2PolygonShape polygon;
-			BodyParser::parsePolygonShape(polygon, fixtureNode);
+			
+			BodyParser::parsePolygon(polygon, vertices, fixtureNode);
+
 			shape = polygon;
 		}
 		else if (std::strcmp(fixtureNode.name(), "Chain") == 0)
 		{
 			b2ChainShape chain;
-			BodyParser::parseChainShape(chain, fixtureNode);
+
+			BodyParser::parseChain(chain, vertices, fixtureNode);
+
 			shape = chain;
 		}
 
-		std::visit([&fixtureDef](auto& shape) { fixtureDef.shape = &shape; }, shape);
+		std::visit([&fixtureDef](auto& shape){ 	fixtureDef.shape = &shape; }, shape);
 
 		createFixture(fixtureDef);
 	}
@@ -113,7 +120,7 @@ void BodyComponent::display()
 
 			if (ImGui::Combo("Shape", &shapeIndex, shapes, 4))
 			{
-				verticesToAdd.clear();
+				vertices.clear();
 
 				switch (static_cast<b2Shape::Type>(shapeIndex))
 				{
@@ -122,7 +129,7 @@ void BodyComponent::display()
 					b2CircleShape circle;
 					circle.m_radius = 1.f;
 
-					shapeToAdd = circle;
+					shape = circle;
 				}
 					break;
 				case b2Shape::e_edge:
@@ -131,14 +138,14 @@ void BodyComponent::display()
 					edge.m_vertex1.SetZero();
 					edge.m_vertex2.SetZero();
 
-					shapeToAdd = edge;
+					shape = edge;
 				}
 					break;
 				case b2Shape::e_polygon:
-					shapeToAdd = b2PolygonShape();
+					shape = b2PolygonShape();
 					break;
 				case b2Shape::e_chain:
-					shapeToAdd = b2ChainShape();
+					shape = b2ChainShape();
 					break;
 				}
 			}
@@ -149,90 +156,21 @@ void BodyComponent::display()
 
 				if constexpr(std::is_same_v<ShapeType, b2CircleShape>)
 				{
-					ImGui::InputFloat("Radius", &shape.m_radius);
-					ImGui::InputFloat2("Center", &shape.m_p.x);
+					BodyDisplay::displayCircle(shape);
 				}
 				else if constexpr(std::is_same_v<ShapeType, b2EdgeShape>)
 				{
-					ImGui::Checkbox("Has Vertex 0", &shape.m_hasVertex0);
-					ImGui::SameLine();
-					ImGui::Checkbox("Has Vertex 3", &shape.m_hasVertex3);
-
-					if (shape.m_hasVertex0)
-					{
-						ImGui::InputFloat2("Vertex 0", &shape.m_vertex0.x);
-					}
-
-					ImGui::InputFloat2("Vertex 1", &shape.m_vertex1.x);
-					ImGui::InputFloat2("Vertex 2", &shape.m_vertex2.x);
-
-					if (shape.m_hasVertex3)
-					{
-						ImGui::InputFloat2("Vertex 3", &shape.m_vertex3.x);
-					}
-				
+					BodyDisplay::displayEdge(shape);
 				}
 				else if constexpr(std::is_same_v<ShapeType, b2PolygonShape>)
 				{
-					ImGui::Text("Vertices");
-					ImGui::SameLine();
-
-					if (CCIMGUI::getInstance()->imageButton("#AddButton", 50, 50))
-					{
-						verticesToAdd.push_back({ 0.f, 0.f });
-					}
-
-					int i = 0;
-
-					for (auto vertexItr = std::begin(verticesToAdd); vertexItr != std::end(verticesToAdd);)
-					{
-						ImGui::PushID(i++);
-
-						ImGui::InputFloat2(("Vertex " + std::to_string(i)).c_str(), &vertexItr->x);
-						ImGui::SameLine();
-						if (CCIMGUI::getInstance()->imageButton("#RemoveButton", 50, 50))
-						{
-							vertexItr = verticesToAdd.erase(vertexItr);
-						}
-						else
-						{
-							++vertexItr;
-						}
-
-						ImGui::PopID();
-					}
+					BodyDisplay::displayVertices(vertices);
 				}
 				else if constexpr(std::is_same_v<ShapeType, b2ChainShape>)
 				{
-					ImGui::Text("Vertices");
-					ImGui::SameLine();
-
-					if (CCIMGUI::getInstance()->imageButton("#AddButton", 50, 50))
-					{
-						verticesToAdd.push_back({ 0.f, 0.f });
-					}
-
-					int i = 0;
-
-					for (auto vertexItr = std::begin(verticesToAdd); vertexItr != std::end(verticesToAdd);)
-					{
-						ImGui::PushID(i++);
-
-						ImGui::InputFloat2(("Vertex " + std::to_string(i)).c_str(), &vertexItr->x);
-						ImGui::SameLine();
-						if (CCIMGUI::getInstance()->imageButton("#RemoveButton", 50, 50))
-						{
-							vertexItr = verticesToAdd.erase(vertexItr);
-						}
-						else
-						{
-							++vertexItr;
-						}
-
-						ImGui::PopID();
-					}
+					BodyDisplay::displayVertices(vertices);
 				}
-			}, shapeToAdd);
+			}, shape);
 
 			if (ImGui::Button("Add"))
 			{
@@ -244,19 +182,19 @@ void BodyComponent::display()
 
 					if constexpr(std::is_same_v<ShapeType, b2PolygonShape>)
 					{
-						shape.Set(verticesToAdd.data(), verticesToAdd.size());
+						shape.Set(vertices.data(), vertices.size());
 					}
 					else if constexpr(std::is_same_v<ShapeType, b2ChainShape>)
 					{
-						shape.CreateChain(verticesToAdd.data(), verticesToAdd.size());
+						shape.CreateChain(vertices.data(), vertices.size());
 					}
 
 					fixtureDef.shape = &shape; 
-				}, shapeToAdd);
+				}, shape);
 
 				createFixture(fixtureDef);
 				
-				verticesToAdd.clear();
+				vertices.clear();
 
 				ImGui::CloseCurrentPopup();
 			}
@@ -264,45 +202,17 @@ void BodyComponent::display()
 			ImGui::EndPopup();
 		}
 
-		const char* bodyTypes[] = { "Static", "Kinematic", "Dynamic" };
-
-		if (auto bodyType = static_cast<int>(getBodyType()); ImGui::Combo("Type", &bodyType, bodyTypes, 3))
-		{
-			setBodyType(static_cast<b2BodyType>(bodyType));
-		}
-
-		if (auto position = getPosition(); ImGui::InputFloat2("Position(X, Y)", &position.x))
-		{
-			setPosition(position);
-		}
-		if (auto angle = getAngle(); ImGui::InputFloat("Angle", &angle))
-		{
-			setAngle(angle);
-		}
-		if (auto linearDamping = getLinearDamping(); ImGui::InputFloat("Linear Damping", &linearDamping))
-		{
-			setLinearDamping(linearDamping);
-		}
-		if (auto angularDamping = getAngularDamping(); ImGui::InputFloat("Angular Damping", &angularDamping))
-		{
-			setAngularDamping(angularDamping);
-		}
-		if (auto rotationFixed = isRotationFixed(); ImGui::Checkbox("Rotation Fixed", &rotationFixed))
-		{
-			setRotationFixed(rotationFixed);
-		}
-		if (auto bullet = isBullet(); ImGui::Checkbox("Bullet", &bullet))
-		{
-			setBullet(bullet);
-		}
+		BodyDisplay::displayBody(body);
 
 		int fixtureID = 0;
 		std::vector<b2Fixture*> fixturesToDestroy;
 
 		for (auto* fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
 		{
-			auto isFixtureOpen = ImGui::TreeNode(("Fixture " + std::to_string(fixtureID++)).c_str());
+			ImGui::PushID(fixtureID++);
 
+			auto isFixtureOpen = ImGui::TreeNode("", "Fixture %d", fixtureID);
+			
 			ImGui::SameLine();
 
 			if (CCIMGUI::getInstance()->imageButton("#RemoveButton", 50, 50))
@@ -312,87 +222,28 @@ void BodyComponent::display()
 
 			if (isFixtureOpen)
 			{
-				if (auto density = fixture->GetDensity(); ImGui::InputFloat("Density", &density))
-				{
-					fixture->SetDensity(density);
-				}
-				if (auto friction = fixture->GetFriction(); ImGui::InputFloat("Friction", &friction))
-				{
-					fixture->SetFriction(friction);
-				}
-				if (auto restitution = fixture->GetRestitution(); ImGui::InputFloat("Restitution", &restitution))
-				{
-					fixture->SetRestitution(restitution);
-				}
-				if (auto sensor = fixture->IsSensor(); ImGui::Checkbox("Sensor", &sensor))
-				{
-					fixture->SetSensor(sensor);
-				}
+				BodyDisplay::displayFixture(fixture);
 		
 				switch (fixture->GetShape()->GetType())
 				{
 				case b2Shape::e_circle:
-					if (ImGui::TreeNode("Circle"))
-					{
-						const auto* circle = static_cast<const b2CircleShape*>(fixture->GetShape());
-
-						ImGui::Text("Radius: %.2f", circle->m_radius);
-						ImGui::Text("Center(X, Y): (%.2f, %.2f)", circle->m_p.x, circle->m_p.y);
-
-						ImGui::TreePop();
-					}
+					BodyDisplay::displayCircle(static_cast<const b2CircleShape*>(fixture->GetShape()));
 					break;
 				case b2Shape::e_edge:
-					if (ImGui::TreeNode("Edge"))
-					{
-						const auto* edge = static_cast<const b2EdgeShape*>(fixture->GetShape());
-
-						if (edge->m_hasVertex0)
-						{
-							ImGui::Text("Vertex 0(X, Y): (%.2f, %.2f)", edge->m_vertex0.x, edge->m_vertex0.y);
-						}
-
-						ImGui::Text("Vertex 1(X, Y): (%.2f, %.2f)", edge->m_vertex1.x, edge->m_vertex1.y);
-						ImGui::Text("Vertex 2(X, Y): (%.2f, %.2f)", edge->m_vertex2.x, edge->m_vertex2.y);
-
-						if (edge->m_hasVertex3)
-						{
-							ImGui::Text("Vertex 3(X, Y): (%.2f, %.2f)", edge->m_vertex3.x, edge->m_vertex3.y);
-						}
-
-						ImGui::TreePop();
-					}
+					BodyDisplay::displayEdge(static_cast<const b2EdgeShape*>(fixture->GetShape()));
 					break;
 				case b2Shape::e_polygon:
-					if (ImGui::TreeNode("Polygon"))
-					{
-						const auto* polygon = static_cast<const b2PolygonShape*>(fixture->GetShape());
-					   
-						for (int i = 0; i < polygon->m_count; ++i)
-						{
-							ImGui::Text("Vertex %d (X, Y): (%.2f, %.2f)", i, polygon->m_vertices[i].x, polygon->m_vertices[i].y);
-						}
-
-						ImGui::TreePop();
-					}
+					BodyDisplay::displayPolygon(static_cast<const b2PolygonShape*>(fixture->GetShape()));
 					break;
 				case b2Shape::e_chain:
-					if (ImGui::TreeNode("Chain"))
-					{
-						const auto* chain = static_cast<const b2ChainShape*>(fixture->GetShape());
-						
-						for (int i = 0; i < chain->m_count; ++i)
-						{
-							ImGui::Text("Vertex %d (X, Y): (%.2f, %.2f)", i, chain->m_vertices[i].x, chain->m_vertices[i].y);
-						}
-
-						ImGui::TreePop();
-					}
+					BodyDisplay::displayChain(static_cast<const b2ChainShape*>(fixture->GetShape()));
 					break;
 				}
 
 				ImGui::TreePop();
 			}
+
+			ImGui::PopID();
 		}
 
 		for (const auto& fixture : fixturesToDestroy)
@@ -412,6 +263,7 @@ b2Body* BodyComponent::getBody()
 void BodyComponent::setBody(b2Body* body)
 {
 	this->body = body;
+
 	body->SetUserData(&userData);
 }
 

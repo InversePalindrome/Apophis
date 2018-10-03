@@ -104,8 +104,8 @@ bool LevelEditorNode::init()
 			for (auto entityItr = std::begin(entities); entityItr != std::end(entities);)
 			{
 				ImGui::PushID(i++);
-
-				bool isEntityOpen = ImGui::TreeNode(("Entity " + std::to_string(entityItr->id().index())).c_str());
+			 
+				bool isEntityOpen = ImGui::TreeNode("", "Entity %d", entityItr->id().index());
 				bool isEntityMarkedForRemoval = false;
 
 				ImGui::SameLine();

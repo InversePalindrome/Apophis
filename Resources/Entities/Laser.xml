@@ -4,7 +4,7 @@
     <Object>Projectile</Object>
        <Sprite xScale="0.5" yScale="0.5" frame="RedBlast03"></Sprite>
     <Body type="2" bullet="true">
-      <Rectangle width="0.75" height="0.5"></Rectangle>
+      <Polygon mode="box" width="0.75" height="0.5"></Polygon>
     </Body>
     <Speed linear="40"></Speed>
     <Impulse linear="30"></Impulse>

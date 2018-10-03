@@ -16,13 +16,18 @@ InversePalindrome.com
 
 #include <pugixml.hpp>
 
+#include <vector>
+
 
 namespace BodyParser
 {
 	void parseBody(b2Body* body, const pugi::xml_node& bodyNode);
 	void parseFixtureDef(b2FixtureDef& fixtureDef, const pugi::xml_node& fixtureNode);
-	void parseCircleShape(b2CircleShape& circle, const pugi::xml_node& circleNode);
-	void parseEdgeShape(b2EdgeShape& edge, const pugi::xml_node& edgeNode);
-	void parsePolygonShape(b2PolygonShape& polygon, const pugi::xml_node& polygonNode);
-	void parseChainShape(b2ChainShape& chain, const pugi::xml_node& chainNode);
+
+	void parseCircle(b2CircleShape& circle, const pugi::xml_node& circleNode);
+	void parseEdge(b2EdgeShape& edge, const pugi::xml_node& edgeNode);
+	void parsePolygon(b2PolygonShape& polygon, std::vector<b2Vec2>& vertices, const pugi::xml_node& polygonNode);
+	void parseChain(b2ChainShape& chain, std::vector<b2Vec2>& vertices, const pugi::xml_node& chainNode);
+	
+	void parseVertices(std::vector<b2Vec2>& vertices, const pugi::xml_node& verticesNode);
 }

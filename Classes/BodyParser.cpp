@@ -64,7 +64,7 @@ void BodyParser::parseFixtureDef(b2FixtureDef& fixtureDef, const pugi::xml_node&
 	}
 }
 
-void BodyParser::parseCircleShape(b2CircleShape& circle, const pugi::xml_node& circleNode)
+void BodyParser::parseCircle(b2CircleShape& circle, const pugi::xml_node& circleNode)
 {
 	if (const auto xAttribute = circleNode.attribute("x"))
 	{
@@ -80,7 +80,7 @@ void BodyParser::parseCircleShape(b2CircleShape& circle, const pugi::xml_node& c
 	}
 }
 
-void BodyParser::parseEdgeShape(b2EdgeShape& edge, const pugi::xml_node& edgeNode)
+void BodyParser::parseEdge(b2EdgeShape& edge, const pugi::xml_node& edgeNode)
 {
 	if (const auto hasVertex0Attribute = edgeNode.attribute("hasVertex0"))
 	{
@@ -142,48 +142,60 @@ void BodyParser::parseEdgeShape(b2EdgeShape& edge, const pugi::xml_node& edgeNod
 	}
 }
 
-void BodyParser::parsePolygonShape(b2PolygonShape& polygon, const pugi::xml_node& polygonNode)
+void BodyParser::parsePolygon(b2PolygonShape& polygon, std::vector<b2Vec2>& vertices, const pugi::xml_node& polygonNode)
 {
-	std::vector<b2Vec2> points;
-
-	for (const auto pointNode : polygonNode.children("Point"))
+	if (const auto modeAttribue = polygonNode.attribute("mode"))
 	{
-		b2Vec2 point(0.f, 0.f);
-
-		if (const auto xAttribute = pointNode.attribute("x"))
+		if (std::strcmp(modeAttribue.as_string(), "polygon") == 0)
 		{
-			point.x = xAttribute.as_float();
-		}
-		if (const auto yAttribute = pointNode.attribute("y"))
-		{
-			point.y = yAttribute.as_float();
-		}
+			parseVertices(vertices, polygonNode);
 
-		points.push_back(point);
+			polygon.Set(vertices.data(), vertices.size());
+		}
+		else if (std::strcmp(modeAttribue.as_string(), "box") == 0)
+		{
+			if (const auto widthAttribute = polygonNode.attribute("width"),
+				heightAttribute = polygonNode.attribute("height");
+			    widthAttribute && heightAttribute)
+			{
+				polygon.SetAsBox(widthAttribute.as_float(1.f), heightAttribute.as_float(1.f));
+			}
+		}
 	}
-	
-	polygon.Set(points.data(), points.size());
 }
 
-void BodyParser::parseChainShape(b2ChainShape& chain, const pugi::xml_node& chainNode)
+void BodyParser::parseChain(b2ChainShape& chain, std::vector<b2Vec2>& vertices, const pugi::xml_node& chainNode)
 {
-	std::vector<b2Vec2> points;
-
-	for (const auto pointNode : chainNode.children("Point"))
+	if (const auto modeAttribute = chainNode.attribute("mode"))
 	{
-		b2Vec2 point(0.f, 0.f);
+		parseVertices(vertices, chainNode);
+
+		if (std::strcmp(modeAttribute.as_string(), "chain") == 0)
+		{
+			chain.CreateChain(vertices.data(), vertices.size());
+		}
+		else if (std::strcmp(modeAttribute.as_string(), "loop") == 0)
+		{
+			chain.CreateLoop(vertices.data(), vertices.size());
+		}
+	}
+}
+
+void BodyParser::parseVertices(std::vector<b2Vec2>& vertices, const pugi::xml_node& verticesNode)
+{
+	for (const auto pointNode : verticesNode.children("Vertex"))
+	{
+		b2Vec2 vertex(0.f, 0.f);
 
 		if (const auto xAttribute = pointNode.attribute("x"))
 		{
-			point.x = xAttribute.as_float();
+			vertex.x = xAttribute.as_float();
 		}
 		if (const auto yAttribute = pointNode.attribute("y"))
 		{
-			point.y = yAttribute.as_float();
+			vertex.y = yAttribute.as_float();
 		}
 
-		points.push_back(point);
+		vertices.push_back(vertex);
 	}
-
-	chain.CreateChain(points.data(), points.size());
 }

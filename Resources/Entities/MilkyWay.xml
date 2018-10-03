@@ -4,17 +4,23 @@
 		<Sprite x="0" y="0" rotation="0" xScale="1" yScale="1" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="Space" textureX="0" textureY="0" textureWidth="4096" textureHeight="4096" repeat="true" />
 	</Entity>
 	<Entity>
-		<Transform x="0" y="10.494998" angle="0" />
+		<Body type="0" x="-64" y="64" angle="0" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
+
+      
+		</Body>
+	</Entity>
+	<Entity>
+		<Transform x="-1.78528154" y="10.5725241" angle="9877.375" />
 		<Object>Player</Object>
 		<Tags>
 			<Tag>Player</Tag>
 		</Tags>
-		<Body type="2" x="0" y="10.494998" angle="0" linearDamping="0.400000006" angularDamping="0" fixedRotation="false" bullet="false">
+		<Body type="2" x="-1.78528154" y="10.5725241" angle="172.392715" linearDamping="0.400000006" angularDamping="0" fixedRotation="false" bullet="false">
 			<Circle density="0.100000001" friction="0.200000003" restitution="0" sensor="false" x="0" y="0" radius="0.75" />
 		</Body>
 		<Speed linear="35" angular="100" />
 		<Acceleration linear="1" angular="1" />
-		<Sprite x="0" y="335.839935" rotation="0" xScale="0.5" yScale="0.5" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="Spaceship4" textureX="0" textureY="0" textureWidth="96" textureHeight="86" repeat="false" />
+		<Sprite x="-57.1290092" y="338.32077" rotation="-9877.375" xScale="0.5" yScale="0.5" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="Spaceship4" textureX="0" textureY="0" textureWidth="96" textureHeight="86" repeat="false" />
 		<Sound>
 			<Sound state="Attacking" file="Laser.mp3" loop="false" />
 		</Sound>
@@ -33,14 +39,14 @@
 		<Sprite x="0" y="0" rotation="0" xScale="0.5" yScale="0.5" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="Planet_D" textureX="668" textureY="0" textureWidth="550" textureHeight="550" repeat="false" />
 	</Entity>
 	<Entity>
-		<Transform x="20" y="0" angle="0" />
+		<Transform x="20.8885345" y="-0.912606478" angle="-82.5141449" />
 		<Object>Asteroid</Object>
-		<Body type="2" x="20" y="0" angle="0" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
+		<Body type="2" x="20.8885345" y="-0.912606478" angle="-1.44014347" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
 			<Circle density="0.300000012" friction="0.200000003" restitution="0" sensor="false" x="0" y="0" radius="0.899999976" />
 		</Body>
 		<Speed linear="10" angular="25" />
-		<Sprite x="640" y="0" rotation="0" xScale="0.5" yScale="0.5" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="BlueAsteroid" textureX="228" textureY="0" textureWidth="171" textureHeight="171" repeat="false" />
-		<Satellite primaryID="2" direction="1" />
+		<Sprite x="668.433105" y="-29.2034073" rotation="82.5141449" xScale="0.5" yScale="0.5" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="BlueAsteroid" textureX="228" textureY="0" textureWidth="171" textureHeight="171" repeat="false" />
+		<Satellite primaryID="3" direction="1" />
 	</Entity>
 	<Entity>
 		<Transform x="-30" y="0" angle="0" />
@@ -50,7 +56,7 @@
 		</Body>
 		<Speed linear="15" angular="2" />
 		<Sprite x="-960" y="0" rotation="0" xScale="0.5" yScale="0.5" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="RockAsteroid" textureX="305" textureY="228" textureWidth="142" textureHeight="142" repeat="false" />
-		<Satellite primaryID="2" direction="1" />
+		<Satellite primaryID="3" direction="1" />
 	</Entity>
 	<Entity>
 		<Speed linear="40" angular="5" />
@@ -67,10 +73,10 @@
 		<State>Idle</State>
 	</Entity>
 	<Entity>
-		<DistanceJoint idA="2" idB="3" anchorAX="0" anchorAY="0" anchorBX="0" anchorBY="0" frequency="0" dampingRatio="0" />
+		<DistanceJoint idA="3" idB="4" anchorAX="0" anchorAY="0" anchorBX="0" anchorBY="0" frequency="0" dampingRatio="0" />
 	</Entity>
 	<Entity>
-		<DistanceJoint idA="2" idB="4" anchorAX="0" anchorAY="0" anchorBX="0" anchorBY="0" frequency="0" dampingRatio="0" />
+		<DistanceJoint idA="3" idB="5" anchorAX="0" anchorAY="0" anchorBX="0" anchorBY="0" frequency="0" dampingRatio="0" />
 	</Entity>
 	<Entity>
 		<Transform x="-10" y="-10" angle="0" />
@@ -79,13 +85,13 @@
 			<Tag>Striker</Tag>
 		</Tags>
 		<Body type="2" x="-10" y="-10" angle="0" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
-			<Circle density="0.3" friction="0.200000003" restitution="0" sensor="false" x="0" y="0" radius="0.75" />
+			<Circle density="0.300000012" friction="0.200000003" restitution="0" sensor="false" x="0" y="0" radius="0.75" />
 		</Body>
-    <Weapon projectileFilename="Laser.xml" reloadTime="2000" />
 		<Speed linear="10" angular="5" />
 		<Sprite x="-320" y="-320" rotation="0" xScale="0.5" yScale="0.5" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="Spaceship3" textureX="98" textureY="0" textureWidth="86" textureHeight="91" repeat="false" />
+		<Health>20</Health>
+		<Weapon projectileFilename="Laser.xml" reloadTime="2000" />
 		<Vision>20</Vision>
 		<Wander distance="5" radius="1" rate="1" />
-    <Health>20</Health>
 	</Entity>
 </Level>

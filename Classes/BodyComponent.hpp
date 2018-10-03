@@ -97,6 +97,7 @@ private:
 	std::any userData;	
 
 	int shapeIndex;
-	std::variant<b2CircleShape, b2EdgeShape, b2PolygonShape, b2ChainShape> shapeToAdd;
-	std::vector<b2Vec2> verticesToAdd;
+	std::string shapeMode;
+	std::variant<b2CircleShape, b2EdgeShape, b2PolygonShape, b2ChainShape> shape;
+	std::vector<b2Vec2> vertices;
 };
