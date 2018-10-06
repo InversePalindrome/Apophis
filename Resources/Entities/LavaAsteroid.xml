@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Entity>
-  <Components>
-    <Sprite>LavaAsteroid</Sprite>
-    <Body object="Asteroid" type="0">
-      <Fixture shape="circle" radius="2"></Fixture>
-    </Body>
-  </Components>
-</Entity>

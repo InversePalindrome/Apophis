@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
-  <Components>
-    <Transform></Transform>
-    <Sprite frame="RegenBoost"></Sprite>
-    <Object>Item</Object>
-    <Body type="2" linearDamping="1" fixedRotation="false">
+   <Transform></Transform>
+   <Sprite frame="RegenBoost" xScale="0.5" yScale="0.5"></Sprite>
+   <Object>Item</Object>
+   <Body type="2" linearDamping="1" fixedRotation="false">
       <Circle radius="1.0" density="0.3"></Circle>
-    </Body>
-    <RegenBoost period="1000"></RegenBoost>
-  </Components>
+   </Body>
+   <RegenBoost period="1000"></RegenBoost>
 </Entity>

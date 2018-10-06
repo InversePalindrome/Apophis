@@ -32,15 +32,12 @@ void PhysicsSystem::configure(entityx::EventManager& eventManager)
 	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<BodyComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentRemovedEvent<BodyComponent>>(*this);
-	eventManager.subscribe<EntityParsed>(*this);
-	eventManager.subscribe<GameReset>(*this);
+	eventManager.subscribe<UpdateTransform>(*this);
 	eventManager.subscribe<ComponentLoaded<entityx::ComponentHandle<DistanceJointComponent>>>(*this);
 }
 
 void PhysicsSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
-	updateWorldCallbacks();
-
 	entityManager.each<TransformComponent, BodyComponent>([](auto entity, auto& transform, const auto& body)
 	{
 		transform.setPosition(body.getPosition());
@@ -48,6 +45,8 @@ void PhysicsSystem::update(entityx::EntityManager& entityManager, entityx::Event
 	});
 
 	world.Step(Constants::TIMESTEP, Constants::VELOCITY_ITERATIONS, Constants::POSITION_ITERATIONS);
+
+	collisionManager.update();
 }
 
 void PhysicsSystem::receive(const entityx::EntityDestroyedEvent& event)
@@ -70,90 +69,59 @@ void PhysicsSystem::receive(const entityx::EntityDestroyedEvent& event)
 
 void PhysicsSystem::receive(const entityx::ComponentAddedEvent<BodyComponent>& event)
 {
+	bodiesUserData.push_back(event.entity);
+
 	auto body = event.component;
 
-	modifyWorld([this, body, event]() mutable
-	{ 
-		body->setBody(world.CreateBody(&b2BodyDef())); 
-		body->setUserData(event.entity);
-	});
+	body->setBody(world.CreateBody(&b2BodyDef())); 
+	body->setUserData(&bodiesUserData.back());
 }
 
 void PhysicsSystem::receive(const entityx::ComponentRemovedEvent<BodyComponent>& event)
 {
+	bodiesUserData.erase(std::remove(std::begin(bodiesUserData), std::end(bodiesUserData), event.entity));
+
 	auto body = event.component;
 
+	body->setUserData(nullptr);
 	destroyBody(body->getBody());
 }
 
-void PhysicsSystem::receive(const EntityParsed& event)
+void PhysicsSystem::receive(const UpdateTransform& event)
 {
-	modifyWorld([event]()
+	if (auto[body, transform] = event.entity.components<BodyComponent, TransformComponent>(); body && transform)
 	{
-		if (auto[body, transform] = event.entity.components<BodyComponent, TransformComponent>(); body && transform)
-		{
-			body->setPosition(transform->getPosition());
-			body->setAngle(Conversions::degreesToRadians(transform->getAngle()));
-		}
-	});
-}
-
-void PhysicsSystem::receive(const GameReset& event)
-{
-	worldCallbacks.clear();
+		body->setPosition(transform->getPosition());
+		body->setAngle(Conversions::degreesToRadians(transform->getAngle()));
+	}
 }
 
 void PhysicsSystem::receive(const ComponentLoaded<entityx::ComponentHandle<DistanceJointComponent>>& event)
 {
-	modifyWorld([this, event]() mutable
-	{
-		auto joint = event.component;
+	auto joint = event.component;
 
-		if (auto entityA = entityManager.get(entityManager.create_id(joint->getEntityIDA())),
-			entityB = entityManager.get(entityManager.create_id(joint->getEntityIDB()));
-		    entityA && entityB)
-		{
-			if (auto bodyA = entityA.component<BodyComponent>(),
-				bodyB = entityB.component<BodyComponent>();
-			    bodyA && bodyB)
-			{ 
-				b2DistanceJointDef distanceJointDef;
-				distanceJointDef.Initialize(bodyA->getBody(), bodyB->getBody(), joint->getLocalAnchorA(), joint->getLocalAnchorB());
-				joint->setDistanceJoint(static_cast<b2DistanceJoint*>(world.CreateJoint(&distanceJointDef)));
-				joint->setJoint(joint->getDistanceJoint());
-			}
+	if (auto entityA = entityManager.get(entityManager.create_id(joint->getEntityIDA())),
+		entityB = entityManager.get(entityManager.create_id(joint->getEntityIDB()));
+	    entityA && entityB)
+	{
+		if (auto bodyA = entityA.component<BodyComponent>(),
+			bodyB = entityB.component<BodyComponent>();
+		    bodyA && bodyB)
+		{ 
+			b2DistanceJointDef distanceJointDef;
+			distanceJointDef.Initialize(bodyA->getBody(), bodyB->getBody(), joint->getLocalAnchorA(), joint->getLocalAnchorB());
+			joint->setDistanceJoint(static_cast<b2DistanceJoint*>(world.CreateJoint(&distanceJointDef)));
+			joint->setJoint(joint->getDistanceJoint());
 		}
-	});
-}
-
-void PhysicsSystem::updateWorldCallbacks()
-{
-	for (const auto& worldCallback : worldCallbacks)
-	{
-		worldCallback();
 	}
-
-	worldCallbacks.clear();
 }
 
 void PhysicsSystem::destroyBody(b2Body* body)
 {
-    modifyWorld([this, body]() { world.DestroyBody(body); });
+    world.DestroyBody(body); 
 }
 
 void PhysicsSystem::destroyJoint(b2Joint* joint)
 {
-	modifyWorld([this, joint] { world.DestroyJoint(joint); });
-}
-
-void PhysicsSystem::modifyWorld(const std::function<void()>& function)
-{
-	if (world.IsLocked())
-	{
-		worldCallbacks.push_back(function);
-	}
-	else
-	{
-		function();
-	}
+	world.DestroyJoint(joint); 
 }

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
-  <Components>
-    <Object>Projectile</Object>
-    <Body type="2" bullet="true">
-      <Fixture shape="polygon" width="0.8" height="0.8"></Fixture>
-    </Body>
-    <Speed linear="40"></Speed>
-    <Impulse linear="25"></Impulse>
-    <Sprite>BlueBlast06</Sprite>
-    <Damage>20</Damage>
-  </Components>
+  <Object>Projectile</Object>
+  <Body type="2" bullet="true">
+    <Polygon width="0.8" height="0.8"></Polygon>
+  </Body>
+  <Speed linear="40"></Speed>
+  <Impulse linear="25"></Impulse>
+  <Sprite frame="BlueBlast06"></Sprite>
+  <Damage>20</Damage>
 </Entity>

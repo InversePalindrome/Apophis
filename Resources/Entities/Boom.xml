@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
-  <Components>
-  <Sprite frame="Explosion1"></Sprite>
+  <Sprite frame="Explosion1" xScale="0.5" yScale="0.5"></Sprite>
     <Sound>
     <Explode>Boom.mp3</Explode>
   </Sound>
@@ -10,5 +9,4 @@
   <Body type="2" bullet="true">
     <Circle radius="0.8" density="0.001"></Circle>
   </Body>
-    </Components>
 </Entity>

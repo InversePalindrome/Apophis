@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
-    <Sprite>Skeleton</Sprite>
+    <Sprite frame="Skeleton"></Sprite>
     <Object>Item</Object>
     <Body type="2" linearDamping="1" fixedRotation="false" x="-5" y="-5">
-      <Fixture shape="circle" radius="1.0" density="0.3"></Fixture>
+      <Circle radius="1.0" density="0.3"></Circle>
     </Body>
 </Entity>

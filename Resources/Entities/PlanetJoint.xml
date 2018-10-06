@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Entity>
-  <Components>
-    <DistanceJoint IDA="1" IDB="5" collideConnected="true"></DistanceJoint>
-  </Components>
-</Entity>

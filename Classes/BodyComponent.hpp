@@ -17,7 +17,6 @@ InversePalindrome.com
 
 #include <pugixml.hpp>
 
-#include <any>
 #include <vector>
 #include <variant>
 
@@ -41,8 +40,8 @@ public:
 	b2JointEdge* getJointList();
 	const b2JointEdge* getJointList() const;
 
-	std::any getUserData() const;
-	void setUserData(const std::any& userData);
+	void* getUserData() const;
+	void setUserData(void* userData);
 
 	b2BodyType getBodyType() const;
 	void setBodyType(b2BodyType bodyType);
@@ -92,12 +91,9 @@ public:
 private:
 	b2Body* body;
 
-	b2AABB AABB;
-
-	std::any userData;	
+	b2AABB AABB;	
 
 	int shapeIndex;
-	std::string shapeMode;
 	std::variant<b2CircleShape, b2EdgeShape, b2PolygonShape, b2ChainShape> shape;
 	std::vector<b2Vec2> vertices;
 };

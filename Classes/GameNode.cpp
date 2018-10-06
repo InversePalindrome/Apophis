@@ -122,8 +122,6 @@ void GameNode::reloadGame()
 {
 	scheduleUpdate();
 
-	eventManager.emit(GameReset{});
-
 	entityManager.reset();
 
 	LevelParser::parseLevel(entityManager, eventManager, mapDimensions, level);

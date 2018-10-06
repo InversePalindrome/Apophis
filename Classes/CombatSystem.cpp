@@ -71,7 +71,7 @@ void CombatSystem::receive(const ShootProjectile& event)
 				}
 			});
 		}
-
+		
 		eventManager.emit(ChangeState{ event.shooter, State::Attacking });
 	}
 }
@@ -105,6 +105,8 @@ void CombatSystem::handleExplosion(entityx::Entity destroyedEntity)
 		if (auto explosionTransform = explosionEntity.component<TransformComponent>())
 		{
 			explosionTransform->setPosition(destroyedTransform->getPosition());
+
+			eventManager.emit(UpdateTransform{ explosionEntity });
 
 			timer.add(destroyedExplosion->getExplosionTime(), [explosionEntity](auto id) mutable
 			{

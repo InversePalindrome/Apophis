@@ -41,4 +41,5 @@ void EntityParser::parseEntity(entityx::Entity entity, entityx::EventManager& ev
 	}
 
 	eventManager.emit(EntityParsed{ entity });
+	eventManager.emit(UpdateTransform{ entity });
 }

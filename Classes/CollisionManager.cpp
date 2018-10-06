@@ -11,29 +11,43 @@ InversePalindrome.com
 
 #include <Box2D/Dynamics/b2Fixture.h>
 
-#include <any>
-
 
 CollisionManager::CollisionManager(entityx::EventManager& eventManager) :
 	eventManager(eventManager)
 {
 }
 
+void CollisionManager::update()
+{
+	for (const auto& collisionCallback : collisionCallbacks)
+	{
+		collisionCallback();
+	}
+	
+	collisionCallbacks.clear();
+}
+
 void CollisionManager::BeginContact(b2Contact* contact)
 {
-	const auto* bodyA = contact->GetFixtureA()->GetBody();
-	const auto* bodyB = contact->GetFixtureB()->GetBody();
+	auto* entityA = static_cast<entityx::Entity*>(contact->GetFixtureA()->GetBody()->GetUserData());
+	auto* entityB = static_cast<entityx::Entity*>(contact->GetFixtureB()->GetBody()->GetUserData());
 
-	if (auto collisionPair = getCollisionPair(bodyA, bodyB, ObjectType::Projectile, ObjectType::Alive))
+	collisionCallbacks.push_back([this, entityA, entityB]()
 	{
-		eventManager.emit(CombatOcurred{collisionPair->first, collisionPair->second });
-	
-		collisionPair->first.destroy();
-	}
-	else if (auto collisionPair = getCollisionPair(bodyA, bodyB, ObjectType::Player, ObjectType::Item))
-	{
-		eventManager.emit(PickedUpItem{ collisionPair->first, collisionPair->second });
-	}
+		if (entityA && entityB && *entityA && *entityB)
+		{
+			if (auto collisionPair = getCollisionPair(entityA, entityB, ObjectType::Projectile, ObjectType::Alive))
+			{
+				eventManager.emit(CombatOcurred{ collisionPair->first, collisionPair->second });
+
+				collisionPair->first.destroy();
+			}
+			else if (auto collisionPair = getCollisionPair(entityA, entityB, ObjectType::Player, ObjectType::Item))
+			{
+				eventManager.emit(PickedUpItem{ collisionPair->first, collisionPair->second });
+			}
+		}
+	});
 }
 
 void CollisionManager::EndContact(b2Contact* contact)
@@ -52,29 +66,19 @@ void CollisionManager::PostSolve(b2Contact* contact, const b2ContactImpulse* imp
 }
 
 std::optional<std::pair<entityx::Entity, entityx::Entity>>
-CollisionManager::getCollisionPair(const b2Body* bodyA, const b2Body* bodyB, ObjectType objectTypeA, ObjectType objectTypeB)
+CollisionManager::getCollisionPair(entityx::Entity* entityA, entityx::Entity* entityB, ObjectType objectTypeA, ObjectType objectTypeB)
 {
-	if (auto* userDataA = static_cast<std::any*>(bodyA->GetUserData()),
-	    *userDataB = static_cast<std::any*>(bodyB->GetUserData());
-	    userDataA && userDataB && userDataA->type() == typeid(entityx::Entity) && userDataB->type() == typeid(entityx::Entity))
+	if (const auto objectA = entityA->component<ObjectComponent>(),
+		objectB = entityB->component<ObjectComponent>();
+	    objectA && objectB)
 	{
-		if (auto* entityA = std::any_cast<entityx::Entity>(userDataA),
-		    *entityB = std::any_cast<entityx::Entity>(userDataB); 
-		    *entityA && *entityB)
+		if (objectA->getObjectType() & objectTypeA && objectB->getObjectType() & objectTypeB)
 		{
-			if (const auto objectA = entityA->component<ObjectComponent>(),
-				objectB = entityB->component<ObjectComponent>();
-				objectA && objectB)
-			{
-				if (objectA->getObjectType() & objectTypeA && objectB->getObjectType() & objectTypeB)
-				{
-					return { { *entityA, *entityB } };
-				}
-				else if (objectA->getObjectType() & objectTypeB && objectB->getObjectType() & objectTypeA)
-				{
-					return { { *entityB, *entityA } };
-				}
-			}
+			return { { *entityA, *entityB } };
+		}
+		else if (objectA->getObjectType() & objectTypeB && objectB->getObjectType() & objectTypeA)
+		{
+			return { { *entityB, *entityA } };
 		}
 	}
 

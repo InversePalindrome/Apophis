@@ -6,17 +6,16 @@
 	<Entity>
 		<Body type="0" x="-64" y="64" angle="0" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
 
-      
 		</Body>
 	</Entity>
 	<Entity>
-		<Transform x="-1.78528154" y="10.5725241" angle="9877.375" />
+		<Transform x="-25" y="-25"/>
 		<Object>Player</Object>
 		<Tags>
 			<Tag>Player</Tag>
 		</Tags>
-		<Body type="2" x="-1.78528154" y="10.5725241" angle="172.392715" linearDamping="0.400000006" angularDamping="0" fixedRotation="false" bullet="false">
-			<Circle density="0.100000001" friction="0.200000003" restitution="0" sensor="false" x="0" y="0" radius="0.75" />
+		<Body type="2" angle="172.392715" linearDamping="0.400000006" angularDamping="0" fixedRotation="false" bullet="false">
+      <Circle density="0.100000001" friction="0.200000003" restitution="0" sensor="false" x="0" y="0" radius="0.4" />
 		</Body>
 		<Speed linear="35" angular="100" />
 		<Acceleration linear="1" angular="1" />
@@ -26,7 +25,6 @@
 		</Sound>
 		<Health>100</Health>
 		<Weapon projectileFilename="Laser.xml" reloadTime="400" />
-		<Explosion filename="Boom.xml" time="2000" />
 		<Vision>5</Vision>
 		<State>Undefined</State>
 	</Entity>
@@ -66,6 +64,7 @@
 		<Particle x="304" y="482" rotation="0" xScale="1" yScale="1" xAnchorPoint="0" yAnchorPoint="0" R="255" G="255" B="255" zOrder="0" filename="Supernova.plist" mode="1" duration="-1" emissionRate="165" life="0.400000006" lifeVar="0" startRadius="408" startRadiusVar="22" endRadius="0" endRadiusVar="0" startR="1" startG="0" startB="0" startA="0" starVartR="0" startVarG="0" startVarB="0.200000003" startVarA="0.100000001" endR="0" endG="0" endB="0" endA="0" endVarR="0" endVarG="0" endVarB="0" endVarA="0" />
 	</Entity>
 	<Entity>
+    <Transform x="10" y="10"></Transform>
 		<Sprite x="0" y="0" rotation="0" xScale="0.5" yScale="0.5" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="Coin1" textureX="0" textureY="0" textureWidth="60" textureHeight="60" repeat="false" />
 		<Animation>
 			<Animation state="Idle" name="Coin" loops="2147483647" />
@@ -89,9 +88,14 @@
 		</Body>
 		<Speed linear="10" angular="5" />
 		<Sprite x="-320" y="-320" rotation="0" xScale="0.5" yScale="0.5" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="Spaceship3" textureX="98" textureY="0" textureWidth="86" textureHeight="91" repeat="false" />
-		<Health>20</Health>
+		<Health>40</Health>
 		<Weapon projectileFilename="Laser.xml" reloadTime="2000" />
 		<Vision>20</Vision>
 		<Wander distance="5" radius="1" rate="1" />
+    <Drop>
+      <Item filename="RegenBoost.xml" weight="1"></Item>
+      <Item filename="SpeedBoost.xml" weight="1"></Item>
+    </Drop>
+    <Explosion filename="Boom.xml" time="2000"/>
 	</Entity>
 </Level>

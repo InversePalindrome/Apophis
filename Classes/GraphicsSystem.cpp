@@ -23,10 +23,11 @@ GraphicsSystem::GraphicsSystem(cocos2d::Node* gameNode) :
 
 void GraphicsSystem::configure(entityx::EventManager& eventManager)
 {
-	eventManager.subscribe<EntityParsed>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<SpriteComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<LabelComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentAddedEvent<ParticleComponent>>(*this);
+	eventManager.subscribe<EntityParsed>(*this);
+	eventManager.subscribe<UpdateTransform>(*this);
 }
 
 void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
@@ -41,23 +42,6 @@ void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::Even
 	});
 
 	updateHealthBar();
-}
-
-void GraphicsSystem::receive(const EntityParsed& event)
-{
-	if (auto[tags, health] = event.entity.components<TagsComponent, HealthComponent>(); tags && health && tags->hasTag("Player"))
-	{
-		playerHealth = health;
-	}
-
-	brigand::for_each<Renderables>([event](auto renderableElement)
-	{
-		if (auto[renderable, transform] = event.entity.components<decltype(renderableElement)::type, TransformComponent>(); renderable && transform)
-		{
-			renderable->setPosition({ transform->getPosition().x * Constants::PTM_RATIO, transform->getPosition().y * Constants::PTM_RATIO });
-			renderable->setRotation(-transform->getAngle());
-		}
-	});
 }
 
 void GraphicsSystem::receive(const entityx::ComponentAddedEvent<SpriteComponent>& event)
@@ -75,6 +59,23 @@ void GraphicsSystem::receive(const entityx::ComponentAddedEvent<ParticleComponen
 	gameNode->addChild(event.component->getNode());
 }
 
+void GraphicsSystem::receive(const EntityParsed& event)
+{
+	syncHealthBar(event.entity);
+}
+
+void GraphicsSystem::receive(const UpdateTransform& event)
+{
+	brigand::for_each<Renderables>([event](auto renderableElement)
+	{
+		if (auto[renderable, transform] = event.entity.components<decltype(renderableElement)::type, TransformComponent>(); renderable && transform)
+		{
+			renderable->setPosition({ transform->getPosition().x * Constants::PTM_RATIO, transform->getPosition().y * Constants::PTM_RATIO });
+			renderable->setRotation(-transform->getAngle());
+		}
+	});
+}
+
 void GraphicsSystem::updateHealthBar()
 {
 	if (playerHealth)
@@ -82,5 +83,13 @@ void GraphicsSystem::updateHealthBar()
 		auto healthPercent = playerHealth->getCurrentHitpoints() / playerHealth->getMaxHitpoints() * 100.f;
 
 		gameNode->getEventDispatcher()->dispatchCustomEvent("setHealthBar", &healthPercent);
+	}
+}
+
+void GraphicsSystem::syncHealthBar(entityx::Entity entity)
+{
+	if (auto[tags, health] = entity.components<TagsComponent, HealthComponent>(); tags && health && tags->hasTag("Player"))
+	{
+		playerHealth = health;
 	}
 }

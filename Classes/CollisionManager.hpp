@@ -15,8 +15,10 @@ InversePalindrome.com
 #include <entityx/Event.h>
 #include <entityx/Entity.h>
 
+#include <vector>
 #include <utility>
 #include <optional>
+#include <functional>
 
 
 class CollisionManager : public b2ContactListener
@@ -25,6 +27,8 @@ public:
 	explicit CollisionManager(entityx::EventManager& eventManager);
 	CollisionManager(const CollisionManager&) = delete;
 	CollisionManager& operator= (const CollisionManager&) = delete;
+
+	void update();
 
 private:
 	entityx::EventManager& eventManager;
@@ -36,5 +40,7 @@ private:
 	virtual void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override;
 
 	std::optional<std::pair<entityx::Entity, entityx::Entity>>
-    getCollisionPair(const b2Body* bodyA, const b2Body* bodyB, ObjectType objectTypeA, ObjectType objectTypeB);
+    getCollisionPair(entityx::Entity* entityA, entityx::Entity* entityB, ObjectType objectTypeA, ObjectType objectTypeB);
+
+	std::vector<std::function<void()>> collisionCallbacks;
 };

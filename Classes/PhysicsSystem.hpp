@@ -18,8 +18,7 @@ InversePalindrome.com
 
 #include <entityx/System.h> 
 
-#include <vector>
-#include <functional>
+#include <list>
 
 
 class PhysicsSystem : public entityx::System<PhysicsSystem>, public entityx::Receiver<PhysicsSystem>
@@ -32,8 +31,7 @@ public:
 	virtual void receive(const entityx::EntityDestroyedEvent& event);
 	virtual void receive(const entityx::ComponentAddedEvent<BodyComponent>& event);
 	virtual void receive(const entityx::ComponentRemovedEvent<BodyComponent>& event);
-	virtual void receive(const EntityParsed& event);
-	virtual void receive(const GameReset& event);
+	virtual void receive(const UpdateTransform& event);
 	virtual void receive(const ComponentLoaded<entityx::ComponentHandle<DistanceJointComponent>>& event);
 
 private:
@@ -42,14 +40,10 @@ private:
 	CollisionFilter collisionFilter;
 	DestructionListener destructionListener;
 
-	std::vector<std::function<void()>> worldCallbacks;
-
 	entityx::EntityManager& entityManager;
 
-	void updateWorldCallbacks();
+	std::list<entityx::Entity> bodiesUserData;
 
 	void destroyBody(b2Body* body);
 	void destroyJoint(b2Joint* joint);
-
-	void modifyWorld(const std::function<void()>& function);
 };

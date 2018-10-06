@@ -46,9 +46,11 @@ void ItemSystem::receive(const entityx::EntityDestroyedEvent& event)
 			auto itemEntity = entityManager.create();
 			EntityParser::parseEntity(itemEntity, eventManager, destroyedItemFilenames.at(discreteDistribution(randomEngine)));
 
-			if (auto itemGeometry = itemEntity.component<TransformComponent>())
+			if (auto itemTransform = itemEntity.component<TransformComponent>())
 			{
-				itemGeometry->setPosition(destroyedTransform->getPosition());
+				itemTransform->setPosition(destroyedTransform->getPosition());
+
+				eventManager.emit(UpdateTransform{ itemEntity });
 			}
 		}
 	}

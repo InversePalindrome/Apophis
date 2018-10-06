@@ -144,41 +144,26 @@ void BodyParser::parseEdge(b2EdgeShape& edge, const pugi::xml_node& edgeNode)
 
 void BodyParser::parsePolygon(b2PolygonShape& polygon, std::vector<b2Vec2>& vertices, const pugi::xml_node& polygonNode)
 {
-	if (const auto modeAttribue = polygonNode.attribute("mode"))
-	{
-		if (std::strcmp(modeAttribue.as_string(), "polygon") == 0)
-		{
-			parseVertices(vertices, polygonNode);
+	parseVertices(vertices, polygonNode);
 
-			polygon.Set(vertices.data(), vertices.size());
-		}
-		else if (std::strcmp(modeAttribue.as_string(), "box") == 0)
-		{
-			if (const auto widthAttribute = polygonNode.attribute("width"),
-				heightAttribute = polygonNode.attribute("height");
-			    widthAttribute && heightAttribute)
-			{
-				polygon.SetAsBox(widthAttribute.as_float(1.f), heightAttribute.as_float(1.f));
-			}
-		}
+	if (!vertices.empty())
+	{
+		polygon.Set(vertices.data(), vertices.size());
+	}
+
+    else if (const auto widthAttribute = polygonNode.attribute("width"),
+		heightAttribute = polygonNode.attribute("height");
+	    widthAttribute && heightAttribute)
+	{
+	    polygon.SetAsBox(widthAttribute.as_float(1.f), heightAttribute.as_float(1.f));
 	}
 }
 
 void BodyParser::parseChain(b2ChainShape& chain, std::vector<b2Vec2>& vertices, const pugi::xml_node& chainNode)
 {
-	if (const auto modeAttribute = chainNode.attribute("mode"))
-	{
-		parseVertices(vertices, chainNode);
+	parseVertices(vertices, chainNode);
 
-		if (std::strcmp(modeAttribute.as_string(), "chain") == 0)
-		{
-			chain.CreateChain(vertices.data(), vertices.size());
-		}
-		else if (std::strcmp(modeAttribute.as_string(), "loop") == 0)
-		{
-			chain.CreateLoop(vertices.data(), vertices.size());
-		}
-	}
+	chain.CreateChain(vertices.data(), vertices.size());
 }
 
 void BodyParser::parseVertices(std::vector<b2Vec2>& vertices, const pugi::xml_node& verticesNode)

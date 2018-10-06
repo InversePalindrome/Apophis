@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Entity>
-  <Sprite>GreenAsteroid</Sprite>
-  <Body object="Asteroid" type="0">
-    <Fixture shape="circle" radius="1.8"></Fixture>
-  </Body>
-</Entity>

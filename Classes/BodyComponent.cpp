@@ -14,7 +14,6 @@ InversePalindrome.com
 
 #include <imgui.h>
 
-#include <variant>
 #include <algorithm>
 
 
@@ -61,13 +60,13 @@ void BodyComponent::load(const pugi::xml_node& componentNode)
 		else if (std::strcmp(fixtureNode.name(), "Chain") == 0)
 		{
 			b2ChainShape chain;
-
+		
 			BodyParser::parseChain(chain, vertices, fixtureNode);
 
 			shape = chain;
 		}
 
-		std::visit([&fixtureDef](auto& shape){ 	fixtureDef.shape = &shape; }, shape);
+		std::visit([&fixtureDef](auto& shape){ fixtureDef.shape = &shape; }, shape);
 
 		createFixture(fixtureDef);
 	}
@@ -263,8 +262,6 @@ b2Body* BodyComponent::getBody()
 void BodyComponent::setBody(b2Body* body)
 {
 	this->body = body;
-
-	body->SetUserData(&userData);
 }
 
 b2Fixture* BodyComponent::getFixtureList()
@@ -287,14 +284,14 @@ const b2JointEdge* BodyComponent::getJointList() const
 	return body->GetJointList();
 }
 
-std::any BodyComponent::getUserData() const
+void* BodyComponent::getUserData() const
 {
-	return userData;
+	return body->GetUserData();
 }
 
-void BodyComponent::setUserData(const std::any& userData)
+void BodyComponent::setUserData(void* userData)
 {
-	this->userData = userData;
+	body->SetUserData(userData);
 }
 
 b2BodyType BodyComponent::getBodyType() const
@@ -398,7 +395,7 @@ void BodyComponent::computeAABB()
 		}
 	}
 }
-
+ 
 b2Fixture* BodyComponent::createFixture(const b2FixtureDef& fixtureDef)
 {
 	return body->CreateFixture(&fixtureDef);
