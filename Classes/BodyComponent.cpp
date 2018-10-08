@@ -181,10 +181,38 @@ void BodyComponent::display()
 			{
 				b2FixtureDef fixtureDef;
 				
-				std::visit([this, &fixtureDef](auto& shape){ fixtureDef.shape = &shape; }, shape);
+				std::visit([this, &fixtureDef](auto& shape)
+				{ 
+					using ShapeType = std::decay_t<decltype(shape)>;
+
+					if constexpr(std::is_same_v<ShapeType, b2PolygonShape>)
+					{
+						if (polygonModeIndex == 0)
+						{
+							shape.Set(vertices.data(), vertices.size());
+						}
+						else if (polygonModeIndex == 1)
+						{
+							shape.SetAsBox(box.x, box.y);
+						}
+					}
+					else if constexpr(std::is_same_v<ShapeType, b2ChainShape>)
+					{
+						if (chainModeIndex == 0)
+						{
+							shape.CreateChain(vertices.data(), vertices.size());
+						}
+						else if (chainModeIndex == 1)
+						{
+							shape.CreateLoop(vertices.data(), vertices.size());
+						}
+					}
+
+					fixtureDef.shape = &shape; 
+				}, shape);
 
 				createFixture(fixtureDef);
-				
+
 				vertices.clear();
 
 				ImGui::CloseCurrentPopup();

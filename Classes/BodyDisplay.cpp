@@ -133,17 +133,10 @@ void BodyDisplay::displayPolygon(b2PolygonShape& polygon, int& polygonModeIndex,
 	if(polygonModeIndex == 0)
 	{
 		displayVertices(vertices);
-
-		if (vertices.size() > 2)
-		{
-			polygon.Set(vertices.data(), vertices.size());
-		}
 	}
 	else if (polygonModeIndex == 1)
 	{
 		displayBox(box);
-
-		polygon.SetAsBox(box.x, box.y);
 	}
 }
 
@@ -167,18 +160,6 @@ void BodyDisplay::displayChain(b2ChainShape& chain, int& chainModeIndex, std::ve
 	ImGui::RadioButton("Loop", &chainModeIndex, 1);
 
 	displayVertices(vertices);
-
-	if (vertices.size() > 2)
-	{
-		if (chainModeIndex == 0)
-		{
-			chain.CreateChain(vertices.data(), vertices.size());
-		}
-		else if (chainModeIndex == 1)
-		{
-			chain.CreateLoop(vertices.data(), vertices.size());
-		}
-	}
 }
 
 void BodyDisplay::displayChain(const b2ChainShape* chain)
