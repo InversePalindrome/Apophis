@@ -94,6 +94,10 @@ private:
 	b2AABB AABB;	
 
 	int shapeIndex;
+	int polygonModeIndex;
+	int chainModeIndex;
 	std::variant<b2CircleShape, b2EdgeShape, b2PolygonShape, b2ChainShape> shape;
+
+	b2Vec2 box;
 	std::vector<b2Vec2> vertices;
 };

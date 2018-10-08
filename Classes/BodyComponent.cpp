@@ -20,7 +20,10 @@ InversePalindrome.com
 BodyComponent::BodyComponent() :
 	body(nullptr),
 	AABB({ {FLT_MAX, FLT_MAX}, {-FLT_MAX, -FLT_MAX} }),
-	shapeIndex(0)
+	shapeIndex(0),
+	polygonModeIndex(0),
+	chainModeIndex(0),
+	box(0.f, 0.f)
 {
 }
 
@@ -31,6 +34,7 @@ void BodyComponent::load(const pugi::xml_node& componentNode)
 	for (const auto fixtureNode : componentNode.children())
 	{
 		b2FixtureDef fixtureDef;
+
 		BodyParser::parseFixtureDef(fixtureDef, fixtureNode);
 
 		if (std::strcmp(fixtureNode.name(), "Circle") == 0)
@@ -39,7 +43,9 @@ void BodyComponent::load(const pugi::xml_node& componentNode)
 
 			BodyParser::parseCircle(circle, fixtureNode);
 
-			shape = circle;
+			fixtureDef.shape = &circle;
+
+			createFixture(fixtureDef);
 		}
 		else if (std::strcmp(fixtureNode.name(), "Edge") == 0)
 		{
@@ -47,28 +53,30 @@ void BodyComponent::load(const pugi::xml_node& componentNode)
 
 			BodyParser::parseEdge(edge, fixtureNode);
 
-			shape = edge;
+			fixtureDef.shape = &edge;
+
+			createFixture(fixtureDef);
 		}
 		else if (std::strcmp(fixtureNode.name(), "Polygon") == 0)
 		{
 			b2PolygonShape polygon;
-			
-			BodyParser::parsePolygon(polygon, vertices, fixtureNode);
 
-			shape = polygon;
+			BodyParser::parsePolygon(polygon, fixtureNode);
+
+			fixtureDef.shape = &polygon;
+
+			createFixture(fixtureDef);
 		}
 		else if (std::strcmp(fixtureNode.name(), "Chain") == 0)
 		{
 			b2ChainShape chain;
-		
-			BodyParser::parseChain(chain, vertices, fixtureNode);
 
-			shape = chain;
+			BodyParser::parseChain(chain, fixtureNode);
+
+			fixtureDef.shape = &chain;
+
+			createFixture(fixtureDef);
 		}
-
-		std::visit([&fixtureDef](auto& shape){ fixtureDef.shape = &shape; }, shape);
-
-		createFixture(fixtureDef);
 	}
 
 	computeAABB();
@@ -119,8 +127,6 @@ void BodyComponent::display()
 
 			if (ImGui::Combo("Shape", &shapeIndex, shapes, 4))
 			{
-				vertices.clear();
-
 				switch (static_cast<b2Shape::Type>(shapeIndex))
 				{
 				case b2Shape::e_circle:
@@ -163,11 +169,11 @@ void BodyComponent::display()
 				}
 				else if constexpr(std::is_same_v<ShapeType, b2PolygonShape>)
 				{
-					BodyDisplay::displayVertices(vertices);
+					BodyDisplay::displayPolygon(shape, polygonModeIndex, vertices, box);
 				}
 				else if constexpr(std::is_same_v<ShapeType, b2ChainShape>)
 				{
-					BodyDisplay::displayVertices(vertices);
+					BodyDisplay::displayChain(shape, chainModeIndex, vertices);
 				}
 			}, shape);
 
@@ -175,21 +181,7 @@ void BodyComponent::display()
 			{
 				b2FixtureDef fixtureDef;
 				
-				std::visit([this, &fixtureDef](auto& shape)
-				{
-					using ShapeType = std::decay_t<decltype(shape)>;
-
-					if constexpr(std::is_same_v<ShapeType, b2PolygonShape>)
-					{
-						shape.Set(vertices.data(), vertices.size());
-					}
-					else if constexpr(std::is_same_v<ShapeType, b2ChainShape>)
-					{
-						shape.CreateChain(vertices.data(), vertices.size());
-					}
-
-					fixtureDef.shape = &shape; 
-				}, shape);
+				std::visit([this, &fixtureDef](auto& shape){ fixtureDef.shape = &shape; }, shape);
 
 				createFixture(fixtureDef);
 				

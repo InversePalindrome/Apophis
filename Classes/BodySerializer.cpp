@@ -71,7 +71,7 @@ void BodySerializer::savePolygon(const b2PolygonShape* polygon, pugi::xml_node& 
 
 	for (int i = 0; i < polygon->GetVertexCount(); ++i)
 	{
-		auto pointNode = polygonNode.append_child("Point");
+		auto pointNode = polygonNode.append_child("Vertex");
 		pointNode.append_attribute("x") = polygon->m_vertices[i].x;
 		pointNode.append_attribute("y") = polygon->m_vertices[i].y;
 	}
@@ -83,7 +83,7 @@ void BodySerializer::saveChain(const b2ChainShape* chain, pugi::xml_node& chainN
 
 	for (int i = 0; i < chain->m_count; ++i)
 	{
-		auto pointNode = chainNode.append_child("Point");
+		auto pointNode = chainNode.append_child("Vertex");
 		pointNode.append_attribute("x") = chain->m_vertices[i].x;
 		pointNode.append_attribute("y") = chain->m_vertices[i].y;
 	}

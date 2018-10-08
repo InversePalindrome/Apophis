@@ -124,6 +124,29 @@ void BodyDisplay::displayEdge(const b2EdgeShape* edge)
 	}
 }
 
+void BodyDisplay::displayPolygon(b2PolygonShape& polygon, int& polygonModeIndex, std::vector<b2Vec2>& vertices, b2Vec2& box)
+{
+	ImGui::RadioButton("Vertices", &polygonModeIndex, 0);
+	ImGui::SameLine();
+	ImGui::RadioButton("Box", &polygonModeIndex, 1);
+	
+	if(polygonModeIndex == 0)
+	{
+		displayVertices(vertices);
+
+		if (vertices.size() > 2)
+		{
+			polygon.Set(vertices.data(), vertices.size());
+		}
+	}
+	else if (polygonModeIndex == 1)
+	{
+		displayBox(box);
+
+		polygon.SetAsBox(box.x, box.y);
+	}
+}
+
 void BodyDisplay::displayPolygon(const b2PolygonShape* polygon)
 {
 	if (ImGui::TreeNode("Polygon"))
@@ -134,6 +157,27 @@ void BodyDisplay::displayPolygon(const b2PolygonShape* polygon)
 		}
 
 		ImGui::TreePop();
+	}
+}
+
+void BodyDisplay::displayChain(b2ChainShape& chain, int& chainModeIndex, std::vector<b2Vec2>& vertices)
+{
+	ImGui::RadioButton("Chain", &chainModeIndex, 0);
+	ImGui::SameLine();
+	ImGui::RadioButton("Loop", &chainModeIndex, 1);
+
+	displayVertices(vertices);
+
+	if (vertices.size() > 2)
+	{
+		if (chainModeIndex == 0)
+		{
+			chain.CreateChain(vertices.data(), vertices.size());
+		}
+		else if (chainModeIndex == 1)
+		{
+			chain.CreateLoop(vertices.data(), vertices.size());
+		}
 	}
 }
 
@@ -148,6 +192,11 @@ void BodyDisplay::displayChain(const b2ChainShape* chain)
 
 		ImGui::TreePop();
 	}
+}
+
+void BodyDisplay::displayBox(b2Vec2& box)
+{
+	ImGui::InputFloat2("(Width, Height)", &box.x);
 }
 
 void BodyDisplay::displayVertices(std::vector<b2Vec2>& vertices)

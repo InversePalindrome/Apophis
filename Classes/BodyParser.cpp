@@ -142,15 +142,16 @@ void BodyParser::parseEdge(b2EdgeShape& edge, const pugi::xml_node& edgeNode)
 	}
 }
 
-void BodyParser::parsePolygon(b2PolygonShape& polygon, std::vector<b2Vec2>& vertices, const pugi::xml_node& polygonNode)
+void BodyParser::parsePolygon(b2PolygonShape& polygon, const pugi::xml_node& polygonNode)
 {
+	std::vector<b2Vec2> vertices;
+
 	parseVertices(vertices, polygonNode);
 
 	if (!vertices.empty())
 	{
 		polygon.Set(vertices.data(), vertices.size());
 	}
-
     else if (const auto widthAttribute = polygonNode.attribute("width"),
 		heightAttribute = polygonNode.attribute("height");
 	    widthAttribute && heightAttribute)
@@ -159,10 +160,12 @@ void BodyParser::parsePolygon(b2PolygonShape& polygon, std::vector<b2Vec2>& vert
 	}
 }
 
-void BodyParser::parseChain(b2ChainShape& chain, std::vector<b2Vec2>& vertices, const pugi::xml_node& chainNode)
+void BodyParser::parseChain(b2ChainShape& chain, const pugi::xml_node& chainNode)
 {
-	parseVertices(vertices, chainNode);
+	std::vector<b2Vec2> vertices;
 
+	parseVertices(vertices, chainNode);
+	
 	chain.CreateChain(vertices.data(), vertices.size());
 }
 
