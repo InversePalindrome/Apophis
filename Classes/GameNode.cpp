@@ -100,7 +100,7 @@ GameNode* GameNode::create(const std::string& level)
 
 void GameNode::initSystems()
 {
-	systemManager.add<DroneSystem>(eventManager);
+	systemManager.add<DroneSystem>(entityManager, eventManager);
 	systemManager.add<StrikerSystem>(eventManager);
 	systemManager.add<PlayerSystem>(this);
 	systemManager.add<StateSystem>(eventManager);

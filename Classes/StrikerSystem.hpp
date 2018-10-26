@@ -26,8 +26,6 @@ public:
 	virtual void receive(const EntityParsed& event);
 
 private:
-	entityx::EventManager& eventManager;
-
 	beehive::Tree<StrikerContext> strikerTree;
 
 	entityx::ComponentHandle<TransformComponent> playerTransform;

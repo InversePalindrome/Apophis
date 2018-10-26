@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+  <Transform></Transform>
+  <Object>Enemy</Object>
+  <Tags>
+    <Tag>Drone</Tag>
+  </Tags>
+  <Body type="2" angle="0" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
+    <Circle density="0.300000012" friction="0.200000003" restitution="0" sensor="false" radius="0.75" />
+  </Body>
+  <Speed linear="10" angular="5" />
+  <Sprite rotation="0" xScale="0.5" yScale="0.5" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="Spaceship2" textureX="98" textureY="0" textureWidth="86" textureHeight="91" repeat="false"/>
+  <Vision>5</Vision>
+  <Wander></Wander>
+  <Arrive></Arrive>
+  <Follow leaderID="1" distance="1.5"></Follow>
+  <Flock></Flock>
+</Entity>

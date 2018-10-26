@@ -27,6 +27,7 @@ InversePalindrome.com
 #include "DamageComponent.hpp"
 #include "PursueComponent.hpp"
 #include "SpriteComponent.hpp"
+#include "ArriveComponent.hpp"
 #include "ParticleComponent.hpp"
 #include "TransformComponent.hpp"
 #include "AnimationComponent.hpp"
@@ -45,14 +46,14 @@ InversePalindrome.com
 
 
 using Components = brigand::list<TransformComponent, ObjectComponent, TagsComponent, BodyComponent, DistanceJointComponent, SpeedComponent, 
-                               	 AccelerationComponent, SpriteComponent, LabelComponent, ParticleComponent, AnimationComponent,
+                               	 AccelerationComponent, SpriteComponent, ArriveComponent, LabelComponent, ParticleComponent, AnimationComponent,
                                  SoundComponent, HealthComponent, DamageComponent,  WeaponComponent, DropComponent, SpeedBoostComponent, 
                                  RegenBoostComponent, ExplosionComponent, VisionComponent, WanderComponent, PatrolComponent, 
 	                             FollowComponent, PursueComponent, AvoidComponent, FlockComponent, QueueComponent, SatelliteComponent, StateComponent>;
 
 using ComponentsVariant = std::variant<entityx::ComponentHandle<TransformComponent>, entityx::ComponentHandle<ObjectComponent>, entityx::ComponentHandle<TagsComponent>,
 	                                   entityx::ComponentHandle<BodyComponent>, entityx::ComponentHandle<SpeedComponent>, entityx::ComponentHandle<DistanceJointComponent>,
-	                                   entityx::ComponentHandle<AccelerationComponent>, entityx::ComponentHandle<SpriteComponent>, entityx::ComponentHandle<LabelComponent>,
+	                                   entityx::ComponentHandle<AccelerationComponent>, entityx::ComponentHandle<SpriteComponent>, entityx::ComponentHandle<ArriveComponent>, entityx::ComponentHandle<LabelComponent>,
 	                                   entityx::ComponentHandle<ParticleComponent>, entityx::ComponentHandle<AnimationComponent>, entityx::ComponentHandle<SoundComponent>, entityx::ComponentHandle<HealthComponent>,
 	                                   entityx::ComponentHandle<DamageComponent>, entityx::ComponentHandle<WeaponComponent>, entityx::ComponentHandle<DropComponent>,
 	                                   entityx::ComponentHandle<SpeedBoostComponent>, entityx::ComponentHandle<RegenBoostComponent>, entityx::ComponentHandle<ExplosionComponent>,

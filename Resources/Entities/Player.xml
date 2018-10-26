@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+  <Transform/>
+  <Object>Player</Object>
+  <Tags>
+    <Tag>Player</Tag>
+  </Tags>
+  <Body type="2" linearDamping="0.400000006" angularDamping="0" fixedRotation="false" bullet="false">
+    <Circle density="0.100000001" friction="0.200000003" restitution="0" sensor="false" x="0" y="0" radius="0.4" />
+  </Body>
+  <Speed linear="35" angular="100" />
+  <Acceleration linear="1" angular="1" />
+  <Sprite xScale="0.5" yScale="0.5" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="Spaceship4" textureX="0" textureY="0" textureWidth="96" textureHeight="86" repeat="false" />
+  <Sound>
+    <Sound state="Attacking" file="Laser.mp3" loop="false" />
+  </Sound>
+  <Health>100</Health>
+  <Weapon projectileFilename="Laser.xml" reloadTime="400" />
+  <Vision>5</Vision>
+  <State>Undefined</State>
+</Entity>

@@ -21,6 +21,7 @@ const std::unordered_map<std::string, std::function<ComponentsVariant(entityx::E
     { "Object", [](auto& entity) { return entity.assign<ObjectComponent>(); } },
 	{ "Tags", [](auto& entity) { return entity.assign<TagsComponent>(); }},
     { "State", [](auto& entity) { return entity.assign<StateComponent>(); } },
+	{ "Arrive", [](auto& entity) { return entity.assign<ArriveComponent>(); }},
     { "Pursue", [](auto& entity) { return entity.assign<PursueComponent>(); } },
     { "Avoid", [](auto& entity) { return entity.assign<AvoidComponent>(); } },
     { "Wander", [](auto& entity) { return entity.assign<WanderComponent>(); } },

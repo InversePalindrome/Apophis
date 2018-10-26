@@ -11,7 +11,6 @@ InversePalindrome.com
 
 
 StrikerSystem::StrikerSystem(entityx::EventManager& eventManager)  :
-	eventManager(eventManager),
 	strikerTree(beehive::Builder<StrikerContext>()
 	.selector()
 	.sequence()

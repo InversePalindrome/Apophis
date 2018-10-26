@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity>
+  <Transform />
+  <Object>Asteroid</Object>
+  <Body type="0" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
+    <Circle density="0" friction="0.200000003" restitution="0" sensor="false" x="0" y="0" radius="4.5" />
+  </Body>
+  <Sprite x="0" y="0" rotation="0" xScale="0.5" yScale="0.5" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="Planet_D" textureX="668" textureY="0" textureWidth="550" textureHeight="550" repeat="false" />
+</Entity>

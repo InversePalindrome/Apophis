@@ -20,9 +20,13 @@ public:
 
 	void display();
 
+	int getLeaderID() const;
+	void setLeaderID(int leaderID);
+
 	float getDistanceFromLeader() const;
 	void setDistanceFromLeader(float distanceFromLeader);
 
 private:
+	int leaderID;
 	float distanceFromLeader;
 };

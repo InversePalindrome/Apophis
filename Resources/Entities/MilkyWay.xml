@@ -35,34 +35,6 @@
 		<State>Undefined</State>
 	</Entity>
 	<Entity>
-		<Transform x="0" y="0" angle="0" />
-		<Object>Asteroid</Object>
-		<Body type="0" x="0" y="0" angle="0" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
-			<Circle density="0" friction="0.200000003" restitution="0" sensor="false" x="0" y="0" radius="4.5" />
-		</Body>
-		<Sprite x="0" y="0" rotation="0" xScale="0.5" yScale="0.5" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="Planet_D" textureX="668" textureY="0" textureWidth="550" textureHeight="550" repeat="false" />
-	</Entity>
-	<Entity>
-		<Transform x="20.8885345" y="-0.912606478" angle="-82.5141449" />
-		<Object>Asteroid</Object>
-		<Body type="2" x="20.8885345" y="-0.912606478" angle="-1.44014347" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
-			<Circle density="0.300000012" friction="0.200000003" restitution="0" sensor="false" x="0" y="0" radius="0.899999976" />
-		</Body>
-		<Speed linear="10" angular="25" />
-		<Sprite x="668.433105" y="-29.2034073" rotation="82.5141449" xScale="0.5" yScale="0.5" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="BlueAsteroid" textureX="228" textureY="0" textureWidth="171" textureHeight="171" repeat="false" />
-		<Satellite primaryID="3" direction="1" />
-	</Entity>
-	<Entity>
-		<Transform x="-30" y="0" angle="0" />
-		<Object>Asteroid</Object>
-		<Body type="2" x="-30" y="0" angle="0" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
-			<Circle density="0.300000012" friction="0.200000003" restitution="0" sensor="false" x="0" y="0" radius="1" />
-		</Body>
-		<Speed linear="15" angular="2" />
-		<Sprite x="-960" y="0" rotation="0" xScale="0.5" yScale="0.5" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="RockAsteroid" textureX="305" textureY="228" textureWidth="142" textureHeight="142" repeat="false" />
-		<Satellite primaryID="3" direction="1" />
-	</Entity>
-	<Entity>
 		<Speed linear="40" angular="5" />
 		<Label x="0" y="0" rotation="0" xScale="1" yScale="1" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" font="BEBAS" size="100" HAlignment="0" VAlignment="0" textR="17" textG="231" textB="242" textA="255">Hello World</Label>
 	</Entity>
@@ -83,25 +55,21 @@
 	<Entity>
 		<DistanceJoint idA="3" idB="5" anchorAX="0" anchorAY="0" anchorBX="0" anchorBY="0" frequency="0" dampingRatio="0" />
 	</Entity>
-	<Entity>
-		<Transform x="-10" y="-10" angle="0" />
-		<Object>Enemy</Object>
-		<Tags>
-			<Tag>Striker</Tag>
-		</Tags>
-		<Body type="2" x="-10" y="-10" angle="0" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
-			<Circle density="0.300000012" friction="0.200000003" restitution="0" sensor="false" x="0" y="0" radius="0.75" />
-		</Body>
-		<Speed linear="10" angular="5" />
-		<Sprite x="-320" y="-320" rotation="0" xScale="0.5" yScale="0.5" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="Spaceship3" textureX="98" textureY="0" textureWidth="86" textureHeight="91" repeat="false" />
-		<Health>40</Health>
-		<Weapon projectileFilename="Laser.xml" reloadTime="2000" />
-		<Vision>20</Vision>
-		<Wander distance="5" radius="1" rate="1" />
-    <Drop>
-      <Item filename="RegenBoost.xml" weight="1"></Item>
-      <Item filename="SpeedBoost.xml" weight="1"></Item>
-    </Drop>
-    <Explosion filename="Boom.xml" time="2000"/>
-	</Entity>
+  <Entity>
+    <Transform x="25" y="15"></Transform>
+    <Object>Enemy</Object>
+    <Tags>
+      <Tag>Drone</Tag>
+    </Tags>
+    <Body type="2" angle="0" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
+      <Circle density="0.300000012" friction="0.200000003" restitution="0" sensor="false" radius="0.75" />
+    </Body>
+    <Speed linear="10" angular="5" />
+    <Sprite rotation="0" xScale="0.5" yScale="0.5" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="Spaceship2" textureX="98" textureY="0" textureWidth="86" textureHeight="91" repeat="false"/>
+    <Vision>20</Vision>
+    <Wander></Wander>
+    <Arrive></Arrive>
+    <Follow leaderID="2"></Follow>
+    <Flock></Flock>
+  </Entity>
 </Level>
