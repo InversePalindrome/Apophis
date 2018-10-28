@@ -20,16 +20,23 @@ b2Vec2 SteeringBehaviors::seek(const b2Vec2& bodyPosition, const b2Vec2& targetP
 	return desiredVelocity(bodyPosition, targetPosition, maxSpeed) - bodyVelocity;
 }
 
-b2Vec2 SteeringBehaviors::pursue(const b2Vec2& bodyPosition, const b2Vec2& targetPosition, const b2Vec2& bodyVelocity, const b2Vec2& targetVelocity, float predictionTime, float maxSpeed)
+b2Vec2 SteeringBehaviors::flee(const b2Vec2& bodyPosition, const b2Vec2& targetPosition, const b2Vec2& bodyVelocity, float maxSpeed)
 {
-	const auto distance = (targetPosition - bodyPosition).Length();
+	return desiredVelocity(targetPosition, bodyPosition, maxSpeed) - bodyVelocity;
+}
 
-	if (bodyVelocity.Length() > distance / predictionTime)
-	{
-		predictionTime = distance / bodyVelocity.Length();
-	}
+b2Vec2 SteeringBehaviors::pursue(const b2Vec2& bodyPosition, const b2Vec2& targetPosition, const b2Vec2& bodyVelocity, const b2Vec2& targetVelocity, float maxSpeed)
+{
+	const auto predictionFrames = (targetPosition - bodyPosition).Length() / maxSpeed;
 
-	return seek(bodyPosition, targetPosition + predictionTime * targetVelocity, bodyVelocity, maxSpeed);
+	return seek(bodyPosition, targetPosition + predictionFrames * targetVelocity, bodyVelocity, maxSpeed);
+}
+
+b2Vec2 SteeringBehaviors::evade(const b2Vec2& bodyPosition, const b2Vec2& targetPosition, const b2Vec2& bodyVelocity, const b2Vec2& targetVelocity, float maxSpeed)
+{
+	const auto predictionFrames = (targetPosition - bodyPosition).Length() / maxSpeed;
+
+	return flee(bodyPosition, targetPosition + predictionFrames * targetVelocity, bodyVelocity, maxSpeed);
 }
 
 b2Vec2 SteeringBehaviors::arrive(const b2Vec2& bodyPosition, const b2Vec2& targetPosition, const b2Vec2& bodyVelocity, float slowRadius, float maxSpeed)
@@ -40,24 +47,6 @@ b2Vec2 SteeringBehaviors::arrive(const b2Vec2& bodyPosition, const b2Vec2& targe
 	}
 
 	return seek(bodyPosition, targetPosition, bodyVelocity, maxSpeed);
-}
-
-b2Vec2 SteeringBehaviors::follow(const b2Vec2& bodyPosition, const b2Vec2& leaderPosition, const b2Vec2& bodyVelocity, const b2Vec2& leaderVelocity, float leaderSight, float distanceFromLeader, float predictionTime, float maxSpeed)
-{
-	b2Vec2 steeringForce(0.f, 0.f);
-
-	auto leaderDirection = leaderVelocity;
-	leaderDirection.Normalize();
-	leaderDirection *= distanceFromLeader;
-
-	if ((bodyPosition - leaderPosition + leaderDirection).Length() <= leaderSight || (bodyPosition - leaderPosition).Length() <= leaderSight)
-	{
-		steeringForce += pursue(bodyPosition, leaderPosition, bodyVelocity, leaderVelocity, predictionTime, -maxSpeed);
-	}
-
-	steeringForce += arrive(bodyPosition, leaderPosition - leaderDirection, bodyVelocity, distanceFromLeader, maxSpeed);
-
-	return steeringForce;
 }
 
 b2Vec2 SteeringBehaviors::wander(const b2Vec2& bodyPosition, const b2Vec2& bodyVelocity, float wanderDistance, float wanderRadius, float wanderRate, float& wanderAngle, float maxSpeed)
@@ -81,18 +70,6 @@ b2Vec2 SteeringBehaviors::orbit(const b2Vec2& satellitePosition, const b2Vec2& p
 	steeringForce *= maxSpeed;
 
 	return steeringForce - bodyVelocity;
-}
-
-b2Vec2 SteeringBehaviors::avoidForce(const std::vector<b2Vec2>& neighborPositions)
-{
-	b2Vec2 avoidForce(0.f, 0.f);
-
-	for (const auto& bodyPosition : neighborPositions)
-	{
-
-	}
-
-	return avoidForce;
 }
 
 b2Vec2 SteeringBehaviors::alignForce(const b2Vec2& agentPosition, const std::vector<b2Vec2>& neighborVelocities)
@@ -125,7 +102,8 @@ b2Vec2 SteeringBehaviors::cohesionForce(const b2Vec2& agentPosition, const std::
 
 	return cohesionForce;
 }
-b2Vec2 SteeringBehaviors::separateForce(const b2Vec2& agentPosition, const std::vector<b2Vec2>& neighborPositions, float separationRadius)
+
+b2Vec2 SteeringBehaviors::separateForce(const b2Vec2& agentPosition, const std::vector<b2Vec2>& neighborPositions, float separationForce)
 {
 	b2Vec2 separateForce(0.f, 0.f);
 
@@ -134,9 +112,13 @@ b2Vec2 SteeringBehaviors::separateForce(const b2Vec2& agentPosition, const std::
 		separateForce += neighborPosition - agentPosition;
 	}
 
-	separateForce *= -1.f / neighborPositions.size();
-	separateForce.Normalize();
-
+	if (!neighborPositions.empty())
+	{
+		separateForce *= -1.f / neighborPositions.size();
+		separateForce.Normalize();
+		separateForce *= separationForce;
+	}
+	
 	return separateForce;
 }
 
@@ -152,7 +134,6 @@ b2Vec2 SteeringBehaviors::desiredVelocity(const b2Vec2& bodyPosition, const b2Ve
 float SteeringBehaviors::face(float desiredAngle, float bodyAngle, float bodyAngularVelocity, float bodyInertia)
 {
 	const auto nextAngle = bodyAngle + bodyAngularVelocity / Constants::FPS;
-
 	const auto totalRotation = std::remainderf(desiredAngle - nextAngle, 2 * boost::math::constants::pi<float>());
 
 	return bodyInertia * totalRotation * Constants::FPS;

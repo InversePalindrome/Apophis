@@ -7,7 +7,6 @@ InversePalindrome.com
 
 #pragma once
 
-#include "Events.hpp"
 #include "DroneContext.hpp"
 
 #include <entityx/Entity.h>

@@ -20,13 +20,9 @@ public:
 
 	void display();
 
-	float getAvoidanceAheadDistance() const;
-	void setAvoidanceAheadDistance(float avoidanceAheadDistance);
-
 	float getAvoidanceForce() const;
 	void setAvoidanceForce(float avoidanceForce);
 
 private:
-	float avoidanceAheadDistance;
 	float avoidanceForce;
 };

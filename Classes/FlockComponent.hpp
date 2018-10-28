@@ -26,7 +26,20 @@ public:
 	float getGroupRadius() const;
 	void setGroupRadius(float groupRadius);
 
+	float getAlignmentForce() const;
+	void setAlignmentForce(float alignmentForce);
+
+	float getCohesionForce() const;
+	void setCohesionForce(float cohesionForce);
+
+	float getSeparationForce() const;
+	void setSeparationForce(float separationForce);
+
 private:
 	int groupID;
 	float groupRadius;
+
+	float alignmentForce;
+	float cohesionForce;
+	float separationForce;
 };

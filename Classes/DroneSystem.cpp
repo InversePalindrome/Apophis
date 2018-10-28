@@ -34,14 +34,33 @@ DroneSystem::DroneSystem(entityx::EntityManager& entityManager, entityx::EventMa
 
 		if (const auto leaderBody = leaderEntity.component<BodyComponent>())
 		{
-			auto leaderBehindPoint = leaderBody->getLinearVelocity();
-			leaderBehindPoint *= -1.f;
-			leaderBehindPoint.Normalize();
-			leaderBehindPoint *= context.follow.getDistanceFromLeader();
+			auto directionVector = leaderBody->getLinearVelocity();
+			directionVector.Normalize();
+			directionVector *= context.follow.getDistanceFromLeader();
 
-			context.body.applyLinearImpulse(SteeringBehaviors::arrive(context.body.getPosition(), leaderBehindPoint, context.body.getLinearVelocity(), context.arrive.getSlowRadius(), context.speed.getMaxLinearSpeed()));
-			context.body.applyAngularImpulse(SteeringBehaviors::face(leaderBody->getAngle(), context.body.getAngle(), context.body.getAngularVelocity(), context.body.getInertia()));
+			const auto aheadPoint = leaderBody->getPosition() + directionVector;
+			const auto behindPoint = leaderBody->getPosition() - directionVector;
+
+			if (b2RayCastOutput rayOutput; context.body.raycast(rayOutput, { leaderBody->getPosition(), aheadPoint, 1.f }))
+			{
+				context.body.applyLinearImpulse(SteeringBehaviors::evade(context.body.getPosition(), leaderBody->getPosition(), context.body.getLinearVelocity(), leaderBody->getLinearVelocity(), context.speed.getMaxLinearSpeed()));
+			}
+
+			context.body.applyLinearImpulse(SteeringBehaviors::arrive(context.body.getPosition(), behindPoint, context.body.getLinearVelocity(), context.arrive.getSlowRadius(), context.speed.getMaxLinearSpeed()));
+			context.body.applyAngularImpulse(SteeringBehaviors::face(context.body.getPosition(), context.body.getPosition() + context.body.getLinearVelocity(), context.body.getAngle(), context.body.getAngularVelocity(), context.body.getInertia()));
 		}
+
+		std::vector<b2Vec2> neighborPositions;
+
+		entityManager.each<FlockComponent, BodyComponent>([&context, &neighborPositions](auto entity, const auto& flock, const auto& body) 
+		{
+			if (context.entity != entity && context.flock.getGroupID() == flock.getGroupID() && (context.body.getPosition() - body.getPosition()).Length() <= context.flock.getGroupRadius())
+			{
+				neighborPositions.push_back(body.getPosition());
+			}
+		});
+		
+		context.body.applyLinearImpulse(SteeringBehaviors::separateForce(context.body.getPosition(), neighborPositions, context.flock.getSeparationForce()));
 	})
 	.end()
 	.void_leaf([](auto& context)
@@ -58,7 +77,8 @@ void DroneSystem::configure(entityx::EventManager& eventManager)
 
 void DroneSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
-	entityManager.each<TagsComponent, BodyComponent, WanderComponent, SpeedComponent, ArriveComponent, FollowComponent, FlockComponent, VisionComponent>([this](auto entity, const auto& tags, auto& body, auto& wander, const auto& speed, const auto& arrive, const auto& follow, const auto& flock, const auto& vision)
+	entityManager.each<TagsComponent, BodyComponent, WanderComponent, SpeedComponent, ArriveComponent, FollowComponent, FlockComponent, VisionComponent>
+	([this](auto entity, const auto& tags, auto& body, auto& wander, const auto& speed, const auto& arrive, const auto& follow, const auto& flock, const auto& vision)
 	{
 		if (tags.hasTag("Drone"))
 		{
