@@ -5,8 +5,10 @@ InversePalindrome.com
 */
 
 
+#include "Events.hpp"
 #include "StrikerSystem.hpp"
-#include "TagsComponent.hpp"
+#include "ObjectComponent.hpp"
+#include "TargetComponent.hpp"
 #include "SteeringBehaviors.hpp"
 
 
@@ -16,7 +18,7 @@ StrikerSystem::StrikerSystem(entityx::EventManager& eventManager)  :
 	.sequence()
 	.leaf([this](auto& context)
     {
-	     return (playerTransform->getPosition() - context.body.getPosition()).Length() <= context.vision.getVisionDistance();
+	     return (context.targetTransform->getPosition() - context.body.getPosition()).Length() <= context.vision.getVisionDistance();
     })
 	.selector()
 	.sequence()
@@ -28,16 +30,16 @@ StrikerSystem::StrikerSystem(entityx::EventManager& eventManager)  :
 	})
 	.void_leaf([this, &eventManager](auto& context)
 	{
-		context.body.applyLinearImpulse(SteeringBehaviors::seek(context.body.getPosition(), playerTransform->getPosition(), context.body.getLinearVelocity(), context.speed.getMaxLinearSpeed()));
-		context.body.applyAngularImpulse(SteeringBehaviors::face(context.body.getPosition(), playerTransform->getPosition(), context.body.getAngle(), context.body.getAngularVelocity(), context.body.getInertia()));
+		context.body.applyLinearImpulse(SteeringBehaviors::seek(context.body.getPosition(), context.targetTransform->getPosition(), context.body.getLinearVelocity(), context.speed.getMaxLinearSpeed()));
+		context.body.applyAngularImpulse(SteeringBehaviors::face(context.body.getPosition(), context.targetTransform->getPosition(), context.body.getAngle(), context.body.getAngularVelocity(), context.body.getInertia()));
 
 		eventManager.emit(ShootProjectile{ context.striker });
 	})
 	.end()
 	.void_leaf([this](auto& context)
 	{
-		context.body.applyLinearImpulse(SteeringBehaviors::seek(context.body.getPosition(), playerTransform->getPosition(), context.body.getLinearVelocity(), -context.speed.getMaxLinearSpeed()));
-		context.body.applyAngularImpulse(SteeringBehaviors::face(playerTransform->getPosition(), context.body.getPosition(), context.body.getAngle(), context.body.getAngularVelocity(), context.body.getInertia()));
+		context.body.applyLinearImpulse(SteeringBehaviors::seek(context.body.getPosition(), context.targetTransform->getPosition(), context.body.getLinearVelocity(), -context.speed.getMaxLinearSpeed()));
+		context.body.applyAngularImpulse(SteeringBehaviors::face(context.targetTransform->getPosition(), context.body.getPosition(), context.body.getAngle(), context.body.getAngularVelocity(), context.body.getInertia()));
 	}).end().end()
 	.void_leaf([](auto& context)
 	{
@@ -49,27 +51,22 @@ StrikerSystem::StrikerSystem(entityx::EventManager& eventManager)  :
 	  
 void StrikerSystem::configure(entityx::EventManager& eventManager)
 {
-	eventManager.subscribe<EntityParsed>(*this);
 }
 
 void StrikerSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
-	if (playerTransform)
+	entityManager.each<ObjectComponent, TargetComponent, BodyComponent, SpeedComponent, WanderComponent, VisionComponent, HealthComponent>
+	([this, &entityManager](auto entity, const auto& object, const auto& target, auto& body, const auto& speed, auto& wander, const auto& vision, const auto& health) 
 	{
-		entityManager.each<TagsComponent, BodyComponent, SpeedComponent, WanderComponent, VisionComponent, HealthComponent>([this](auto entity, const auto& tags, auto& body, const auto& speed, auto& wander, const auto& vision, const auto& health) 
+		if (object.getObjectType() == +ObjectType::Striker)
 		{
-			if (tags.hasTag("Striker"))
+			if (auto targetEntity = entityManager.get(entityManager.create_id(target.getTargetID())))
 			{
-				strikerTree.process(StrikerContext{ entity, body, speed, wander, vision, health });
+				if (const auto targetTransform = targetEntity.component<TransformComponent>())
+				{
+					strikerTree.process(StrikerContext{ entity, targetEntity, body, speed, wander, vision, health, targetTransform });
+				}
 			}
-		});
-	}
-}
-
-void StrikerSystem::receive(const EntityParsed& event)
-{
-	if (const auto&[tags, transform] = event.entity.components<TagsComponent, TransformComponent>(); tags && tags->hasTag("Player") && transform)
-	{
-		playerTransform = transform;
-	}
+		}
+	});
 }

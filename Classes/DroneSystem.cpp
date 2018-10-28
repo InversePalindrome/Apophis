@@ -6,7 +6,7 @@ InversePalindrome.com
 
 
 #include "DroneSystem.hpp"
-#include "TagsComponent.hpp"
+#include "ObjectComponent.hpp"
 #include "SteeringBehaviors.hpp"
 #include "TransformComponent.hpp"
 
@@ -17,44 +17,30 @@ DroneSystem::DroneSystem(entityx::EntityManager& entityManager, entityx::EventMa
 	.sequence()
 	.leaf([&entityManager](auto& context)
     {
-	   if (auto leaderEntity = entityManager.get(entityManager.create_id(context.follow.getLeaderID())))
-	   {
-		   if (const auto leaderTransform = leaderEntity.component<TransformComponent>(); leaderTransform && 
-			   (leaderTransform->getPosition() - context.body.getPosition()).Length() <= context.vision.getVisionDistance())
-		   {
-			   return true;
-		   }
-	   }
-
-	   return false;   
+	     return (context.leaderBody->getPosition() - context.body.getPosition()).Length() <= context.vision.getVisionDistance();
     }
 	).void_leaf([&entityManager](auto& context) 
 	{
-		auto leaderEntity = entityManager.get(entityManager.create_id(context.follow.getLeaderID()));
+		auto directionVector = context.leaderBody->getLinearVelocity();
+		directionVector.Normalize();
+		directionVector *= context.follow.getDistanceFromLeader();
 
-		if (const auto leaderBody = leaderEntity.component<BodyComponent>())
+		const auto aheadPoint = context.leaderBody->getPosition() + directionVector;
+		const auto behindPoint = context.leaderBody->getPosition() - directionVector;
+
+		if (b2RayCastOutput rayOutput; context.body.raycast(rayOutput, { context.leaderBody->getPosition(), aheadPoint, 1.f }))
 		{
-			auto directionVector = leaderBody->getLinearVelocity();
-			directionVector.Normalize();
-			directionVector *= context.follow.getDistanceFromLeader();
-
-			const auto aheadPoint = leaderBody->getPosition() + directionVector;
-			const auto behindPoint = leaderBody->getPosition() - directionVector;
-
-			if (b2RayCastOutput rayOutput; context.body.raycast(rayOutput, { leaderBody->getPosition(), aheadPoint, 1.f }))
-			{
-				context.body.applyLinearImpulse(SteeringBehaviors::evade(context.body.getPosition(), leaderBody->getPosition(), context.body.getLinearVelocity(), leaderBody->getLinearVelocity(), context.speed.getMaxLinearSpeed()));
-			}
-
-			context.body.applyLinearImpulse(SteeringBehaviors::arrive(context.body.getPosition(), behindPoint, context.body.getLinearVelocity(), context.arrive.getSlowRadius(), context.speed.getMaxLinearSpeed()));
-			context.body.applyAngularImpulse(SteeringBehaviors::face(context.body.getPosition(), context.body.getPosition() + context.body.getLinearVelocity(), context.body.getAngle(), context.body.getAngularVelocity(), context.body.getInertia()));
+			context.body.applyLinearImpulse(SteeringBehaviors::evade(context.body.getPosition(), context.leaderBody->getPosition(), context.body.getLinearVelocity(), context.leaderBody->getLinearVelocity(), context.speed.getMaxLinearSpeed()));
 		}
+
+		context.body.applyLinearImpulse(SteeringBehaviors::arrive(context.body.getPosition(), behindPoint, context.body.getLinearVelocity(), context.arrive.getSlowRadius(), context.speed.getMaxLinearSpeed()));
+		context.body.applyAngularImpulse(SteeringBehaviors::face(context.body.getPosition(), context.body.getPosition() + context.body.getLinearVelocity(), context.body.getAngle(), context.body.getAngularVelocity(), context.body.getInertia()));
 
 		std::vector<b2Vec2> neighborPositions;
 
 		entityManager.each<FlockComponent, BodyComponent>([&context, &neighborPositions](auto entity, const auto& flock, const auto& body) 
 		{
-			if (context.entity != entity && context.flock.getGroupID() == flock.getGroupID() && (context.body.getPosition() - body.getPosition()).Length() <= context.flock.getGroupRadius())
+			if (context.drone != entity && context.flock.getGroupID() == flock.getGroupID() && (context.body.getPosition() - body.getPosition()).Length() <= context.flock.getGroupRadius())
 			{
 				neighborPositions.push_back(body.getPosition());
 			}
@@ -77,12 +63,18 @@ void DroneSystem::configure(entityx::EventManager& eventManager)
 
 void DroneSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
-	entityManager.each<TagsComponent, BodyComponent, WanderComponent, SpeedComponent, ArriveComponent, FollowComponent, FlockComponent, VisionComponent>
-	([this](auto entity, const auto& tags, auto& body, auto& wander, const auto& speed, const auto& arrive, const auto& follow, const auto& flock, const auto& vision)
+	entityManager.each<ObjectComponent, BodyComponent, WanderComponent, SpeedComponent, ArriveComponent, FollowComponent, FlockComponent, VisionComponent>
+	([this, &entityManager](auto entity, const auto& object, auto& body, auto& wander, const auto& speed, const auto& arrive, const auto& follow, const auto& flock, const auto& vision)
 	{
-		if (tags.hasTag("Drone"))
+		if (object.getObjectType() == +ObjectType::Drone)
 		{
-			droneTree.process(DroneContext{ entity, body, wander, speed, arrive, follow, flock, vision});
+			if (auto leaderEntity = entityManager.get(entityManager.create_id(follow.getLeaderID())))
+			{
+				if (const auto leaderBody = leaderEntity.component<BodyComponent>())
+				{
+					droneTree.process(DroneContext{ entity, leaderEntity, body, wander, speed, arrive, follow, flock, vision, leaderBody });
+				}
+			}
 		}
 	});
 }

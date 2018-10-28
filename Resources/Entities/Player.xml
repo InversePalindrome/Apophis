@@ -2,9 +2,6 @@
 <Entity>
   <Transform/>
   <Object>Player</Object>
-  <Tags>
-    <Tag>Player</Tag>
-  </Tags>
   <Body type="2" linearDamping="0.400000006" angularDamping="0" fixedRotation="false" bullet="false">
     <Circle density="0.100000001" friction="0.200000003" restitution="0" sensor="false" x="0" y="0" radius="0.4" />
   </Body>

@@ -12,6 +12,7 @@ InversePalindrome.com
 #include "WanderComponent.hpp"
 #include "HealthComponent.hpp"
 #include "VisionComponent.hpp"
+#include "TransformComponent.hpp"
 
 #include <entityx/Entity.h>
 
@@ -19,9 +20,11 @@ InversePalindrome.com
 struct StrikerContext
 {
 	entityx::Entity striker;
+	entityx::Entity target;
 	BodyComponent& body;
 	const SpeedComponent& speed;
 	WanderComponent& wander;
 	const VisionComponent& vision;
 	const HealthComponent& health;
+   const entityx::ComponentHandle<TransformComponent> targetTransform;
 };

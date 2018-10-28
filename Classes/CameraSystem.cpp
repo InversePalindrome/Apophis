@@ -7,7 +7,7 @@ InversePalindrome.com
 
 #include "Constants.hpp"
 #include "CameraSystem.hpp"
-#include "TagsComponent.hpp"
+#include "ObjectComponent.hpp"
 
 #include <cocos/base/CCDirector.h>
 
@@ -44,7 +44,8 @@ void CameraSystem::update(entityx::EntityManager& entityManager, entityx::EventM
 
 void CameraSystem::receive(const EntityParsed& event)
 {
-	if (const auto[tags, transform] = event.entity.components<TagsComponent, TransformComponent>(); tags && transform && tags->hasTag("Player"))
+	if (const auto[object, transform] = event.entity.components<ObjectComponent, TransformComponent>();
+	   object && transform && object->getObjectType() == +ObjectType::Player)
 	{
 		playerTransform = transform;
 	}

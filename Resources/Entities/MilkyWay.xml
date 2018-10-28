@@ -17,9 +17,6 @@
 	<Entity>
 		<Transform x="-25" y="-25"/>
 		<Object>Player</Object>
-		<Tags>
-			<Tag>Player</Tag>
-		</Tags>
 		<Body type="2" angle="172.392715" linearDamping="0.400000006" angularDamping="0" fixedRotation="false" bullet="false">
       <Circle density="0.100000001" friction="0.200000003" restitution="0" sensor="false" x="0" y="0" radius="0.4" />
 		</Body>
@@ -51,10 +48,7 @@
 	</Entity>
   <Entity>
     <Transform x="-5" y="-5"></Transform>
-    <Object>Enemy</Object>
-    <Tags>
-      <Tag>Drone</Tag>
-    </Tags>
+    <Object>Striker</Object>
     <Body type="2" angle="0" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
       <Circle density="0.300000012" friction="0.200000003" restitution="0" sensor="false" radius="0.75" />
     </Body>
@@ -62,16 +56,16 @@
     <Sprite rotation="0" xScale="0.5" yScale="0.5" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="Spaceship2" textureX="98" textureY="0" textureWidth="86" textureHeight="91" repeat="false"/>
     <Vision>20</Vision>
     <Wander></Wander>
+    <Health hitpoints="5"></Health>
+    <Weapon projectileFilename="Laser.xml" reloadTime="2000" />
     <Arrive></Arrive>
     <Follow leaderID="2" distance="10"></Follow>
     <Flock id="1"></Flock>
+    <Target id="2"></Target>
   </Entity>
   <Entity>
     <Transform x="-5" y="0"></Transform>
-    <Object>Enemy</Object>
-    <Tags>
-      <Tag>Drone</Tag>
-    </Tags>
+    <Object>Striker</Object>
     <Body type="2" angle="0" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
       <Circle density="0.300000012" friction="0.200000003" restitution="0" sensor="false" radius="0.75" />
     </Body>
@@ -80,7 +74,10 @@
     <Vision>20</Vision>
     <Wander></Wander>
     <Arrive></Arrive>
+    <Health>5</Health>
+    <Weapon projectileFilename="Laser.xml" reloadTime="2000" />
     <Follow leaderID="2" distance="10"></Follow>
     <Flock id="1"></Flock>
+    <Target id="2"></Target>
   </Entity>
 </Level>

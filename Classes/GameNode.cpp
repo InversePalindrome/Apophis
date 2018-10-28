@@ -18,8 +18,8 @@ InversePalindrome.com
 #include "PhysicsSystem.hpp"
 #include "OrbitalSystem.hpp"
 #include "StrikerSystem.hpp"
-#include "TagsComponent.hpp"
 #include "GraphicsSystem.hpp"
+#include "ObjectComponent.hpp"
 
 #include <cocos/base/CCEventDispatcher.h>
 #include <cocos/base/CCEventListenerCustom.h>
@@ -74,7 +74,7 @@ void GameNode::receive(const EntityDied& event)
 {
 	auto entity = event.entity;
 	
-	if (const auto tags = entity.component<TagsComponent>(); tags && tags->hasTag("Player"))
+	if (const auto object = entity.component<ObjectComponent>(); object && object->getObjectType() == +ObjectType::Player)
 	{
 		unscheduleUpdate();
 

@@ -7,8 +7,8 @@ InversePalindrome.com
 
 #include "Constants.hpp"
 #include "Renderables.hpp"
-#include "TagsComponent.hpp"
 #include "GraphicsSystem.hpp"
+#include "ObjectComponent.hpp"
 #include "TransformComponent.hpp"
 
 #include <cocos/base/CCEventDispatcher.h>
@@ -88,7 +88,7 @@ void GraphicsSystem::updateHealthBar()
 
 void GraphicsSystem::syncHealthBar(entityx::Entity entity)
 {
-	if (auto[tags, health] = entity.components<TagsComponent, HealthComponent>(); tags && health && tags->hasTag("Player"))
+	if (auto[object, health] = entity.components<ObjectComponent, HealthComponent>(); object && health && object->getObjectType() == +ObjectType::Player)
 	{
 		playerHealth = health;
 	}

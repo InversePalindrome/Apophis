@@ -72,54 +72,62 @@ b2Vec2 SteeringBehaviors::orbit(const b2Vec2& satellitePosition, const b2Vec2& p
 	return steeringForce - bodyVelocity;
 }
 
-b2Vec2 SteeringBehaviors::alignForce(const b2Vec2& agentPosition, const std::vector<b2Vec2>& neighborVelocities)
+b2Vec2 SteeringBehaviors::alignForce(const b2Vec2& agentPosition, const std::vector<b2Vec2>& neighborVelocities, float alignmentForce)
 {
-	b2Vec2 alignForce(0.f, 0.f);
+	b2Vec2 steeringForce(0.f, 0.f);
 
 	for (const auto& neighborVelocity : neighborVelocities)
 	{
-		alignForce += neighborVelocity;
+		steeringForce += neighborVelocity;
 	}
 
-	alignForce *= 1.f / neighborVelocities.size();
-	alignForce.Normalize();
+	if (!neighborVelocities.empty())
+	{
+		steeringForce *= 1.f / neighborVelocities.size();
+		steeringForce.Normalize();
+		steeringForce *= alignmentForce;
+	}
 
-	return alignForce;
+	return steeringForce;
 }
 
-b2Vec2 SteeringBehaviors::cohesionForce(const b2Vec2& agentPosition, const std::vector<b2Vec2>& neighborPositions)
+b2Vec2 SteeringBehaviors::cohesionForce(const b2Vec2& agentPosition, const std::vector<b2Vec2>& neighborPositions, float cohesionForce)
 {
-	b2Vec2 cohesionForce(0.f, 0.f);
+	b2Vec2 steeringForce(0.f, 0.f);
 
 	for (const auto& neighborPosition : neighborPositions)
 	{
-		cohesionForce += neighborPosition;
-	}
-
-	cohesionForce *= 1.f / neighborPositions.size();
-	cohesionForce -= agentPosition;
-	cohesionForce.Normalize();
-
-	return cohesionForce;
-}
-
-b2Vec2 SteeringBehaviors::separateForce(const b2Vec2& agentPosition, const std::vector<b2Vec2>& neighborPositions, float separationForce)
-{
-	b2Vec2 separateForce(0.f, 0.f);
-
-	for (const auto& neighborPosition : neighborPositions)
-	{
-		separateForce += neighborPosition - agentPosition;
+		steeringForce += neighborPosition;
 	}
 
 	if (!neighborPositions.empty())
 	{
-		separateForce *= -1.f / neighborPositions.size();
-		separateForce.Normalize();
-		separateForce *= separationForce;
+		steeringForce *= 1.f / neighborPositions.size();
+		steeringForce -= agentPosition;
+		steeringForce.Normalize();
+		steeringForce *= cohesionForce;
+	}
+
+	return steeringForce;
+}
+
+b2Vec2 SteeringBehaviors::separateForce(const b2Vec2& agentPosition, const std::vector<b2Vec2>& neighborPositions, float separationForce)
+{
+	b2Vec2 steeringForce(0.f, 0.f);
+
+	for (const auto& neighborPosition : neighborPositions)
+	{
+		steeringForce += neighborPosition - agentPosition;
+	}
+
+	if (!neighborPositions.empty())
+	{
+		steeringForce *= -1.f / neighborPositions.size();
+		steeringForce.Normalize();
+		steeringForce *= separationForce;
 	}
 	
-	return separateForce;
+	return steeringForce;
 }
 
 b2Vec2 SteeringBehaviors::desiredVelocity(const b2Vec2& bodyPosition, const b2Vec2& targetPosition, float maxSpeed)
