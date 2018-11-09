@@ -105,7 +105,18 @@ bool LevelEditorNode::init()
 			{
 				ImGui::PushID(i++);
 			 
-				bool isEntityOpen = ImGui::TreeNode("", "Entity %d", entityItr->id().index());
+				std::string entityName;
+
+				if (const auto name = entityItr->component<NameComponent>())
+				{
+					entityName = name->getName();
+				}
+				else
+				{
+					entityName = "Entity " + std::to_string(entityItr->id().index());
+				}
+
+				bool isEntityOpen = ImGui::TreeNode(entityName.c_str());
 				bool isEntityMarkedForRemoval = false;
 
 				ImGui::SameLine();
