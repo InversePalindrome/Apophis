@@ -17,6 +17,8 @@ InversePalindrome.com
 #include <entityx/Entity.h>
 #include <entityx/System.h>
 
+#include <unordered_map>
+
 
 class GameNode : public cocos2d::Node, public entityx::Receiver<GameNode>
 {
@@ -35,6 +37,7 @@ private:
 	entityx::SystemManager systemManager;
 
 	std::string level;
+	std::unordered_map<std::string, entityx::Entity> entities;
 	b2Vec2 mapDimensions;
 
 	void initSystems();

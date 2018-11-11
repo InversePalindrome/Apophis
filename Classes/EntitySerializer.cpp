@@ -26,11 +26,16 @@ void EntitySerializer::saveEntity(entityx::Entity entity, const std::string& fil
 
 void EntitySerializer::saveEntity(entityx::Entity entity, pugi::xml_node& entityNode)
 {
-	brigand::for_each<Components>([&entity, &entityNode](auto componentType) 
+	brigand::for_each<Components>([&entity, &entityNode](auto componentType)
 	{
 		if (const auto component = entity.component<decltype(componentType)::type>())
 		{
 			component->save(entityNode.append_child());
 		}
 	});
+}
+
+void EntitySerializer::saveName(const std::string& name, pugi::xml_node& entityNode)
+{
+	entityNode.append_attribute("name") = name.c_str();
 }

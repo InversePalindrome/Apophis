@@ -13,9 +13,10 @@ InversePalindrome.com
 #include <box2d/Common/b2Math.h>
 
 #include <string>
+#include <unordered_map>
 
 
 namespace LevelParser
 {
-	void parseLevel(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, b2Vec2& mapDimensions, const std::string& filename);
+	void parseLevel(std::unordered_map<std::string, entityx::Entity>& entities, b2Vec2& mapDimensions, entityx::EntityManager& entityManager, entityx::EventManager& eventManager, const std::string& filename);
 };

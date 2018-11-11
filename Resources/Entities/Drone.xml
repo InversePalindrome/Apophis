@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
+  <Name>Drone</Name>
   <Transform></Transform>
   <Object>Drone</Object>
   <Body type="2" angle="0" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">

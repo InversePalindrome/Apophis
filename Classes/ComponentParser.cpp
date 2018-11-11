@@ -10,7 +10,6 @@ InversePalindrome.com
 
 const std::unordered_map<std::string, std::function<ComponentsVariant(entityx::Entity&)>> componentParser
 {
-	{ "Name", [](auto& entity) { return entity.assign<NameComponent>(); } },
 	{ "Sprite", [](auto& entity)  { return entity.assign<SpriteComponent>(); } },
     { "Label", [](auto& entity) { return entity.assign<LabelComponent>(); } },
     { "Particle", [](auto& entity) { return entity.assign<ParticleComponent>(); } },

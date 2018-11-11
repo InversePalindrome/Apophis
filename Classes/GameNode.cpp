@@ -57,10 +57,9 @@ bool GameNode::init()
 	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("resume", [this](auto* event) { scheduleUpdate(); }), this);
 	getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("retry", [this](auto* event) { reloadGame(); }), this);
 
-	scheduleUpdate();
 	initSystems();
 
-	LevelParser::parseLevel(entityManager, eventManager, mapDimensions, level);
+	reloadGame();
 
 	return true;
 }
@@ -124,5 +123,5 @@ void GameNode::reloadGame()
 
 	entityManager.reset();
 
-	LevelParser::parseLevel(entityManager, eventManager, mapDimensions, level);
+	LevelParser::parseLevel(entities, mapDimensions, entityManager, eventManager, level);
 }

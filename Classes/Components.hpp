@@ -7,7 +7,6 @@ InversePalindrome.com
 
 #pragma once
 
-#include "NameComponent.hpp"
 #include "BodyComponent.hpp"
 #include "DropComponent.hpp"
 #include "StateComponent.hpp"
@@ -45,13 +44,13 @@ InversePalindrome.com
 #include <variant>
 
 
-using Components = brigand::list<NameComponent, TransformComponent, ObjectComponent, BodyComponent, DistanceJointComponent, SpeedComponent, 
+using Components = brigand::list<TransformComponent, ObjectComponent, BodyComponent, DistanceJointComponent, SpeedComponent, 
                                	 AccelerationComponent, SpriteComponent, ArriveComponent, LabelComponent, ParticleComponent, AnimationComponent,
                                  SoundComponent, HealthComponent, DamageComponent,  WeaponComponent, TargetComponent, DropComponent, SpeedBoostComponent, 
                                  RegenBoostComponent, ExplosionComponent, VisionComponent, WanderComponent, PatrolComponent, 
 	                             FollowComponent, AvoidComponent, FlockComponent, QueueComponent, SatelliteComponent, StateComponent>;
 
-using ComponentsVariant = std::variant<entityx::ComponentHandle<NameComponent>, entityx::ComponentHandle<TransformComponent>, entityx::ComponentHandle<ObjectComponent>, 
+using ComponentsVariant = std::variant<entityx::ComponentHandle<TransformComponent>, entityx::ComponentHandle<ObjectComponent>, 
 	                                   entityx::ComponentHandle<BodyComponent>, entityx::ComponentHandle<SpeedComponent>, entityx::ComponentHandle<DistanceJointComponent>,
 	                                   entityx::ComponentHandle<AccelerationComponent>, entityx::ComponentHandle<SpriteComponent>, entityx::ComponentHandle<ArriveComponent>, entityx::ComponentHandle<LabelComponent>,
 	                                   entityx::ComponentHandle<ParticleComponent>, entityx::ComponentHandle<AnimationComponent>, entityx::ComponentHandle<SoundComponent>, entityx::ComponentHandle<HealthComponent>,

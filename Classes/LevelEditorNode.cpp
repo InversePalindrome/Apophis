@@ -39,7 +39,8 @@ bool LevelEditorNode::init()
 		return false;
 	}
 
-	schedule([this](auto dt) { 
+	schedule([this](auto dt)
+	{ 
 		systemManager.update_all(dt);
 		SetPanBoundsRect({ mapDimensions.x * Constants::PTM_RATIO * -0.5f, mapDimensions.y * Constants::PTM_RATIO * -0.5f, mapDimensions.x * Constants::PTM_RATIO, mapDimensions.y * Constants::PTM_RATIO });
 	}, 0.f, "update");
@@ -66,7 +67,7 @@ bool LevelEditorNode::init()
 					
 					if (NFD_OpenDialog("xml", nullptr, &filename) == NFD_OKAY)
 					{
-						LevelParser::parseLevel(entityManager, eventManager, mapDimensions, filename);
+						LevelParser::parseLevel(entities, mapDimensions, entityManager, eventManager, filename);
 					}
 				}
 				if (ImGui::MenuItem("Save"))
@@ -92,32 +93,48 @@ bool LevelEditorNode::init()
 			ImGui::SameLine();
 			if (CCIMGUI::getInstance()->imageButton("#AddButton", 50, 50))
 			{
-				entityManager.create();
+				auto entity = entityManager.create();
+
+				entities.emplace(std::to_string(entity.id().index()), entity);
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Clear"))
 			{
 				entityManager.reset();
+				entities.clear();
 			}
-
+			
 			int i = 0;
 			for (auto entityItr = std::begin(entities); entityItr != std::end(entities);)
 			{
 				ImGui::PushID(i++);
-			 
-				std::string entityName;
-
-				if (const auto name = entityItr->component<NameComponent>())
-				{
-					entityName = name->getName();
-				}
-				else
-				{
-					entityName = "Entity " + std::to_string(entityItr->id().index());
-				}
-
-				bool isEntityOpen = ImGui::TreeNode(entityName.c_str());
+				
+				bool isEntityOpen = ImGui::TreeNode(std::to_string(i).c_str(), entityItr->first.c_str());
 				bool isEntityMarkedForRemoval = false;
+				bool isEntityRenamed = false;
+
+				ImGui::SameLine();
+				if (ImGui::Button("Rename"))
+				{
+					entityName = entityItr->first;
+
+					ImGui::OpenPopup("Name");
+				}
+				if (auto isOpen = true; ImGui::BeginPopupModal("Name", &isOpen, ImGuiWindowFlags_AlwaysAutoResize))
+				{
+					entityName.resize(64);
+					
+					ImGui::InputText("Name", entityName.data(), entityName.length());
+					
+					if (ImGui::Button("Rename"))
+					{
+						isEntityRenamed = true;
+
+						ImGui::CloseCurrentPopup();
+					}
+
+					ImGui::EndPopup();
+				}
 
 				ImGui::SameLine();
 				if (ImGui::Button("Open"))
@@ -126,7 +143,7 @@ bool LevelEditorNode::init()
 
 					if (NFD_OpenDialog("xml", nullptr, &filename) == NFD_OKAY)
 					{
-						EntityParser::parseEntity(*entityItr, eventManager, filename);
+						EntityParser::parseEntity(entityItr->second, eventManager, filename);
 					}
 				}
 				ImGui::SameLine();
@@ -136,7 +153,7 @@ bool LevelEditorNode::init()
 
 					if (NFD_SaveDialog("xml", nullptr, &filename) == NFD_OKAY)
 					{
-						EntitySerializer::saveEntity(*entityItr, filename);
+						EntitySerializer::saveEntity(entityItr->second, filename);
 					}
 				}
 				ImGui::SameLine();		
@@ -169,7 +186,7 @@ bool LevelEditorNode::init()
 					{
 						if (componentParser.count(currentAddComponent))
 						{
-							componentParser.at(currentAddComponent)(*entityItr);
+							componentParser.at(currentAddComponent)(entityItr->second);
 						}
 
 						ImGui::CloseCurrentPopup();
@@ -182,7 +199,7 @@ bool LevelEditorNode::init()
 				{
 					brigand::for_each<Components>([entityItr](auto componentElement) mutable
 					{
-						if (auto component = entityItr->component<decltype(componentElement)::type>())
+						if (auto component = entityItr->second.component<decltype(componentElement)::type>())
 						{
 							component->display();
 						}
@@ -195,7 +212,16 @@ bool LevelEditorNode::init()
 
 				if (isEntityMarkedForRemoval)
 				{
+					entityItr->second.destroy();
 					entityItr = entities.erase(entityItr);
+				}
+				else if (isEntityRenamed && !entities.count(entityName))
+				{
+					auto renamedEntity = entities.extract(entityItr->first);
+					renamedEntity.key() = entityName;
+					entityItr = entities.insert(std::move(renamedEntity)).position;
+
+					entityName.clear();
 				}
 				else
 				{
@@ -219,16 +245,6 @@ bool LevelEditorNode::init()
 	return true;
 }
 
-void LevelEditorNode::receive(const entityx::EntityCreatedEvent& event)
-{
-	entities.push_back(event.entity);
-}
-
-void LevelEditorNode::receive(const entityx::EntityDestroyedEvent& event)
-{
-	entities.erase(std::remove(std::begin(entities), std::end(entities), event.entity), std::end(entities));
-}
-
 cocos2d::Scene* LevelEditorNode::scene()
 {
 	auto* scene = cocos2d::Scene::create();
@@ -242,9 +258,6 @@ void LevelEditorNode::initSystems()
 {
 	systemManager.add<GraphicsSystem>(this);
 	systemManager.add<PhysicsSystem>(entityManager, eventManager);
-
-	eventManager.subscribe<entityx::EntityCreatedEvent>(*this);
-	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
 
 	systemManager.configure();
 }

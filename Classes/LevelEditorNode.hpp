@@ -15,7 +15,7 @@ InversePalindrome.com
 
 #include <Box2D/Common/b2Math.h>
 
-#include <vector>
+#include <unordered_map>
 
 
 class LevelEditorNode: public PanZoomLayer, public entityx::Receiver<LevelEditorNode>
@@ -24,20 +24,19 @@ public:
 	LevelEditorNode();
 
 	virtual bool init() override;
-	virtual void receive(const entityx::EntityCreatedEvent& event);
-	virtual void receive(const entityx::EntityDestroyedEvent& event);
 
 	CREATE_FUNC(LevelEditorNode);
 
 	static cocos2d::Scene* scene();
 
 private:
-	std::vector<entityx::Entity> entities;
+	std::unordered_map<std::string, entityx::Entity> entities;
 
 	entityx::EventManager eventManager;
 	entityx::EntityManager entityManager;
 	entityx::SystemManager systemManager;
 	
+	std::string entityName;
 	b2Vec2 mapDimensions;
 
 	void initSystems();

@@ -44,6 +44,7 @@ void ItemSystem::receive(const entityx::EntityDestroyedEvent& event)
 			std::discrete_distribution<> discreteDistribution(std::cbegin(destroyedWeights), std::cend(destroyedWeights));
 
 			auto itemEntity = entityManager.create();
+
 			EntityParser::parseEntity(itemEntity, eventManager, destroyedItemFilenames.at(discreteDistribution(randomEngine)));
 
 			if (auto itemTransform = itemEntity.component<TransformComponent>())

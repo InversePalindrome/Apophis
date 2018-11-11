@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity>
+  <Name>Bryan</Name>
   <Transform/>
   <Object>Player</Object>
   <Body type="2" linearDamping="0.400000006" angularDamping="0" fixedRotation="false" bullet="false">

@@ -14,7 +14,7 @@ InversePalindrome.com
 #include <brigand/algorithms/for_each.hpp>
 
 
-void EntityParser::parseEntity(entityx::Entity entity, entityx::EventManager& eventManager, const std::string& filename)
+void EntityParser::parseEntity(entityx::Entity& entity, entityx::EventManager& eventManager, const std::string& filename)
 {
 	if (pugi::xml_document doc; doc.load_file(cocos2d::FileUtils::getInstance()->fullPathForFilename(filename).c_str()))
 	{
@@ -25,7 +25,7 @@ void EntityParser::parseEntity(entityx::Entity entity, entityx::EventManager& ev
 	}
 }
 
-void EntityParser::parseEntity(entityx::Entity entity, entityx::EventManager& eventManager, const pugi::xml_node& entityNode)
+void EntityParser::parseEntity(entityx::Entity& entity, entityx::EventManager& eventManager, const pugi::xml_node& entityNode)
 {
 	for (const auto componentNode : entityNode.children())
 	{
@@ -42,4 +42,16 @@ void EntityParser::parseEntity(entityx::Entity entity, entityx::EventManager& ev
 
 	eventManager.emit(EntityParsed{ entity });
 	eventManager.emit(UpdateTransform{ entity });
+}
+
+void EntityParser::parseName(std::string& name, const entityx::Entity& entity, const pugi::xml_node& entityNode)
+{
+	if (const auto nameAttribute = entityNode.attribute("name"))
+	{
+		name = nameAttribute.as_string();
+	}
+	else
+	{
+		name = std::to_string(entity.id().index());
+	}
 }
