@@ -111,7 +111,7 @@ void ParticleComponent::load(const pugi::xml_node& componentNode)
 		startColorAAttribute = componentNode.attribute("startA");
 	    startColorRAttribute && startColorBAttribute && startColorGAttribute && startColorAAttribute)
 	{
-		setStartColor(cocos2d::Color4F(startColorRAttribute.as_uint(), startColorGAttribute.as_uint(), startColorBAttribute.as_uint(), startColorAAttribute.as_uint()));
+		setStartColor(cocos2d::Color4F(startColorRAttribute.as_float(), startColorGAttribute.as_float(), startColorBAttribute.as_float(), startColorAAttribute.as_float()));
 	}
 	if (const auto startColorVarRAttribute = componentNode.attribute("startVarR"),
 		startColorVarGAttribute = componentNode.attribute("startVarG"),
@@ -119,7 +119,7 @@ void ParticleComponent::load(const pugi::xml_node& componentNode)
 		startColorVarAAttribute = componentNode.attribute("startVarA");
 	    startColorVarRAttribute && startColorVarGAttribute && startColorVarBAttribute && startColorVarAAttribute)
 	{
-		setStartColorVar(cocos2d::Color4F(startColorVarRAttribute.as_uint(), startColorVarGAttribute.as_uint(), startColorVarBAttribute.as_uint(), startColorVarAAttribute.as_uint()));
+		setStartColorVar(cocos2d::Color4F(startColorVarRAttribute.as_float(), startColorVarGAttribute.as_float(), startColorVarBAttribute.as_float(), startColorVarAAttribute.as_float()));
 	}
 	if (const auto endColorRAttribute = componentNode.attribute("endR"),
 		endColorGAttribute = componentNode.attribute("endG"),
@@ -127,7 +127,7 @@ void ParticleComponent::load(const pugi::xml_node& componentNode)
 		endColorAAttribute = componentNode.attribute("endA");
 	    endColorRAttribute && endColorBAttribute && endColorGAttribute && endColorAAttribute)
 	{
-		setEndColor(cocos2d::Color4F(endColorRAttribute.as_uint(), endColorGAttribute.as_uint(), endColorBAttribute.as_uint(), endColorAAttribute.as_uint()));
+		setEndColor(cocos2d::Color4F(endColorRAttribute.as_float(), endColorGAttribute.as_float(), endColorBAttribute.as_float(), endColorAAttribute.as_float()));
 	}
 	if (const auto endColorVarRAttribute = componentNode.attribute("endVarR"),
 		endColorVarGAttribute = componentNode.attribute("endVarG"),
@@ -135,7 +135,7 @@ void ParticleComponent::load(const pugi::xml_node& componentNode)
 		endColorVarAAttribute = componentNode.attribute("endVarA");
 	    endColorVarRAttribute && endColorVarBAttribute && endColorVarGAttribute && endColorVarAAttribute)
 	{
-		setEndColorVar(cocos2d::Color4F(endColorVarRAttribute.as_uint(), endColorVarGAttribute.as_uint(), endColorVarBAttribute.as_uint(), endColorVarAAttribute.as_uint()));
+		setEndColorVar(cocos2d::Color4F(endColorVarRAttribute.as_float(), endColorVarGAttribute.as_float(), endColorVarBAttribute.as_float(), endColorVarAAttribute.as_float()));
 	}
 }
 
@@ -149,7 +149,6 @@ void ParticleComponent::save(pugi::xml_node& componentNode) const
 	{
 		componentNode.append_attribute("filename") = filename.c_str();
 	}
-
 	if (!spriteFrameName.empty())
 	{
 		componentNode.append_attribute("frame") = spriteFrameName.c_str();
@@ -179,12 +178,12 @@ void ParticleComponent::save(pugi::xml_node& componentNode) const
 		componentNode.append_attribute("endRadius") = getEndRadius();
 		componentNode.append_attribute("endRadiusVar") = getEndRadiusVar();
 	}
-		
+	
 	componentNode.append_attribute("startR") = getStartColor().r;
 	componentNode.append_attribute("startG") = getStartColor().g;
 	componentNode.append_attribute("startB") = getStartColor().b;
 	componentNode.append_attribute("startA") = getStartColor().a;
-	componentNode.append_attribute("starVartR") = getStartColorVar().r;
+	componentNode.append_attribute("startVarR") = getStartColorVar().r;
 	componentNode.append_attribute("startVarG") = getStartColorVar().g;
 	componentNode.append_attribute("startVarB") = getStartColorVar().b;
 	componentNode.append_attribute("startVarA") = getStartColorVar().a;
@@ -214,12 +213,13 @@ void ParticleComponent::display()
 		}
 
 		NodeComponent::display();
-
+		
 		spriteFrameName.resize(64);
 		if (ImGui::InputText("Display Frame", spriteFrameName.data(), spriteFrameName.length()))
 		{
 			setDisplayFrame(spriteFrameName.c_str());
 		}
+		spriteFrameName.erase(std::find(std::begin(spriteFrameName), std::end(spriteFrameName), '\0'), std::end(spriteFrameName));
 
 		const char* modes[] = { "Gravity", "Radius" };
 
@@ -227,17 +227,14 @@ void ParticleComponent::display()
 		{
 			setMode(static_cast<cocos2d::ParticleSystem::Mode>(mode));
 		}
-		
 		if (auto duration = getDuration(); ImGui::InputFloat("Duration", &duration))
 		{
 			setDuration(duration);
 		}
-
 		if (auto emissionRate = getEmissionRate(); ImGui::InputFloat("Emission Rate", &emissionRate))
 		{
 			setEmissionRate(emissionRate);
 		}
-
 		if (auto life = getLife(); ImGui::InputFloat("Life", &life))
 		{
 			setLife(life);
@@ -334,11 +331,11 @@ void ParticleComponent::initWithFile(const std::string& filename)
 
 void ParticleComponent::setDisplayFrame(const std::string& spriteFrameName)
 {
-	this->spriteFrameName = spriteFrameName;
-
 	if (auto* spriteFrame = cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFrameName))
 	{
-		emitter->setDisplayFrame(cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFrameName));
+		this->spriteFrameName = spriteFrameName;
+
+		emitter->setDisplayFrame(spriteFrame);
 	}
 }
 

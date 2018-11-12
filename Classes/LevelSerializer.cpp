@@ -26,7 +26,7 @@ void LevelSerializer::saveLevel(const std::unordered_map<std::string, entityx::E
 	levelNode.append_attribute("width") = mapDimensions.x;
 	levelNode.append_attribute("height") = mapDimensions.y;
 
-	for (auto [name, entity] : entities)
+	for (const auto& [name, entity] : entities)
 	{
 		auto entityNode = levelNode.append_child("Entity");
 

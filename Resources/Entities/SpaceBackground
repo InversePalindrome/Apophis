@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Entity>
+	<Sprite x="0" y="0" rotation="0" xScale="1" yScale="1" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="Space" textureX="0" textureY="0" textureWidth="4096" textureHeight="4096" repeat="true" />
+</Entity>

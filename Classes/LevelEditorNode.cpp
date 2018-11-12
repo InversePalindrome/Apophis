@@ -125,6 +125,8 @@ bool LevelEditorNode::init()
 					entityName.resize(64);
 					
 					ImGui::InputText("Name", entityName.data(), entityName.length());
+
+					entityName.erase(std::find(std::begin(entityName), std::end(entityName), '\0'), std::end(entityName));
 					
 					if (ImGui::Button("Rename"))
 					{

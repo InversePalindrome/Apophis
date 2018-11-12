@@ -24,6 +24,8 @@ public:
 
 	void display();
 
+	void initWithFilename(const std::string& filename);
+
 	cocos2d::SpriteFrame* getSpriteFrame() const;
 	void setSpriteFrame(const std::string& spriteFrameName);
 
@@ -39,6 +41,8 @@ public:
 private:
 	cocos2d::Sprite* sprite;
 
+	std::string filename;
 	std::string spriteFrameName;
+
 	bool repeatTexture;
 };
