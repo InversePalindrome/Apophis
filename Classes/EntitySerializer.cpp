@@ -34,8 +34,3 @@ void EntitySerializer::saveEntity(entityx::Entity entity, pugi::xml_node& entity
 		}
 	});
 }
-
-void EntitySerializer::saveName(const std::string& name, pugi::xml_node& entityNode)
-{
-	entityNode.append_attribute("name") = name.c_str();
-}

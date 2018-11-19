@@ -14,6 +14,7 @@ InversePalindrome.com
 
 #include <cocos/ui/UIButton.h>
 #include <cocos/base/CCDirector.h>
+#include <cocos/base/CCEventDispatcher.h>
 
 
 cocos2d::Scene* getMenuScene()
@@ -37,6 +38,18 @@ cocos2d::Scene* getMenuScene()
 	{
 		director->end();
 	});
+
+	auto* keyboardListener = cocos2d::EventListenerKeyboard::create();
+
+	keyboardListener->onKeyPressed = [director](const auto keyCode, auto* event)
+	{
+		if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_L)
+		{
+			director->replaceScene(LevelEditorNode::scene());
+		}
+	};
+
+	canvas->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, canvas);
 
 	return scene;
 }

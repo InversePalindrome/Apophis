@@ -67,7 +67,7 @@ bool LevelEditorNode::init()
 					
 					if (NFD_OpenDialog("xml", nullptr, &filename) == NFD_OKAY)
 					{
-						LevelParser::parseLevel(entities, mapDimensions, entityManager, eventManager, filename);
+						LevelParser::parseLevel(entityManager, eventManager, mapDimensions, filename);
 					}
 				}
 				if (ImGui::MenuItem("Save"))
@@ -93,51 +93,35 @@ bool LevelEditorNode::init()
 			ImGui::SameLine();
 			if (CCIMGUI::getInstance()->imageButton("#AddButton", 50, 50))
 			{
-				auto entity = entityManager.create();
-
-				entities.emplace(std::to_string(entity.id().index()), entity);
+				entityManager.create();
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Clear"))
 			{
 				entityManager.reset();
-				entities.clear();
 			}
 			
 			int i = 0;
-			for (auto entityItr = std::begin(entities); entityItr != std::end(entities);)
+
+			std::vector<entityx::Entity> entitiesToDestroy;
+
+			for (auto entity : entities)
 			{
 				ImGui::PushID(i++);
 				
-				bool isEntityOpen = ImGui::TreeNode(std::to_string(i).c_str(), entityItr->first.c_str());
-				bool isEntityMarkedForRemoval = false;
-				bool isEntityRenamed = false;
+				std::string entityName;
 
-				ImGui::SameLine();
-				if (ImGui::Button("Rename"))
+				if (auto name = entity.component<NameComponent>())
 				{
-					entityName = entityItr->first;
-
-					ImGui::OpenPopup("Name");
+					entityName = name->getName();
 				}
-				if (auto isOpen = true; ImGui::BeginPopupModal("Name", &isOpen, ImGuiWindowFlags_AlwaysAutoResize))
+				else
 				{
-					entityName.resize(64);
-					
-					ImGui::InputText("Name", entityName.data(), entityName.length());
-
-					entityName.erase(std::find(std::begin(entityName), std::end(entityName), '\0'), std::end(entityName));
-					
-					if (ImGui::Button("Rename"))
-					{
-						isEntityRenamed = true;
-
-						ImGui::CloseCurrentPopup();
-					}
-
-					ImGui::EndPopup();
+					entityName = std::to_string(entity.id().index());
 				}
 
+				bool isEntityOpen = ImGui::TreeNode(std::to_string(i).c_str(), entityName.c_str());
+				
 				ImGui::SameLine();
 				if (ImGui::Button("Open"))
 				{
@@ -145,7 +129,7 @@ bool LevelEditorNode::init()
 
 					if (NFD_OpenDialog("xml", nullptr, &filename) == NFD_OKAY)
 					{
-						EntityParser::parseEntity(entityItr->second, eventManager, filename);
+						EntityParser::parseEntity(entity, eventManager, filename);
 					}
 				}
 				ImGui::SameLine();
@@ -155,7 +139,7 @@ bool LevelEditorNode::init()
 
 					if (NFD_SaveDialog("xml", nullptr, &filename) == NFD_OKAY)
 					{
-						EntitySerializer::saveEntity(entityItr->second, filename);
+						EntitySerializer::saveEntity(entity, filename);
 					}
 				}
 				ImGui::SameLine();		
@@ -166,7 +150,7 @@ bool LevelEditorNode::init()
 				ImGui::SameLine();
 				if (CCIMGUI::getInstance()->imageButton("#RemoveButton", 50, 50))
 				{
-					isEntityMarkedForRemoval = true;
+					entitiesToDestroy.push_back(entity);
 				}
 
 				if (auto isAddComponentOpen = true; ImGui::BeginPopupModal("Add Component", &isAddComponentOpen, ImGuiWindowFlags_AlwaysAutoResize))
@@ -188,7 +172,7 @@ bool LevelEditorNode::init()
 					{
 						if (componentParser.count(currentAddComponent))
 						{
-							componentParser.at(currentAddComponent)(entityItr->second);
+							componentParser.at(currentAddComponent)(entity);
 						}
 
 						ImGui::CloseCurrentPopup();
@@ -199,9 +183,9 @@ bool LevelEditorNode::init()
 
 				if (isEntityOpen)
 				{
-					brigand::for_each<ComponentList>([entityItr](auto componentElement) mutable
+					brigand::for_each<ComponentList>([entity](auto componentElement) mutable
 					{
-						if (auto component = entityItr->second.component<decltype(componentElement)::type>())
+						if (auto component = entity.component<decltype(componentElement)::type>())
 						{
 							component->display();
 						}
@@ -211,24 +195,11 @@ bool LevelEditorNode::init()
 				}
 
 				ImGui::PopID();
-
-				if (isEntityMarkedForRemoval)
-				{
-					entityItr->second.destroy();
-					entityItr = entities.erase(entityItr);
-				}
-				else if (isEntityRenamed && !entities.count(entityName))
-				{
-					auto renamedEntity = entities.extract(entityItr->first);
-					renamedEntity.key() = entityName;
-					entityItr = entities.insert(std::move(renamedEntity)).position;
-
-					entityName.clear();
-				}
-				else
-				{
-					++entityItr;
-				}
+			}
+			
+			for (auto& entity : entitiesToDestroy)
+			{
+				entity.destroy();
 			}
 			
 			ImGui::TreePop();
@@ -247,6 +218,16 @@ bool LevelEditorNode::init()
 	return true;
 }
 
+void LevelEditorNode::receive(const entityx::EntityCreatedEvent& event)
+{
+	entities.push_back(event.entity);
+}
+
+void LevelEditorNode::receive(const entityx::EntityDestroyedEvent& event)
+{
+	entities.erase(std::remove(std::begin(entities), std::end(entities), event.entity), std::end(entities));
+}
+
 cocos2d::Scene* LevelEditorNode::scene()
 {
 	auto* scene = cocos2d::Scene::create();
@@ -260,6 +241,9 @@ void LevelEditorNode::initSystems()
 {
 	systemManager.add<GraphicsSystem>(this);
 	systemManager.add<PhysicsSystem>(entityManager, eventManager);
+
+	eventManager.subscribe<entityx::EntityCreatedEvent>(*this);
+	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
 
 	systemManager.configure();
 }

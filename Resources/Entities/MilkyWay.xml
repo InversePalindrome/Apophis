@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Level width="128" height="128">
-	<Entity name="SpaceBackground">
+	<Entity>
+		<Name>Background</Name>
 		<Sprite x="0" y="0" rotation="0" xScale="1" yScale="1" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" filename="PurpleSpace.png" textureX="0" textureY="0" textureWidth="4096" textureHeight="4096" repeat="true" />
 	</Entity>
-	<Entity name="2">
+	<Entity>
 		<Speed linear="40" angular="5" />
 		<Label x="0" y="300" rotation="0" xScale="1" yScale="1" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" font="BEBAS" size="100" HAlignment="0" VAlignment="0" textR="17" textG="231" textB="242" textA="255">Hello World</Label>
 	</Entity>
-	<Entity name="9">
+	<Entity>
 		<Transform x="15" y="0" angle="0" />
 		<Sprite x="480" y="0" rotation="0" xScale="1" yScale="1" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="LavaAsteroid" textureX="157" textureY="228" textureWidth="146" textureHeight="139" repeat="false" />
 	</Entity>
-	<Entity name="7">
+	<Entity>
 		<Transform x="0" y="0" angle="0" />
 		<Object>Asteroid</Object>
 		<Body type="0" x="0" y="0" angle="0" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
@@ -19,7 +20,7 @@
 		</Body>
 		<Sprite x="0" y="0" rotation="0" xScale="0.5" yScale="0.5" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="Planet_D" textureX="668" textureY="0" textureWidth="550" textureHeight="550" repeat="false" />
 	</Entity>
-	<Entity name="3">
+	<Entity>
 		<Body type="0" x="-64" y="64" angle="0" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
 			<Chain density="0" friction="0.200000003" restitution="0" sensor="false">
 				<Vertex x="0" y="0" />
@@ -30,7 +31,7 @@
 			</Chain>
 		</Body>
 	</Entity>
-	<Entity name="4">
+	<Entity>
 		<Transform x="10" y="10" angle="0" />
 		<Sprite x="320" y="320" rotation="0" xScale="0.5" yScale="0.5" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="Coin1" textureX="0" textureY="0" textureWidth="60" textureHeight="60" repeat="false" />
 		<Animation>
@@ -38,7 +39,8 @@
 		</Animation>
 		<State>Idle</State>
 	</Entity>
-	<Entity name="Player">
+	<Entity>
+		<Name>Player</Name>
 		<Transform x="6" y="-4" angle="10313.2402" />
 		<Object>Player</Object>
 		<Body type="2" x="6" y="-4" angle="180" linearDamping="0.400000006" angularDamping="0" fixedRotation="false" bullet="false">
@@ -55,7 +57,8 @@
 		<Vision>5</Vision>
 		<State>Undefined</State>
 	</Entity>
-	<Entity name="5">
+	<Entity>
+		<Name>Striker</Name>
 		<Transform x="-5.24499893" y="-7" angle="0" />
 		<Object>Striker</Object>
 		<Body type="2" x="-5.24499893" y="-7" angle="0" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
@@ -72,7 +75,7 @@
 		<Follow leaderID="2" distance="10" />
 		<Flock id="1" groupRadius="3" alignmentForce="5" cohesionForce="5" separationForce="5" />
 	</Entity>
-	<Entity name="8ed">
+	<Entity>
 		<Particle x="304" y="482" rotation="0" xScale="1" yScale="1" xAnchorPoint="0" yAnchorPoint="0" R="255" G="255" B="255" zOrder="0" filename="C:\Users\Bryan\Desktop\Apophis\Resources\Particles\Supernova.plist" mode="1" duration="-1" emissionRate="165" life="0.400000006" lifeVar="0" startRadius="408" startRadiusVar="22" endRadius="0" endRadiusVar="0" startR="1" startG="0.600000024" startB="0.400000006" startA="0.200000003" startVarR="0" startVarG="0" startVarB="0.200000003" startVarA="0.100000001" endR="0.75" endG="0.889999986" endB="0.400000006" endA="0.300000012" endVarR="0.340000004" endVarG="0.340000004" endVarB="0.25" endVarA="0.400000006" />
 	</Entity>
 </Level>

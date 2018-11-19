@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #pragma once
 
+#include "NameComponent.hpp"
 #include "BodyComponent.hpp"
 #include "DropComponent.hpp"
 #include "StateComponent.hpp"
@@ -43,7 +44,7 @@ InversePalindrome.com
 #include <brigand/algorithms/transform.hpp>
 
 
-using ComponentList = brigand::list<TransformComponent, ObjectComponent, BodyComponent, DistanceJointComponent, SpeedComponent, 
+using ComponentList = brigand::list<NameComponent, TransformComponent, ObjectComponent, BodyComponent, DistanceJointComponent, SpeedComponent, 
                                	 AccelerationComponent, SpriteComponent, ArriveComponent, LabelComponent, ParticleComponent, AnimationComponent,
                                  SoundComponent, HealthComponent, DamageComponent,  WeaponComponent, TargetComponent, DropComponent, SpeedBoostComponent, 
                                  RegenBoostComponent, ExplosionComponent, VisionComponent, WanderComponent, PatrolComponent, 

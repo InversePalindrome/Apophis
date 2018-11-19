@@ -13,7 +13,7 @@ InversePalindrome.com
 #include <pugixml.hpp>
 
 
-void LevelSerializer::saveLevel(const std::unordered_map<std::string, entityx::Entity>& entities, const b2Vec2& mapDimensions, const std::string& filename)
+void LevelSerializer::saveLevel(const std::vector<entityx::Entity>& entities, const b2Vec2& mapDimensions, const std::string& filename)
 {
 	pugi::xml_document doc;
 
@@ -26,12 +26,9 @@ void LevelSerializer::saveLevel(const std::unordered_map<std::string, entityx::E
 	levelNode.append_attribute("width") = mapDimensions.x;
 	levelNode.append_attribute("height") = mapDimensions.y;
 
-	for (const auto& [name, entity] : entities)
+	for (const auto& entity : entities)
 	{
-		auto entityNode = levelNode.append_child("Entity");
-
-		EntitySerializer::saveEntity(entity, entityNode);
-		EntitySerializer::saveName(name, entityNode);
+		EntitySerializer::saveEntity(entity, levelNode.append_child("Entity"));
 	}
 
 	doc.save_file(filename.c_str());

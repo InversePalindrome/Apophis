@@ -43,15 +43,3 @@ void EntityParser::parseEntity(entityx::Entity& entity, entityx::EventManager& e
 	eventManager.emit(EntityParsed{ entity });
 	eventManager.emit(UpdateTransform{ entity });
 }
-
-void EntityParser::parseName(std::string& name, const entityx::Entity& entity, const pugi::xml_node& entityNode)
-{
-	if (const auto nameAttribute = entityNode.attribute("name"))
-	{
-		name = nameAttribute.as_string();
-	}
-	else
-	{
-		name = std::to_string(entity.id().index());
-	}
-}

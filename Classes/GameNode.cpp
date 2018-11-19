@@ -123,5 +123,5 @@ void GameNode::reloadGame()
 
 	entityManager.reset();
 
-	LevelParser::parseLevel(entities, mapDimensions, entityManager, eventManager, level);
+	LevelParser::parseLevel(entityManager, eventManager, mapDimensions, level);
 }
