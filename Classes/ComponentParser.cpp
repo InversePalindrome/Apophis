@@ -8,7 +8,7 @@ InversePalindrome.com
 #include "ComponentParser.hpp"
 
 
-const std::unordered_map<std::string, std::function<ComponentsVariant(entityx::Entity&)>> componentParser
+const std::unordered_map<std::string, std::function<ComponentHandleVariant(entityx::Entity&)>> componentParser
 {
 	{ "Sprite", [](auto& entity)  { return entity.assign<SpriteComponent>(); } },
     { "Label", [](auto& entity) { return entity.assign<LabelComponent>(); } },

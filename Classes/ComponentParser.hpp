@@ -15,4 +15,4 @@ InversePalindrome.com
 #include <unordered_map>
 
 
-extern const std::unordered_map<std::string, std::function<ComponentsVariant(entityx::Entity&)>> componentParser;
+extern const std::unordered_map<std::string, std::function<ComponentHandleVariant(entityx::Entity&)>> componentParser;

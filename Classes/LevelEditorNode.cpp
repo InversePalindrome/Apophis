@@ -199,7 +199,7 @@ bool LevelEditorNode::init()
 
 				if (isEntityOpen)
 				{
-					brigand::for_each<Components>([entityItr](auto componentElement) mutable
+					brigand::for_each<ComponentList>([entityItr](auto componentElement) mutable
 					{
 						if (auto component = entityItr->second.component<decltype(componentElement)::type>())
 						{

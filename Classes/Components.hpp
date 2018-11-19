@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2018 Inverse Palindrome
-Apophis - Components.hpp
+Apophis - ComponentList.hpp
 InversePalindrome.com
 */
 
@@ -28,6 +28,7 @@ InversePalindrome.com
 #include "SpriteComponent.hpp"
 #include "ArriveComponent.hpp"
 #include "ParticleComponent.hpp"
+#include "AddComponentHandle.hpp"
 #include "TransformComponent.hpp"
 #include "AnimationComponent.hpp"
 #include "ExplosionComponent.hpp"
@@ -37,25 +38,17 @@ InversePalindrome.com
 #include "AccelerationComponent.hpp"
 #include "DistanceJointComponent.hpp"
 
-#include <entityx/Entity.h>
-
 #include <brigand/sequences/list.hpp>
+#include <brigand/adapted/variant.hpp>
+#include <brigand/algorithms/transform.hpp>
 
-#include <variant>
 
-
-using Components = brigand::list<TransformComponent, ObjectComponent, BodyComponent, DistanceJointComponent, SpeedComponent, 
+using ComponentList = brigand::list<TransformComponent, ObjectComponent, BodyComponent, DistanceJointComponent, SpeedComponent, 
                                	 AccelerationComponent, SpriteComponent, ArriveComponent, LabelComponent, ParticleComponent, AnimationComponent,
                                  SoundComponent, HealthComponent, DamageComponent,  WeaponComponent, TargetComponent, DropComponent, SpeedBoostComponent, 
                                  RegenBoostComponent, ExplosionComponent, VisionComponent, WanderComponent, PatrolComponent, 
 	                             FollowComponent, AvoidComponent, FlockComponent, QueueComponent, SatelliteComponent, StateComponent>;
 
-using ComponentsVariant = std::variant<entityx::ComponentHandle<TransformComponent>, entityx::ComponentHandle<ObjectComponent>, 
-	                                   entityx::ComponentHandle<BodyComponent>, entityx::ComponentHandle<SpeedComponent>, entityx::ComponentHandle<DistanceJointComponent>,
-	                                   entityx::ComponentHandle<AccelerationComponent>, entityx::ComponentHandle<SpriteComponent>, entityx::ComponentHandle<ArriveComponent>, entityx::ComponentHandle<LabelComponent>,
-	                                   entityx::ComponentHandle<ParticleComponent>, entityx::ComponentHandle<AnimationComponent>, entityx::ComponentHandle<SoundComponent>, entityx::ComponentHandle<HealthComponent>,
-	                                   entityx::ComponentHandle<DamageComponent>, entityx::ComponentHandle<WeaponComponent>, entityx::ComponentHandle<TargetComponent>,
-	                                   entityx::ComponentHandle<DropComponent>, entityx::ComponentHandle<SpeedBoostComponent>, entityx::ComponentHandle<RegenBoostComponent>,
-	                                   entityx::ComponentHandle<ExplosionComponent>, entityx::ComponentHandle<VisionComponent>, entityx::ComponentHandle<WanderComponent>, entityx::ComponentHandle<PatrolComponent>,
-	                                   entityx::ComponentHandle<FollowComponent>, entityx::ComponentHandle<AvoidComponent>, entityx::ComponentHandle<FlockComponent>, entityx::ComponentHandle<QueueComponent>, 
-	                                   entityx::ComponentHandle<SatelliteComponent>, entityx::ComponentHandle<StateComponent>>;
+using ComponentHandleList = brigand::transform<ComponentList, AddComponetHandle<brigand::_1>>;
+
+using ComponentHandleVariant = brigand::as_variant<ComponentHandleList>;

@@ -30,6 +30,17 @@ cocos2d::Scene* getGameScene(const std::string& level)
 
 	canvas->addChild(GameNode::create(level));
 
+	auto* hudNode = canvas->getChildByName("hudNode");
+	hudNode->setLocalZOrder(1);
+
+	auto* healthBar = static_cast<cocos2d::ui::LoadingBar*>(hudNode->getChildByName("healthBar"));
+
+	hudNode->getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("setHealthBar", 
+	[healthBar](auto* event) 
+	{
+		healthBar->setPercent(*static_cast<float*>(event->getUserData()));
+	}), canvas);
+
 	auto* pauseNode = canvas->getChildByName("pauseNode");
 	pauseNode->setLocalZOrder(1);
 	pauseNode->getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("pause", [pauseNode](auto* event) { pauseNode->setVisible(true); }), canvas);

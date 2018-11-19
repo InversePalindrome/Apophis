@@ -29,10 +29,6 @@ cocos2d::Scene* getMenuScene()
 	{ 
 	    director->replaceScene(getLevelSelectionScene());
 	});
-	static_cast<cocos2d::ui::Button*>(canvas->getChildByName("createButton"))->addTouchEventListener([director](auto* sender, auto event)
-	{
-		director->replaceScene(LevelEditorNode::scene());
-	});
 	static_cast<cocos2d::ui::Button*>(canvas->getChildByName("settingsButton"))->addTouchEventListener([director](auto* sender, auto event)
 	{
 		director->pushScene(getSettingsScene());

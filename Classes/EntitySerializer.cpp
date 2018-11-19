@@ -26,7 +26,7 @@ void EntitySerializer::saveEntity(entityx::Entity entity, const std::string& fil
 
 void EntitySerializer::saveEntity(entityx::Entity entity, pugi::xml_node& entityNode)
 {
-	brigand::for_each<Components>([&entity, &entityNode](auto componentType)
+	brigand::for_each<ComponentList>([&entity, &entityNode](auto componentType)
 	{
 		if (const auto component = entity.component<decltype(componentType)::type>())
 		{
