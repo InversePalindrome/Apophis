@@ -15,6 +15,7 @@ InversePalindrome.com
 #include "PlayerSystem.hpp"
 #include "CombatSystem.hpp"
 #include "CameraSystem.hpp"
+#include "PatrolSystem.hpp"
 #include "PhysicsSystem.hpp"
 #include "OrbitalSystem.hpp"
 #include "StrikerSystem.hpp"
@@ -102,6 +103,7 @@ void GameNode::initSystems()
 	systemManager.add<DroneSystem>(entityManager, eventManager);
 	systemManager.add<StrikerSystem>(eventManager);
 	systemManager.add<PlayerSystem>(this);
+	systemManager.add<PatrolSystem>();
 	systemManager.add<StateSystem>(eventManager);
 	systemManager.add<ActionSystem>();
 	systemManager.add<CameraSystem>(this, mapDimensions);

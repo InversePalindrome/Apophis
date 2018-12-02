@@ -57,10 +57,6 @@ DroneSystem::DroneSystem(entityx::EntityManager& entityManager, entityx::EventMa
 {
 }
 
-void DroneSystem::configure(entityx::EventManager& eventManager)
-{
-}
-
 void DroneSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
 	entityManager.each<ObjectComponent, BodyComponent, WanderComponent, SpeedComponent, ArriveComponent, FollowComponent, FlockComponent, VisionComponent>

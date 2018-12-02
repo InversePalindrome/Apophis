@@ -49,10 +49,6 @@ StrikerSystem::StrikerSystem(entityx::EventManager& eventManager)  :
 {
 }
 	  
-void StrikerSystem::configure(entityx::EventManager& eventManager)
-{
-}
-
 void StrikerSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
 	entityManager.each<ObjectComponent, TargetComponent, BodyComponent, SpeedComponent, WanderComponent, VisionComponent, HealthComponent>

@@ -12,11 +12,6 @@ InversePalindrome.com
 #include <imgui.h>
 
 
-PatrolComponent::PatrolComponent() :
-	patrolIndex(0u)
-{
-}
-
 void PatrolComponent::load(const pugi::xml_node& componentNode)
 {
 	for (const auto pointNode : componentNode.children("Point"))
@@ -32,9 +27,7 @@ void PatrolComponent::load(const pugi::xml_node& componentNode)
 
 void PatrolComponent::save(pugi::xml_node& componentNode) const
 {
-	componentNode.set_name("Point");
-
-	componentNode.append_attribute("patrolIndex") = getPatrolIndex();
+	componentNode.set_name("Patrol");
 
 	for (const auto& patrolPoint : patrolPoints)
 	{
@@ -86,19 +79,9 @@ void PatrolComponent::display()
 	}
 }
 
-const std::vector<b2Vec2>& PatrolComponent::getPatrolPoints() const
+b2Vec2 PatrolComponent::getCurrentPatrolPoint() const
 {
-	return patrolPoints;
-}
-
-std::size_t PatrolComponent::getPatrolIndex() const
-{
-	return patrolIndex;
-}
-
-void PatrolComponent::setPatrolIndex(std::size_t patrolIndex)
-{
-	this->patrolIndex = patrolIndex;
+	return patrolPoints.front();
 }
 
 void PatrolComponent::addPatrolPoint(const b2Vec2& patrolPoint)
@@ -114,4 +97,14 @@ void PatrolComponent::removePatrolPoint(std::size_t patrolPointIndex)
 void PatrolComponent::clearPatrolPoints()
 {
 	patrolPoints.clear();
+}
+
+void PatrolComponent::nextPatrolPoint()
+{
+	std::rotate(std::begin(patrolPoints), std::begin(patrolPoints) + 1, std::end(patrolPoints));
+}
+
+bool PatrolComponent::hasPatrolPoints() const
+{
+	return !patrolPoints.empty();
 }

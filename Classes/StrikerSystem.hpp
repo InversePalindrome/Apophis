@@ -14,12 +14,11 @@ InversePalindrome.com
 #include <beehive/beehive.hpp>
 
 
-class StrikerSystem : public entityx::System<StrikerSystem>, public entityx::Receiver<StrikerSystem>
+class StrikerSystem : public entityx::System<StrikerSystem>
 {
 public:
 	explicit StrikerSystem(entityx::EventManager& eventManager);
 
-	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
 
 private:
