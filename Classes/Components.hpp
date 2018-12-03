@@ -28,6 +28,7 @@ InversePalindrome.com
 #include "DamageComponent.hpp"
 #include "SpriteComponent.hpp"
 #include "ArriveComponent.hpp"
+#include "PathwayComponent.hpp"
 #include "ParticleComponent.hpp"
 #include "AddComponentHandle.hpp"
 #include "TransformComponent.hpp"
@@ -47,7 +48,7 @@ InversePalindrome.com
 using ComponentList = brigand::list<NameComponent, TransformComponent, ObjectComponent, BodyComponent, DistanceJointComponent, SpeedComponent, 
                                	 AccelerationComponent, SpriteComponent, ArriveComponent, LabelComponent, ParticleComponent, AnimationComponent,
                                  SoundComponent, HealthComponent, DamageComponent,  WeaponComponent, TargetComponent, DropComponent, SpeedBoostComponent, 
-                                 RegenBoostComponent, ExplosionComponent, VisionComponent, WanderComponent, PatrolComponent, 
+                                 RegenBoostComponent, ExplosionComponent, VisionComponent, WanderComponent, PatrolComponent, PathwayComponent,
 	                             FollowComponent, AvoidComponent, FlockComponent, QueueComponent, SatelliteComponent, StateComponent>;
 
 using ComponentHandleList = brigand::transform<ComponentList, AddComponetHandle<brigand::_1>>;

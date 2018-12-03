@@ -13,8 +13,6 @@ InversePalindrome.com
 
 #include <brigand/algorithms/for_each.hpp>
 
-#include <variant>
-
 
 PhysicsSystem::PhysicsSystem(entityx::EntityManager& entityManager, entityx::EventManager& eventManager) :
 	world({ 0.f, 0.f }),
@@ -34,6 +32,7 @@ void PhysicsSystem::configure(entityx::EventManager& eventManager)
 	eventManager.subscribe<entityx::ComponentRemovedEvent<BodyComponent>>(*this);
 	eventManager.subscribe<UpdateTransform>(*this);
 	eventManager.subscribe<ComponentLoaded<entityx::ComponentHandle<DistanceJointComponent>>>(*this);
+	eventManager.subscribe<ComponentLoaded<entityx::ComponentHandle<PathwayComponent>>>(*this);
 }
 
 void PhysicsSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
@@ -113,6 +112,30 @@ void PhysicsSystem::receive(const ComponentLoaded<entityx::ComponentHandle<Dista
 			joint->setDistanceJoint(static_cast<b2DistanceJoint*>(world.CreateJoint(&distanceJointDef)));
 			joint->setJoint(joint->getDistanceJoint());
 		}
+	}
+}
+
+void PhysicsSystem::receive(const ComponentLoaded<entityx::ComponentHandle<PathwayComponent>>& event)
+{
+	bodiesUserData.push_back(event.entity);
+
+	b2BodyDef pathwayBodyDef;
+	pathwayBodyDef.userData = &bodiesUserData.back();
+
+	auto* body = world.CreateBody(&pathwayBodyDef);
+
+	for (const auto& pathwayPoint : *event.component.get())
+	{
+		b2CircleShape circle;
+		circle.m_p = pathwayPoint;
+		circle.m_radius = 0.1f;
+
+		b2FixtureDef fixtureDef;
+		
+		fixtureDef.isSensor = true;
+		fixtureDef.shape = &circle;
+
+		body->CreateFixture(&fixtureDef);
 	}
 }
 

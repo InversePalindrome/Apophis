@@ -7,32 +7,26 @@ InversePalindrome.com
 
 #pragma once
 
-#include <Box2D/Common/b2Math.h>
-
 #include <pugixml.hpp>
-
-#include <vector>
 
 
 class PatrolComponent
 {
 public:
+	PatrolComponent();
+
 	void load(const pugi::xml_node& componentNode);
 	void save(pugi::xml_node& componentNode) const;
 
 	void display();
 
-	b2Vec2 getCurrentPatrolPoint() const;
+    int getPathwayID() const;
+	void setPathwayID(int pathwayID);
 
-	void addPatrolPoint(const b2Vec2& patrolPoint);
-
-	void removePatrolPoint(std::size_t patrolPointIndex);
-	void clearPatrolPoints();
-
-	void nextPatrolPoint();
-
-	bool hasPatrolPoints() const;
+	int getCurrentPointIndex() const;
+	void setCurrentPointIndex(int currentPointIndex);
 
 private:
-	std::vector<b2Vec2> patrolPoints;
+	int pathwayID;
+	int currentPointIndex;
 };

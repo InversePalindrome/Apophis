@@ -9,7 +9,6 @@ InversePalindrome.com
 
 #include "BodyComponent.hpp"
 #include "SpeedComponent.hpp"
-#include "PatrolComponent.hpp"
 
 #include <entityx/Entity.h>
 
@@ -17,7 +16,7 @@ InversePalindrome.com
 struct PatrolContext
 {
 	entityx::Entity patrolEntity;
+	b2Vec2 targetPoint;
 	BodyComponent& body;
 	const SpeedComponent& speed;
-	PatrolComponent& patrol;
 };

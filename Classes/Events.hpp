@@ -74,22 +74,8 @@ struct Avoid
 	ObjectType object;
 };
 
-struct Align
+struct CrossedWaypoint
 {
-	mutable entityx::Entity entity;
-};
-
-struct Cohesion
-{
-	mutable entityx::Entity entity;
-};
-
-struct Separate
-{
-	mutable entityx::Entity entity;
-};
-
-struct Queue
-{
-	mutable entityx::Entity entity;
+	mutable entityx::Entity patrolEntity;
+	mutable entityx::Entity pathEntity;
 };

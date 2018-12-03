@@ -20,6 +20,7 @@ BETTER_ENUM(ObjectType, int,
 	Asteroid = (1 << 5),
 	Item = (1 << 6),
 	Patrol = (1 << 7),
+	Path = (1 << 8),
 	Enemy = Striker | Drone | Patrol,
 	Alive = Player | Enemy,
 	Obstacle = Asteroid | Item)

@@ -28,6 +28,7 @@ const std::unordered_map<std::string, std::function<ComponentHandleVariant(entit
     { "Flock", [](auto& entity) { return entity.assign<FlockComponent>(); } },
     { "Follow", [](auto& entity) { return entity.assign<FollowComponent>(); } },
     { "Queue", [](auto& entity) { return entity.assign<QueueComponent>(); } },
+    { "Pathway", [](auto& entity) { return entity.assign<PathwayComponent>(); } },
     { "Satellite", [](auto& entity) { return entity.assign<SatelliteComponent>(); } },
     { "Drop", [](auto& entity) { return entity.assign<DropComponent>(); } },
     { "Health", [](auto& entity) { return entity.assign<HealthComponent>(); } },

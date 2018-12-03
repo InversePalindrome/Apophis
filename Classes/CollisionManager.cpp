@@ -46,6 +46,10 @@ void CollisionManager::BeginContact(b2Contact* contact)
 			{
 				eventManager.emit(PickedUpItem{ collisionPair->first, collisionPair->second });
 			}
+			else if (auto collisionPair = getCollisionPair(entityA, entityB, ObjectType::Patrol, ObjectType::Path))
+			{
+				eventManager.emit(CrossedWaypoint{ collisionPair->first, collisionPair->second });
+			}
 		}
 	});
 }

@@ -51,21 +51,22 @@
 	</Entity>
 	<Entity>
 		<Name>Striker</Name>
-		<Transform x="-5.24499893" y="-7" angle="0" />
+		<Transform x="0" y="0" angle="0" />
 		<Object>Patrol</Object>
 		<Body type="2" x="-5.24499893" y="-7" angle="0" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
 			<Circle density="0.300000012" friction="0.200000003" restitution="0" sensor="false" x="0" y="0" radius="0.75" />
 		</Body>
 		<Speed linear="10" angular="5" />
 		<Sprite x="-167.839966" y="-224" rotation="0" xScale="0.5" yScale="0.5" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="Spaceship2" textureX="98" textureY="0" textureWidth="86" textureHeight="91" repeat="false" />
-    <Patrol>
-      <Point x="-10" y="-10"></Point>
-      <Point x="-10" y="10"></Point>
-      <Point x="10" y="10"></Point>
-      <Point x="10" y="-10"></Point>
-    </Patrol>	
+		<Patrol pathwayID="7"></Patrol>
 	</Entity>
 	<Entity>
-		<Particle x="304" y="482" rotation="0" xScale="1" yScale="1" xAnchorPoint="0" yAnchorPoint="0" R="255" G="255" B="255" zOrder="0" filename="C:\Users\Bryan\Desktop\Apophis\Resources\Particles\Supernova.plist" mode="1" duration="-1" emissionRate="165" life="0.400000006" lifeVar="0" startRadius="408" startRadiusVar="22" endRadius="0" endRadiusVar="0" startR="1" startG="0.600000024" startB="0.400000006" startA="0.200000003" startVarR="0" startVarG="0" startVarB="0.200000003" startVarA="0.100000001" endR="0.75" endG="0.889999986" endB="0.400000006" endA="0.300000012" endVarR="0.340000004" endVarG="0.340000004" endVarB="0.25" endVarA="0.400000006" />
+		<Object>Path</Object>
+  <Pathway pathwayID="7">
+			<Point x="-10" y="-10" />
+			<Point x="-10" y="10" />
+			<Point x="10" y="10" />
+			<Point x="10" y="-10" />
+		</Pathway>
 	</Entity>
 </Level>

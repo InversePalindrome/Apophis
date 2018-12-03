@@ -11,6 +11,7 @@ InversePalindrome.com
 #include "BodyComponent.hpp"
 #include "CollisionFilter.hpp"
 #include "CollisionManager.hpp"
+#include "PathwayComponent.hpp"
 #include "DestructionListener.hpp"
 #include "DistanceJointComponent.hpp"
 
@@ -33,6 +34,7 @@ public:
 	virtual void receive(const entityx::ComponentRemovedEvent<BodyComponent>& event);
 	virtual void receive(const UpdateTransform& event);
 	virtual void receive(const ComponentLoaded<entityx::ComponentHandle<DistanceJointComponent>>& event);
+	virtual void receive(const ComponentLoaded<entityx::ComponentHandle<PathwayComponent>>& event);
 
 private:
 	b2World world;
