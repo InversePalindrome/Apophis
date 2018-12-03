@@ -15,7 +15,7 @@ StateSystem::StateSystem(entityx::EventManager& eventManager) :
 
 void StateSystem::configure(entityx::EventManager& eventManager)
 {
-	eventManager.subscribe<ComponentLoaded<entityx::ComponentHandle<StateComponent>>>(*this);
+	eventManager.subscribe<ComponentLoaded<StateComponent>>(*this);
 	eventManager.subscribe<ChangeState>(*this);
 }
 
@@ -24,7 +24,7 @@ void StateSystem::update(entityx::EntityManager& entityManager, entityx::EventMa
 
 }
 
-void StateSystem::receive(const ComponentLoaded<entityx::ComponentHandle<StateComponent>>& event)
+void StateSystem::receive(const ComponentLoaded<StateComponent>& event)
 {
 	eventManager.emit(ChangeState{ event.entity, event.component->getState() });
 }

@@ -20,7 +20,7 @@ public:
 
 	virtual void configure(entityx::EventManager& eventManager) override;
 	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
-	virtual void receive(const ComponentLoaded<entityx::ComponentHandle<StateComponent>>& event);
+	virtual void receive(const ComponentLoaded<StateComponent>& event);
 	virtual void receive(const ChangeState& event);
 
 private:

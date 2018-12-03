@@ -33,8 +33,8 @@ public:
 	virtual void receive(const entityx::ComponentAddedEvent<BodyComponent>& event);
 	virtual void receive(const entityx::ComponentRemovedEvent<BodyComponent>& event);
 	virtual void receive(const UpdateTransform& event);
-	virtual void receive(const ComponentLoaded<entityx::ComponentHandle<DistanceJointComponent>>& event);
-	virtual void receive(const ComponentLoaded<entityx::ComponentHandle<PathwayComponent>>& event);
+	virtual void receive(const ComponentLoaded<DistanceJointComponent>& event);
+	virtual void receive(const ComponentLoaded<PathwayComponent>& event);
 
 private:
 	b2World world;

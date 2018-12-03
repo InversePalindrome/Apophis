@@ -31,8 +31,8 @@ void PhysicsSystem::configure(entityx::EventManager& eventManager)
 	eventManager.subscribe<entityx::ComponentAddedEvent<BodyComponent>>(*this);
 	eventManager.subscribe<entityx::ComponentRemovedEvent<BodyComponent>>(*this);
 	eventManager.subscribe<UpdateTransform>(*this);
-	eventManager.subscribe<ComponentLoaded<entityx::ComponentHandle<DistanceJointComponent>>>(*this);
-	eventManager.subscribe<ComponentLoaded<entityx::ComponentHandle<PathwayComponent>>>(*this);
+	eventManager.subscribe<ComponentLoaded<DistanceJointComponent>>(*this);
+	eventManager.subscribe<ComponentLoaded<PathwayComponent>>(*this);
 }
 
 void PhysicsSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
@@ -95,7 +95,7 @@ void PhysicsSystem::receive(const UpdateTransform& event)
 	}
 }
 
-void PhysicsSystem::receive(const ComponentLoaded<entityx::ComponentHandle<DistanceJointComponent>>& event)
+void PhysicsSystem::receive(const ComponentLoaded<DistanceJointComponent>& event)
 {
 	auto joint = event.component;
 
@@ -115,7 +115,7 @@ void PhysicsSystem::receive(const ComponentLoaded<entityx::ComponentHandle<Dista
 	}
 }
 
-void PhysicsSystem::receive(const ComponentLoaded<entityx::ComponentHandle<PathwayComponent>>& event)
+void PhysicsSystem::receive(const ComponentLoaded<PathwayComponent>& event)
 {
 	bodiesUserData.push_back(event.entity);
 

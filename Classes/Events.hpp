@@ -30,7 +30,7 @@ struct EntityDied
 template<typename T>
 struct ComponentLoaded
 {
-	T component;
+	entityx::ComponentHandle<T> component;
 	entityx::Entity entity;
 };
 

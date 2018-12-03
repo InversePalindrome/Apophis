@@ -35,11 +35,11 @@ void EntityParser::parseEntity(entityx::Entity& entity, entityx::EventManager& e
 			{ 
 				component->load(componentNode);
 			
-				eventManager.emit(ComponentLoaded<std::decay_t<decltype(component)>>{ component, entity });
+				eventManager.emit(ComponentLoaded<std::decay_t<decltype(component)>::ComponentType>{ component, entity });
 			}, componentParser.at(componentNode.name())(entity));
 		}
 	}
-
+	
 	eventManager.emit(EntityParsed{ entity });
 	eventManager.emit(UpdateTransform{ entity });
 }
