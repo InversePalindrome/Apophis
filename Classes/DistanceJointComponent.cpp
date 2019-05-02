@@ -11,97 +11,97 @@ InversePalindrome.com
 
 
 DistanceJointComponent::DistanceJointComponent() :
-	distanceJoint(nullptr),
-	frequency(0.f),
-	dampingRatio(0.f)
+    distanceJoint(nullptr),
+    frequency(0.f),
+    dampingRatio(0.f)
 {
 }
 
 void DistanceJointComponent::load(const pugi::xml_node& componentNode)
 {
-	JointComponent::load(componentNode);
+    JointComponent::load(componentNode);
 
-	if (const auto frequencyAttribute = componentNode.attribute("frequency"))
-	{
-		setFrequency(frequencyAttribute.as_float());
-	}
-	if (const auto dampingRatioAttribute = componentNode.attribute("dampingRatio"))
-	{
-		setDampingRatio(dampingRatioAttribute.as_float());
-	}
+    if (const auto frequencyAttribute = componentNode.attribute("frequency"))
+    {
+        setFrequency(frequencyAttribute.as_float());
+    }
+    if (const auto dampingRatioAttribute = componentNode.attribute("dampingRatio"))
+    {
+        setDampingRatio(dampingRatioAttribute.as_float());
+    }
 }
 
 void DistanceJointComponent::save(pugi::xml_node& componentNode) const
 {
-	JointComponent::save(componentNode);
-	
-	componentNode.set_name("DistanceJoint");
+    JointComponent::save(componentNode);
 
-	componentNode.append_attribute("frequency") = getFrequency();
-	componentNode.append_attribute("dampingRatio") = getDampingRatio();
+    componentNode.set_name("DistanceJoint");
+
+    componentNode.append_attribute("frequency") = getFrequency();
+    componentNode.append_attribute("dampingRatio") = getDampingRatio();
 }
 
 void DistanceJointComponent::display()
 {
-	if (ImGui::TreeNode("DistanceJoint"))
-	{
-		JointComponent::display();
+    if (ImGui::TreeNode("DistanceJoint"))
+    {
+        JointComponent::display();
 
-		ImGui::InputFloat("frequency", &frequency);
-		ImGui::InputFloat("dampingRatio", &dampingRatio);
+        ImGui::InputFloat("frequency", &frequency);
+        ImGui::InputFloat("dampingRatio", &dampingRatio);
 
-		ImGui::TreePop();
-	}
+        ImGui::TreePop();
+    }
 }
 
 b2DistanceJoint* DistanceJointComponent::getDistanceJoint()
 {
-	return distanceJoint;
+    return distanceJoint;
 }
 
 void DistanceJointComponent::setDistanceJoint(b2DistanceJoint* distanceJoint)
 {
-	this->distanceJoint = distanceJoint;
+    this->distanceJoint = distanceJoint;
 
-	distanceJoint->SetFrequency(frequency);
-	distanceJoint->SetDampingRatio(dampingRatio);
+    distanceJoint->SetFrequency(frequency);
+    distanceJoint->SetDampingRatio(dampingRatio);
 }
 
 b2Vec2 DistanceJointComponent::getAnchorA() const
 {
-	return distanceJoint->GetAnchorA();
+    return distanceJoint->GetAnchorA();
 }
 b2Vec2 DistanceJointComponent::getAnchorB() const
 {
-	return distanceJoint->GetAnchorB();
+    return distanceJoint->GetAnchorB();
 }
 
 float DistanceJointComponent::getFrequency() const
 {
-	return frequency;
+    return frequency;
 }
 
 void DistanceJointComponent::setFrequency(float frequency)
 {
-	this->frequency = frequency;
+    this->frequency = frequency;
 
-	if (distanceJoint)
-	{
-		distanceJoint->SetFrequency(frequency);
-	}
+    if (distanceJoint)
+    {
+        distanceJoint->SetFrequency(frequency);
+    }
 }
 
 float DistanceJointComponent::getDampingRatio() const
 {
-	return dampingRatio;
+    return dampingRatio;
 }
 
 void DistanceJointComponent::setDampingRatio(float dampingRatio)
 {
-	this->dampingRatio = dampingRatio;
+    this->dampingRatio = dampingRatio;
 
-	if (distanceJoint)
-	{
-		distanceJoint->SetDampingRatio(dampingRatio);
-	}
+    if (distanceJoint)
+    {
+        distanceJoint->SetDampingRatio(dampingRatio);
+    }
 }

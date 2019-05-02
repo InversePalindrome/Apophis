@@ -15,5 +15,5 @@ InversePalindrome.com
 
 namespace LevelParser
 {
-	void parseLevel(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, b2Vec2& mapDimensions, const std::string& filename);
+    void parseLevel(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, b2Vec2& mapDimensions, const std::string& filename);
 };

@@ -17,23 +17,23 @@ class WeaponComponent
 public:
     WeaponComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	std::string getProjectileFilename() const;
-	void setProjectileFilename(const std::string& projectileFilename);
+    std::string getProjectileFilename() const;
+    void setProjectileFilename(const std::string& projectileFilename);
 
-	std::chrono::milliseconds getReloadTime() const;
-	void setReloadTime(std::chrono::milliseconds reloadTime);
+    std::chrono::milliseconds getReloadTime() const;
+    void setReloadTime(std::chrono::milliseconds reloadTime);
 
-	bool isReloaded() const;
-	void setReloadStatus(bool reloadStatus);
+    bool isReloaded() const;
+    void setReloadStatus(bool reloadStatus);
 
 private:
-	std::string projectileFilename;
+    std::string projectileFilename;
 
-	std::chrono::milliseconds reloadTime;
-	bool reloadStatus;
+    std::chrono::milliseconds reloadTime;
+    bool reloadStatus;
 };

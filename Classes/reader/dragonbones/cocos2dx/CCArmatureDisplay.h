@@ -38,7 +38,7 @@ public:
 
 public:
     virtual void advanceTimeBySelf(bool on) override;
-    
+
     void addEvent(const std::string& type, const std::function<void(EventObject*)>& callback);
     void removeEvent(const std::string& type);
 
@@ -47,12 +47,12 @@ public:
         return _eventCallback || _dispatcher->isEnabled();
     }
 
-    inline Armature* getArmature() const override 
+    inline Armature* getArmature() const override
     {
         return _armature;
     }
 
-    virtual Animation& getAnimation() const override 
+    virtual Animation& getAnimation() const override
     {
         return _armature->getAnimation();
     }

@@ -11,38 +11,38 @@ InversePalindrome.com
 
 
 DamageComponent::DamageComponent() :
-	damageHitpoints(1.f)
+    damageHitpoints(1.f)
 {
 }
 
 void DamageComponent::load(const pugi::xml_node& componentNode)
 {
-	setDamageHitpoints(componentNode.text().as_float());
+    setDamageHitpoints(componentNode.text().as_float());
 }
 
 void DamageComponent::save(pugi::xml_node& componentNode) const
 {
-	componentNode.set_name("Damage");
+    componentNode.set_name("Damage");
 
-	componentNode.text().set(damageHitpoints);
+    componentNode.text().set(damageHitpoints);
 }
 
 void DamageComponent::display()
 {
-	if (ImGui::TreeNode("Damage"))
-	{
-		ImGui::InputFloat("Hitpoints", &damageHitpoints);
+    if (ImGui::TreeNode("Damage"))
+    {
+        ImGui::InputFloat("Hitpoints", &damageHitpoints);
 
-		ImGui::TreePop();
-	}
+        ImGui::TreePop();
+    }
 }
 
 float DamageComponent::getDamageHitpoints() const
 {
-	return damageHitpoints;
+    return damageHitpoints;
 }
 
 void DamageComponent::setDamageHitpoints(float hitpoints)
 {
-	this->damageHitpoints = hitpoints;
+    this->damageHitpoints = hitpoints;
 }

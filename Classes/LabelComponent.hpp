@@ -17,31 +17,31 @@ InversePalindrome.com
 class LabelComponent : public NodeComponent
 {
 public:
-	LabelComponent();
+    LabelComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	std::string getText() const;
-	void setText(const std::string& text);
+    std::string getText() const;
+    void setText(const std::string& text);
 
-	std::string getFontName() const;
-	void setFontName(const std::string& fontName);
+    std::string getFontName() const;
+    void setFontName(const std::string& fontName);
 
-	float getFontSize() const;
-	void setFontSize(float fontSize);
+    float getFontSize() const;
+    void setFontSize(float fontSize);
 
-	cocos2d::TextHAlignment getHorizontalAlignment() const;
-	void setHorizontalAlignment(cocos2d::TextHAlignment horizontalAlignment);
+    cocos2d::TextHAlignment getHorizontalAlignment() const;
+    void setHorizontalAlignment(cocos2d::TextHAlignment horizontalAlignment);
 
-	cocos2d::TextVAlignment getVerticalAlignment() const;
-	void setVerticalAlignment(cocos2d::TextVAlignment verticalAlignment);
+    cocos2d::TextVAlignment getVerticalAlignment() const;
+    void setVerticalAlignment(cocos2d::TextVAlignment verticalAlignment);
 
-	cocos2d::Color4B getTextColor() const;
-	void setTextColor(const cocos2d::Color4B& textColor);
+    cocos2d::Color4B getTextColor() const;
+    void setTextColor(const cocos2d::Color4B& textColor);
 
 private:
-	cocos2d::Label* label;
+    cocos2d::Label* label;
 };

@@ -43,7 +43,7 @@ void CCArmatureDisplay::_dispatchEvent(EventObject* value)
     if (_eventCallback) {
         _eventCallback(value);
     }
-    
+
     if (_dispatcher->isEnabled()) {
         _dispatcher->dispatchCustomEvent(value->type, value);
     }
@@ -51,7 +51,7 @@ void CCArmatureDisplay::_dispatchEvent(EventObject* value)
 
 void CCArmatureDisplay::dispose()
 {
-    if (_armature) 
+    if (_armature)
     {
         advanceTimeBySelf(false);
         _armature->dispose();
@@ -70,7 +70,7 @@ void CCArmatureDisplay::advanceTimeBySelf(bool on)
     {
         scheduleUpdate();
     }
-    else 
+    else
     {
         unscheduleUpdate();
     }
@@ -78,7 +78,7 @@ void CCArmatureDisplay::advanceTimeBySelf(bool on)
 
 void CCArmatureDisplay::addEvent(const std::string& type, const std::function<void(EventObject*)>& callback)
 {
-    auto lambda = [callback](cocos2d::EventCustom* event) -> void {
+    auto lambda = [callback](cocos2d::EventCustom * event) -> void {
         callback(static_cast<EventObject*>(event->getUserData()));
     };
     _dispatcher->addCustomEventListener(type, lambda);
@@ -113,23 +113,23 @@ DBCCSprite::~DBCCSprite() {}
 cocos2d::Vec2 DBCCSprite::projectGL(const cocos2d::Vec3& src) const
 {
     cocos2d::Vec2 screenPos;
-    
+
     auto director = cocos2d::Director::getInstance();
     auto viewport = director->getWinSize();
     cocos2d::Vec4 clipPos;
     auto projMatrix = director->getMatrix(cocos2d::MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
     projMatrix.transformVector(cocos2d::Vec4(src.x, src.y, src.z, 1.0f), &clipPos);
-    
+
     CCASSERT(clipPos.w != 0.0f, "clipPos.w can't be 0.0f!");
     float ndcX = clipPos.x / clipPos.w;
     float ndcY = clipPos.y / clipPos.w;
-    
+
     screenPos.x = (ndcX + 1.0f) * 0.5f * viewport.width;
     screenPos.y = (ndcY + 1.0f) * 0.5f * viewport.height;
     return screenPos;
 }
 
-bool DBCCSprite::_checkVisibility(const cocos2d::Mat4& transform, const cocos2d::Size& size, const cocos2d::Rect& rect)
+bool DBCCSprite::_checkVisibility(const cocos2d::Mat4 & transform, const cocos2d::Size & size, const cocos2d::Rect & rect)
 {
     ////---- TODO Not support camera in -x-lite now
 //    auto scene = cocos2d::Director::getInstance()->getRunningScene();
@@ -166,7 +166,7 @@ bool DBCCSprite::_checkVisibility(const cocos2d::Mat4& transform, const cocos2d:
     return ret;
 }
 
-void DBCCSprite::draw(cocos2d::Renderer* renderer, const cocos2d::Mat4& transform, uint32_t flags)
+void DBCCSprite::draw(cocos2d::Renderer * renderer, const cocos2d::Mat4 & transform, uint32_t flags)
 {
 #if CC_USE_CULLING
     const auto& rect = this->_polyInfo.getRect();
@@ -182,7 +182,7 @@ void DBCCSprite::draw(cocos2d::Renderer* renderer, const cocos2d::Mat4& transfor
 //    {
 //        _insideBounds = _checkVisibility(transform, _contentSize, rect);
 //    }
-    
+
     if ((flags & FLAGS_TRANSFORM_DIRTY))
     {
         _insideBounds = _checkVisibility(transform, _contentSize, rect);

@@ -11,58 +11,58 @@ InversePalindrome.com
 
 
 AccelerationComponent::AccelerationComponent() :
-	linearAcceleration(1.f),
-	angularAcceleration(1.f)
+    linearAcceleration(1.f),
+    angularAcceleration(1.f)
 {
 }
 
 void AccelerationComponent::load(const pugi::xml_node& componentNode)
 {
-	if (const auto linearAccelerationAttribute = componentNode.attribute("linear"))
-	{
-		setLinearAcceleration(linearAccelerationAttribute.as_float());
-	}
-	if (const auto angularAccelerationAttribute = componentNode.attribute("angular"))
-	{
-		setAngularAcceleration(angularAccelerationAttribute.as_float());
-	}
+    if (const auto linearAccelerationAttribute = componentNode.attribute("linear"))
+    {
+        setLinearAcceleration(linearAccelerationAttribute.as_float());
+    }
+    if (const auto angularAccelerationAttribute = componentNode.attribute("angular"))
+    {
+        setAngularAcceleration(angularAccelerationAttribute.as_float());
+    }
 }
 
 void AccelerationComponent::save(pugi::xml_node& componentNode) const
 {
-	componentNode.set_name("Acceleration");
+    componentNode.set_name("Acceleration");
 
-	componentNode.append_attribute("linear") = getLinearAcceleration();
-	componentNode.append_attribute("angular") = getAngularAcceleration();
+    componentNode.append_attribute("linear") = getLinearAcceleration();
+    componentNode.append_attribute("angular") = getAngularAcceleration();
 }
 
 void AccelerationComponent::display()
 {
-	if (ImGui::TreeNode("Acceleration"))
-	{
-		ImGui::InputFloat("Linear Acceleration", &linearAcceleration);
-		ImGui::InputFloat("Angular Acceleration", &angularAcceleration);
+    if (ImGui::TreeNode("Acceleration"))
+    {
+        ImGui::InputFloat("Linear Acceleration", &linearAcceleration);
+        ImGui::InputFloat("Angular Acceleration", &angularAcceleration);
 
-		ImGui::TreePop();
-	}
+        ImGui::TreePop();
+    }
 }
 
 float AccelerationComponent::getLinearAcceleration() const
 {
-	return linearAcceleration;
+    return linearAcceleration;
 }
 
 void AccelerationComponent::setLinearAcceleration(float linearAcceleration)
 {
-	this->linearAcceleration = linearAcceleration;
+    this->linearAcceleration = linearAcceleration;
 }
 
 float AccelerationComponent::getAngularAcceleration() const
 {
-	return angularAcceleration;
+    return angularAcceleration;
 }
 
 void AccelerationComponent::setAngularAcceleration(float angularAcceleration)
 {
-	this->angularAcceleration = angularAcceleration;
+    this->angularAcceleration = angularAcceleration;
 }

@@ -305,24 +305,24 @@ DataParser::~DataParser() {}
 void DataParser::_getTimelineFrameMatrix(const AnimationData& animation, BoneTimelineData& timeline, float position, Transform& transform) const
 {
     const auto frameIndex = unsigned(position * animation.frameCount / animation.duration); // floor
-    if (timeline.frames.size() == 1 || frameIndex >= timeline.frames.size()) 
+    if (timeline.frames.size() == 1 || frameIndex >= timeline.frames.size())
     {
         transform = timeline.frames[0]->transform; // copy
     }
-    else 
+    else
     {
         const auto frame = timeline.frames[frameIndex];
         auto tweenProgress = 0.f;
 
-        if (frame->duration > 0.f && frame->tweenEasing != NO_TWEEN) 
+        if (frame->duration > 0.f && frame->tweenEasing != NO_TWEEN)
         {
             tweenProgress = (position - frame->position) / frame->duration;
-            if (frame->tweenEasing != 0.f) 
+            if (frame->tweenEasing != 0.f)
             {
                 tweenProgress = TweenTimelineState<BoneFrameData, BoneTimelineData>::_getEasingValue(tweenProgress, frame->tweenEasing);
             }
         }
-        else if (!frame->curve.empty()) 
+        else if (!frame->curve.empty())
         {
             tweenProgress = (position - frame->position) / frame->duration;
             tweenProgress = TweenTimelineState<BoneFrameData, BoneTimelineData>::_getCurveEasingValue(tweenProgress, frame->curve);
@@ -348,15 +348,15 @@ void DataParser::_getTimelineFrameMatrix(const AnimationData& animation, BoneTim
     transform.add(timeline.originTransform);
 }
 
-void DataParser::_globalToLocal(ArmatureData* armature) const
+void DataParser::_globalToLocal(ArmatureData * armature) const
 {
     std::vector<BoneFrameData*> keyFrames;
     auto bones = armature->getSortedBones(); // copy
     bones.reserve(bones.size());
 
-    for (const auto bone : bones) 
+    for (const auto bone : bones)
     {
-        if (bone->parent) 
+        if (bone->parent)
         {
             bone->parent->transform.toMatrix(_helpMatrix);
             _helpMatrix.invert();
@@ -421,17 +421,17 @@ void DataParser::_globalToLocal(ArmatureData* armature) const
     }
 }
 
-void DataParser::_mergeFrameToAnimationTimeline(float framePosition, const std::vector<ActionData*>& actions, const std::vector<EventData*>& events) const
+void DataParser::_mergeFrameToAnimationTimeline(float framePosition, const std::vector<ActionData*> & actions, const std::vector<EventData*> & events) const
 {
     const auto frameStart = std::floor(framePosition * _armature->frameRate);
     auto& frames = _animation->frames;
 
-    if (frames.empty()) 
+    if (frames.empty())
     {
         const auto startFrame = BaseObject::borrowObject<AnimationFrameData>();
         startFrame->position = 0.f;
 
-        if (_animation->frameCount > 1) 
+        if (_animation->frameCount > 1)
         {
             frames.resize(_animation->frameCount + 1, nullptr);
 
@@ -446,26 +446,26 @@ void DataParser::_mergeFrameToAnimationTimeline(float framePosition, const std::
     auto insertedFrame = (AnimationFrameData*)nullptr;
     const auto replacedFrame = frames[frameStart];
 
-    if (replacedFrame && (frameStart == 0 || frames[frameStart - 1] == replacedFrame->prev)) 
+    if (replacedFrame && (frameStart == 0 || frames[frameStart - 1] == replacedFrame->prev))
     {
         insertedFrame = replacedFrame;
     }
-    else 
+    else
     {
         insertedFrame = BaseObject::borrowObject<AnimationFrameData>();
         insertedFrame->position = frameStart / _armature->frameRate;
         frames[frameStart] = insertedFrame;
 
-        for (size_t i = frameStart + 1, l = frames.size(); i < l; ++i) 
+        for (size_t i = frameStart + 1, l = frames.size(); i < l; ++i)
         {
-            if (replacedFrame && frames[i] == replacedFrame) 
+            if (replacedFrame && frames[i] == replacedFrame)
             {
                 frames[i] = nullptr;
             }
         }
     }
 
-    if (!actions.empty()) 
+    if (!actions.empty())
     {
         for (const auto action : actions)
         {
@@ -473,9 +473,9 @@ void DataParser::_mergeFrameToAnimationTimeline(float framePosition, const std::
         }
     }
 
-    if (!events.empty()) 
+    if (!events.empty())
     {
-        for (const auto event : events) 
+        for (const auto event : events)
         {
             insertedFrame->events.push_back(event);
         }
@@ -483,10 +483,10 @@ void DataParser::_mergeFrameToAnimationTimeline(float framePosition, const std::
 
     auto prevFrame = (AnimationFrameData*)nullptr;
     auto nextFrame = (AnimationFrameData*)nullptr;
-    for (size_t i = 0, l = frames.size(); i < l; ++i) 
+    for (size_t i = 0, l = frames.size(); i < l; ++i)
     {
         const auto currentFrame = frames[i];
-        if (currentFrame && nextFrame != currentFrame) 
+        if (currentFrame && nextFrame != currentFrame)
         {
             nextFrame = currentFrame;
 
@@ -498,7 +498,7 @@ void DataParser::_mergeFrameToAnimationTimeline(float framePosition, const std::
 
             prevFrame = nextFrame;
         }
-        else 
+        else
         {
             frames[i] = prevFrame;
         }

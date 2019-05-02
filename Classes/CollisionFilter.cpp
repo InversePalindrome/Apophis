@@ -10,5 +10,5 @@ InversePalindrome.com
 
 bool CollisionFilter::ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB)
 {
-	return true;
+    return true;
 }

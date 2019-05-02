@@ -14,10 +14,10 @@ InversePalindrome.com
 
 struct RayCastData
 {
-	entityx::Entity* entity;
-	b2Vec2 point;
-	b2Vec2 normal;
-	float fraction;
+    entityx::Entity* entity;
+    b2Vec2 point;
+    b2Vec2 normal;
+    float fraction;
 };
 
 bool operator<(const RayCastData& rayCastData1, const RayCastData& rayCastData2);

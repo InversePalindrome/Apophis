@@ -74,7 +74,7 @@ void BoneFrameData::_onClear()
 }
 
 ColorTransform SlotFrameData::DEFAULT_COLOR;
-ColorTransform * SlotFrameData::generateColor()
+ColorTransform* SlotFrameData::generateColor()
 {
     return new ColorTransform();
 }

@@ -15,20 +15,20 @@ InversePalindrome.com
 class SpeedBoostComponent
 {
 public:
-	SpeedBoostComponent();
+    SpeedBoostComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	float getSpeedBoostRatio() const;
-	void setSpeedBoostRatio(float speedBoostRatio);
+    float getSpeedBoostRatio() const;
+    void setSpeedBoostRatio(float speedBoostRatio);
 
-	std::chrono::milliseconds getSpeedBoostDuration() const;
-	void setSpeedBoostDuration(const std::chrono::milliseconds& speedBoostDuration);
+    std::chrono::milliseconds getSpeedBoostDuration() const;
+    void setSpeedBoostDuration(const std::chrono::milliseconds& speedBoostDuration);
 
 private:
-	float speedBoostRatio;
-	std::chrono::milliseconds speedBoostDuration;
+    float speedBoostRatio;
+    std::chrono::milliseconds speedBoostDuration;
 };

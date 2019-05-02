@@ -129,34 +129,34 @@ void Armature::_doAction(const ActionData& value)
     const auto& floats = std::get<1>(value.data);
     const auto& strings = std::get<2>(value.data);
 
-    switch (value.type) 
+    switch (value.type)
     {
-        case ActionType::Play:
-            _animation->play(strings[0], ints[0]);
-            break;
+    case ActionType::Play:
+        _animation->play(strings[0], ints[0]);
+        break;
 
-        case ActionType::Stop:
-            _animation->stop(strings[0]);
-            break;
+    case ActionType::Stop:
+        _animation->stop(strings[0]);
+        break;
 
-        case ActionType::GotoAndPlay:
-            _animation->gotoAndPlayByTime(strings[0], floats[0], ints[0]);
-            break;
+    case ActionType::GotoAndPlay:
+        _animation->gotoAndPlayByTime(strings[0], floats[0], ints[0]);
+        break;
 
-        case ActionType::GotoAndStop:
-            _animation->gotoAndStopByTime(strings[0], floats[0]);
-            break;
+    case ActionType::GotoAndStop:
+        _animation->gotoAndStopByTime(strings[0], floats[0]);
+        break;
 
-        case ActionType::FadeIn:
-            _animation->fadeIn(strings[0], floats[0], ints[0]);
-            break;
+    case ActionType::FadeIn:
+        _animation->fadeIn(strings[0], floats[0], ints[0]);
+        break;
 
-        case ActionType::FadeOut:
-            // TODO fade out
-            break;
+    case ActionType::FadeOut:
+        // TODO fade out
+        break;
 
-        default:
-            break;
+    default:
+        break;
     }
 }
 
@@ -224,7 +224,7 @@ void Armature::dispose()
 
 void Armature::advanceTime(float passedTime)
 {
-    if (!_animation) 
+    if (!_animation)
     {
         DRAGONBONES_ASSERT(false, "The armature has been disposed.");
     }
@@ -300,30 +300,30 @@ void Armature::advanceTime(float passedTime)
         {
             for (const auto action : _actions)
             {
-                if (action->slot) 
+                if (action->slot)
                 {
                     const auto slot = getSlot(action->slot->name);
-                    if (slot) 
+                    if (slot)
                     {
                         const auto childArmature = slot->getChildArmature();
-                        if (childArmature) 
+                        if (childArmature)
                         {
                             childArmature->_doAction(*action);
                         }
                     }
                 }
-                else if (action->bone) 
+                else if (action->bone)
                 {
-                    for (const auto slot : _slots) 
+                    for (const auto slot : _slots)
                     {
                         const auto childArmature = slot->getChildArmature();
-                        if (childArmature) 
+                        if (childArmature)
                         {
                             childArmature->_doAction(*action);
                         }
                     }
                 }
-                else 
+                else
                 {
                     _doAction(*action);
                 }
@@ -468,7 +468,7 @@ void Armature::addBone(Bone* value, const std::string& parentName)
     }
 }
 
-void Armature::removeBone(Bone* value)
+void Armature::removeBone(Bone * value)
 {
     if (value && value->getArmature() == this)
     {
@@ -484,7 +484,7 @@ void Armature::removeBone(Bone* value)
 void Armature::replaceTexture(void* texture)
 {
     _replacedTexture = texture;
-    for (auto const slot : _slots) 
+    for (auto const slot : _slots)
     {
         slot->invalidUpdate();
     }
@@ -496,10 +496,10 @@ void Armature::setCacheFrameRate(unsigned value)
     {
         _armatureData->cacheFrames(value);
 
-        for (const auto slot : _slots) 
+        for (const auto slot : _slots)
         {
             const auto childArmature = slot->getChildArmature();
-            if (childArmature && childArmature->getCacheFrameRate() == 0) 
+            if (childArmature && childArmature->getCacheFrameRate() == 0)
             {
                 childArmature->setCacheFrameRate(value);
             }

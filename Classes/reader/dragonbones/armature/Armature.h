@@ -105,7 +105,7 @@ public:
 
     inline const std::string& getName() const
     {
-        if(_armatureData)
+        if (_armatureData)
         {
             return _armatureData->name;
         }

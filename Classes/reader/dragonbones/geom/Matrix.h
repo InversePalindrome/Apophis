@@ -16,7 +16,7 @@ public:
     float tx;
     float ty;
 
-    Matrix():
+    Matrix() :
         a(1.f),
         b(0.f),
         c(0.f),
@@ -71,7 +71,7 @@ public:
         ty = dB * tyA + bB * txA + tyB;
     }
 
-    inline void invert() 
+    inline void invert()
     {
         const auto aA = a;
         const auto bA = b;
@@ -89,7 +89,7 @@ public:
         ty = -(aA * tyA - bA * txA) / n;
     }
 
-    inline void transformPoint(float x, float y, Point& result, bool delta = false) const
+    inline void transformPoint(float x, float y, Point & result, bool delta = false) const
     {
         result.x = a * x + c * y;
         result.y = b * x + d * y;

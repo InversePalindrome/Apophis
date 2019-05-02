@@ -45,31 +45,31 @@ struct AnimationInfo
 class AnimationManager : public cocos2d::Node
 {
 public:
-    void playAnimationClip(cocos2d::Node *target, const std::string &animationClipName);
+    void playAnimationClip(cocos2d::Node* target, const std::string& animationClipName);
     // if AnimationClip is stopped, can not run it again.
-    void stopAnimationClip(cocos2d::Node *target, const std::string &animationClipName);
-    void pauseAnimationClip(cocos2d::Node *target, const std::string &animationClipName);
-    void resumeAnimationClip(cocos2d::Node *target, const std::string &animationClipName);
+    void stopAnimationClip(cocos2d::Node* target, const std::string& animationClipName);
+    void pauseAnimationClip(cocos2d::Node* target, const std::string& animationClipName);
+    void resumeAnimationClip(cocos2d::Node* target, const std::string& animationClipName);
     // if a "Play On Load" animation is a loop animation, please stop it manually.
     void stopAnimationClipsRunByPlayOnLoad();
 private:
     friend class CreatorReader;
-    
+
     AnimationManager();
     ~AnimationManager();
-    
+
     // functions invoked by CreatorReader only
     void addAnimation(const AnimationInfo& animationInfo);
     void playOnLoad();
 
-    void runAnimationClip(cocos2d::Node *target, AnimationClip* animationClip);
+    void runAnimationClip(cocos2d::Node* target, AnimationClip* animationClip);
     // AnimateClip will be released
-    void removeAnimateClip(cocos2d::Node *target, const std::string &animationClipName);
-    AnimateClip* getAnimateClip(cocos2d::Node *target, const std::string &animationClipName) const;
-    
+    void removeAnimateClip(cocos2d::Node* target, const std::string& animationClipName);
+    AnimateClip* getAnimateClip(cocos2d::Node* target, const std::string& animationClipName) const;
+
     std::vector<AnimationInfo> _animations;
     std::vector<std::tuple<cocos2d::Node*, std::string, AnimateClip*>> _cachedAnimates;
-    
+
     CREATOR_DISALLOW_COPY_ASSIGN_AND_MOVE(AnimationManager);
 };
 

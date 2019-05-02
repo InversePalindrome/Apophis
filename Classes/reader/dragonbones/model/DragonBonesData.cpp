@@ -27,7 +27,7 @@ void DragonBonesData::_onClear()
     _armatureNames.clear();
 }
 
-void DragonBonesData::addArmature(ArmatureData * value)
+void DragonBonesData::addArmature(ArmatureData* value)
 {
     if (value && !value->name.empty() && armatures.find(value->name) == armatures.end())
     {

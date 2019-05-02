@@ -12,5 +12,5 @@ InversePalindrome.com
 
 namespace ResourceParser
 {
-	void parseResources(const std::string& filename);
+    void parseResources(const std::string& filename);
 }

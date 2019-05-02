@@ -5,13 +5,20 @@
 		<Sprite x="0" y="0" rotation="0" xScale="1" yScale="1" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" filename="PurpleSpace.png" textureX="0" textureY="0" textureWidth="4096" textureHeight="4096" repeat="true" />
 	</Entity>
 	<Entity>
-		<Speed linear="40" angular="5" />
-		<Label x="0" y="300" rotation="0" xScale="1" yScale="1" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" font="BEBAS" size="100" HAlignment="0" VAlignment="0" textR="17" textG="231" textB="242" textA="255">Hello World</Label>
-	</Entity>
-	<Entity>
 		<Transform x="15" y="0" angle="0" />
 		<Sprite x="480" y="0" rotation="0" xScale="1" yScale="1" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="LavaAsteroid" textureX="157" textureY="228" textureWidth="146" textureHeight="139" repeat="false" />
+    <Body>
+      <Circle radius="2"></Circle>
+    </Body>
 	</Entity>
+  <Entity>
+    <Transform />
+    <Object>Asteroid</Object>
+    <Body type="0" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
+      <Circle density="0" friction="0.200000003" restitution="0" sensor="false" x="0" y="0" radius="4.5" />
+    </Body>
+    <Sprite x="0" y="0" rotation="0" xScale="0.5" yScale="0.5" xAnchorPoint="0.5" yAnchorPoint="0.5" R="255" G="255" B="255" zOrder="0" frame="Planet_D" textureX="668" textureY="0" textureWidth="550" textureHeight="550" repeat="false" />
+  </Entity>
 	<Entity>
 		<Body type="0" x="-64" y="64" angle="0" linearDamping="0" angularDamping="0" fixedRotation="false" bullet="false">
 			<Chain density="0" friction="0.200000003" restitution="0" sensor="false">

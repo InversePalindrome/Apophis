@@ -11,38 +11,38 @@ InversePalindrome.com
 
 
 VisionComponent::VisionComponent() :
-	visionDistance(10.f)
+    visionDistance(10.f)
 {
 }
 
 void VisionComponent::load(const pugi::xml_node& componentNode)
 {
-	setVisionDistance(componentNode.text().as_float());
+    setVisionDistance(componentNode.text().as_float());
 }
 
 void VisionComponent::save(pugi::xml_node& componentNode) const
 {
-	componentNode.set_name("Vision");
+    componentNode.set_name("Vision");
 
-	componentNode.text().set(getVisionDistance());
+    componentNode.text().set(getVisionDistance());
 }
 
 void VisionComponent::display()
 {
-	if (ImGui::TreeNode("Vision"))
-	{
-		ImGui::InputFloat("Distance", &visionDistance);
+    if (ImGui::TreeNode("Vision"))
+    {
+        ImGui::InputFloat("Distance", &visionDistance);
 
-		ImGui::TreePop();
-	}
+        ImGui::TreePop();
+    }
 }
 
 float VisionComponent::getVisionDistance() const
 {
-	return visionDistance;
+    return visionDistance;
 }
 
 void VisionComponent::setVisionDistance(float visionDistance)
 {
-	this->visionDistance = visionDistance;
+    this->visionDistance = visionDistance;
 }

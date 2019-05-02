@@ -15,81 +15,81 @@ InversePalindrome.com
 
 
 WanderComponent::WanderComponent() :
-	wanderDistance(5.f),
-	wanderRadius(1.f),
-	wanderRate(1.f),
-	wanderAngle(cocos2d::RandomHelper::random_real(0.f, 2.f * boost::math::constants::pi<float>()))
+    wanderDistance(5.f),
+    wanderRadius(1.f),
+    wanderRate(1.f),
+    wanderAngle(cocos2d::RandomHelper::random_real(0.f, 2.f* boost::math::constants::pi<float>()))
 {
 }
 
 void WanderComponent::load(const pugi::xml_node& componentNode)
 {
-	if (const auto wanderDistanceAttribute = componentNode.attribute("distance"))
-	{
-		setWanderDistance(wanderDistanceAttribute.as_float());
-	}
-	if (const auto wanderRadiusAttribute = componentNode.attribute("radius"))
-	{
-		setWanderRadius(wanderRadiusAttribute.as_float());
-	}
-	if (const auto wanderRateAttribute = componentNode.attribute("rate"))
-	{
-		setWanderRate(wanderRateAttribute.as_float());
-	}
+    if (const auto wanderDistanceAttribute = componentNode.attribute("distance"))
+    {
+        setWanderDistance(wanderDistanceAttribute.as_float());
+    }
+    if (const auto wanderRadiusAttribute = componentNode.attribute("radius"))
+    {
+        setWanderRadius(wanderRadiusAttribute.as_float());
+    }
+    if (const auto wanderRateAttribute = componentNode.attribute("rate"))
+    {
+        setWanderRate(wanderRateAttribute.as_float());
+    }
 }
 
 void WanderComponent::save(pugi::xml_node& componentNode) const
 {
-	componentNode.set_name("Wander");
+    componentNode.set_name("Wander");
 
-	componentNode.append_attribute("distance") = getWanderDistance();
-	componentNode.append_attribute("radius") = getWanderRadius();
-	componentNode.append_attribute("rate") = getWanderRate();
+    componentNode.append_attribute("distance") = getWanderDistance();
+    componentNode.append_attribute("radius") = getWanderRadius();
+    componentNode.append_attribute("rate") = getWanderRate();
 }
 
 void WanderComponent::display()
 {
-	if (ImGui::TreeNode("Wander"))
-	{
-		ImGui::InputFloat("Distance", &wanderDistance);
-		ImGui::InputFloat("Radius", &wanderRadius);
-		ImGui::InputFloat("Rate", &wanderRate);
+    if (ImGui::TreeNode("Wander"))
+    {
+        ImGui::InputFloat("Distance", &wanderDistance);
+        ImGui::InputFloat("Radius", &wanderRadius);
+        ImGui::InputFloat("Rate", &wanderRate);
 
-		ImGui::TreePop();
-	}
+        ImGui::TreePop();
+    }
 }
 
 float WanderComponent::getWanderDistance() const
 {
-	return wanderDistance;
+    return wanderDistance;
 }
 
 void WanderComponent::setWanderDistance(float wanderDistance)
 {
-	this->wanderDistance = wanderDistance;
+    this->wanderDistance = wanderDistance;
 }
 
 float WanderComponent::getWanderRadius() const
 {
-	return wanderRadius;
+    return wanderRadius;
 }
 
 void WanderComponent::setWanderRadius(float wanderRadius)
 {
-	this->wanderRadius = wanderRadius;
+    this->wanderRadius = wanderRadius;
 }
 
 float WanderComponent::getWanderRate() const
 {
-	return wanderRate;
+    return wanderRate;
 }
 
 void WanderComponent::setWanderRate(float wanderRate)
 {
-	this->wanderRate = wanderRate;
+    this->wanderRate = wanderRate;
 }
 
 float& WanderComponent::getWanderAngle()
 {
-	return wanderAngle;
+    return wanderAngle;
 }

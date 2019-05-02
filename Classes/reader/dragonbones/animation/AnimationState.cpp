@@ -14,7 +14,7 @@ AnimationState::AnimationState() :
 {
     _onClear();
 }
-AnimationState::~AnimationState() 
+AnimationState::~AnimationState()
 {
     _onClear();
 }
@@ -58,7 +58,7 @@ void AnimationState::_onClear()
         _timeline->returnToPool();
         _timeline = nullptr;
     }
-    
+
     _isPlaying = true;
     _isPausePlayhead = false;
     _isFadeOut = false;
@@ -85,7 +85,7 @@ void AnimationState::_advanceFadeTime(float passedTime)
     auto fadeProgress = 0.f;
     if (_fadeTime >= fadeTotalTime)
     {
-        fadeProgress = _isFadeOut? 0.f : 1.f;
+        fadeProgress = _isFadeOut ? 0.f : 1.f;
     }
     else if (_fadeTime > 0.f)
     {
@@ -152,7 +152,7 @@ void AnimationState::_advanceFadeTime(float passedTime)
     }
 }
 
-bool AnimationState::_isDisabled(const Slot& slot) const
+bool AnimationState::_isDisabled(const Slot & slot) const
 {
     if (
         displayControl &&
@@ -160,8 +160,8 @@ bool AnimationState::_isDisabled(const Slot& slot) const
             slot.displayController.empty() ||
             slot.displayController == _name ||
             slot.displayController == _group
+            )
         )
-    )
     {
         return false;
     }
@@ -170,7 +170,7 @@ bool AnimationState::_isDisabled(const Slot& slot) const
 }
 
 void AnimationState::_fadeIn(
-    Armature* armature, AnimationData* clip, const std::string& animationName, 
+    Armature * armature, AnimationData * clip, const std::string & animationName,
     unsigned playTimes, float position, float duration, float time, float timeScale, float fadeInTime,
     bool pausePlayhead
 )
@@ -311,7 +311,7 @@ void AnimationState::_updateFFDTimelineStates()
             const auto displayIndex = slot->getDisplayIndex();
             const auto rawMeshData = displayIndex < slot->_displayDataSet->displays.size() ? slot->_displayDataSet->displays[displayIndex]->mesh : nullptr;
 
-            if (slot->_meshData == rawMeshData) 
+            if (slot->_meshData == rawMeshData)
             {
                 const auto ffdTimelineData = _animationData->getFFDTimeline(_armature->_skinData->name, timelineName, displayIndex);
                 if (ffdTimelineData && containsBoneMask(parentTimelineName)) //  && !_isFadeOut
@@ -379,12 +379,12 @@ void AnimationState::_advanceTime(float passedTime, float weightLeft, int index)
         if (isCacheEnabled)
         {
             const auto cacheFrameIndex = (unsigned)(_timeline->_currentTime * cacheTimeToFrameScale);
-            if (_armature->_cacheFrameIndex == cacheFrameIndex) 
+            if (_armature->_cacheFrameIndex == cacheFrameIndex)
             {
                 isUpdatesTimeline = false;
                 isUpdatesBoneTimeline = false;
             }
-            else 
+            else
             {
                 _armature->_cacheFrameIndex = cacheFrameIndex;
 
@@ -403,17 +403,17 @@ void AnimationState::_advanceTime(float passedTime, float weightLeft, int index)
                     }
                 }
 
-                if (_animationData->cachedFrames[cacheFrameIndex]) 
+                if (_animationData->cachedFrames[cacheFrameIndex])
                 {
                     isUpdatesBoneTimeline = false;
                 }
-                else 
+                else
                 {
                     _animationData->cachedFrames[cacheFrameIndex] = true;
                 }
             }
         }
-        else 
+        else
         {
             _armature->_cacheFrameIndex = -1;
         }
@@ -497,7 +497,7 @@ void AnimationState::fadeOut(float fadeOutTime, bool pausePlayhead)
     _fadeTime = fadeTotalTime * (1.f - _fadeProgress);
 }
 
-void AnimationState::addBoneMask(const std::string& name, bool recursive)
+void AnimationState::addBoneMask(const std::string & name, bool recursive)
 {
     const auto currentBone = _armature->getBone(name);
     if (!currentBone)
@@ -532,7 +532,7 @@ void AnimationState::addBoneMask(const std::string& name, bool recursive)
     _updateTimelineStates();
 }
 
-void AnimationState::removeBoneMask(const std::string& name, bool recursive)
+void AnimationState::removeBoneMask(const std::string & name, bool recursive)
 {
     auto iterator = std::find(_boneMask.begin(), _boneMask.end(), name);
     if (iterator != _boneMask.cend())

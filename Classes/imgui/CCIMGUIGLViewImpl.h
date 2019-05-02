@@ -59,21 +59,21 @@ public:
     static IMGUIGLViewImpl* create(const std::string& viewName, bool resizable);
     static IMGUIGLViewImpl* createWithRect(const std::string& viewName, Rect size, float frameZoomFactor = 1.0f, bool resizable = false);
     static IMGUIGLViewImpl* createWithFullScreen(const std::string& viewName);
-    static IMGUIGLViewImpl* createWithFullScreen(const std::string& viewName, const GLFWvidmode &videoMode, GLFWmonitor *monitor);
-	
-	static IMGUIGLViewImpl* create(const std::string& viewName);
+    static IMGUIGLViewImpl* createWithFullScreen(const std::string& viewName, const GLFWvidmode& videoMode, GLFWmonitor* monitor);
+
+    static IMGUIGLViewImpl* create(const std::string& viewName);
 
     /*
      *frameZoomFactor for frame. This method is for debugging big resolution (e.g.new ipad) app on desktop.
      */
 
-    //void resize(int width, int height);
+     //void resize(int width, int height);
 
     float getFrameZoomFactor() const override;
     //void centerWindow();
 
-    virtual void setViewPortInPoints(float x , float y , float w , float h) override;
-    virtual void setScissorInPoints(float x , float y , float w , float h) override;
+    virtual void setViewPortInPoints(float x, float y, float w, float h) override;
+    virtual void setScissorInPoints(float x, float y, float w, float h) override;
     virtual Rect getScissorRect() const override;
 
     bool windowShouldClose() override;
@@ -101,14 +101,14 @@ public:
     void enableRetina(bool enabled);
     /** Check whether retina display is enabled. */
     bool isRetinaEnabled() const { return _isRetinaEnabled; };
-    
+
     /** Get retina factor */
     int getRetinaFactor() const override { return _retinaFactor; }
-    
+
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
     HWND getWin32Window() { return glfwGetWin32Window(_mainWindow); }
 #endif /* (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) */
-    
+
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
     id getCocoaWindow() override { return glfwGetCocoaWindow(_mainWindow); }
 #endif // #if (CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
@@ -119,7 +119,7 @@ protected:
 
     bool initWithRect(const std::string& viewName, Rect rect, float frameZoomFactor, bool resizable);
     bool initWithFullScreen(const std::string& viewName);
-    bool initWithFullscreen(const std::string& viewname, const GLFWvidmode &videoMode, GLFWmonitor *monitor);
+    bool initWithFullscreen(const std::string& viewname, const GLFWvidmode& videoMode, GLFWmonitor* monitor);
 
     bool initGlew();
 
@@ -134,9 +134,9 @@ protected:
     void onGLFWCharCallback(GLFWwindow* window, unsigned int character);
     void onGLFWWindowPosCallback(GLFWwindow* windows, int x, int y);
     void onGLFWframebuffersize(GLFWwindow* window, int w, int h);
-    void onGLFWWindowSizeFunCallback(GLFWwindow *window, int width, int height);
+    void onGLFWWindowSizeFunCallback(GLFWwindow* window, int width, int height);
     void onGLFWWindowIconifyCallback(GLFWwindow* window, int iconified);
-	void onGLFWWindowFocusCallback(GLFWwindow* /*window*/, int focused);
+    void onGLFWWindowFocusCallback(GLFWwindow* /*window*/, int focused);
 
     bool _captured;
     bool _supportTouch;
@@ -153,11 +153,11 @@ protected:
     float _mouseY;
 
     friend class GLFWEventHandler;
-	
+
 public:
-	static const std::string EVENT_WINDOW_RESIZED;			
-	static const std::string EVENT_WINDOW_FOCUSED;			
-	static const std::string EVENT_WINDOW_UNFOCUSED;
+    static const std::string EVENT_WINDOW_RESIZED;
+    static const std::string EVENT_WINDOW_FOCUSED;
+    static const std::string EVENT_WINDOW_UNFOCUSED;
 
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(IMGUIGLViewImpl);

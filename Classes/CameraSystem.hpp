@@ -18,15 +18,15 @@ InversePalindrome.com
 class CameraSystem : public entityx::System<CameraSystem>, public entityx::Receiver<CameraSystem>
 {
 public:
-	CameraSystem(cocos2d::Node* gameNode, const b2Vec2& mapDimensions);
+    CameraSystem(cocos2d::Node* gameNode, const b2Vec2& mapDimensions);
 
-	virtual void configure(entityx::EventManager& eventManager) override;
-	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
-	virtual void receive(const EntityParsed& event);
+    virtual void configure(entityx::EventManager& eventManager) override;
+    virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
+    virtual void receive(const EntityParsed& event);
 
 private:
-	cocos2d::Node* gameNode;
-	const b2Vec2& mapDimensions;
+    cocos2d::Node* gameNode;
+    const b2Vec2& mapDimensions;
 
-	entityx::ComponentHandle<TransformComponent> playerTransform;
+    entityx::ComponentHandle<TransformComponent> playerTransform;
 };

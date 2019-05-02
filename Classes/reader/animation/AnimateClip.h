@@ -33,38 +33,38 @@ struct AnimProperties;
 
 class AnimateClip : public cocos2d::Node {
 public:
-    
+
     typedef std::function<void()> AnimateEndCallback;
-    
+
     static AnimateClip* createWithAnimationClip(cocos2d::Node* rootTarget, AnimationClip* clip);
-    
+
     void startAnimate();
     void stopAnimate();
     void pauseAnimate();
     void resumeAnimate();
-    
-    void setCallbackForEndevent(const AnimateEndCallback &callback);
-    
+
+    void setCallbackForEndevent(const AnimateEndCallback& callback);
+
     virtual ~AnimateClip();
 
     //
     // Overrides
     //
     virtual void update(float dt) override;
-    
+
 private:
     AnimateClip();
     bool initWithAnimationClip(cocos2d::Node* rootTarget, AnimationClip* clip);
     void doUpdate(const AnimProperties& animProperties) const;
-    cocos2d::Node* getTarget(const std::string &path) const;
+    cocos2d::Node* getTarget(const std::string& path) const;
     float computeElapse() const;
 
     AnimationClip* _clip;
 
     // the time elapsed since the animation start
     float _elapsed;
-    cocos2d::Node *_rootTarget;
-    
+    cocos2d::Node* _rootTarget;
+
     AnimateEndCallback _endCallback;
     bool _needStop;
     float _durationToStop;

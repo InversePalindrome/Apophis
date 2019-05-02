@@ -13,20 +13,20 @@ InversePalindrome.com
 class PatrolComponent
 {
 public:
-	PatrolComponent();
+    PatrolComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
     int getPathwayID() const;
-	void setPathwayID(int pathwayID);
+    void setPathwayID(int pathwayID);
 
-	int getCurrentPointIndex() const;
-	void setCurrentPointIndex(int currentPointIndex);
+    int getCurrentPointIndex() const;
+    void setCurrentPointIndex(int currentPointIndex);
 
 private:
-	int pathwayID;
-	int currentPointIndex;
+    int pathwayID;
+    int currentPointIndex;
 };

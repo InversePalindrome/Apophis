@@ -13,28 +13,28 @@ InversePalindrome.com
 class QueueComponent
 {
 public:
-	QueueComponent();
+    QueueComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	float getQueueAheadDistance() const;
-	void setQueueAheadDistance(float queueAheadDistance);
+    float getQueueAheadDistance() const;
+    void setQueueAheadDistance(float queueAheadDistance);
 
-	float getQueueRadius() const;
-	void setQueueRadius(float queueRadius);
+    float getQueueRadius() const;
+    void setQueueRadius(float queueRadius);
 
-	float getBrakeFactor() const;
-	void setBrakeFactor(float brakeFactor);
+    float getBrakeFactor() const;
+    void setBrakeFactor(float brakeFactor);
 
-	float getVelocityShrinkFactor() const;
-	void setVelocityShrinkFactor(float velocityShrinkFactor);
+    float getVelocityShrinkFactor() const;
+    void setVelocityShrinkFactor(float velocityShrinkFactor);
 
 private:
-	float queueAheadDistance;
-	float queueRadius;
-	float brakeFactor;
-	float velocityShrinkFactor;
+    float queueAheadDistance;
+    float queueRadius;
+    float brakeFactor;
+    float velocityShrinkFactor;
 };

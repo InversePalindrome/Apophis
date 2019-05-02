@@ -11,58 +11,58 @@ InversePalindrome.com
 
 
 SpeedComponent::SpeedComponent() :
-	maxLinearSpeed(10.f),
-	maxAngularSpeed(5.f)
+    maxLinearSpeed(10.f),
+    maxAngularSpeed(5.f)
 {
 }
 
 void SpeedComponent::load(const pugi::xml_node& componentNode)
 {
-	if (const auto maxLinearSpeedAttribute = componentNode.attribute("linear"))
-	{
-		setMaxLinearSpeed(maxLinearSpeedAttribute.as_float());
-	}
-	if (const auto maxAngularSpeedAttribute = componentNode.attribute("angular"))
-	{
-		setMaxAngularSpeed(maxAngularSpeedAttribute.as_float());
-	}
+    if (const auto maxLinearSpeedAttribute = componentNode.attribute("linear"))
+    {
+        setMaxLinearSpeed(maxLinearSpeedAttribute.as_float());
+    }
+    if (const auto maxAngularSpeedAttribute = componentNode.attribute("angular"))
+    {
+        setMaxAngularSpeed(maxAngularSpeedAttribute.as_float());
+    }
 }
 
 void SpeedComponent::save(pugi::xml_node& componentNode) const
 {
-	componentNode.set_name("Speed");
+    componentNode.set_name("Speed");
 
-	componentNode.append_attribute("linear") = getMaxLinearSpeed();
-	componentNode.append_attribute("angular") = getMaxAngularSpeed();
+    componentNode.append_attribute("linear") = getMaxLinearSpeed();
+    componentNode.append_attribute("angular") = getMaxAngularSpeed();
 }
 
 void SpeedComponent::display()
 {
-	if (ImGui::TreeNode("Speed"))
-	{
-		ImGui::InputFloat("Max Linear Speed", &maxLinearSpeed);
-		ImGui::InputFloat("Max Angular Speed", &maxAngularSpeed);
+    if (ImGui::TreeNode("Speed"))
+    {
+        ImGui::InputFloat("Max Linear Speed", &maxLinearSpeed);
+        ImGui::InputFloat("Max Angular Speed", &maxAngularSpeed);
 
-		ImGui::TreePop();
-	}
+        ImGui::TreePop();
+    }
 }
 
 float SpeedComponent::getMaxLinearSpeed() const
 {
-	return maxLinearSpeed;
+    return maxLinearSpeed;
 }
 
 void SpeedComponent::setMaxLinearSpeed(float maxLinearSpeed)
 {
-	this->maxLinearSpeed = maxLinearSpeed;
+    this->maxLinearSpeed = maxLinearSpeed;
 }
 
 float SpeedComponent::getMaxAngularSpeed() const
 {
-	return maxAngularSpeed;
+    return maxAngularSpeed;
 }
 
 void SpeedComponent::setMaxAngularSpeed(float maxAngularSpeed)
 {
-	this->maxAngularSpeed = maxAngularSpeed;
+    this->maxAngularSpeed = maxAngularSpeed;
 }

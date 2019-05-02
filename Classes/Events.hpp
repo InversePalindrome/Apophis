@@ -19,63 +19,63 @@ InversePalindrome.com
 
 struct EntityParsed
 {
-	mutable entityx::Entity entity;
+    mutable entityx::Entity entity;
 };
 
 struct EntityDied
 {
-	mutable entityx::Entity entity;
+    mutable entityx::Entity entity;
 };
 
 template<typename T>
 struct ComponentLoaded
 {
-	entityx::ComponentHandle<T> component;
-	entityx::Entity entity;
+    entityx::ComponentHandle<T> component;
+    entityx::Entity entity;
 };
 
 struct ChangeState
 {
-	mutable entityx::Entity entity;
-	State state;
+    mutable entityx::Entity entity;
+    State state;
 };
 
 struct StateChanged
 {
-	mutable entityx::Entity entity;
-	State state;
+    mutable entityx::Entity entity;
+    State state;
 };
 
 struct UpdateTransform
 {
-	mutable entityx::Entity entity;
+    mutable entityx::Entity entity;
 };
 
 struct ShootProjectile
 {
-	mutable entityx::Entity shooter;
+    mutable entityx::Entity shooter;
 };
 
 struct CombatOcurred
 {
-	mutable entityx::Entity attacker;
-	mutable entityx::Entity victim;
+    mutable entityx::Entity attacker;
+    mutable entityx::Entity victim;
 };
 
 struct PickedUpItem
 {
-	mutable entityx::Entity entity;
-	mutable entityx::Entity itemEntity;
+    mutable entityx::Entity entity;
+    mutable entityx::Entity itemEntity;
 };
 
 struct Avoid
 {
-	mutable entityx::Entity entity;
-	ObjectType object;
+    mutable entityx::Entity entity;
+    ObjectType object;
 };
 
 struct CrossedWaypoint
 {
-	mutable entityx::Entity patrolEntity;
-	mutable entityx::Entity pathEntity;
+    mutable entityx::Entity patrolEntity;
+    mutable entityx::Entity pathEntity;
 };

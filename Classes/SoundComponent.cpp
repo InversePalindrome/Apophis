@@ -15,158 +15,158 @@ InversePalindrome.com
 
 
 SoundComponent::SoundComponent() :
-	soundID(-1),
-	soundToAdd{ State::Undefined, {"", false} }
+    soundID(-1),
+    soundToAdd{ State::Undefined, {"", false} }
 {
 }
 
 void SoundComponent::load(const pugi::xml_node& componentNode)
 {
-	for (const auto soundNode : componentNode.children())
-	{
-		if (const auto stateAttribute = soundNode.attribute("state"),
-			fileAttribute = soundNode.attribute("file"),
-		    loopAttribute = soundNode.attribute("loop");
-		    stateAttribute && fileAttribute && loopAttribute)
-		{
-			addSound(State::_from_string(stateAttribute.as_string()), { fileAttribute.as_string(), loopAttribute.as_bool() });
-		}
-	}
+    for (const auto soundNode : componentNode.children())
+    {
+        if (const auto stateAttribute = soundNode.attribute("state"),
+            fileAttribute = soundNode.attribute("file"),
+            loopAttribute = soundNode.attribute("loop");
+            stateAttribute && fileAttribute && loopAttribute)
+        {
+            addSound(State::_from_string(stateAttribute.as_string()), { fileAttribute.as_string(), loopAttribute.as_bool() });
+        }
+    }
 }
 
 void SoundComponent::save(pugi::xml_node& componentNode) const
 {
-	componentNode.set_name("Sound");
+    componentNode.set_name("Sound");
 
-	for (const auto&[state, soundData] : sounds)
-	{
-		auto soundNode = componentNode.append_child("Sound");
-		soundNode.append_attribute("state") = state._to_string();
-		soundNode.append_attribute("file") = soundData.first.c_str();
-		soundNode.append_attribute("loop") = soundData.second;
-	}
+    for (const auto& [state, soundData] : sounds)
+    {
+        auto soundNode = componentNode.append_child("Sound");
+        soundNode.append_attribute("state") = state._to_string();
+        soundNode.append_attribute("file") = soundData.first.c_str();
+        soundNode.append_attribute("loop") = soundData.second;
+    }
 }
 
 void SoundComponent::display()
 {
-	if (ImGui::TreeNode("Sound"))
-	{
-		ImGui::SameLine();
+    if (ImGui::TreeNode("Sound"))
+    {
+        ImGui::SameLine();
 
-		if (CCIMGUI::getInstance()->imageButton("#AddButton", 50, 50))
-		{
-			ImGui::OpenPopup("Add Sound");
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Clear"))
-		{
-			clearSounds();
-		}
+        if (CCIMGUI::getInstance()->imageButton("#AddButton", 50, 50))
+        {
+            ImGui::OpenPopup("Add Sound");
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Clear"))
+        {
+            clearSounds();
+        }
 
-		if (auto isOpen = true; ImGui::BeginPopupModal("Add Sound", &isOpen, ImGuiWindowFlags_AlwaysAutoResize))
-		{
-			if (ImGui::BeginCombo("State", soundToAdd.first._to_string()))
-			{
-				for (const auto state : State::_values())
-				{
-					if (ImGui::Selectable(state._to_string()))
-					{
-						soundToAdd.first = state;
-					}
-				}
+        if (auto isOpen = true; ImGui::BeginPopupModal("Add Sound", &isOpen, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            if (ImGui::BeginCombo("State", soundToAdd.first._to_string()))
+            {
+                for (const auto state : State::_values())
+                {
+                    if (ImGui::Selectable(state._to_string()))
+                    {
+                        soundToAdd.first = state;
+                    }
+                }
 
-				ImGui::EndCombo();
-			}
-			
-			soundToAdd.second.first.resize(64);
+                ImGui::EndCombo();
+            }
 
-			ImGui::InputText("File", soundToAdd.second.first.data(), soundToAdd.second.first.length());
+            soundToAdd.second.first.resize(64);
 
-			ImGui::SameLine();
+            ImGui::InputText("File", soundToAdd.second.first.data(), soundToAdd.second.first.length());
 
-			if (ImGui::Button("Select"))
-			{
-				nfdchar_t* filename = nullptr;
+            ImGui::SameLine();
 
-				if (NFD_OpenDialog("mp3,ogg,wav", nullptr, &filename) == NFD_OKAY)
-				{
-					soundToAdd.second.first = filename;
-				}
-			}
+            if (ImGui::Button("Select"))
+            {
+                nfdchar_t* filename = nullptr;
 
-			ImGui::Checkbox("Loop", &soundToAdd.second.second);
+                if (NFD_OpenDialog("mp3,ogg,wav", nullptr, &filename) == NFD_OKAY)
+                {
+                    soundToAdd.second.first = filename;
+                }
+            }
 
-			if (ImGui::Button("Add"))
-			{
-				addSound(soundToAdd.first, soundToAdd.second);
+            ImGui::Checkbox("Loop", &soundToAdd.second.second);
 
-				soundToAdd = { State::Undefined, {"", false} };
+            if (ImGui::Button("Add"))
+            {
+                addSound(soundToAdd.first, soundToAdd.second);
 
-				ImGui::CloseCurrentPopup();
-			}
+                soundToAdd = { State::Undefined, {"", false} };
 
-			ImGui::EndPopup();
-		}
+                ImGui::CloseCurrentPopup();
+            }
 
-		int i = 0;
+            ImGui::EndPopup();
+        }
 
-		for (auto soundItr = std::cbegin(sounds); soundItr != std::cend(sounds);)
-		{
-			ImGui::PushID(i++);
+        int i = 0;
 
-			const auto&[state, soundData] = *soundItr;
+        for (auto soundItr = std::cbegin(sounds); soundItr != std::cend(sounds);)
+        {
+            ImGui::PushID(i++);
 
-			ImGui::Text("State: %s | Filename: %s | Loop: %s", state._to_string(), soundData.first.c_str(), soundData.second ? "True" : "False");
-		
-			ImGui::SameLine();
+            const auto& [state, soundData] = *soundItr;
 
-			if (CCIMGUI::getInstance()->imageButton("#RemoveButton", 50, 50))
-			{
-				soundItr = sounds.erase(soundItr);
-			}
-			else
-			{
-				++soundItr;
-			}
+            ImGui::Text("State: %s | Filename: %s | Loop: %s", state._to_string(), soundData.first.c_str(), soundData.second ? "True" : "False");
 
-			ImGui::PopID();
-		}
+            ImGui::SameLine();
 
-		ImGui::TreePop();
-	}
+            if (CCIMGUI::getInstance()->imageButton("#RemoveButton", 50, 50))
+            {
+                soundItr = sounds.erase(soundItr);
+            }
+            else
+            {
+                ++soundItr;
+            }
+
+            ImGui::PopID();
+        }
+
+        ImGui::TreePop();
+    }
 }
 
 int SoundComponent::getSoundID() const
 {
-	return soundID;
+    return soundID;
 }
 
 void SoundComponent::setSoundID(int soundID)
 {
-	this->soundID = soundID;
+    this->soundID = soundID;
 }
 
 void SoundComponent::addSound(State state, const std::pair<std::string, bool>& soundFilename)
 {
-	sounds.emplace(state, soundFilename);
+    sounds.emplace(state, soundFilename);
 }
 
 void SoundComponent::removeSound(State state)
 {
-	sounds.erase(state);
+    sounds.erase(state);
 }
 
 void SoundComponent::clearSounds()
 {
-	sounds.clear();
+    sounds.clear();
 }
 
 bool SoundComponent::hasSound(State state) const
 {
-	return sounds.count(state);
+    return sounds.count(state);
 }
 
 const std::pair<std::string, bool>& SoundComponent::getSound(State state) const
 {
-	return sounds.at(state);
+    return sounds.at(state);
 }

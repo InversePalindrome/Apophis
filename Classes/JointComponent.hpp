@@ -15,36 +15,36 @@ InversePalindrome.com
 class JointComponent
 {
 public:
-	JointComponent();
+    JointComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	b2Joint* getJoint();
-	b2Joint* getJoint() const;
-	void setJoint(b2Joint* joint);
+    b2Joint* getJoint();
+    b2Joint* getJoint() const;
+    void setJoint(b2Joint* joint);
 
-	b2Body* getBodyA();
-	b2Body* getBodyB();
+    b2Body* getBodyA();
+    b2Body* getBodyB();
 
-	int getEntityIDA() const;
-	void setEntityIDA(int entityIDA);
+    int getEntityIDA() const;
+    void setEntityIDA(int entityIDA);
 
-	int getEntityIDB() const;
-	void setEntityIDB(int entityIDB);
+    int getEntityIDB() const;
+    void setEntityIDB(int entityIDB);
 
-	b2Vec2 getLocalAnchorA() const;
-	void setLocalAnchorA(const b2Vec2& localAnchorA);
+    b2Vec2 getLocalAnchorA() const;
+    void setLocalAnchorA(const b2Vec2& localAnchorA);
 
-	b2Vec2 getLocalAnchorB() const;
-	void setLocalAnchorB(const b2Vec2& localAnchorB);
+    b2Vec2 getLocalAnchorB() const;
+    void setLocalAnchorB(const b2Vec2& localAnchorB);
 
 private:
-	b2Joint* joint;
-	int entityIDA;
-	int entityIDB;
-	b2Vec2 localAnchorA;
-	b2Vec2 localAnchorB;
+    b2Joint* joint;
+    int entityIDA;
+    int entityIDB;
+    b2Vec2 localAnchorA;
+    b2Vec2 localAnchorB;
 };

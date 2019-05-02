@@ -13,20 +13,20 @@ InversePalindrome.com
 class AccelerationComponent
 {
 public:
-	AccelerationComponent();
+    AccelerationComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	float getLinearAcceleration() const;
-	void setLinearAcceleration(float linearAcceleration);
+    float getLinearAcceleration() const;
+    void setLinearAcceleration(float linearAcceleration);
 
-	float getAngularAcceleration() const;
-	void setAngularAcceleration(float angularAcceleration);
+    float getAngularAcceleration() const;
+    void setAngularAcceleration(float angularAcceleration);
 
 private:
-	float linearAcceleration;
-	float angularAcceleration;
+    float linearAcceleration;
+    float angularAcceleration;
 };

@@ -11,41 +11,41 @@ InversePalindrome.com
 
 
 ArriveComponent::ArriveComponent() :
-	slowRadius(5.f)
+    slowRadius(5.f)
 {
 }
 
 void ArriveComponent::load(const pugi::xml_node& componentNode)
 {
-	if (const auto slowRadiusAttribute = componentNode.attribute("slowRadius"))
-	{
-		setSlowRadius(slowRadiusAttribute.as_float());
-	}
+    if (const auto slowRadiusAttribute = componentNode.attribute("slowRadius"))
+    {
+        setSlowRadius(slowRadiusAttribute.as_float());
+    }
 }
 
 void ArriveComponent::save(pugi::xml_node& componentNode) const
 {
-	componentNode.set_name("Arrive");
+    componentNode.set_name("Arrive");
 
-	componentNode.append_attribute("slowRadius") = getSlowRadius();
+    componentNode.append_attribute("slowRadius") = getSlowRadius();
 }
 
 void ArriveComponent::display()
 {
-	if (ImGui::TreeNode("Arrive"))
-	{
-		ImGui::InputFloat("Slow Radius", &slowRadius);
+    if (ImGui::TreeNode("Arrive"))
+    {
+        ImGui::InputFloat("Slow Radius", &slowRadius);
 
-		ImGui::TreePop();
-	}
+        ImGui::TreePop();
+    }
 }
 
 float ArriveComponent::getSlowRadius() const
 {
-	return slowRadius;
+    return slowRadius;
 }
 
 void ArriveComponent::setSlowRadius(float slowRadius)
 {
-	this->slowRadius = slowRadius;
+    this->slowRadius = slowRadius;
 }

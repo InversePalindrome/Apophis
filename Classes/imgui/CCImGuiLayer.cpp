@@ -10,29 +10,29 @@ bool ImGuiLayer::init()
 {
     //////////////////////////////
     // 1. super init first
-    if ( !Layer::init() )
+    if (!Layer::init())
     {
         return false;
     }
 
-	// init imgui
-	CCIMGUI::getInstance()->setWindow(((GLViewImpl*)Director::getInstance()->getOpenGLView())->getWindow());
+    // init imgui
+    CCIMGUI::getInstance()->setWindow(((GLViewImpl*)Director::getInstance()->getOpenGLView())->getWindow());
     setGLProgram(GLProgramCache::getInstance()->getGLProgram(GLProgram::SHADER_NAME_POSITION_COLOR));
 
-	// events
+    // events
     auto listener = EventListenerTouchOneByOne::create();
     listener->setSwallowTouches(true);
-    listener->onTouchBegan = [](Touch* touch, Event*) -> bool {
+    listener->onTouchBegan = [](Touch * touch, Event*) -> bool {
         //bool inImGuiWidgets = ImGui::IsPosHoveringAnyWindow(ImVec2(touch->getLocationInView().x, touch->getLocationInView().y));
         //CCLOG("touch in ImGui widgets %s", inImGuiWidgets ? "yes" : "no");
         //return inImGuiWidgets;
-		return ImGui::GetIO().WantCaptureMouse;
+        return ImGui::GetIO().WantCaptureMouse;
     };
     getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
     return true;
 }
 
-void ImGuiLayer::visit(cocos2d::Renderer *renderer, const cocos2d::Mat4 &parentTransform, uint32_t parentFlags)
+void ImGuiLayer::visit(cocos2d::Renderer* renderer, const cocos2d::Mat4& parentTransform, uint32_t parentFlags)
 {
     Layer::visit(renderer, parentTransform, parentFlags);
     _command.init(_globalZOrder);
@@ -44,17 +44,17 @@ void ImGuiLayer::onDraw()
 {
     glUseProgram(0);
     if (CCIMGUI::getInstance()->getWindow()) {
-		ImGuiIO& io = ImGui::GetIO();
-		io.DeltaTime = Director::getInstance()->getDeltaTime();
+        ImGuiIO& io = ImGui::GetIO();
+        io.DeltaTime = Director::getInstance()->getDeltaTime();
 
         // create frame
         ImGui_ImplGlfw_NewFrame();
 
         // draw all gui
-		CCIMGUI::getInstance()->updateImGUI();
+        CCIMGUI::getInstance()->updateImGUI();
 
         // rendering
         ImGui::Render();
     }
-	glUseProgram(1);
+    glUseProgram(1);
 }

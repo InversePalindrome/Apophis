@@ -13,16 +13,16 @@ InversePalindrome.com
 class AvoidComponent
 {
 public:
-	AvoidComponent();
+    AvoidComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	float getAvoidanceForce() const;
-	void setAvoidanceForce(float avoidanceForce);
+    float getAvoidanceForce() const;
+    void setAvoidanceForce(float avoidanceForce);
 
 private:
-	float avoidanceForce;
+    float avoidanceForce;
 };

@@ -15,14 +15,14 @@ InversePalindrome.com
 class NameComponent
 {
 public:
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	std::string getName() const;
-	void setName(const std::string& name);
+    std::string getName() const;
+    void setName(const std::string& name);
 
 private:
-	std::string name;
+    std::string name;
 };

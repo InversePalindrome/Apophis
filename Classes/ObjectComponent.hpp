@@ -15,16 +15,16 @@ InversePalindrome.com
 class ObjectComponent
 {
 public:
-	ObjectComponent();
+    ObjectComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	ObjectType getObjectType() const;
-	void setObjectType(ObjectType objectType);
+    ObjectType getObjectType() const;
+    void setObjectType(ObjectType objectType);
 
 private:
-	ObjectType objectType;
+    ObjectType objectType;
 };

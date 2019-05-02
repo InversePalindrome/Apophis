@@ -11,50 +11,50 @@ InversePalindrome.com
 
 
 HealthComponent::HealthComponent() :
-	maxHitpoints(5.f),
-	currentHitpoints(5.f)
+    maxHitpoints(5.f),
+    currentHitpoints(5.f)
 {
 }
 
 void HealthComponent::load(const pugi::xml_node& componentNode)
 {
-	setMaxHitpoints(componentNode.text().as_float());
-	setCurrentHitpoints(componentNode.text().as_float());
+    setMaxHitpoints(componentNode.text().as_float());
+    setCurrentHitpoints(componentNode.text().as_float());
 }
 
 void HealthComponent::save(pugi::xml_node& componentNode) const
 {
-	componentNode.set_name("Health");
+    componentNode.set_name("Health");
 
-	componentNode.text().set(maxHitpoints);
+    componentNode.text().set(maxHitpoints);
 }
 
 void HealthComponent::display()
 {
-	if (ImGui::TreeNode("Health"))
-	{
-		ImGui::InputFloat("Max Hitpoints", &maxHitpoints);
+    if (ImGui::TreeNode("Health"))
+    {
+        ImGui::InputFloat("Max Hitpoints", &maxHitpoints);
 
-		ImGui::TreePop();
-	}
+        ImGui::TreePop();
+    }
 }
 
 float HealthComponent::getMaxHitpoints() const
 {
-	return maxHitpoints;
+    return maxHitpoints;
 }
 
 void HealthComponent::setMaxHitpoints(float maxHitpoints)
 {
-	this->maxHitpoints = maxHitpoints;
+    this->maxHitpoints = maxHitpoints;
 }
 
 float HealthComponent::getCurrentHitpoints() const
 {
-	return currentHitpoints;
+    return currentHitpoints;
 }
 
 void HealthComponent::setCurrentHitpoints(float currentHitpoints)
 {
-	this->currentHitpoints = currentHitpoints;
+    this->currentHitpoints = currentHitpoints;
 }

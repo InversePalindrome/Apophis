@@ -26,224 +26,224 @@ InversePalindrome.com
 
 
 LevelEditorNode::LevelEditorNode() :
-	entityManager(eventManager),
-	systemManager(entityManager, eventManager),
-	mapDimensions(0.f, 0.f)
+    entityManager(eventManager),
+    systemManager(entityManager, eventManager),
+    mapDimensions(0.f, 0.f)
 {
 }
 
 bool LevelEditorNode::init()
 {
-	if (!PanZoomLayer::init())
-	{
-		return false;
-	}
+    if (!PanZoomLayer::init())
+    {
+        return false;
+    }
 
-	schedule([this](auto dt)
-	{ 
-		systemManager.update_all(dt);
-		SetPanBoundsRect({ mapDimensions.x * Constants::PTM_RATIO * -0.5f, mapDimensions.y * Constants::PTM_RATIO * -0.5f, mapDimensions.x * Constants::PTM_RATIO, mapDimensions.y * Constants::PTM_RATIO });
-	}, 0.f, "update");
+    schedule([this](auto dt)
+        {
+            systemManager.update_all(dt);
+            SetPanBoundsRect({ mapDimensions.x * Constants::PTM_RATIO * -0.5f, mapDimensions.y * Constants::PTM_RATIO * -0.5f, mapDimensions.x * Constants::PTM_RATIO, mapDimensions.y * Constants::PTM_RATIO });
+        }, 0.f, "update");
 
-	initSystems();
+    initSystems();
 
-	std::string currentAddComponent;
-	
-	CCIMGUI::getInstance()->addImGUI([this, currentAddComponent]() mutable
-	{
-		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[0]);
+    std::string currentAddComponent;
 
-		if (ImGui::BeginMainMenuBar())
-		{
-			if (ImGui::MenuItem("Exit"))
-			{
-				cocos2d::Director::getInstance()->replaceScene(getMenuScene());
-			}
-			if (ImGui::BeginMenu("File"))
-			{
-				if (ImGui::MenuItem("Open"))
-				{
-					nfdchar_t* filename = nullptr;
-					
-					if (NFD_OpenDialog("xml", nullptr, &filename) == NFD_OKAY)
-					{
-						LevelParser::parseLevel(entityManager, eventManager, mapDimensions, filename);
-					}
-				}
-				if (ImGui::MenuItem("Save"))
-				{
-					nfdchar_t* filename = nullptr;
-					
-					if (NFD_SaveDialog("xml", nullptr, &filename) == NFD_OKAY)
-					{
-						LevelSerializer::saveLevel(entities, mapDimensions, filename);
-					}
-				}
+    CCIMGUI::getInstance()->addImGUI([this, currentAddComponent]() mutable
+        {
+            ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[0]);
 
-				ImGui::EndMenu();
-			}
+            if (ImGui::BeginMainMenuBar())
+            {
+                if (ImGui::MenuItem("Exit"))
+                {
+                    cocos2d::Director::getInstance()->replaceScene(getMenuScene());
+                }
+                if (ImGui::BeginMenu("File"))
+                {
+                    if (ImGui::MenuItem("Open"))
+                    {
+                        nfdchar_t* filename = nullptr;
 
-			ImGui::EndMainMenuBar();
-		}
+                        if (NFD_OpenDialog("xml", nullptr, &filename) == NFD_OKAY)
+                        {
+                            LevelParser::parseLevel(entityManager, eventManager, mapDimensions, filename);
+                        }
+                    }
+                    if (ImGui::MenuItem("Save"))
+                    {
+                        nfdchar_t* filename = nullptr;
 
-		ImGui::Begin("Level Data");
+                        if (NFD_SaveDialog("xml", nullptr, &filename) == NFD_OKAY)
+                        {
+                            LevelSerializer::saveLevel(entities, mapDimensions, filename);
+                        }
+                    }
 
-		if (ImGui::TreeNode("Entities"))
-		{
-			ImGui::SameLine();
-			if (CCIMGUI::getInstance()->imageButton("#AddButton", 50, 50))
-			{
-				entityManager.create();
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Clear"))
-			{
-				entityManager.reset();
-			}
-			
-			int i = 0;
+                    ImGui::EndMenu();
+                }
 
-			std::vector<entityx::Entity> entitiesToDestroy;
+                ImGui::EndMainMenuBar();
+            }
 
-			for (auto entity : entities)
-			{
-				ImGui::PushID(i++);
-				
-				std::string entityName;
+            ImGui::Begin("Level Data");
 
-				if (auto name = entity.component<NameComponent>())
-				{
-					entityName = name->getName();
-				}
-				else
-				{
-					entityName = std::to_string(entity.id().index());
-				}
+            if (ImGui::TreeNode("Entities"))
+            {
+                ImGui::SameLine();
+                if (CCIMGUI::getInstance()->imageButton("#AddButton", 50, 50))
+                {
+                    entityManager.create();
+                }
+                ImGui::SameLine();
+                if (ImGui::Button("Clear"))
+                {
+                    entityManager.reset();
+                }
 
-				bool isEntityOpen = ImGui::TreeNode(std::to_string(i).c_str(), entityName.c_str());
-				
-				ImGui::SameLine();
-				if (ImGui::Button("Open"))
-				{
-					nfdchar_t* filename = nullptr;
+                int i = 0;
 
-					if (NFD_OpenDialog("xml", nullptr, &filename) == NFD_OKAY)
-					{
-						EntityParser::parseEntity(entity, eventManager, filename);
-					}
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("Save"))
-				{
-					nfdchar_t* filename = nullptr;
+                std::vector<entityx::Entity> entitiesToDestroy;
 
-					if (NFD_SaveDialog("xml", nullptr, &filename) == NFD_OKAY)
-					{
-						EntitySerializer::saveEntity(entity, filename);
-					}
-				}
-				ImGui::SameLine();		
-				if (CCIMGUI::getInstance()->imageButton("#AddButton", 50, 50))
-				{
-					ImGui::OpenPopup("Add Component");
-				}
-				ImGui::SameLine();
-				if (CCIMGUI::getInstance()->imageButton("#RemoveButton", 50, 50))
-				{
-					entitiesToDestroy.push_back(entity);
-				}
+                for (auto entity : entities)
+                {
+                    ImGui::PushID(i++);
 
-				if (auto isAddComponentOpen = true; ImGui::BeginPopupModal("Add Component", &isAddComponentOpen, ImGuiWindowFlags_AlwaysAutoResize))
-				{
-					if (ImGui::BeginCombo("Component", currentAddComponent.c_str()))
-					{
-						for (const auto& component : componentParser)
-						{
-							if (ImGui::Selectable(component.first.c_str()))
-							{
-								currentAddComponent = component.first;
-							}
-						}
+                    std::string entityName;
 
-						ImGui::EndCombo();
-					}
+                    if (auto name = entity.component<NameComponent>())
+                    {
+                        entityName = name->getName();
+                    }
+                    else
+                    {
+                        entityName = std::to_string(entity.id().index());
+                    }
 
-					if (ImGui::Button("Add"))
-					{
-						if (componentParser.count(currentAddComponent))
-						{
-							componentParser.at(currentAddComponent)(entity);
-						}
+                    bool isEntityOpen = ImGui::TreeNode(std::to_string(i).c_str(), entityName.c_str());
 
-						ImGui::CloseCurrentPopup();
-					}
+                    ImGui::SameLine();
+                    if (ImGui::Button("Open"))
+                    {
+                        nfdchar_t* filename = nullptr;
 
-					ImGui::EndPopup();
-				}
+                        if (NFD_OpenDialog("xml", nullptr, &filename) == NFD_OKAY)
+                        {
+                            EntityParser::parseEntity(entity, eventManager, filename);
+                        }
+                    }
+                    ImGui::SameLine();
+                    if (ImGui::Button("Save"))
+                    {
+                        nfdchar_t* filename = nullptr;
 
-				if (isEntityOpen)
-				{
-					brigand::for_each<ComponentList>([entity](auto componentElement) mutable
-					{
-						if (auto component = entity.component<decltype(componentElement)::type>())
-						{
-							component->display();
-						}
-					});
+                        if (NFD_SaveDialog("xml", nullptr, &filename) == NFD_OKAY)
+                        {
+                            EntitySerializer::saveEntity(entity, filename);
+                        }
+                    }
+                    ImGui::SameLine();
+                    if (CCIMGUI::getInstance()->imageButton("#AddButton", 50, 50))
+                    {
+                        ImGui::OpenPopup("Add Component");
+                    }
+                    ImGui::SameLine();
+                    if (CCIMGUI::getInstance()->imageButton("#RemoveButton", 50, 50))
+                    {
+                        entitiesToDestroy.push_back(entity);
+                    }
 
-					ImGui::TreePop();
-				}
+                    if (auto isAddComponentOpen = true; ImGui::BeginPopupModal("Add Component", &isAddComponentOpen, ImGuiWindowFlags_AlwaysAutoResize))
+                    {
+                        if (ImGui::BeginCombo("Component", currentAddComponent.c_str()))
+                        {
+                            for (const auto& component : componentParser)
+                            {
+                                if (ImGui::Selectable(component.first.c_str()))
+                                {
+                                    currentAddComponent = component.first;
+                                }
+                            }
 
-				ImGui::PopID();
-			}
-			
-			for (auto& entity : entitiesToDestroy)
-			{
-				entity.destroy();
-			}
-			
-			ImGui::TreePop();
-		}
-		if (ImGui::TreeNode("Map"))
-		{
-			ImGui::InputFloat2("Dimensions(Width, Height)", &mapDimensions.x);
-		
-			ImGui::TreePop();
-		}
-		ImGui::End();
+                            ImGui::EndCombo();
+                        }
 
-		ImGui::PopFont();
-	}, "LevelEditor");
+                        if (ImGui::Button("Add"))
+                        {
+                            if (componentParser.count(currentAddComponent))
+                            {
+                                componentParser.at(currentAddComponent)(entity);
+                            }
 
-	return true;
+                            ImGui::CloseCurrentPopup();
+                        }
+
+                        ImGui::EndPopup();
+                    }
+
+                    if (isEntityOpen)
+                    {
+                        brigand::for_each<ComponentList>([entity](auto componentElement) mutable
+                            {
+                                if (auto component = entity.component<decltype(componentElement)::type>())
+                                {
+                                    component->display();
+                                }
+                            });
+
+                        ImGui::TreePop();
+                    }
+
+                    ImGui::PopID();
+                }
+
+                for (auto& entity : entitiesToDestroy)
+                {
+                    entity.destroy();
+                }
+
+                ImGui::TreePop();
+            }
+            if (ImGui::TreeNode("Map"))
+            {
+                ImGui::InputFloat2("Dimensions(Width, Height)", &mapDimensions.x);
+
+                ImGui::TreePop();
+            }
+            ImGui::End();
+
+            ImGui::PopFont();
+        }, "LevelEditor");
+
+    return true;
 }
 
 void LevelEditorNode::receive(const entityx::EntityCreatedEvent& event)
 {
-	entities.push_back(event.entity);
+    entities.push_back(event.entity);
 }
 
 void LevelEditorNode::receive(const entityx::EntityDestroyedEvent& event)
 {
-	entities.erase(std::remove(std::begin(entities), std::end(entities), event.entity), std::end(entities));
+    entities.erase(std::remove(std::begin(entities), std::end(entities), event.entity), std::end(entities));
 }
 
 cocos2d::Scene* LevelEditorNode::scene()
 {
-	auto* scene = cocos2d::Scene::create();
-	scene->addChild(LevelEditorNode::create());
-	scene->addChild(ImGuiLayer::create());
+    auto* scene = cocos2d::Scene::create();
+    scene->addChild(LevelEditorNode::create());
+    scene->addChild(ImGuiLayer::create());
 
-	return scene;
+    return scene;
 }
 
 void LevelEditorNode::initSystems()
 {
-	systemManager.add<GraphicsSystem>(this);
-	systemManager.add<PhysicsSystem>(entityManager, eventManager);
+    systemManager.add<GraphicsSystem>(this);
+    systemManager.add<PhysicsSystem>(entityManager, eventManager);
 
-	eventManager.subscribe<entityx::EntityCreatedEvent>(*this);
-	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
+    eventManager.subscribe<entityx::EntityCreatedEvent>(*this);
+    eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
 
-	systemManager.configure();
+    systemManager.configure();
 }

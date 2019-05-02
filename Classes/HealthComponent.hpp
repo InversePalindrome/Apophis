@@ -15,18 +15,18 @@ class HealthComponent
 public:
     HealthComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
-	
-	float getMaxHitpoints() const;
-	void setMaxHitpoints(float maxHitpoints);
+    void display();
 
-	float getCurrentHitpoints() const;
-	void setCurrentHitpoints(float currentHitpoints);
+    float getMaxHitpoints() const;
+    void setMaxHitpoints(float maxHitpoints);
+
+    float getCurrentHitpoints() const;
+    void setCurrentHitpoints(float currentHitpoints);
 
 private:
-	float maxHitpoints;
-	float currentHitpoints;
+    float maxHitpoints;
+    float currentHitpoints;
 };

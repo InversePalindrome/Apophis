@@ -40,7 +40,7 @@ public:
         return mapFind(armatures, theName);
     }
 
-    inline const std::vector<std::string>& getArmatureNames() const 
+    inline const std::vector<std::string>& getArmatureNames() const
     {
         return _armatureNames;
     }

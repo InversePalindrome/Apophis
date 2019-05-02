@@ -23,22 +23,22 @@ InversePalindrome.com
 class ItemSystem : public entityx::System<ItemSystem>, public entityx::Receiver<ItemSystem>
 {
 public:
-	ItemSystem(entityx::EntityManager& entityManager, entityx::EventManager& eventManager);
+    ItemSystem(entityx::EntityManager& entityManager, entityx::EventManager& eventManager);
 
-	virtual void configure(entityx::EventManager& eventManager) override;
-	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
-	virtual void receive(const entityx::EntityDestroyedEvent& event);
-	virtual void receive(const PickedUpItem& event);
+    virtual void configure(entityx::EventManager& eventManager) override;
+    virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
+    virtual void receive(const entityx::EntityDestroyedEvent& event);
+    virtual void receive(const PickedUpItem& event);
 
 private:
-	entityx::EntityManager& entityManager;
-	entityx::EventManager& eventManager;
+    entityx::EntityManager& entityManager;
+    entityx::EventManager& eventManager;
 
-	CppTime::Timer timer;
+    CppTime::Timer timer;
 
-	std::mt19937 randomEngine;
+    std::mt19937 randomEngine;
 
-	static void addWeapon(entityx::Entity entity, entityx::ComponentHandle<WeaponComponent> weapon);
-	void addRegenBoost(entityx::Entity entity, const entityx::ComponentHandle<RegenBoostComponent> regenBoost);
-	void addSpeedBoost(entityx::Entity entity, const entityx::ComponentHandle<SpeedBoostComponent> speedBoost);
+    static void addWeapon(entityx::Entity entity, entityx::ComponentHandle<WeaponComponent> weapon);
+    void addRegenBoost(entityx::Entity entity, const entityx::ComponentHandle<RegenBoostComponent> regenBoost);
+    void addSpeedBoost(entityx::Entity entity, const entityx::ComponentHandle<SpeedBoostComponent> speedBoost);
 };

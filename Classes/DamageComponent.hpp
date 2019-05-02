@@ -13,16 +13,16 @@ InversePalindrome.com
 class DamageComponent
 {
 public:
-	DamageComponent();
+    DamageComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	float getDamageHitpoints() const;
-	void setDamageHitpoints(float hitpoints);
+    float getDamageHitpoints() const;
+    void setDamageHitpoints(float hitpoints);
 
 private:
-	float damageHitpoints;
+    float damageHitpoints;
 };

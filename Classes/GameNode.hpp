@@ -21,22 +21,22 @@ InversePalindrome.com
 class GameNode : public cocos2d::Node, public entityx::Receiver<GameNode>
 {
 public:
-	explicit GameNode(const std::string& level);
+    explicit GameNode(const std::string& level);
 
-	virtual bool init() override;
-	virtual void update(float dt) override;
-	virtual void receive(const EntityDied& event);
+    virtual bool init() override;
+    virtual void update(float dt) override;
+    virtual void receive(const EntityDied& event);
 
-	static GameNode* create(const std::string& level);
+    static GameNode* create(const std::string& level);
 
 private:
-	entityx::EventManager eventManager;
-	entityx::EntityManager entityManager;
-	entityx::SystemManager systemManager;
+    entityx::EventManager eventManager;
+    entityx::EntityManager entityManager;
+    entityx::SystemManager systemManager;
 
-	std::string level;
-	b2Vec2 mapDimensions;
+    std::string level;
+    b2Vec2 mapDimensions;
 
-	void initSystems();
-	void reloadGame();
+    void initSystems();
+    void reloadGame();
 };

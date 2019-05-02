@@ -16,9 +16,9 @@ InversePalindrome.com
 class ActionSystem : public entityx::System<ActionSystem>, public entityx::Receiver<ActionSystem>
 {
 public:
-	virtual void configure(entityx::EventManager& eventManager) override;
-	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
-	virtual void receive(const StateChanged& event);
+    virtual void configure(entityx::EventManager& eventManager) override;
+    virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
+    virtual void receive(const StateChanged& event);
 
 private:
 };

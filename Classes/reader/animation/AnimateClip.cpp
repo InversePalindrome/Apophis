@@ -31,14 +31,14 @@
 
 #include <functional>
 
-namespace  {
+namespace {
 
     creator::AnimationClip* g_clip = nullptr;
 
     // -1: invalid index
     // -2: haven't reached first frame, so it should be the same as first frame
     template<typename P>
-    int getValidIndex(const P &properties, float elapsed)
+    int getValidIndex(const P& properties, float elapsed)
     {
         if (properties.empty())
             return -1;
@@ -96,26 +96,26 @@ namespace  {
     }
 
     template<typename T>
-    void computeNextValue(T start, T end, float percent, T &out)
+    void computeNextValue(T start, T end, float percent, T& out)
     {
         out = start + percent * (end - start);
     }
 
-    void computeNextValue(const cocos2d::Color3B& start, const cocos2d::Color3B& end, float percent, cocos2d::Color3B& out)
+    void computeNextValue(const cocos2d::Color3B & start, const cocos2d::Color3B & end, float percent, cocos2d::Color3B & out)
     {
         computeNextValue(start.r, end.r, percent, out.r);
         computeNextValue(start.g, end.g, percent, out.g);
         computeNextValue(start.b, end.b, percent, out.b);
     }
 
-    void computeNextValue(const cocos2d::Vec2& start, const cocos2d::Vec2& end, float percent, cocos2d::Vec2& out)
+    void computeNextValue(const cocos2d::Vec2 & start, const cocos2d::Vec2 & end, float percent, cocos2d::Vec2 & out)
     {
         computeNextValue(start.x, end.x, percent, out.x);
         computeNextValue(start.y, end.y, percent, out.y);
     }
 
     template<typename P, typename T>
-    bool getNextValue(const P & properties, float elapsed, T &out)
+    bool getNextValue(const P & properties, float elapsed, T & out)
     {
         int index = getValidIndex(properties, elapsed);
         if (index == -1)
@@ -127,14 +127,14 @@ namespace  {
             return true;
         }
 
-        if (index == properties.size() -1)
+        if (index == properties.size() - 1)
         {
             assignValue(properties.back().value, out);
             return true;
         }
 
         const auto& prop = properties[index];
-        const auto& nextProp = properties[index+1];
+        const auto& nextProp = properties[index + 1];
         float percent = getPercent(prop, nextProp, elapsed);
         computeNextValue(prop.value, nextProp.value, percent, out);
 
@@ -158,18 +158,18 @@ AnimateClip* AnimateClip::createWithAnimationClip(cocos2d::Node* rootTarget, Ani
 }
 
 AnimateClip::AnimateClip()
-: _clip(nullptr)
-, _elapsed(0)
-, _rootTarget(nullptr)
-, _needStop(true)
-, _durationToStop(0.f)
+    : _clip(nullptr)
+    , _elapsed(0)
+    , _rootTarget(nullptr)
+    , _needStop(true)
+    , _durationToStop(0.f)
 {
 }
 
 AnimateClip::~AnimateClip()
 {
     // a loop animate might keep running until destruction, memory will leak if not stop it
-    if(_running)
+    if (_running)
         stopAnimate();
 
     CC_SAFE_RELEASE(_clip);
@@ -202,7 +202,7 @@ void AnimateClip::resumeAnimate()
     scheduleUpdate();
 }
 
-void AnimateClip::setCallbackForEndevent(const AnimateEndCallback &callback)
+void AnimateClip::setCallbackForEndevent(const AnimateEndCallback& callback)
 {
     _endCallback = std::move(callback);
 }
@@ -247,7 +247,7 @@ void AnimateClip::update(float dt) {
         doUpdate(animProperties);
 }
 
-void AnimateClip::doUpdate(const AnimProperties& animProperties) const
+void AnimateClip::doUpdate(const AnimProperties & animProperties) const
 {
     auto target = getTarget(animProperties.path);
     if (target)
@@ -307,16 +307,16 @@ void AnimateClip::doUpdate(const AnimProperties& animProperties) const
     }
 }
 
-cocos2d::Node* AnimateClip::getTarget(const std::string &path) const
+cocos2d::Node* AnimateClip::getTarget(const std::string & path) const
 {
     if (path.empty())
         return _rootTarget;
 
-    cocos2d::Node *ret = nullptr;
-    _rootTarget->enumerateChildren(path, [&ret](cocos2d::Node* result) -> bool {
+    cocos2d::Node* ret = nullptr;
+    _rootTarget->enumerateChildren(path, [&ret](cocos2d::Node * result) -> bool {
         ret = result;
         return true;
-    });
+        });
     return ret;
 }
 

@@ -8,7 +8,7 @@ DRAGONBONES_NAMESPACE_BEGIN
 /**
  * @private
  */
-class Rectangle final
+    class Rectangle final
 {
 public:
     float x;
@@ -16,11 +16,11 @@ public:
     float width;
     float height;
 
-    Rectangle():
+    Rectangle() :
         x(0.f),
         y(0.f),
         width(0.f),
-        height(0.f) 
+        height(0.f)
     {
     }
     Rectangle(const Rectangle& value)

@@ -13,27 +13,27 @@ InversePalindrome.com
 class WanderComponent
 {
 public:
-	WanderComponent();
+    WanderComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	float getWanderDistance() const;
-	void setWanderDistance(float wanderDistance);
+    float getWanderDistance() const;
+    void setWanderDistance(float wanderDistance);
 
-	float getWanderRadius() const;
-	void setWanderRadius(float wanderRadius);
+    float getWanderRadius() const;
+    void setWanderRadius(float wanderRadius);
 
-	float getWanderRate() const;
-	void setWanderRate(float wanderRate);
+    float getWanderRate() const;
+    void setWanderRate(float wanderRate);
 
-	float& getWanderAngle();
+    float& getWanderAngle();
 
 private:
-	float wanderDistance;
-	float wanderRadius;
-	float wanderRate;
-	float wanderAngle;
+    float wanderDistance;
+    float wanderRadius;
+    float wanderRate;
+    float wanderAngle;
 };

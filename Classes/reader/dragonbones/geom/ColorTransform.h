@@ -8,7 +8,7 @@ DRAGONBONES_NAMESPACE_BEGIN
 /**
  * @private
  */
-class ColorTransform final
+    class ColorTransform final
 {
 public:
     float alphaMultiplier;
@@ -20,7 +20,7 @@ public:
     int greenOffset;
     int blueOffset;
 
-    ColorTransform():
+    ColorTransform() :
         alphaMultiplier(1.f),
         redMultiplier(1.f),
         greenMultiplier(1.f),
@@ -31,13 +31,13 @@ public:
         blueOffset(0)
     {
     }
-    ColorTransform(const ColorTransform &value)
+    ColorTransform(const ColorTransform& value)
     {
         operator=(value);
     }
     ~ColorTransform() {}
 
-    inline void operator=(const ColorTransform &value)
+    inline void operator=(const ColorTransform& value)
     {
         alphaMultiplier = value.alphaMultiplier;
         redMultiplier = value.redMultiplier;

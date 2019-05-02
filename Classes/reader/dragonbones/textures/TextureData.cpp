@@ -45,7 +45,7 @@ void TextureAtlasData::_onClear()
     textures.clear();
 }
 
-void TextureAtlasData::addTexture(TextureData * value)
+void TextureAtlasData::addTexture(TextureData* value)
 {
     if (value && !value->name.empty() && textures.find(value->name) == textures.end())
     {

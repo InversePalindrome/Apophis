@@ -42,11 +42,11 @@ bool AnimationClip::init()
 }
 
 AnimationClip::AnimationClip()
-: _name("")
-, _speed(0)
-, _sample(0)
-, _duration(0)
-, _wrapMode(WrapMode::Default)
+    : _name("")
+    , _speed(0)
+    , _sample(0)
+    , _duration(0)
+    , _wrapMode(WrapMode::Default)
 {
 }
 

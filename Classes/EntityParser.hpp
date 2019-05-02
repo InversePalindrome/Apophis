@@ -15,6 +15,6 @@ InversePalindrome.com
 
 namespace EntityParser
 {
-	void parseEntity(entityx::Entity& entity, entityx::EventManager& eventManager, const std::string& filename);
-	void parseEntity(entityx::Entity& entity, entityx::EventManager& eventManager, const pugi::xml_node& entityNode);
+    void parseEntity(entityx::Entity& entity, entityx::EventManager& eventManager, const std::string& filename);
+    void parseEntity(entityx::Entity& entity, entityx::EventManager& eventManager, const pugi::xml_node& entityNode);
 }

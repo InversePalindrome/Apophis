@@ -17,7 +17,7 @@ InversePalindrome.com
 
 struct AreaQuery : public b2QueryCallback
 {
-	virtual bool ReportFixture(b2Fixture* fixture) override;
+    virtual bool ReportFixture(b2Fixture* fixture) override;
 
-	std::vector<entityx::Entity*> queryEntities;
+    std::vector<entityx::Entity*> queryEntities;
 };

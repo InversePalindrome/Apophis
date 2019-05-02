@@ -13,20 +13,20 @@ InversePalindrome.com
 class SatelliteComponent
 {
 public:
-	SatelliteComponent();
+    SatelliteComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	int getPrimaryID() const;
-	void setPrimaryID(int primaryID);
+    int getPrimaryID() const;
+    void setPrimaryID(int primaryID);
 
-	int getOrbitDirection() const;
-	void setOrbitDirection(int orbitDirection);
+    int getOrbitDirection() const;
+    void setOrbitDirection(int orbitDirection);
 
 private:
-	int primaryID;
-	int orbitDirection;
+    int primaryID;
+    int orbitDirection;
 };

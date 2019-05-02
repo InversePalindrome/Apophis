@@ -17,5 +17,5 @@ InversePalindrome.com
 
 namespace LevelSerializer
 {
-	void saveLevel(const std::vector<entityx::Entity>& entities, const b2Vec2& mapDimensions, const std::string& filename);
+    void saveLevel(const std::vector<entityx::Entity>& entities, const b2Vec2& mapDimensions, const std::string& filename);
 };

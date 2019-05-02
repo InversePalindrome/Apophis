@@ -13,20 +13,20 @@ InversePalindrome.com
 class SpeedComponent
 {
 public:
-	SpeedComponent();
+    SpeedComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	float getMaxLinearSpeed() const;
-	void setMaxLinearSpeed(float maxLinearSpeed);
+    float getMaxLinearSpeed() const;
+    void setMaxLinearSpeed(float maxLinearSpeed);
 
-	float getMaxAngularSpeed() const;
-	void setMaxAngularSpeed(float maxAngularSpeed);
+    float getMaxAngularSpeed() const;
+    void setMaxAngularSpeed(float maxAngularSpeed);
 
 private:
-	float maxLinearSpeed;
-	float maxAngularSpeed;
+    float maxLinearSpeed;
+    float maxAngularSpeed;
 };

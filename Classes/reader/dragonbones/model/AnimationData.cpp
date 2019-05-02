@@ -3,11 +3,11 @@
 
 DRAGONBONES_NAMESPACE_BEGIN
 
-AnimationData::AnimationData() 
+AnimationData::AnimationData()
 {
     _onClear();
 }
-AnimationData::~AnimationData() 
+AnimationData::~AnimationData()
 {
     _onClear();
 }

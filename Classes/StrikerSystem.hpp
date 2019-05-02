@@ -17,10 +17,10 @@ InversePalindrome.com
 class StrikerSystem : public entityx::System<StrikerSystem>
 {
 public:
-	explicit StrikerSystem(entityx::EventManager& eventManager);
+    explicit StrikerSystem(entityx::EventManager& eventManager);
 
-	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
+    virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
 
 private:
-	beehive::Tree<StrikerContext> strikerTree;
+    beehive::Tree<StrikerContext> strikerTree;
 };

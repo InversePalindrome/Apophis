@@ -16,6 +16,6 @@ InversePalindrome.com
 
 namespace EntitySerializer
 {
-	void saveEntity(entityx::Entity entity, const std::string& filename);
-	void saveEntity(entityx::Entity entity, pugi::xml_node& entityNode);
+    void saveEntity(entityx::Entity entity, const std::string& filename);
+    void saveEntity(entityx::Entity entity, pugi::xml_node& entityNode);
 }

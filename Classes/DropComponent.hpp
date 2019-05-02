@@ -16,20 +16,20 @@ InversePalindrome.com
 class DropComponent
 {
 public:
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	const std::vector<std::string>& getItemFilenames() const;
-	const std::vector<int>& getWeights() const;
+    const std::vector<std::string>& getItemFilenames() const;
+    const std::vector<int>& getWeights() const;
 
-	void addItem(const std::string& itemFilename, int weight);
-	void removeItem(const std::string& itemFilename);
+    void addItem(const std::string& itemFilename, int weight);
+    void removeItem(const std::string& itemFilename);
 
-	void clearItems();
+    void clearItems();
 
 private:
-	std::vector<std::string> itemFilenames;
-	std::vector<int> weights;
+    std::vector<std::string> itemFilenames;
+    std::vector<int> weights;
 };

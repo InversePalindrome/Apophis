@@ -24,23 +24,23 @@ InversePalindrome.com
 class CollisionManager : public b2ContactListener
 {
 public:
-	explicit CollisionManager(entityx::EventManager& eventManager);
-	CollisionManager(const CollisionManager&) = delete;
-	CollisionManager& operator= (const CollisionManager&) = delete;
+    explicit CollisionManager(entityx::EventManager& eventManager);
+    CollisionManager(const CollisionManager&) = delete;
+    CollisionManager& operator= (const CollisionManager&) = delete;
 
-	void update();
+    void update();
 
 private:
-	entityx::EventManager& eventManager;
+    entityx::EventManager& eventManager;
 
-	virtual void BeginContact(b2Contact* contact) override;
-	virtual void EndContact(b2Contact* contact) override;
+    virtual void BeginContact(b2Contact* contact) override;
+    virtual void EndContact(b2Contact* contact) override;
 
-	virtual void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override;
-	virtual void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override;
+    virtual void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override;
+    virtual void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override;
 
-	std::optional<std::pair<entityx::Entity, entityx::Entity>>
-    getCollisionPair(entityx::Entity* entityA, entityx::Entity* entityB, ObjectType objectTypeA, ObjectType objectTypeB);
+    std::optional<std::pair<entityx::Entity, entityx::Entity>>
+        getCollisionPair(entityx::Entity* entityA, entityx::Entity* entityB, ObjectType objectTypeA, ObjectType objectTypeB);
 
-	std::vector<std::function<void()>> collisionCallbacks;
+    std::vector<std::function<void()>> collisionCallbacks;
 };

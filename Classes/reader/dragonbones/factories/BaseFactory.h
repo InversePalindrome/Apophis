@@ -12,7 +12,7 @@ DRAGONBONES_NAMESPACE_BEGIN
 /**
  * @private
  */
-class BuildArmaturePackage final
+    class BuildArmaturePackage final
 {
 public:
     std::string dataName;
@@ -75,14 +75,14 @@ public:
 
     virtual Armature* buildArmature(const std::string& armatureName, const std::string& dragonBonesName = "", const std::string& skinName = "") const;
     virtual bool copyAnimationsToArmature(
-        Armature& toArmature, 
-        const std::string& fromArmatreName, const std::string& fromSkinName = "", const std::string& fromDragonBonesDataName = "", 
+        Armature& toArmature,
+        const std::string& fromArmatreName, const std::string& fromSkinName = "", const std::string& fromDragonBonesDataName = "",
         bool ifRemoveOriginalAnimationList = true
     ) const;
     virtual void replaceSlotDisplay(const std::string& dragonBonesName, const std::string& armatureName, const std::string& slotName, const std::string& displayName, Slot& slot, int displayIndex = -1) const;
     virtual void replaceSlotDisplayList(const std::string& dragonBonesName, const std::string& armatureName, const std::string& slotName, Slot& slot) const;
 
-    inline DragonBonesData* getDragonBonesData(const std::string& dragonBonesName) const 
+    inline DragonBonesData* getDragonBonesData(const std::string& dragonBonesName) const
     {
         return mapFind(_dragonBonesDataMap, dragonBonesName);
     }

@@ -11,49 +11,49 @@ InversePalindrome.com
 
 
 ObjectComponent::ObjectComponent() :
-	objectType(ObjectType::Undefined)
+    objectType(ObjectType::Undefined)
 {
 }
 
 void ObjectComponent::load(const pugi::xml_node& componentNode)
 {
-	setObjectType(ObjectType::_from_string(componentNode.text().as_string()));
+    setObjectType(ObjectType::_from_string(componentNode.text().as_string()));
 }
 
 void ObjectComponent::save(pugi::xml_node& componentNode) const
 {
-	componentNode.set_name("Object");
+    componentNode.set_name("Object");
 
-	componentNode.text().set(objectType._to_string());
+    componentNode.text().set(objectType._to_string());
 }
 
 void ObjectComponent::display()
 {
-	if (ImGui::TreeNode("Object"))
-	{
-		if (ImGui::BeginCombo("Type", objectType._to_string()))
-		{
-			for (const auto objectType : ObjectType::_values())
-			{
-				if (ImGui::Selectable(objectType._to_string()))
-				{
-					setObjectType(objectType);
-				}
-			}
+    if (ImGui::TreeNode("Object"))
+    {
+        if (ImGui::BeginCombo("Type", objectType._to_string()))
+        {
+            for (const auto objectType : ObjectType::_values())
+            {
+                if (ImGui::Selectable(objectType._to_string()))
+                {
+                    setObjectType(objectType);
+                }
+            }
 
-			ImGui::EndCombo();
-		}
+            ImGui::EndCombo();
+        }
 
-		ImGui::TreePop();
-	}
+        ImGui::TreePop();
+    }
 }
 
 ObjectType ObjectComponent::getObjectType() const
 {
-	return objectType;
+    return objectType;
 }
 
 void ObjectComponent::setObjectType(ObjectType objectType)
 {
-	this->objectType = objectType;
+    this->objectType = objectType;
 }

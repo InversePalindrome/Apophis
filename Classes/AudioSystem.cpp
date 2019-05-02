@@ -9,11 +9,11 @@ InversePalindrome.com
 #include "AppSettings.hpp"
 
 
-void AudioSystem::configure(entityx::EventManager& eventManager) 
+void AudioSystem::configure(entityx::EventManager& eventManager)
 {
-	eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
-	eventManager.subscribe<entityx::ComponentRemovedEvent<SoundComponent>>(*this);
-	eventManager.subscribe<StateChanged>(*this);
+    eventManager.subscribe<entityx::EntityDestroyedEvent>(*this);
+    eventManager.subscribe<entityx::ComponentRemovedEvent<SoundComponent>>(*this);
+    eventManager.subscribe<StateChanged>(*this);
 }
 
 void AudioSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
@@ -22,26 +22,26 @@ void AudioSystem::update(entityx::EntityManager& entityManager, entityx::EventMa
 
 void AudioSystem::receive(const entityx::EntityDestroyedEvent& event)
 {
-	auto entity = event.entity;
+    auto entity = event.entity;
 
-	if (auto sound = entity.component<SoundComponent>())
-	{
-		AppSettings::getInstance().stopSound(sound->getSoundID());
-	}
+    if (auto sound = entity.component<SoundComponent>())
+    {
+        AppSettings::getInstance().stopSound(sound->getSoundID());
+    }
 }
 
 void AudioSystem::receive(const entityx::ComponentRemovedEvent<SoundComponent>& event)
 {
-	AppSettings::getInstance().stopSound(event.component->getSoundID());
+    AppSettings::getInstance().stopSound(event.component->getSoundID());
 }
 
 void AudioSystem::receive(const StateChanged& event)
 {
-	if (auto sound = event.entity.component<SoundComponent>(); sound && sound->hasSound(event.state))
-	{
-		const auto& [file, loop] = sound->getSound(event.state);
+    if (auto sound = event.entity.component<SoundComponent>(); sound && sound->hasSound(event.state))
+    {
+        const auto& [file, loop] = sound->getSound(event.state);
 
-		AppSettings::getInstance().stopSound(sound->getSoundID());
-		sound->setSoundID(AppSettings::getInstance().playSound(file, loop));
-	}
+        AppSettings::getInstance().stopSound(sound->getSoundID());
+        sound->setSoundID(AppSettings::getInstance().playSound(file, loop));
+    }
 }

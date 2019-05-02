@@ -127,7 +127,7 @@ public:
     bool _setColor(const ColorTransform& value);
 
 public:
-    inline void invalidUpdate() 
+    inline void invalidUpdate()
     {
         _displayDirty = true;
     }
@@ -159,7 +159,7 @@ public:
         return _display;
     }
     void setDisplay(void* value, DisplayType displayType);
-    
+
     inline Armature* getChildArmature() const
     {
         return _childArmature;

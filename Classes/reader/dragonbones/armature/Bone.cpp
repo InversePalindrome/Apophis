@@ -98,11 +98,11 @@ void Bone::_computeIKA()
 
     const auto ikRadian =
         (
-            std::atan2(ikGlobal.y - this->global.y, ikGlobal.x - this->global.x) + 
+            std::atan2(ikGlobal.y - this->global.y, ikGlobal.x - this->global.x) +
             this->offset.skewY -
-            this->global.skewY * 2.f + 
+            this->global.skewY * 2.f +
             std::atan2(y, x)
-        ) * ikWeight;
+            ) * ikWeight;
 
     this->global.skewX += ikRadian;
     this->global.skewY += ikRadian;
@@ -178,7 +178,7 @@ void Bone::_computeIKB()
         (
             std::atan2(ikGlobal.y - this->global.y, ikGlobal.x - this->global.x) + this->offset.skewY -
             this->global.skewY * 2.f + std::atan2(y, x)
-        ) * ikWeight;
+            ) * ikWeight;
 
     this->global.skewX += ikRadianB;
     this->global.skewY += ikRadianB;
@@ -186,7 +186,7 @@ void Bone::_computeIKB()
     this->global.toMatrix(*this->globalTransformMatrix);
 }
 
-void Bone::_setArmature(Armature* value)
+void Bone::_setArmature(Armature * value)
 {
     if (this->_armature == value)
     {
@@ -213,9 +213,9 @@ void Bone::_setArmature(Armature* value)
     }
 
     if (!oldSlots.empty()) {
-        for (const auto slot : oldSlots) 
+        for (const auto slot : oldSlots)
         {
-            if (slot->getParent() == this) 
+            if (slot->getParent() == this)
             {
                 slot->_setArmature(this->_armature);
             }
@@ -233,7 +233,7 @@ void Bone::_setArmature(Armature* value)
     }
 }
 
-void Bone::_setIK(Bone* value, unsigned chain, int chainIndex)
+void Bone::_setIK(Bone * value, unsigned chain, int chainIndex)
 {
     if (value)
     {
@@ -351,7 +351,7 @@ void Bone::_update(int cacheFrameIndex)
 
                 _updateGlobalTransformMatrix();
 
-                if (_ik && _ikChainIndex == _ikChain  && ikWeight > 0.f)
+                if (_ik && _ikChainIndex == _ikChain && ikWeight > 0.f)
                 {
                     if (this->inheritTranslation && _ikChain > 0 && this->_parent)
                     {
@@ -376,7 +376,7 @@ void Bone::_update(int cacheFrameIndex)
     }
 }
 
-bool Bone::contains(const TransformObject* child) const
+bool Bone::contains(const TransformObject * child) const
 {
     if (child)
     {
@@ -393,7 +393,7 @@ bool Bone::contains(const TransformObject* child) const
 
         return ancestor == this;
     }
-    
+
     return false;
 }
 

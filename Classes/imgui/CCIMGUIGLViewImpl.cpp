@@ -108,7 +108,7 @@ public:
             _view->onGLFWframebuffersize(window, w, h);
     }
 
-    static void onGLFWWindowSizeFunCallback(GLFWwindow *window, int width, int height)
+    static void onGLFWWindowSizeFunCallback(GLFWwindow* window, int width, int height)
     {
         if (_view)
             _view->onGLFWWindowSizeFunCallback(window, width, height);
@@ -135,15 +135,15 @@ public:
             _view->setDesignResolutionSize(w, h, ResolutionPolicy::SHOW_ALL);
         }
     }
-	
-	
-	static void onGLFWWindowFocusCallback(GLFWwindow* window, int focused)			
-	{			
-		if (_view)			
-		{			
-			_view->onGLFWWindowFocusCallback(window, focused);			
-		}			
-	}
+
+
+    static void onGLFWWindowFocusCallback(GLFWwindow* window, int focused)
+    {
+        if (_view)
+        {
+            _view->onGLFWWindowFocusCallback(window, focused);
+        }
+    }
 
 private:
     static IMGUIGLViewImpl* _view;
@@ -151,8 +151,8 @@ private:
 
 IMGUIGLViewImpl* GLFWEventHandler::_view = nullptr;
 
-const std::string IMGUIGLViewImpl::EVENT_WINDOW_RESIZED = "glview_window_resized";			
-const std::string IMGUIGLViewImpl::EVENT_WINDOW_FOCUSED = "glview_window_focused";			
+const std::string IMGUIGLViewImpl::EVENT_WINDOW_RESIZED = "glview_window_resized";
+const std::string IMGUIGLViewImpl::EVENT_WINDOW_FOCUSED = "glview_window_focused";
 const std::string IMGUIGLViewImpl::EVENT_WINDOW_UNFOCUSED = "glview_window_unfocused";
 
 ////////////////////////////////////////////////////
@@ -301,16 +301,16 @@ static keyCodeItem g_keyCodeStructArray[] = {
 
 
 IMGUIGLViewImpl::IMGUIGLViewImpl()
-: _captured(false)
-, _supportTouch(false)
-, _isInRetinaMonitor(false)
-, _isRetinaEnabled(false)
-, _retinaFactor(1)
-, _frameZoomFactor(1.0f)
-, _mainWindow(nullptr)
-, _monitor(nullptr)
-, _mouseX(0.0f)
-, _mouseY(0.0f)
+    : _captured(false)
+    , _supportTouch(false)
+    , _isInRetinaMonitor(false)
+    , _isRetinaEnabled(false)
+    , _retinaFactor(1)
+    , _frameZoomFactor(1.0f)
+    , _mainWindow(nullptr)
+    , _monitor(nullptr)
+    , _mouseX(0.0f)
+    , _mouseY(0.0f)
 {
     _viewName = "cocos2dx";
     g_keyCodeMap.clear();
@@ -323,9 +323,9 @@ IMGUIGLViewImpl::IMGUIGLViewImpl()
 
     glfwSetErrorCallback(GLFWEventHandler::onGLFWError);
     glfwInit();
-	
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
+
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
 }
 
 IMGUIGLViewImpl::~IMGUIGLViewImpl()
@@ -336,30 +336,30 @@ IMGUIGLViewImpl::~IMGUIGLViewImpl()
 }
 
 IMGUIGLViewImpl* IMGUIGLViewImpl::create(const std::string& viewName)
-{			
-	return IMGUIGLViewImpl::create(viewName, false);			
+{
+    return IMGUIGLViewImpl::create(viewName, false);
 }
 
 IMGUIGLViewImpl* IMGUIGLViewImpl::create(const std::string& viewName, bool resizable)
 {
     auto ret = new (std::nothrow) IMGUIGLViewImpl;
-    if(ret && ret->initWithRect(viewName, Rect(0, 0, 960, 640), 1, resizable)) {
+    if (ret && ret->initWithRect(viewName, Rect(0, 0, 960, 640), 1, resizable)) {
         ret->autorelease();
         return ret;
     }
-	CC_SAFE_DELETE(ret);
-	
+    CC_SAFE_DELETE(ret);
+
     return nullptr;
 }
 
 IMGUIGLViewImpl* IMGUIGLViewImpl::createWithRect(const std::string& viewName, Rect rect, float frameZoomFactor, bool resizable)
 {
     auto ret = new (std::nothrow) IMGUIGLViewImpl;
-    if(ret && ret->initWithRect(viewName, rect, frameZoomFactor, resizable)) {
+    if (ret && ret->initWithRect(viewName, rect, frameZoomFactor, resizable)) {
         ret->autorelease();
         return ret;
     }
-	CC_SAFE_DELETE(ret);
+    CC_SAFE_DELETE(ret);
 
     return nullptr;
 }
@@ -367,24 +367,24 @@ IMGUIGLViewImpl* IMGUIGLViewImpl::createWithRect(const std::string& viewName, Re
 IMGUIGLViewImpl* IMGUIGLViewImpl::createWithFullScreen(const std::string& viewName)
 {
     auto ret = new (std::nothrow) IMGUIGLViewImpl();
-    if(ret && ret->initWithFullScreen(viewName)) {
+    if (ret && ret->initWithFullScreen(viewName)) {
         ret->autorelease();
         return ret;
     }
-	CC_SAFE_DELETE(ret);
+    CC_SAFE_DELETE(ret);
 
     return nullptr;
 }
 
-IMGUIGLViewImpl* IMGUIGLViewImpl::createWithFullScreen(const std::string& viewName, const GLFWvidmode &videoMode, GLFWmonitor *monitor)
+IMGUIGLViewImpl* IMGUIGLViewImpl::createWithFullScreen(const std::string& viewName, const GLFWvidmode& videoMode, GLFWmonitor* monitor)
 {
     auto ret = new (std::nothrow) IMGUIGLViewImpl();
-    if(ret && ret->initWithFullscreen(viewName, videoMode, monitor)) {
+    if (ret && ret->initWithFullscreen(viewName, videoMode, monitor)) {
         ret->autorelease();
         return ret;
     }
-	CC_SAFE_DELETE(ret);
-    
+    CC_SAFE_DELETE(ret);
+
     return nullptr;
 }
 
@@ -394,31 +394,31 @@ bool IMGUIGLViewImpl::initWithRect(const std::string& viewName, Rect rect, float
 
     _frameZoomFactor = frameZoomFactor;
 
-	glfwWindowHint(GLFW_RESIZABLE, resizable ? GL_TRUE : GL_FALSE);
+    glfwWindowHint(GLFW_RESIZABLE, resizable ? GL_TRUE : GL_FALSE);
     //glfwWindowHint(GLFW_RESIZABLE,GL_TRUE);
-    glfwWindowHint(GLFW_RED_BITS,_glContextAttrs.redBits);
-    glfwWindowHint(GLFW_GREEN_BITS,_glContextAttrs.greenBits);
-    glfwWindowHint(GLFW_BLUE_BITS,_glContextAttrs.blueBits);
-    glfwWindowHint(GLFW_ALPHA_BITS,_glContextAttrs.alphaBits);
-    glfwWindowHint(GLFW_DEPTH_BITS,_glContextAttrs.depthBits);
-    glfwWindowHint(GLFW_STENCIL_BITS,_glContextAttrs.stencilBits);
+    glfwWindowHint(GLFW_RED_BITS, _glContextAttrs.redBits);
+    glfwWindowHint(GLFW_GREEN_BITS, _glContextAttrs.greenBits);
+    glfwWindowHint(GLFW_BLUE_BITS, _glContextAttrs.blueBits);
+    glfwWindowHint(GLFW_ALPHA_BITS, _glContextAttrs.alphaBits);
+    glfwWindowHint(GLFW_DEPTH_BITS, _glContextAttrs.depthBits);
+    glfwWindowHint(GLFW_STENCIL_BITS, _glContextAttrs.stencilBits);
 
     int needWidth = rect.size.width * _frameZoomFactor;
     int neeHeight = rect.size.height * _frameZoomFactor;
 
     _mainWindow = glfwCreateWindow(needWidth, neeHeight, _viewName.c_str(), _monitor, nullptr);
-	
-	/*if (_mainWindow == nullptr)			
-	{			
-		std::string message = "Can't create window";			
-		if (!_glfwError.empty())			
-		{			
-			message.append("\nMore info: \n");			
-			message.append(_glfwError);			
-		}			
-		MessageBox(message.c_str(), "Error launch application");			
-		return false;			
-	}*/
+
+    /*if (_mainWindow == nullptr)
+    {
+        std::string message = "Can't create window";
+        if (!_glfwError.empty())
+        {
+            message.append("\nMore info: \n");
+            message.append(_glfwError);
+        }
+        MessageBox(message.c_str(), "Error launch application");
+        return false;
+    }*/
 
     /*
     *  Note that the created window and context may differ from what you requested,
@@ -453,19 +453,19 @@ bool IMGUIGLViewImpl::initWithRect(const std::string& viewName, Rect rect, float
     glfwSetWindowSizeCallback(_mainWindow, GLFWEventHandler::onGLFWWindowSizeFunCallback);
     glfwSetWindowIconifyCallback(_mainWindow, GLFWEventHandler::onGLFWWindowIconifyCallback);
     //glfwSetWindowSizeCallback(_mainWindow, GLFWEventHandler::onWindowResizeCallback);
-	glfwSetWindowFocusCallback(_mainWindow, GLFWEventHandler::onGLFWWindowFocusCallback);
+    glfwSetWindowFocusCallback(_mainWindow, GLFWEventHandler::onGLFWWindowFocusCallback);
 
     setFrameSize(rect.size.width, rect.size.height);
 
     // check OpenGL version at first
     const GLubyte* glVersion = glGetString(GL_VERSION);
 
-    if ( utils::atof((const char*)glVersion) < 1.5 )
+    if (utils::atof((const char*)glVersion) < 1.5)
     {
-        char strComplain[256] = {0};
+        char strComplain[256] = { 0 };
         sprintf(strComplain,
-                "OpenGL 1.5 or higher is required (your version is %s). Please upgrade the driver of your video card.",
-                glVersion);
+            "OpenGL 1.5 or higher is required (your version is %s). Please upgrade the driver of your video card.",
+            glVersion);
         MessageBox(strComplain, "OpenGL version too old");
         return false;
     }
@@ -477,7 +477,7 @@ bool IMGUIGLViewImpl::initWithRect(const std::string& viewName, Rect rect, float
 
     // imgui
     ImGui_ImplGlfw_Init(_mainWindow, false);
-    
+
     return true;
 }
 
@@ -488,23 +488,23 @@ bool IMGUIGLViewImpl::initWithFullScreen(const std::string& viewName)
     if (nullptr == _monitor)
         return false;
 
-    const GLFWvidmode* videoMode = glfwGetVideoMode(_monitor);
+    const GLFWvidmode * videoMode = glfwGetVideoMode(_monitor);
     return initWithRect(viewName, Rect(0, 0, videoMode->width, videoMode->height), 1.0f, false);
 }
 
-bool IMGUIGLViewImpl::initWithFullscreen(const std::string &viewname, const GLFWvidmode &videoMode, GLFWmonitor *monitor)
+bool IMGUIGLViewImpl::initWithFullscreen(const std::string & viewname, const GLFWvidmode & videoMode, GLFWmonitor * monitor)
 {
     //Create fullscreen on specified monitor at the specified video mode.
     _monitor = monitor;
     if (nullptr == _monitor)
         return false;
-    
+
     //These are soft contraints. If the video mode is retrieved at runtime, the resulting window and context should match these exactly. If invalid attribs are passed (eg. from an outdated cache), window creation will NOT fail but the actual window/context may differ.
     glfwWindowHint(GLFW_REFRESH_RATE, videoMode.refreshRate);
     glfwWindowHint(GLFW_RED_BITS, videoMode.redBits);
     glfwWindowHint(GLFW_BLUE_BITS, videoMode.blueBits);
     glfwWindowHint(GLFW_GREEN_BITS, videoMode.greenBits);
-    
+
     return initWithRect(viewname, Rect(0, 0, videoMode.width, videoMode.height), 1.0f, false);
 }
 
@@ -515,9 +515,9 @@ bool IMGUIGLViewImpl::isOpenGLReady()
 
 void IMGUIGLViewImpl::end()
 {
-    if(_mainWindow)
+    if (_mainWindow)
     {
-        glfwSetWindowShouldClose(_mainWindow,1);
+        glfwSetWindowShouldClose(_mainWindow, 1);
         _mainWindow = nullptr;
     }
     // Release self. Otherwise, IMGUIGLViewImpl could not be freed.
@@ -526,13 +526,13 @@ void IMGUIGLViewImpl::end()
 
 void IMGUIGLViewImpl::swapBuffers()
 {
-    if(_mainWindow)
+    if (_mainWindow)
         glfwSwapBuffers(_mainWindow);
 }
 
 bool IMGUIGLViewImpl::windowShouldClose()
 {
-    if(_mainWindow)
+    if (_mainWindow)
         return glfwWindowShouldClose(_mainWindow) ? true : false;
     else
         return true;
@@ -565,12 +565,12 @@ void IMGUIGLViewImpl::setIMEKeyboardState(bool /*bOpen*/)
 
 }
 
-void IMGUIGLViewImpl::setCursorVisible( bool isVisible )
+void IMGUIGLViewImpl::setCursorVisible(bool isVisible)
 {
-    if( _mainWindow == NULL )
+    if (_mainWindow == NULL)
         return;
-    
-    if( isVisible )
+
+    if (isVisible)
         glfwSetInputMode(_mainWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     else
         glfwSetInputMode(_mainWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
@@ -614,7 +614,7 @@ void IMGUIGLViewImpl::updateFrameSize()
             {
                 _retinaFactor = 2;
             }
-            glfwSetWindowSize(_mainWindow, _screenSize.width/2 * _retinaFactor * _frameZoomFactor, _screenSize.height/2 * _retinaFactor * _frameZoomFactor);
+            glfwSetWindowSize(_mainWindow, _screenSize.width / 2 * _retinaFactor * _frameZoomFactor, _screenSize.height / 2 * _retinaFactor * _frameZoomFactor);
 
             _isInRetinaMonitor = true;
         }
@@ -624,7 +624,7 @@ void IMGUIGLViewImpl::updateFrameSize()
             {
                 _retinaFactor = 1;
             }
-            glfwSetWindowSize(_mainWindow, _screenSize.width * _retinaFactor * _frameZoomFactor, _screenSize.height *_retinaFactor * _frameZoomFactor);
+            glfwSetWindowSize(_mainWindow, _screenSize.width * _retinaFactor * _frameZoomFactor, _screenSize.height * _retinaFactor * _frameZoomFactor);
 
             _isInRetinaMonitor = false;
         }
@@ -637,21 +637,21 @@ void IMGUIGLViewImpl::setFrameSize(float width, float height)
     updateFrameSize();
 }
 
-void IMGUIGLViewImpl::setViewPortInPoints(float x , float y , float w , float h)
+void IMGUIGLViewImpl::setViewPortInPoints(float x, float y, float w, float h)
 {
     experimental::Viewport vp((float)(x * _scaleX * _retinaFactor * _frameZoomFactor + _viewPortRect.origin.x * _retinaFactor * _frameZoomFactor),
-        (float)(y * _scaleY * _retinaFactor  * _frameZoomFactor + _viewPortRect.origin.y * _retinaFactor * _frameZoomFactor),
+        (float)(y * _scaleY * _retinaFactor * _frameZoomFactor + _viewPortRect.origin.y * _retinaFactor * _frameZoomFactor),
         (float)(w * _scaleX * _retinaFactor * _frameZoomFactor),
         (float)(h * _scaleY * _retinaFactor * _frameZoomFactor));
     Camera::setDefaultViewport(vp);
 }
 
-void IMGUIGLViewImpl::setScissorInPoints(float x , float y , float w , float h)
+void IMGUIGLViewImpl::setScissorInPoints(float x, float y, float w, float h)
 {
     glScissor((GLint)(x * _scaleX * _retinaFactor * _frameZoomFactor + _viewPortRect.origin.x * _retinaFactor * _frameZoomFactor),
-               (GLint)(y * _scaleY * _retinaFactor  * _frameZoomFactor + _viewPortRect.origin.y * _retinaFactor * _frameZoomFactor),
-               (GLsizei)(w * _scaleX * _retinaFactor * _frameZoomFactor),
-               (GLsizei)(h * _scaleY * _retinaFactor * _frameZoomFactor));
+        (GLint)(y * _scaleY * _retinaFactor * _frameZoomFactor + _viewPortRect.origin.y * _retinaFactor * _frameZoomFactor),
+        (GLsizei)(w * _scaleX * _retinaFactor * _frameZoomFactor),
+        (GLsizei)(h * _scaleY * _retinaFactor * _frameZoomFactor));
 }
 
 Rect IMGUIGLViewImpl::getScissorRect() const
@@ -659,9 +659,9 @@ Rect IMGUIGLViewImpl::getScissorRect() const
     GLfloat params[4];
     glGetFloatv(GL_SCISSOR_BOX, params);
     float x = (params[0] - _viewPortRect.origin.x * _retinaFactor * _frameZoomFactor) / (_scaleX * _retinaFactor * _frameZoomFactor);
-    float y = (params[1] - _viewPortRect.origin.y * _retinaFactor * _frameZoomFactor) / (_scaleY * _retinaFactor  * _frameZoomFactor);
+    float y = (params[1] - _viewPortRect.origin.y * _retinaFactor * _frameZoomFactor) / (_scaleY * _retinaFactor * _frameZoomFactor);
     float w = params[2] / (_scaleX * _retinaFactor * _frameZoomFactor);
-    float h = params[3] / (_scaleY * _retinaFactor  * _frameZoomFactor);
+    float h = params[3] / (_scaleY * _retinaFactor * _frameZoomFactor);
     return Rect(x, y, w, h);
 }
 
@@ -670,32 +670,32 @@ void IMGUIGLViewImpl::onGLFWError(int errorID, const char* errorDesc)
     CCLOGERROR("GLFWError #%d Happen, %s\n", errorID, errorDesc);
 }
 
-void IMGUIGLViewImpl::onGLFWWindowFocusCallback(GLFWwindow* /*window*/, int focused)			
-{			
-	if (focused == GL_TRUE)			
-	{			
-		Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(IMGUIGLViewImpl::EVENT_WINDOW_FOCUSED, nullptr);			
-	}			
-	else			
-	{			
-		Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(IMGUIGLViewImpl::EVENT_WINDOW_UNFOCUSED, nullptr);			
-	}			
+void IMGUIGLViewImpl::onGLFWWindowFocusCallback(GLFWwindow* /*window*/, int focused)
+{
+    if (focused == GL_TRUE)
+    {
+        Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(IMGUIGLViewImpl::EVENT_WINDOW_FOCUSED, nullptr);
+    }
+    else
+    {
+        Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(IMGUIGLViewImpl::EVENT_WINDOW_UNFOCUSED, nullptr);
+    }
 }
 
-void IMGUIGLViewImpl::onGLFWMouseCallBack(GLFWwindow* window, int button, int action, int modify)
+void IMGUIGLViewImpl::onGLFWMouseCallBack(GLFWwindow * window, int button, int action, int modify)
 {
-    if(GLFW_MOUSE_BUTTON_LEFT == button)
+    if (GLFW_MOUSE_BUTTON_LEFT == button)
     {
-        if(GLFW_PRESS == action)
+        if (GLFW_PRESS == action)
         {
             _captured = true;
-            if (this->getViewPortRect().equals(Rect::ZERO) || this->getViewPortRect().containsPoint(Vec2(_mouseX,_mouseY)))
+            if (this->getViewPortRect().equals(Rect::ZERO) || this->getViewPortRect().containsPoint(Vec2(_mouseX, _mouseY)))
             {
                 intptr_t id = 0;
                 this->handleTouchesBegin(1, &id, &_mouseX, &_mouseY);
             }
         }
-        else if(GLFW_RELEASE == action)
+        else if (GLFW_RELEASE == action)
         {
             if (_captured)
             {
@@ -705,19 +705,19 @@ void IMGUIGLViewImpl::onGLFWMouseCallBack(GLFWwindow* window, int button, int ac
             }
         }
     }
-    
+
     //Because OpenGL and cocos2d-x uses different Y axis, we need to convert the coordinate here
     float cursorX = (_mouseX - _viewPortRect.origin.x) / _scaleX;
     float cursorY = (_viewPortRect.origin.y + _viewPortRect.size.height - _mouseY) / _scaleY;
 
-    if(GLFW_PRESS == action)
+    if (GLFW_PRESS == action)
     {
         EventMouse event(EventMouse::MouseEventType::MOUSE_DOWN);
         event.setCursorPosition(cursorX, cursorY);
         event.setMouseButton((EventMouse::MouseButton)button);
         Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
     }
-    else if(GLFW_RELEASE == action)
+    else if (GLFW_RELEASE == action)
     {
         EventMouse event(EventMouse::MouseEventType::MOUSE_UP);
         event.setCursorPosition(cursorX, cursorY);
@@ -726,7 +726,7 @@ void IMGUIGLViewImpl::onGLFWMouseCallBack(GLFWwindow* window, int button, int ac
     }
 }
 
-void IMGUIGLViewImpl::onGLFWMouseMoveCallBack(GLFWwindow* window, double x, double y)
+void IMGUIGLViewImpl::onGLFWMouseMoveCallBack(GLFWwindow * window, double x, double y)
 {
     _mouseX = (float)x;
     _mouseY = (float)y;
@@ -748,7 +748,7 @@ void IMGUIGLViewImpl::onGLFWMouseMoveCallBack(GLFWwindow* window, double x, doub
         intptr_t id = 0;
         this->handleTouchesMove(1, &id, &_mouseX, &_mouseY);
     }
-    
+
     //Because OpenGL and cocos2d-x uses different Y axis, we need to convert the coordinate here
     float cursorX = (_mouseX - _viewPortRect.origin.x) / _scaleX;
     float cursorY = (_viewPortRect.origin.y + _viewPortRect.size.height - _mouseY) / _scaleY;
@@ -771,7 +771,7 @@ void IMGUIGLViewImpl::onGLFWMouseMoveCallBack(GLFWwindow* window, double x, doub
     Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
 }
 
-void IMGUIGLViewImpl::onGLFWMouseScrollCallback(GLFWwindow* window, double x, double y)
+void IMGUIGLViewImpl::onGLFWMouseScrollCallback(GLFWwindow * window, double x, double y)
 {
     EventMouse event(EventMouse::MouseEventType::MOUSE_SCROLL);
     //Because OpenGL and cocos2d-x uses different Y axis, we need to convert the coordinate here
@@ -782,7 +782,7 @@ void IMGUIGLViewImpl::onGLFWMouseScrollCallback(GLFWwindow* window, double x, do
     Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
 }
 
-void IMGUIGLViewImpl::onGLFWKeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
+void IMGUIGLViewImpl::onGLFWKeyCallback(GLFWwindow * window, int key, int scancode, int action, int mods)
 {
     if (GLFW_REPEAT != action)
     {
@@ -790,35 +790,35 @@ void IMGUIGLViewImpl::onGLFWKeyCallback(GLFWwindow *window, int key, int scancod
         auto dispatcher = Director::getInstance()->getEventDispatcher();
         dispatcher->dispatchEvent(&event);
     }
-    
+
     if (GLFW_RELEASE != action && g_keyCodeMap[key] == EventKeyboard::KeyCode::KEY_BACKSPACE)
     {
         IMEDispatcher::sharedDispatcher()->dispatchDeleteBackward();
     }
 }
 
-void IMGUIGLViewImpl::onGLFWCharCallback(GLFWwindow *window, unsigned int character)
+void IMGUIGLViewImpl::onGLFWCharCallback(GLFWwindow * window, unsigned int character)
 {
-    char16_t wcharString[2] = { (char16_t) character, 0 };
+    char16_t wcharString[2] = { (char16_t)character, 0 };
     std::string utf8String;
 
-    StringUtils::UTF16ToUTF8( wcharString, utf8String );
-    IMEDispatcher::sharedDispatcher()->dispatchInsertText( utf8String.c_str(), utf8String.size() );
+    StringUtils::UTF16ToUTF8(wcharString, utf8String);
+    IMEDispatcher::sharedDispatcher()->dispatchInsertText(utf8String.c_str(), utf8String.size());
 }
 
-void IMGUIGLViewImpl::onGLFWWindowPosCallback(GLFWwindow *windows, int x, int y)
+void IMGUIGLViewImpl::onGLFWWindowPosCallback(GLFWwindow * windows, int x, int y)
 {
     Director::getInstance()->setViewport();
 }
 
-void IMGUIGLViewImpl::onGLFWframebuffersize(GLFWwindow* window, int w, int h)
+void IMGUIGLViewImpl::onGLFWframebuffersize(GLFWwindow * window, int w, int h)
 {
     float frameSizeW = _screenSize.width;
     float frameSizeH = _screenSize.height;
     float factorX = frameSizeW / w * _retinaFactor * _frameZoomFactor;
     float factorY = frameSizeH / h * _retinaFactor * _frameZoomFactor;
 
-    if (fabs(factorX - 0.5f) < FLT_EPSILON && fabs(factorY - 0.5f) < FLT_EPSILON )
+    if (fabs(factorX - 0.5f) < FLT_EPSILON && fabs(factorY - 0.5f) < FLT_EPSILON)
     {
         _isInRetinaMonitor = true;
         if (_isRetinaEnabled)
@@ -830,9 +830,9 @@ void IMGUIGLViewImpl::onGLFWframebuffersize(GLFWwindow* window, int w, int h)
             _retinaFactor = 2;
         }
 
-        glfwSetWindowSize(window, static_cast<int>(frameSizeW * 0.5f * _retinaFactor * _frameZoomFactor) , static_cast<int>(frameSizeH * 0.5f * _retinaFactor * _frameZoomFactor));
+        glfwSetWindowSize(window, static_cast<int>(frameSizeW * 0.5f * _retinaFactor * _frameZoomFactor), static_cast<int>(frameSizeH * 0.5f * _retinaFactor * _frameZoomFactor));
     }
-    else if(fabs(factorX - 2.0f) < FLT_EPSILON && fabs(factorY - 2.0f) < FLT_EPSILON)
+    else if (fabs(factorX - 2.0f) < FLT_EPSILON && fabs(factorY - 2.0f) < FLT_EPSILON)
     {
         _isInRetinaMonitor = false;
         _retinaFactor = 1;
@@ -840,28 +840,28 @@ void IMGUIGLViewImpl::onGLFWframebuffersize(GLFWwindow* window, int w, int h)
     }
 }
 
-void IMGUIGLViewImpl::onGLFWWindowSizeFunCallback(GLFWwindow *window, int width, int height)
+void IMGUIGLViewImpl::onGLFWWindowSizeFunCallback(GLFWwindow * window, int width, int height)
 {
     /*if (_resolutionPolicy != ResolutionPolicy::UNKNOWN)
     {
         updateDesignResolutionSize();
         Director::getInstance()->setViewport();
     }*/
-	
-	if (width && height && _resolutionPolicy != ResolutionPolicy::UNKNOWN)		
-	{			
-		Size baseDesignSize = _designResolutionSize;
-		ResolutionPolicy baseResolutionPolicy = _resolutionPolicy;
-		int frameWidth = width / _frameZoomFactor;			
-		int frameHeight = height / _frameZoomFactor;			
-		setFrameSize(frameWidth, frameHeight);			
-		setDesignResolutionSize(baseDesignSize.width, baseDesignSize.height, baseResolutionPolicy);		
-		Director::getInstance()->setViewport();			
-		Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(IMGUIGLViewImpl::EVENT_WINDOW_RESIZED, nullptr);			
-	}
+
+    if (width && height && _resolutionPolicy != ResolutionPolicy::UNKNOWN)
+    {
+        Size baseDesignSize = _designResolutionSize;
+        ResolutionPolicy baseResolutionPolicy = _resolutionPolicy;
+        int frameWidth = width / _frameZoomFactor;
+        int frameHeight = height / _frameZoomFactor;
+        setFrameSize(frameWidth, frameHeight);
+        setDesignResolutionSize(baseDesignSize.width, baseDesignSize.height, baseResolutionPolicy);
+        Director::getInstance()->setViewport();
+        Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(IMGUIGLViewImpl::EVENT_WINDOW_RESIZED, nullptr);
+    }
 }
 
-void IMGUIGLViewImpl::onGLFWWindowIconifyCallback(GLFWwindow* window, int iconified)
+void IMGUIGLViewImpl::onGLFWWindowIconifyCallback(GLFWwindow * window, int iconified)
 {
     if (iconified == GL_TRUE)
     {
@@ -876,7 +876,7 @@ void IMGUIGLViewImpl::onGLFWWindowIconifyCallback(GLFWwindow* window, int iconif
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 static bool glew_dynamic_binding()
 {
-    const char *gl_extensions = (const char*)glGetString(GL_EXTENSIONS);
+    const char* gl_extensions = (const char*)glGetString(GL_EXTENSIONS);
 
     // If the current opengl driver doesn't have framebuffers methods, check if an extension exists
     if (glGenFramebuffers == nullptr)
@@ -886,52 +886,52 @@ static bool glew_dynamic_binding()
         {
             log("OpenGL: ARB_framebuffer_object is supported");
 
-            glIsRenderbuffer = (PFNGLISRENDERBUFFERPROC) wglGetProcAddress("glIsRenderbuffer");
-            glBindRenderbuffer = (PFNGLBINDRENDERBUFFERPROC) wglGetProcAddress("glBindRenderbuffer");
-            glDeleteRenderbuffers = (PFNGLDELETERENDERBUFFERSPROC) wglGetProcAddress("glDeleteRenderbuffers");
-            glGenRenderbuffers = (PFNGLGENRENDERBUFFERSPROC) wglGetProcAddress("glGenRenderbuffers");
-            glRenderbufferStorage = (PFNGLRENDERBUFFERSTORAGEPROC) wglGetProcAddress("glRenderbufferStorage");
-            glGetRenderbufferParameteriv = (PFNGLGETRENDERBUFFERPARAMETERIVPROC) wglGetProcAddress("glGetRenderbufferParameteriv");
-            glIsFramebuffer = (PFNGLISFRAMEBUFFERPROC) wglGetProcAddress("glIsFramebuffer");
-            glBindFramebuffer = (PFNGLBINDFRAMEBUFFERPROC) wglGetProcAddress("glBindFramebuffer");
-            glDeleteFramebuffers = (PFNGLDELETEFRAMEBUFFERSPROC) wglGetProcAddress("glDeleteFramebuffers");
-            glGenFramebuffers = (PFNGLGENFRAMEBUFFERSPROC) wglGetProcAddress("glGenFramebuffers");
-            glCheckFramebufferStatus = (PFNGLCHECKFRAMEBUFFERSTATUSPROC) wglGetProcAddress("glCheckFramebufferStatus");
-            glFramebufferTexture1D = (PFNGLFRAMEBUFFERTEXTURE1DPROC) wglGetProcAddress("glFramebufferTexture1D");
-            glFramebufferTexture2D = (PFNGLFRAMEBUFFERTEXTURE2DPROC) wglGetProcAddress("glFramebufferTexture2D");
-            glFramebufferTexture3D = (PFNGLFRAMEBUFFERTEXTURE3DPROC) wglGetProcAddress("glFramebufferTexture3D");
-            glFramebufferRenderbuffer = (PFNGLFRAMEBUFFERRENDERBUFFERPROC) wglGetProcAddress("glFramebufferRenderbuffer");
-            glGetFramebufferAttachmentParameteriv = (PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC) wglGetProcAddress("glGetFramebufferAttachmentParameteriv");
-            glGenerateMipmap = (PFNGLGENERATEMIPMAPPROC) wglGetProcAddress("glGenerateMipmap");
+            glIsRenderbuffer = (PFNGLISRENDERBUFFERPROC)wglGetProcAddress("glIsRenderbuffer");
+            glBindRenderbuffer = (PFNGLBINDRENDERBUFFERPROC)wglGetProcAddress("glBindRenderbuffer");
+            glDeleteRenderbuffers = (PFNGLDELETERENDERBUFFERSPROC)wglGetProcAddress("glDeleteRenderbuffers");
+            glGenRenderbuffers = (PFNGLGENRENDERBUFFERSPROC)wglGetProcAddress("glGenRenderbuffers");
+            glRenderbufferStorage = (PFNGLRENDERBUFFERSTORAGEPROC)wglGetProcAddress("glRenderbufferStorage");
+            glGetRenderbufferParameteriv = (PFNGLGETRENDERBUFFERPARAMETERIVPROC)wglGetProcAddress("glGetRenderbufferParameteriv");
+            glIsFramebuffer = (PFNGLISFRAMEBUFFERPROC)wglGetProcAddress("glIsFramebuffer");
+            glBindFramebuffer = (PFNGLBINDFRAMEBUFFERPROC)wglGetProcAddress("glBindFramebuffer");
+            glDeleteFramebuffers = (PFNGLDELETEFRAMEBUFFERSPROC)wglGetProcAddress("glDeleteFramebuffers");
+            glGenFramebuffers = (PFNGLGENFRAMEBUFFERSPROC)wglGetProcAddress("glGenFramebuffers");
+            glCheckFramebufferStatus = (PFNGLCHECKFRAMEBUFFERSTATUSPROC)wglGetProcAddress("glCheckFramebufferStatus");
+            glFramebufferTexture1D = (PFNGLFRAMEBUFFERTEXTURE1DPROC)wglGetProcAddress("glFramebufferTexture1D");
+            glFramebufferTexture2D = (PFNGLFRAMEBUFFERTEXTURE2DPROC)wglGetProcAddress("glFramebufferTexture2D");
+            glFramebufferTexture3D = (PFNGLFRAMEBUFFERTEXTURE3DPROC)wglGetProcAddress("glFramebufferTexture3D");
+            glFramebufferRenderbuffer = (PFNGLFRAMEBUFFERRENDERBUFFERPROC)wglGetProcAddress("glFramebufferRenderbuffer");
+            glGetFramebufferAttachmentParameteriv = (PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC)wglGetProcAddress("glGetFramebufferAttachmentParameteriv");
+            glGenerateMipmap = (PFNGLGENERATEMIPMAPPROC)wglGetProcAddress("glGenerateMipmap");
         }
         else
-        if (strstr(gl_extensions, "EXT_framebuffer_object"))
-        {
-            log("OpenGL: EXT_framebuffer_object is supported");
-            glIsRenderbuffer = (PFNGLISRENDERBUFFERPROC) wglGetProcAddress("glIsRenderbufferEXT");
-            glBindRenderbuffer = (PFNGLBINDRENDERBUFFERPROC) wglGetProcAddress("glBindRenderbufferEXT");
-            glDeleteRenderbuffers = (PFNGLDELETERENDERBUFFERSPROC) wglGetProcAddress("glDeleteRenderbuffersEXT");
-            glGenRenderbuffers = (PFNGLGENRENDERBUFFERSPROC) wglGetProcAddress("glGenRenderbuffersEXT");
-            glRenderbufferStorage = (PFNGLRENDERBUFFERSTORAGEPROC) wglGetProcAddress("glRenderbufferStorageEXT");
-            glGetRenderbufferParameteriv = (PFNGLGETRENDERBUFFERPARAMETERIVPROC) wglGetProcAddress("glGetRenderbufferParameterivEXT");
-            glIsFramebuffer = (PFNGLISFRAMEBUFFERPROC) wglGetProcAddress("glIsFramebufferEXT");
-            glBindFramebuffer = (PFNGLBINDFRAMEBUFFERPROC) wglGetProcAddress("glBindFramebufferEXT");
-            glDeleteFramebuffers = (PFNGLDELETEFRAMEBUFFERSPROC) wglGetProcAddress("glDeleteFramebuffersEXT");
-            glGenFramebuffers = (PFNGLGENFRAMEBUFFERSPROC) wglGetProcAddress("glGenFramebuffersEXT");
-            glCheckFramebufferStatus = (PFNGLCHECKFRAMEBUFFERSTATUSPROC) wglGetProcAddress("glCheckFramebufferStatusEXT");
-            glFramebufferTexture1D = (PFNGLFRAMEBUFFERTEXTURE1DPROC) wglGetProcAddress("glFramebufferTexture1DEXT");
-            glFramebufferTexture2D = (PFNGLFRAMEBUFFERTEXTURE2DPROC) wglGetProcAddress("glFramebufferTexture2DEXT");
-            glFramebufferTexture3D = (PFNGLFRAMEBUFFERTEXTURE3DPROC) wglGetProcAddress("glFramebufferTexture3DEXT");
-            glFramebufferRenderbuffer = (PFNGLFRAMEBUFFERRENDERBUFFERPROC) wglGetProcAddress("glFramebufferRenderbufferEXT");
-            glGetFramebufferAttachmentParameteriv = (PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC) wglGetProcAddress("glGetFramebufferAttachmentParameterivEXT");
-            glGenerateMipmap = (PFNGLGENERATEMIPMAPPROC) wglGetProcAddress("glGenerateMipmapEXT");
-        }
-        else
-        {
-            log("OpenGL: No framebuffers extension is supported");
-            log("OpenGL: Any call to Fbo will crash!");
-            return false;
-        }
+            if (strstr(gl_extensions, "EXT_framebuffer_object"))
+            {
+                log("OpenGL: EXT_framebuffer_object is supported");
+                glIsRenderbuffer = (PFNGLISRENDERBUFFERPROC)wglGetProcAddress("glIsRenderbufferEXT");
+                glBindRenderbuffer = (PFNGLBINDRENDERBUFFERPROC)wglGetProcAddress("glBindRenderbufferEXT");
+                glDeleteRenderbuffers = (PFNGLDELETERENDERBUFFERSPROC)wglGetProcAddress("glDeleteRenderbuffersEXT");
+                glGenRenderbuffers = (PFNGLGENRENDERBUFFERSPROC)wglGetProcAddress("glGenRenderbuffersEXT");
+                glRenderbufferStorage = (PFNGLRENDERBUFFERSTORAGEPROC)wglGetProcAddress("glRenderbufferStorageEXT");
+                glGetRenderbufferParameteriv = (PFNGLGETRENDERBUFFERPARAMETERIVPROC)wglGetProcAddress("glGetRenderbufferParameterivEXT");
+                glIsFramebuffer = (PFNGLISFRAMEBUFFERPROC)wglGetProcAddress("glIsFramebufferEXT");
+                glBindFramebuffer = (PFNGLBINDFRAMEBUFFERPROC)wglGetProcAddress("glBindFramebufferEXT");
+                glDeleteFramebuffers = (PFNGLDELETEFRAMEBUFFERSPROC)wglGetProcAddress("glDeleteFramebuffersEXT");
+                glGenFramebuffers = (PFNGLGENFRAMEBUFFERSPROC)wglGetProcAddress("glGenFramebuffersEXT");
+                glCheckFramebufferStatus = (PFNGLCHECKFRAMEBUFFERSTATUSPROC)wglGetProcAddress("glCheckFramebufferStatusEXT");
+                glFramebufferTexture1D = (PFNGLFRAMEBUFFERTEXTURE1DPROC)wglGetProcAddress("glFramebufferTexture1DEXT");
+                glFramebufferTexture2D = (PFNGLFRAMEBUFFERTEXTURE2DPROC)wglGetProcAddress("glFramebufferTexture2DEXT");
+                glFramebufferTexture3D = (PFNGLFRAMEBUFFERTEXTURE3DPROC)wglGetProcAddress("glFramebufferTexture3DEXT");
+                glFramebufferRenderbuffer = (PFNGLFRAMEBUFFERRENDERBUFFERPROC)wglGetProcAddress("glFramebufferRenderbufferEXT");
+                glGetFramebufferAttachmentParameteriv = (PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC)wglGetProcAddress("glGetFramebufferAttachmentParameterivEXT");
+                glGenerateMipmap = (PFNGLGENERATEMIPMAPPROC)wglGetProcAddress("glGenerateMipmapEXT");
+            }
+            else
+            {
+                log("OpenGL: No framebuffers extension is supported");
+                log("OpenGL: Any call to Fbo will crash!");
+                return false;
+            }
     }
     return true;
 }
@@ -944,7 +944,7 @@ bool IMGUIGLViewImpl::initGlew()
     GLenum GlewInitResult = glewInit();
     if (GLEW_OK != GlewInitResult)
     {
-        MessageBox((char *)glewGetErrorString(GlewInitResult), "OpenGL error");
+        MessageBox((char*)glewGetErrorString(GlewInitResult), "OpenGL error");
         return false;
     }
 
@@ -967,7 +967,7 @@ bool IMGUIGLViewImpl::initGlew()
     }
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
-    if(glew_dynamic_binding() == false)
+    if (glew_dynamic_binding() == false)
     {
         MessageBox("No OpenGL framebuffer support. Please upgrade the driver of your video card.", "OpenGL error");
         return false;

@@ -16,9 +16,9 @@ class CCImValue // as cocos2d::Value
 {
 public:
     CCImValue();
-    explicit CCImValue(bool v):_type(Type::BOOLEAN) { setValue(v); };
-    explicit CCImValue(float v):_type(Type::FLOAT) { setValue(v); };
-    explicit CCImValue(int v):_type(Type::INTEGER) { setValue(v); };
+    explicit CCImValue(bool v) :_type(Type::BOOLEAN) { setValue(v); };
+    explicit CCImValue(float v) :_type(Type::FLOAT) { setValue(v); };
+    explicit CCImValue(int v) :_type(Type::INTEGER) { setValue(v); };
 
     // bool
     void setValue(bool v) { _field.boolVal = v; };
@@ -77,24 +77,24 @@ protected:
 class CCIMGUI
 {
 public:
-	static CCIMGUI* getInstance();
-	//-------------------------------------------------------
-	GLFWwindow* getWindow() { return _window; };
-	void setWindow(GLFWwindow* window) { _window = window; };
-	ImVec4 getClearColor() { return _clearColor; };
-	void setClearColor(ImColor color) { _clearColor = color; };
-	//-------------------------------------------------------
-	void init();
-	void updateImGUI();
-	void addImGUI(std::function<void()> imGUICall, const std::string& name) { _callPiplines[name] = imGUICall; };
-	void removeImGUI(const std::string& name);
-	//-------------------------------------------------------
-	void setValue(bool value, const std::string& uid);
-	void setValue(int value, const std::string& uid);
-	CCImValue* getValue(const std::string& uid);
-	void removeValue(const std::string& uid);
-	//-------------------------------------------------------
-	void setShowStyleEditor(bool show) { isShowSetupStyle = show; };
+    static CCIMGUI* getInstance();
+    //-------------------------------------------------------
+    GLFWwindow* getWindow() { return _window; };
+    void setWindow(GLFWwindow* window) { _window = window; };
+    ImVec4 getClearColor() { return _clearColor; };
+    void setClearColor(ImColor color) { _clearColor = color; };
+    //-------------------------------------------------------
+    void init();
+    void updateImGUI();
+    void addImGUI(std::function<void()> imGUICall, const std::string& name) { _callPiplines[name] = imGUICall; };
+    void removeImGUI(const std::string& name);
+    //-------------------------------------------------------
+    void setValue(bool value, const std::string& uid);
+    void setValue(int value, const std::string& uid);
+    CCImValue* getValue(const std::string& uid);
+    void removeValue(const std::string& uid);
+    //-------------------------------------------------------
+    void setShowStyleEditor(bool show) { isShowSetupStyle = show; };
 
     // imgui helper
     void image(const std::string& fn, int w = -1, int h = -1);

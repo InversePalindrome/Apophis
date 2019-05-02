@@ -13,20 +13,20 @@ InversePalindrome.com
 class FollowComponent
 {
 public:
-	FollowComponent();
+    FollowComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	int getLeaderID() const;
-	void setLeaderID(int leaderID);
+    int getLeaderID() const;
+    void setLeaderID(int leaderID);
 
-	float getDistanceFromLeader() const;
-	void setDistanceFromLeader(float distanceFromLeader);
+    float getDistanceFromLeader() const;
+    void setDistanceFromLeader(float distanceFromLeader);
 
 private:
-	int leaderID;
-	float distanceFromLeader;
+    int leaderID;
+    float distanceFromLeader;
 };

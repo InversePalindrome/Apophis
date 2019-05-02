@@ -13,5 +13,5 @@ InversePalindrome.com
 class OrbitalSystem : public entityx::System<OrbitalSystem>
 {
 public:
-	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
+    virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
 };

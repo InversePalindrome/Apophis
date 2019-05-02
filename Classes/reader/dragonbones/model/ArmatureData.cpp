@@ -28,7 +28,7 @@ void BoneData::_onClear()
 }
 
 ColorTransform SlotData::DEFAULT_COLOR;
-ColorTransform * SlotData::generateColor()
+ColorTransform* SlotData::generateColor()
 {
     return new ColorTransform();
 }
@@ -45,7 +45,7 @@ SlotData::~SlotData()
 
 void SlotData::_onClear()
 {
-    for (const auto action : actions) 
+    for (const auto action : actions)
     {
         action->returnToPool();
     }
@@ -69,7 +69,7 @@ void SlotData::_onClear()
     actions.clear();
 }
 
-MeshData::MeshData() 
+MeshData::MeshData()
 {
     _onClear();
 }
@@ -97,7 +97,7 @@ DisplayData::DisplayData() :
 {
     _onClear();
 }
-DisplayData::~DisplayData() 
+DisplayData::~DisplayData()
 {
     _onClear();
 }
@@ -120,11 +120,11 @@ void DisplayData::_onClear()
     transform.identity();
 }
 
-SlotDisplayDataSet::SlotDisplayDataSet() 
+SlotDisplayDataSet::SlotDisplayDataSet()
 {
     _onClear();
 }
-SlotDisplayDataSet::~SlotDisplayDataSet() 
+SlotDisplayDataSet::~SlotDisplayDataSet()
 {
     _onClear();
 }
@@ -141,11 +141,11 @@ void SlotDisplayDataSet::_onClear()
     displays.clear();
 }
 
-SkinData::SkinData() 
+SkinData::SkinData()
 {
     _onClear();
 }
-SkinData::~SkinData() 
+SkinData::~SkinData()
 {
     _onClear();
 }
@@ -261,7 +261,7 @@ void ArmatureData::_sortBones()
         {
             index = 0;
         }
-        
+
         if (std::find(_sortedBones.cbegin(), _sortedBones.cend(), bone) != _sortedBones.cend())
         {
             continue;
@@ -271,7 +271,7 @@ void ArmatureData::_sortBones()
         {
             continue;
         }
-        
+
         if (bone->ik && std::find(_sortedBones.cbegin(), _sortedBones.cend(), bone->ik) == _sortedBones.cend())
         {
             continue;
@@ -286,7 +286,7 @@ void ArmatureData::_sortBones()
         {
             _sortedBones.push_back(bone);
         }
-        
+
         count++;
     }
 }

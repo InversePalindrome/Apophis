@@ -10,7 +10,7 @@ DRAGONBONES_NAMESPACE_BEGIN
 /**
  * @private
  */
-class DataParser
+    class DataParser
 {
 protected:
     static const char* DATA_VERSION_2_3;

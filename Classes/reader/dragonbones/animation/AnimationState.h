@@ -108,7 +108,7 @@ public:
         return _boneMask.empty() || std::find(_boneMask.cbegin(), _boneMask.cend(), name) != _boneMask.cend();
     }
 
-    inline int getLayer() const 
+    inline int getLayer() const
     {
         return _layer;
     }

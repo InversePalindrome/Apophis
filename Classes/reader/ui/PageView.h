@@ -34,7 +34,7 @@ class CreatorPageView : public cocos2d::ui::PageView
 {
 public:
     static CreatorPageView* create();
-    
+
     // page size can be not the same as PageView content size
     virtual void remedyLayoutParameter(cocos2d::ui::Widget* item) override;
 };

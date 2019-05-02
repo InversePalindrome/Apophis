@@ -13,5 +13,5 @@ InversePalindrome.com
 template<typename Component>
 struct AddComponetHandle
 {
-	using type = entityx::ComponentHandle<Component>;
+    using type = entityx::ComponentHandle<Component>;
 };

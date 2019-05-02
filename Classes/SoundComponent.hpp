@@ -19,27 +19,27 @@ InversePalindrome.com
 class SoundComponent
 {
 public:
-	SoundComponent();
+    SoundComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	int getSoundID() const;
-	void setSoundID(int soundID);
+    int getSoundID() const;
+    void setSoundID(int soundID);
 
-	void addSound(State state, const std::pair<std::string, bool>& soundFilename);
-	void removeSound(State state);
-	void clearSounds();
+    void addSound(State state, const std::pair<std::string, bool>& soundFilename);
+    void removeSound(State state);
+    void clearSounds();
 
-	const std::pair<std::string, bool>& getSound(State state) const;
+    const std::pair<std::string, bool>& getSound(State state) const;
 
-	bool hasSound(State state) const;
+    bool hasSound(State state) const;
 
 private:
-	int soundID;
-	std::unordered_map<State, std::pair<std::string, bool>, EnumHash<State>> sounds;
+    int soundID;
+    std::unordered_map<State, std::pair<std::string, bool>, EnumHash<State>> sounds;
 
-	std::pair<State, std::pair<std::string, bool>> soundToAdd;
+    std::pair<State, std::pair<std::string, bool>> soundToAdd;
 };

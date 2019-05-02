@@ -141,7 +141,7 @@ protected:
     }
 
 public:
-    virtual void fadeIn(Armature* armature, AnimationState* animationState, M* timelineData, float time)
+    virtual void fadeIn(Armature * armature, AnimationState * animationState, M * timelineData, float time)
     {
         _armature = armature;
         _animationState = animationState;
@@ -230,12 +230,12 @@ public: // private
     }
 
     /** @private */
-    static float _getCurveEasingValue(float progress, const std::vector<float>& sampling)
+    static float _getCurveEasingValue(float progress, const std::vector<float> & sampling)
     {
         if (progress <= 0.f) {
             return 0.f;
         }
-        else if (progress >= 1.f) 
+        else if (progress >= 1.f)
         {
             return 1.f;
         }
@@ -332,7 +332,7 @@ protected:
         }
     }
 
-    TweenType _updateExtensionKeyFrame(const ExtensionFrameData& current, const ExtensionFrameData& next, ExtensionFrameData& result)
+    TweenType _updateExtensionKeyFrame(const ExtensionFrameData & current, const ExtensionFrameData & next, ExtensionFrameData & result)
     {
         auto tweenType = TweenType::None;
         if (current.type == next.type)

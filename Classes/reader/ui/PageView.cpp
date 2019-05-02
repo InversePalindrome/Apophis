@@ -34,7 +34,7 @@ CreatorPageView* CreatorPageView::create()
         pageview->autorelease();
         return pageview;
     }
-    
+
     delete pageview;
     return nullptr;
 }

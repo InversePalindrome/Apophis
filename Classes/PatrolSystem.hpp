@@ -19,12 +19,12 @@ InversePalindrome.com
 class PatrolSystem : public entityx::System<PatrolSystem>, public entityx::Receiver<PatrolSystem>
 {
 public:
-	PatrolSystem();
+    PatrolSystem();
 
-	virtual void configure(entityx::EventManager& eventManager) override;
-	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
-	virtual void receive(const CrossedWaypoint& event);
+    virtual void configure(entityx::EventManager& eventManager) override;
+    virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
+    virtual void receive(const CrossedWaypoint& event);
 
 private:
-	beehive::Tree<PatrolContext> patrolTree;
+    beehive::Tree<PatrolContext> patrolTree;
 };

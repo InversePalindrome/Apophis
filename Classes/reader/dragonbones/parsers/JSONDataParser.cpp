@@ -5,7 +5,7 @@ DRAGONBONES_NAMESPACE_BEGIN
 JSONDataParser::JSONDataParser() {}
 JSONDataParser::~JSONDataParser() {}
 
-ArmatureData * JSONDataParser::_parseArmature(const rapidjson::Value & rawData, float scale)
+ArmatureData* JSONDataParser::_parseArmature(const rapidjson::Value& rawData, float scale)
 {
     const auto armature = BaseObject::borrowObject<ArmatureData>();
     armature->name = _getString(rawData, NAME, "");
@@ -102,7 +102,7 @@ ArmatureData * JSONDataParser::_parseArmature(const rapidjson::Value & rawData, 
     return armature;
 }
 
-BoneData * JSONDataParser::_parseBone(const rapidjson::Value & rawData)
+BoneData* JSONDataParser::_parseBone(const rapidjson::Value& rawData)
 {
     const auto bone = BaseObject::borrowObject<BoneData>();
     bone->name = _getString(rawData, NAME, "");
@@ -116,7 +116,7 @@ BoneData * JSONDataParser::_parseBone(const rapidjson::Value & rawData)
         _parseTransform(rawData[TRANSFORM], bone->transform);
     }
 
-    if (this->_isOldData) 
+    if (this->_isOldData)
     {
         bone->inheritScale = false;
     }
@@ -124,7 +124,7 @@ BoneData * JSONDataParser::_parseBone(const rapidjson::Value & rawData)
     return bone;
 }
 
-void JSONDataParser::_parseIK(const rapidjson::Value & rawData)
+void JSONDataParser::_parseIK(const rapidjson::Value& rawData)
 {
     const auto bone = this->_armature->getBone(_getString(rawData, rawData.HasMember(BONE) ? BONE : NAME, ""));
     if (bone)
@@ -149,7 +149,7 @@ void JSONDataParser::_parseIK(const rapidjson::Value & rawData)
     }
 }
 
-SlotData * JSONDataParser::_parseSlot(const rapidjson::Value& rawData, int zOrder)
+SlotData* JSONDataParser::_parseSlot(const rapidjson::Value& rawData, int zOrder)
 {
     const auto slot = BaseObject::borrowObject<SlotData>();
     slot->name = _getString(rawData, NAME, "");
@@ -181,14 +181,14 @@ SlotData * JSONDataParser::_parseSlot(const rapidjson::Value& rawData, int zOrde
         _parseActionData(rawData, slot->actions, nullptr, nullptr);
     }
 
-    if (this->_isOldData) 
+    if (this->_isOldData)
     {
-        if (rawData.HasMember(COLOR_TRANSFORM)) 
+        if (rawData.HasMember(COLOR_TRANSFORM))
         {
             slot->color = SlotData::generateColor();
             _parseColorTransform(rawData[COLOR_TRANSFORM], *slot->color);
         }
-        else 
+        else
         {
             slot->color = &SlotData::DEFAULT_COLOR;
         }
@@ -197,7 +197,7 @@ SlotData * JSONDataParser::_parseSlot(const rapidjson::Value& rawData, int zOrde
     return slot;
 }
 
-SkinData * JSONDataParser::_parseSkin(const rapidjson::Value & rawData)
+SkinData* JSONDataParser::_parseSkin(const rapidjson::Value& rawData)
 {
     const auto skin = BaseObject::borrowObject<SkinData>();
     skin->name = _getString(rawData, NAME, "__default");
@@ -214,7 +214,7 @@ SkinData * JSONDataParser::_parseSkin(const rapidjson::Value & rawData)
         const auto& slots = rawData[SLOT];
         for (size_t i = 0, l = slots.Size(); i < l; ++i)
         {
-            if (this->_isOldData) 
+            if (this->_isOldData)
             {
                 this->_armature->addSlot(_parseSlot(slots[i], zOrder++));
             }
@@ -228,7 +228,7 @@ SkinData * JSONDataParser::_parseSkin(const rapidjson::Value & rawData)
     return skin;
 }
 
-SlotDisplayDataSet * JSONDataParser::_parseSlotDisplaySet(const rapidjson::Value & rawData)
+SlotDisplayDataSet* JSONDataParser::_parseSlotDisplaySet(const rapidjson::Value& rawData)
 {
     const auto slotDisplayDataSet = BaseObject::borrowObject<SlotDisplayDataSet>();
     slotDisplayDataSet->slot = this->_armature->getSlot(_getString(rawData, NAME, ""));
@@ -251,7 +251,7 @@ SlotDisplayDataSet * JSONDataParser::_parseSlotDisplaySet(const rapidjson::Value
     return slotDisplayDataSet;
 }
 
-DisplayData * JSONDataParser::_parseDisplay(const rapidjson::Value & rawData)
+DisplayData* JSONDataParser::_parseDisplay(const rapidjson::Value& rawData)
 {
     const auto display = BaseObject::borrowObject<DisplayData>();
     display->name = _getString(rawData, NAME, "");
@@ -292,21 +292,21 @@ DisplayData * JSONDataParser::_parseDisplay(const rapidjson::Value & rawData)
 
     switch (display->type)
     {
-        case DisplayType::Image:
-            break;
+    case DisplayType::Image:
+        break;
 
-        case DisplayType::Armature:
-            break;
+    case DisplayType::Armature:
+        break;
 
-        case DisplayType::Mesh:
-            display->mesh = _parseMesh(rawData);
-            break;
+    case DisplayType::Mesh:
+        display->mesh = _parseMesh(rawData);
+        break;
     }
 
     return display;
 }
 
-MeshData * JSONDataParser::_parseMesh(const rapidjson::Value & rawData)
+MeshData* JSONDataParser::_parseMesh(const rapidjson::Value& rawData)
 {
     const auto mesh = BaseObject::borrowObject<MeshData>();
 
@@ -419,7 +419,7 @@ MeshData * JSONDataParser::_parseMesh(const rapidjson::Value & rawData)
     return mesh;
 }
 
-AnimationData * JSONDataParser::_parseAnimation(const rapidjson::Value & rawData) const
+AnimationData* JSONDataParser::_parseAnimation(const rapidjson::Value & rawData) const
 {
     const auto animation = BaseObject::borrowObject<AnimationData>();
     animation->name = _getString(rawData, NAME, "__default");
@@ -476,13 +476,13 @@ AnimationData * JSONDataParser::_parseAnimation(const rapidjson::Value & rawData
         }
     }
 
-    if (this->_isOldData) 
+    if (this->_isOldData)
     {
         this->_isAutoTween = _getBoolean(rawData, AUTO_TWEEN, true);
         this->_animationTweenEasing = _getNumber(rawData, TWEEN_EASING, 0.f) || 0.f;
         animation->playTimes = _getNumber(rawData, LOOP, (unsigned)1);
 
-        if (rawData.HasMember(TIMELINE)) 
+        if (rawData.HasMember(TIMELINE))
         {
             const auto& timelineObjects = rawData[TIMELINE];
             for (size_t i = 0, l = timelineObjects.Size(); i < l; ++i)
@@ -493,7 +493,7 @@ AnimationData * JSONDataParser::_parseAnimation(const rapidjson::Value & rawData
             }
         }
     }
-    else 
+    else
     {
         this->_isAutoTween = false;
         this->_animationTweenEasing = 0.f;
@@ -525,7 +525,7 @@ AnimationData * JSONDataParser::_parseAnimation(const rapidjson::Value & rawData
             {
                 slotFrame->color = &SlotFrameData::DEFAULT_COLOR;
             }
-            else 
+            else
             {
                 slotFrame->color = SlotFrameData::generateColor();
                 *slotFrame->color = *pair.second->color; // copy
@@ -535,7 +535,7 @@ AnimationData * JSONDataParser::_parseAnimation(const rapidjson::Value & rawData
             slotTimeline->frames.push_back(slotFrame);
             animation->addSlotTimeline(slotTimeline);
 
-            if (this->_isOldData) 
+            if (this->_isOldData)
             {
                 slotFrame->displayIndex = -1;
             }
@@ -547,7 +547,7 @@ AnimationData * JSONDataParser::_parseAnimation(const rapidjson::Value & rawData
     return animation;
 }
 
-BoneTimelineData * JSONDataParser::_parseBoneTimeline(const rapidjson::Value& rawData) const
+BoneTimelineData* JSONDataParser::_parseBoneTimeline(const rapidjson::Value & rawData) const
 {
     const auto timeline = BaseObject::borrowObject<BoneTimelineData>();
     timeline->bone = this->_armature->getBone(_getString(rawData, NAME, ""));
@@ -564,13 +564,13 @@ BoneTimelineData * JSONDataParser::_parseBoneTimeline(const rapidjson::Value& ra
             originTransform = frame->transform; // copy
             frame->transform.identity();
 
-            if (originTransform.scaleX == 0.f) 
-            { 
+            if (originTransform.scaleX == 0.f)
+            {
                 originTransform.scaleX = 0.001f;
                 //frame->transform.scaleX = 0.f;
             }
 
-            if (originTransform.scaleY == 0.f) 
+            if (originTransform.scaleY == 0.f)
             {
                 originTransform.scaleY = 0.001f;
                 //frame->transform.scaleY = 0.f;
@@ -592,12 +592,12 @@ BoneTimelineData * JSONDataParser::_parseBoneTimeline(const rapidjson::Value& ra
     if (
         this->_isOldData &&
         (rawData.HasMember(PIVOT_X) || rawData.HasMember(PIVOT_Y))
-    ) 
+        )
     {
         this->_timelinePivot.x = _getNumber(rawData, PIVOT_X, 0.f);
         this->_timelinePivot.y = _getNumber(rawData, PIVOT_Y, 0.f);
     }
-    else 
+    else
     {
         _timelinePivot.clear();
     }
@@ -605,7 +605,7 @@ BoneTimelineData * JSONDataParser::_parseBoneTimeline(const rapidjson::Value& ra
     return timeline;
 }
 
-SlotTimelineData * JSONDataParser::_parseSlotTimeline(const rapidjson::Value& rawData) const
+SlotTimelineData* JSONDataParser::_parseSlotTimeline(const rapidjson::Value & rawData) const
 {
     const auto timeline = BaseObject::borrowObject<SlotTimelineData>();
     timeline->slot = this->_armature->getSlot(_getString(rawData, NAME, ""));
@@ -620,7 +620,7 @@ SlotTimelineData * JSONDataParser::_parseSlotTimeline(const rapidjson::Value& ra
     return timeline;
 }
 
-FFDTimelineData * JSONDataParser::_parseFFDTimeline(const rapidjson::Value& rawData) const
+FFDTimelineData* JSONDataParser::_parseFFDTimeline(const rapidjson::Value & rawData) const
 {
     const auto timeline = BaseObject::borrowObject<FFDTimelineData>();
     timeline->skin = this->_armature->getSkin(_getString(rawData, SKIN, ""));
@@ -645,7 +645,7 @@ FFDTimelineData * JSONDataParser::_parseFFDTimeline(const rapidjson::Value& rawD
     return timeline;
 }
 
-AnimationFrameData * JSONDataParser::_parseAnimationFrame(const rapidjson::Value& rawData, unsigned frameStart, unsigned frameCount) const
+AnimationFrameData* JSONDataParser::_parseAnimationFrame(const rapidjson::Value & rawData, unsigned frameStart, unsigned frameCount) const
 {
     const auto frame = BaseObject::borrowObject<AnimationFrameData>();
 
@@ -664,7 +664,7 @@ AnimationFrameData * JSONDataParser::_parseAnimationFrame(const rapidjson::Value
     return frame;
 }
 
-BoneFrameData * JSONDataParser::_parseBoneFrame(const rapidjson::Value& rawData, unsigned frameStart, unsigned frameCount) const
+BoneFrameData* JSONDataParser::_parseBoneFrame(const rapidjson::Value & rawData, unsigned frameStart, unsigned frameCount) const
 {
     const auto frame = BaseObject::borrowObject<BoneFrameData>();
     frame->parent = this->_armature->getBone(_getString(rawData, PARENT, ""));
@@ -678,7 +678,7 @@ BoneFrameData * JSONDataParser::_parseBoneFrame(const rapidjson::Value& rawData,
         const auto& transformObject = rawData[TRANSFORM];
         _parseTransform(transformObject, frame->transform);
 
-        if (this->_isOldData) 
+        if (this->_isOldData)
         {
             this->_helpPoint.x = this->_timelinePivot.x + _getNumber(transformObject, PIVOT_X, 0.f);
             this->_helpPoint.y = this->_timelinePivot.y + _getNumber(transformObject, PIVOT_Y, 0.f);
@@ -712,7 +712,7 @@ BoneFrameData * JSONDataParser::_parseBoneFrame(const rapidjson::Value& rawData,
     return frame;
 }
 
-SlotFrameData * JSONDataParser::_parseSlotFrame(const rapidjson::Value & rawData, unsigned frameStart, unsigned frameCount) const
+SlotFrameData* JSONDataParser::_parseSlotFrame(const rapidjson::Value & rawData, unsigned frameStart, unsigned frameCount) const
 {
     const auto frame = BaseObject::borrowObject<SlotFrameData>();
     frame->displayIndex = _getNumber(rawData, DISPLAY_INDEX, (int)0);
@@ -731,7 +731,7 @@ SlotFrameData * JSONDataParser::_parseSlotFrame(const rapidjson::Value & rawData
 
     if (this->_isOldData)
     {
-        if (_getBoolean(rawData, HIDE, false)) 
+        if (_getBoolean(rawData, HIDE, false))
         {
             frame->displayIndex = -1;
         }
@@ -749,9 +749,9 @@ SlotFrameData * JSONDataParser::_parseSlotFrame(const rapidjson::Value & rawData
     return frame;
 }
 
-ExtensionFrameData * JSONDataParser::_parseFFDFrame(const rapidjson::Value & rawData, unsigned frameStart, unsigned frameCount) const
+ExtensionFrameData* JSONDataParser::_parseFFDFrame(const rapidjson::Value & rawData, unsigned frameStart, unsigned frameCount) const
 {
-    const auto frame  = BaseObject::borrowObject<ExtensionFrameData>();
+    const auto frame = BaseObject::borrowObject<ExtensionFrameData>();
     frame->type = (ExtensionType)_getNumber(rawData, TYPE, (int)ExtensionType::FFD);
 
     _parseTweenFrame<ExtensionFrameData>(rawData, *frame, frameStart, frameCount);
@@ -762,7 +762,7 @@ ExtensionFrameData * JSONDataParser::_parseFFDFrame(const rapidjson::Value & raw
     auto y = 0.f;
     for (std::size_t i = 0, l = this->_mesh->vertices.size(); i < l; i += 2)
     {
-        if (hasVertices) 
+        if (hasVertices)
         {
             const auto& rawVertices = rawData[VERTICES];
             if (i < offset || i - offset >= rawVertices.Size())
@@ -806,7 +806,7 @@ ExtensionFrameData * JSONDataParser::_parseFFDFrame(const rapidjson::Value & raw
     return frame;
 }
 
-void JSONDataParser::_parseActionData(const rapidjson::Value& rawData, std::vector<ActionData*>& actions, BoneData * bone, SlotData * slot) const
+void JSONDataParser::_parseActionData(const rapidjson::Value & rawData, std::vector<ActionData*> & actions, BoneData * bone, SlotData * slot) const
 {
     const auto& actionsObject = rawData.HasMember(ACTION) ? rawData[ACTION] : (rawData.HasMember(ACTIONS) ? rawData[ACTIONS] : rawData[DEFAULT_ACTIONS]);
 
@@ -837,19 +837,19 @@ void JSONDataParser::_parseActionData(const rapidjson::Value& rawData, std::vect
             const auto actionData = BaseObject::borrowObject<ActionData>();
             const auto animationName = isArray ? _getParameter(actionObject, 1, "") : _getString(actionObject, GOTO_AND_PLAY, "");
 
-            if (isArray) 
+            if (isArray)
             {
                 const auto& actionType = actionObject[0];
                 if (actionType.IsString())
                 {
                     actionData->type = _getActionType(actionType.GetString());
                 }
-                else 
+                else
                 {
                     actionData->type = (ActionType)_getParameter(actionObject, 0, (int)ActionType::FadeIn);
                 }
             }
-            else 
+            else
             {
                 actionData->type = ActionType::GotoAndPlay;
             }
@@ -860,36 +860,36 @@ void JSONDataParser::_parseActionData(const rapidjson::Value& rawData, std::vect
 
             switch (actionData->type)
             {
-                case ActionType::Play:
-                    strings.push_back(animationName);
-                    ints.push_back(isArray ? _getParameter(actionObject, 2, (int)-1) : -1);
-                    break;
+            case ActionType::Play:
+                strings.push_back(animationName);
+                ints.push_back(isArray ? _getParameter(actionObject, 2, (int)-1) : -1);
+                break;
 
-                case ActionType::Stop:
-                    strings.push_back(animationName);
-                    break;
+            case ActionType::Stop:
+                strings.push_back(animationName);
+                break;
 
-                case ActionType::GotoAndPlay:
-                    strings.push_back(animationName);
-                    floats.push_back(isArray ? _getParameter(actionObject, 2, 0.f) : 0.f);
-                    ints.push_back(isArray ? _getParameter(actionObject, 3, (int)-1) : -1);
-                    break;
+            case ActionType::GotoAndPlay:
+                strings.push_back(animationName);
+                floats.push_back(isArray ? _getParameter(actionObject, 2, 0.f) : 0.f);
+                ints.push_back(isArray ? _getParameter(actionObject, 3, (int)-1) : -1);
+                break;
 
-                case ActionType::GotoAndStop:
-                    strings.push_back(animationName);
-                    floats.push_back(isArray ? _getParameter(actionObject, 2, 0.f) : 0.f);
-                    break;
+            case ActionType::GotoAndStop:
+                strings.push_back(animationName);
+                floats.push_back(isArray ? _getParameter(actionObject, 2, 0.f) : 0.f);
+                break;
 
-                case ActionType::FadeIn:
-                    strings.push_back(animationName);
-                    floats.push_back(isArray ? _getParameter(actionObject, 2, -1.f) : -1.f);
-                    ints.push_back(isArray ? _getParameter(actionObject, 3, (int)-1) : -1);
-                    break;
+            case ActionType::FadeIn:
+                strings.push_back(animationName);
+                floats.push_back(isArray ? _getParameter(actionObject, 2, -1.f) : -1.f);
+                ints.push_back(isArray ? _getParameter(actionObject, 3, (int)-1) : -1);
+                break;
 
-                case ActionType::FadeOut:
-                    strings.push_back(animationName);
-                    floats.push_back(isArray ? _getParameter(actionObject, 2, 0.f) : 0.f);
-                    break;
+            case ActionType::FadeOut:
+                strings.push_back(animationName);
+                floats.push_back(isArray ? _getParameter(actionObject, 2, 0.f) : 0.f);
+                break;
             }
 
             actionData->bone = bone;
@@ -899,7 +899,7 @@ void JSONDataParser::_parseActionData(const rapidjson::Value& rawData, std::vect
     }
 }
 
-void JSONDataParser::_parseEventData(const rapidjson::Value& rawData, std::vector<EventData*>& events, BoneData* bone, SlotData* slot) const
+void JSONDataParser::_parseEventData(const rapidjson::Value & rawData, std::vector<EventData*> & events, BoneData * bone, SlotData * slot) const
 {
     if (rawData.HasMember(SOUND))
     {
@@ -928,7 +928,7 @@ void JSONDataParser::_parseEventData(const rapidjson::Value& rawData, std::vecto
     }
 }
 
-void JSONDataParser::_parseTransform(const rapidjson::Value& rawData, Transform& transform) const
+void JSONDataParser::_parseTransform(const rapidjson::Value & rawData, Transform & transform) const
 {
     transform.x = _getNumber(rawData, X, 0.f) * this->_armature->scale;
     transform.y = _getNumber(rawData, Y, 0.f) * this->_armature->scale;
@@ -938,7 +938,7 @@ void JSONDataParser::_parseTransform(const rapidjson::Value& rawData, Transform&
     transform.scaleY = _getNumber(rawData, SCALE_Y, 1.f);
 }
 
-void JSONDataParser::_parseColorTransform(const rapidjson::Value& rawData, ColorTransform& color) const
+void JSONDataParser::_parseColorTransform(const rapidjson::Value & rawData, ColorTransform & color) const
 {
     color.alphaMultiplier = _getNumber(rawData, ALPHA_MULTIPLIER, (int)100) * 0.01f;
     color.redMultiplier = _getNumber(rawData, RED_MULTIPLIER, (int)100) * 0.01f;
@@ -950,7 +950,7 @@ void JSONDataParser::_parseColorTransform(const rapidjson::Value& rawData, Color
     color.blueOffset = _getNumber(rawData, BLUE_OFFSET, (int)0);
 }
 
-DragonBonesData * JSONDataParser::parseDragonBonesData(const char* rawData, float scale)
+DragonBonesData* JSONDataParser::parseDragonBonesData(const char* rawData, float scale)
 {
     if (rawData)
     {
@@ -1005,7 +1005,7 @@ DragonBonesData * JSONDataParser::parseDragonBonesData(const char* rawData, floa
     return nullptr;
 }
 
-void JSONDataParser::parseTextureAtlasData(const char* rawData, TextureAtlasData& textureAtlasData, float scale)
+void JSONDataParser::parseTextureAtlasData(const char* rawData, TextureAtlasData & textureAtlasData, float scale)
 {
     if (rawData)
     {

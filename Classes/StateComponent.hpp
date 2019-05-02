@@ -15,16 +15,16 @@ InversePalindrome.com
 class StateComponent
 {
 public:
-	StateComponent();
+    StateComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	State getState() const;
-	void setState(State state);
+    State getState() const;
+    void setState(State state);
 
 private:
-	State state;
+    State state;
 };

@@ -24,22 +24,22 @@ InversePalindrome.com
 class PlayerSystem : public entityx::System<PlayerSystem>, public entityx::Receiver<PlayerSystem>
 {
 public:
-	explicit PlayerSystem(cocos2d::Node* gameNode);
+    explicit PlayerSystem(cocos2d::Node* gameNode);
 
-	virtual void configure(entityx::EventManager& eventManager) override;
-	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
-	virtual void receive(const ComponentLoaded<ObjectComponent>& event);
+    virtual void configure(entityx::EventManager& eventManager) override;
+    virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
+    virtual void receive(const ComponentLoaded<ObjectComponent>& event);
 
 private:
-	cocos2d::Node* gameNode;
+    cocos2d::Node* gameNode;
 
-	entityx::Entity player;
+    entityx::Entity player;
 
-	std::vector<KeyAction> keyActions;
-	cocos2d::Vec2 playerFocusPoint;
-	bool isShooting;
+    std::vector<KeyAction> keyActions;
+    cocos2d::Vec2 playerFocusPoint;
+    bool isShooting;
 
-	void updateMovement(entityx::ComponentHandle<BodyComponent> body, const entityx::ComponentHandle<SpeedComponent> speed, const entityx::ComponentHandle<AccelerationComponent> acceleration);
-	void updateRotation(entityx::ComponentHandle<BodyComponent> body);
-	void updateShooting(entityx::EventManager& eventManager);
+    void updateMovement(entityx::ComponentHandle<BodyComponent> body, const entityx::ComponentHandle<SpeedComponent> speed, const entityx::ComponentHandle<AccelerationComponent> acceleration);
+    void updateRotation(entityx::ComponentHandle<BodyComponent> body);
+    void updateShooting(entityx::EventManager& eventManager);
 };

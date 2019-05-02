@@ -8,13 +8,13 @@ DRAGONBONES_NAMESPACE_BEGIN
 /**
  * @private
  */
-class Point final
+    class Point final
 {
 public:
     float x;
     float y;
 
-    Point():
+    Point() :
         x(0.f),
         y(0.f)
     {

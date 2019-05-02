@@ -16,13 +16,13 @@ InversePalindrome.com
 class StateSystem : public entityx::System<StateSystem>, public entityx::Receiver<StateSystem>
 {
 public:
-	explicit StateSystem(entityx::EventManager& eventManager);
+    explicit StateSystem(entityx::EventManager& eventManager);
 
-	virtual void configure(entityx::EventManager& eventManager) override;
-	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
-	virtual void receive(const ComponentLoaded<StateComponent>& event);
-	virtual void receive(const ChangeState& event);
+    virtual void configure(entityx::EventManager& eventManager) override;
+    virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
+    virtual void receive(const ComponentLoaded<StateComponent>& event);
+    virtual void receive(const ChangeState& event);
 
 private:
-	entityx::EventManager& eventManager;
+    entityx::EventManager& eventManager;
 };

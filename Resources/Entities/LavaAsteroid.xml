@@ -2,4 +2,7 @@
 <Entity>
   <Transform x="15" y="0"></Transform>
   <Sprite frame="LavaAsteroid"></Sprite>
+  <Body>
+    <Circle radius="2"></Circle>
+  </Body>
 </Entity>

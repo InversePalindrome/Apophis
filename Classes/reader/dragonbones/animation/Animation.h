@@ -6,12 +6,12 @@
 
 DRAGONBONES_NAMESPACE_BEGIN
 
-enum class AnimationFadeOutMode { 
-    None = 0, 
-    SameLayer = 1, 
-    SameGroup = 2, 
-    SameLayerAndGroup = 3, 
-    All  = 4
+enum class AnimationFadeOutMode {
+    None = 0,
+    SameLayer = 1,
+    SameGroup = 2,
+    SameLayerAndGroup = 3,
+    All = 4
 };
 
 class Armature;
@@ -34,7 +34,7 @@ public:
     bool _timelineStateDirty;
     /** @private */
     Armature* _armature;
-    
+
 private:
     bool _isPlaying;
     float _time;

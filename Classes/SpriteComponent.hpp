@@ -17,32 +17,32 @@ InversePalindrome.com
 class SpriteComponent : public NodeComponent
 {
 public:
-	SpriteComponent();
+    SpriteComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	void initWithFilename(const std::string& filename);
+    void initWithFilename(const std::string& filename);
 
-	cocos2d::SpriteFrame* getSpriteFrame() const;
-	void setSpriteFrame(const std::string& spriteFrameName);
+    cocos2d::SpriteFrame* getSpriteFrame() const;
+    void setSpriteFrame(const std::string& spriteFrameName);
 
-	cocos2d::Texture2D* getTexture() const;
-	void setTexture(cocos2d::Texture2D* texture);
+    cocos2d::Texture2D* getTexture() const;
+    void setTexture(cocos2d::Texture2D* texture);
 
-	cocos2d::Rect getTextureRect() const;
-	void setTextureRect(const cocos2d::Rect& textureRect);
+    cocos2d::Rect getTextureRect() const;
+    void setTextureRect(const cocos2d::Rect& textureRect);
 
-	bool isTextureRepeated() const;
-	void setTextureRepeated(bool repeatTexture);
+    bool isTextureRepeated() const;
+    void setTextureRepeated(bool repeatTexture);
 
 private:
-	cocos2d::Sprite* sprite;
+    cocos2d::Sprite* sprite;
 
-	std::string filename;
-	std::string spriteFrameName;
+    std::string filename;
+    std::string spriteFrameName;
 
-	bool repeatTexture;
+    bool repeatTexture;
 };

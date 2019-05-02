@@ -14,7 +14,7 @@ public:
     static void destroyInstance();
 
 private:
-    static CCFactory *s_factory;
+    static CCFactory* s_factory;
 
 public:
     CCFactory();

@@ -21,7 +21,7 @@ void Slot::_onClear()
         if (
             pair.first != _rawDisplay && pair.first != _meshDisplay &&
             std::find(disposeDisplayList.cbegin(), disposeDisplayList.cend(), pair) == disposeDisplayList.cend()
-        )
+            )
         {
             disposeDisplayList.push_back(pair);
         }
@@ -39,7 +39,7 @@ void Slot::_onClear()
         }
     }
 
-    if (_meshDisplay && _meshDisplay != _rawDisplay) 
+    if (_meshDisplay && _meshDisplay != _rawDisplay)
     {
         _disposeDisplay(_meshDisplay);
     }
@@ -160,17 +160,17 @@ void Slot::_updateDisplay()
                         _childArmature->setCacheFrameRate(chacheFrameRate);
                     }
                 }
-                
+
                 const auto slotData = this->_armature->getArmatureData().getSlot(this->name);
                 const auto& actions = !slotData->actions.empty() ? slotData->actions : _childArmature->getArmatureData().actions;
                 if (!actions.empty())
                 {
-                    for (const auto action : actions) 
+                    for (const auto action : actions)
                     {
                         _childArmature->_bufferAction(action);
                     }
                 }
-                else 
+                else
                 {
                     _childArmature->getAnimation().play();
                 }
@@ -179,7 +179,7 @@ void Slot::_updateDisplay()
     }
 }
 
-void Slot::_setArmature(Armature* value)
+void Slot::_setArmature(Armature * value)
 {
     if (this->_armature == value)
     {
@@ -215,7 +215,7 @@ void Slot::_updateMeshData(bool isTimelineUpdate)
         rawMeshData = (_displayDataSet && _displayIndex < _displayDataSet->displays.size()) ? _displayDataSet->displays[_displayIndex]->mesh : nullptr;
         const auto replaceDisplayData = (_displayIndex < _replacedDisplayDataSet.size()) ? _replacedDisplayDataSet[_displayIndex] : nullptr;
         const auto replaceMeshData = replaceDisplayData ? replaceDisplayData->mesh : nullptr;
-        _meshData = replaceMeshData? replaceMeshData: rawMeshData;
+        _meshData = replaceMeshData ? replaceMeshData : rawMeshData;
     }
     else
     {
@@ -364,7 +364,7 @@ void Slot::_update(int cacheFrameIndex)
     }
 }
 
-bool Slot::_setDisplayList(const std::vector<std::pair<void*, DisplayType>>& value)
+bool Slot::_setDisplayList(const std::vector<std::pair<void*, DisplayType>> & value)
 {
     if (!value.empty())
     {
@@ -379,7 +379,7 @@ bool Slot::_setDisplayList(const std::vector<std::pair<void*, DisplayType>>& val
             if (
                 eachPair.first && eachPair.first != _rawDisplay && eachPair.first != _meshDisplay &&
                 eachPair.second != DisplayType::Armature && std::find(_displayList.cbegin(), _displayList.cend(), eachPair) == _displayList.cend()
-            )
+                )
             {
                 _initDisplay(eachPair.first);
             }
@@ -431,7 +431,7 @@ bool Slot::_setBlendMode(BlendMode value)
     return true;
 }
 
-bool Slot::_setColor(const ColorTransform& value)
+bool Slot::_setColor(const ColorTransform & value)
 {
     _colorTransform = value; // copy
     _colorDirty = true;
@@ -447,7 +447,7 @@ void Slot::setDisplayIndex(int value)
     }
 }
 
-void Slot::setDisplayList(const std::vector<std::pair<void*, DisplayType>>& value)
+void Slot::setDisplayList(const std::vector<std::pair<void*, DisplayType>> & value)
 {
     const auto backupDisplayList = _displayList; // copy
     auto disposeDisplayList = backupDisplayList; // copy
@@ -464,7 +464,7 @@ void Slot::setDisplayList(const std::vector<std::pair<void*, DisplayType>>& valu
             pair.first && pair.first != _rawDisplay && pair.first != _meshDisplay &&
             std::find(_displayList.cbegin(), _displayList.cend(), pair) == _displayList.cend() &&
             std::find(disposeDisplayList.cbegin(), disposeDisplayList.cend(), pair) == disposeDisplayList.cend()
-        )
+            )
         {
             disposeDisplayList.push_back(pair);
         }
@@ -515,7 +515,7 @@ void Slot::setDisplay(void* value, DisplayType displayType)
     }
 }
 
-void Slot::setChildArmature(Armature* value)
+void Slot::setChildArmature(Armature * value)
 {
     if (_childArmature == value)
     {

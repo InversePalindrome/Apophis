@@ -12,5 +12,5 @@ InversePalindrome.com
 
 class CollisionFilter : public b2ContactFilter
 {
-	virtual bool ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB) override;
+    virtual bool ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB) override;
 };

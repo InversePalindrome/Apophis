@@ -19,28 +19,28 @@ InversePalindrome.com
 class DistanceJointComponent : public JointComponent
 {
 public:
-	DistanceJointComponent();
+    DistanceJointComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	b2DistanceJoint* getDistanceJoint();
-	void setDistanceJoint(b2DistanceJoint* distanceJoint);
+    b2DistanceJoint* getDistanceJoint();
+    void setDistanceJoint(b2DistanceJoint* distanceJoint);
 
-	b2Vec2 getAnchorA() const;
-	b2Vec2 getAnchorB() const;
+    b2Vec2 getAnchorA() const;
+    b2Vec2 getAnchorB() const;
 
-	float getFrequency() const;
-	void setFrequency(float frequency);
+    float getFrequency() const;
+    void setFrequency(float frequency);
 
-	float getDampingRatio() const;
-	void setDampingRatio(float dampingRatio);
+    float getDampingRatio() const;
+    void setDampingRatio(float dampingRatio);
 
 private:
-	b2DistanceJoint* distanceJoint;
+    b2DistanceJoint* distanceJoint;
 
-	float frequency;
-	float dampingRatio;
+    float frequency;
+    float dampingRatio;
 };

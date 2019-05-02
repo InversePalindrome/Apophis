@@ -11,41 +11,41 @@ InversePalindrome.com
 
 
 AvoidComponent::AvoidComponent() :
-	avoidanceForce(25.f)
+    avoidanceForce(25.f)
 {
 }
 
 void AvoidComponent::load(const pugi::xml_node& componentNode)
 {
-	if (const auto avoidanceForceAttribute = componentNode.attribute("force"))
-	{
-		setAvoidanceForce(avoidanceForceAttribute.as_float());
-	}
+    if (const auto avoidanceForceAttribute = componentNode.attribute("force"))
+    {
+        setAvoidanceForce(avoidanceForceAttribute.as_float());
+    }
 }
 
 void AvoidComponent::save(pugi::xml_node& componentNode) const
 {
-	componentNode.set_name("Avoid");
+    componentNode.set_name("Avoid");
 
-	componentNode.append_attribute("force") = getAvoidanceForce();
+    componentNode.append_attribute("force") = getAvoidanceForce();
 }
 
 void AvoidComponent::display()
 {
-	if (ImGui::TreeNode("Avoid"))
-	{
-		ImGui::InputFloat("Force", &avoidanceForce);
+    if (ImGui::TreeNode("Avoid"))
+    {
+        ImGui::InputFloat("Force", &avoidanceForce);
 
-		ImGui::TreePop();
-	}
+        ImGui::TreePop();
+    }
 }
 
 float AvoidComponent::getAvoidanceForce() const
 {
-	return avoidanceForce;
+    return avoidanceForce;
 }
 
 void AvoidComponent::setAvoidanceForce(float avoidanceForce)
 {
-	this->avoidanceForce = avoidanceForce;
+    this->avoidanceForce = avoidanceForce;
 }

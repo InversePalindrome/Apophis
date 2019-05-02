@@ -18,10 +18,10 @@ InversePalindrome.com
 class DroneSystem : public entityx::System<DroneSystem>
 {
 public:
-	DroneSystem(entityx::EntityManager& entityManager, entityx::EventManager& eventManager);
+    DroneSystem(entityx::EntityManager& entityManager, entityx::EventManager& eventManager);
 
-	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
+    virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
 
 private:
-	beehive::Tree<DroneContext> droneTree;
+    beehive::Tree<DroneContext> droneTree;
 };

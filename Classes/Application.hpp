@@ -13,13 +13,13 @@ InversePalindrome.com
 class Application : public cocos2d::Application
 {
 public:
-	Application() = default;
-	Application(const Application&) = delete;
-	Application& operator= (const Application&) = delete;
+    Application() = default;
+    Application(const Application&) = delete;
+    Application& operator= (const Application&) = delete;
 
-	~Application();
+    ~Application();
 
-	virtual bool applicationDidFinishLaunching() override;
-	virtual void applicationDidEnterBackground() override;
-	virtual void applicationWillEnterForeground() override;
+    virtual bool applicationDidFinishLaunching() override;
+    virtual void applicationDidEnterBackground() override;
+    virtual void applicationWillEnterForeground() override;
 };

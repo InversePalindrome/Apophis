@@ -25,7 +25,7 @@ public:
     float scaleX;
     float scaleY;
 
-    Transform():
+    Transform() :
         x(0.f),
         y(0.f),
         skewX(0.f),
@@ -82,7 +82,7 @@ public:
         return *this;
     }
 
-    inline Transform& fromMatrix(const Matrix& matrix)
+    inline Transform & fromMatrix(const Matrix & matrix)
     {
         const auto  backupScaleX = scaleX, backupScaleY = scaleY;
 
@@ -93,7 +93,7 @@ public:
         skewY = std::atan(matrix.b / matrix.a);
         if (skewX != skewX) skewX = 0.f;
         if (skewY != skewY) skewY = 0.f;
-        
+
         scaleY = (skewX > -PI_Q && skewX < PI_Q) ? (matrix.d / std::cos(skewX)) : (-matrix.c / std::sin(skewX));
         scaleX = (skewY > -PI_Q && skewY < PI_Q) ? (matrix.a / std::cos(skewY)) : (matrix.b / std::sin(skewY));
 
@@ -112,7 +112,7 @@ public:
         return *this;
     }
 
-    inline Transform& toMatrix(Matrix& matrix)
+    inline Transform& toMatrix(Matrix & matrix)
     {
         matrix.a = scaleX * cos(skewY);
         matrix.b = scaleX * sin(skewY);

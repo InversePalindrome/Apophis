@@ -17,21 +17,21 @@ InversePalindrome.com
 
 cocos2d::Scene* getStartScene()
 {
-	auto* reader = creator::CreatorReader::createWithFilename("Creator/Scenes/Start.ccreator");
-	reader->setup();
+    auto* reader = creator::CreatorReader::createWithFilename("Creator/Scenes/Start.ccreator");
+    reader->setup();
 
-	auto* scene = reader->getSceneGraph();
+    auto* scene = reader->getSceneGraph();
 
-	auto* keyboardListener = cocos2d::EventListenerKeyboard::create();
+    auto* keyboardListener = cocos2d::EventListenerKeyboard::create();
 
-	keyboardListener->onKeyPressed = [](const auto keyCode, auto* event)
-	{
-		cocos2d::Director::getInstance()->replaceScene(getMenuScene());
-	};
+    keyboardListener->onKeyPressed = [](const auto keyCode, auto * event)
+    {
+        cocos2d::Director::getInstance()->replaceScene(getMenuScene());
+    };
 
-	scene->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, scene);
+    scene->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, scene);
 
-	AppSettings::getInstance().playMusic("LightYearsMusic.mp3", true);
+    AppSettings::getInstance().playMusic("LightYearsMusic.mp3", true);
 
-	return scene;
+    return scene;
 }

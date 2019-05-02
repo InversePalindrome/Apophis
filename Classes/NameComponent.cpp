@@ -12,36 +12,36 @@ InversePalindrome.com
 
 void NameComponent::load(const pugi::xml_node& componentNode)
 {
-	setName(componentNode.text().as_string());
+    setName(componentNode.text().as_string());
 }
 
 void NameComponent::save(pugi::xml_node& componentNode) const
 {
-	componentNode.set_name("Name");
+    componentNode.set_name("Name");
 
-	componentNode.text().set(name.c_str());
+    componentNode.text().set(name.c_str());
 }
 
 void NameComponent::display()
 {
-	if (ImGui::TreeNode("Name"))
-	{
-		name.resize(64);
+    if (ImGui::TreeNode("Name"))
+    {
+        name.resize(64);
 
-		ImGui::InputText("Name", name.data(), name.length());
+        ImGui::InputText("Name", name.data(), name.length());
 
-		name.erase(std::find(std::begin(name), std::end(name), '\0'), std::end(name));
+        name.erase(std::find(std::begin(name), std::end(name), '\0'), std::end(name));
 
-		ImGui::TreePop();
-	}
+        ImGui::TreePop();
+    }
 }
 
 std::string NameComponent::getName() const
 {
-	return name;
+    return name;
 }
 
 void NameComponent::setName(const std::string& name)
 {
-	this->name = name;
+    this->name = name;
 }

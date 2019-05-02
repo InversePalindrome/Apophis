@@ -199,7 +199,7 @@ void BaseFactory::_replaceSlotDisplay(const BuildArmaturePackage& dataPackage, D
             if (
                 displayData.mesh &&
                 (displayIndex < slot._displayDataSet->displays.size() && slot._displayDataSet->displays[displayIndex]->mesh)
-            )
+                )
             {
                 displayList[displayIndex] = std::make_pair(slot.getMeshDisplay(), displayData.type);
             }
@@ -337,7 +337,7 @@ void BaseFactory::clear(bool disposeData)
     _textureAtlasDataMap.clear();
 }
 
-Armature * BaseFactory::buildArmature(const std::string & armatureName, const std::string & dragonBonesName, const std::string & skinName) const
+Armature* BaseFactory::buildArmature(const std::string& armatureName, const std::string& dragonBonesName, const std::string& skinName) const
 {
     BuildArmaturePackage dataPackage;
     if (_fillBuildArmaturePackage(dragonBonesName, armatureName, skinName, dataPackage))
@@ -355,8 +355,8 @@ Armature * BaseFactory::buildArmature(const std::string & armatureName, const st
 }
 
 bool BaseFactory::copyAnimationsToArmature(
-    Armature& toArmature, 
-    const std::string& fromArmatreName, const std::string& fromSkinName, const std::string& fromDragonBonesDataName, 
+    Armature& toArmature,
+    const std::string& fromArmatreName, const std::string& fromSkinName, const std::string& fromDragonBonesDataName,
     bool ifRemoveOriginalAnimationList
 ) const
 {

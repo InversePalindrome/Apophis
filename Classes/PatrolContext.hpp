@@ -15,8 +15,8 @@ InversePalindrome.com
 
 struct PatrolContext
 {
-	entityx::Entity patrolEntity;
-	b2Vec2 targetPoint;
-	BodyComponent& body;
-	const SpeedComponent& speed;
+    entityx::Entity patrolEntity;
+    b2Vec2 targetPoint;
+    BodyComponent& body;
+    const SpeedComponent& speed;
 };

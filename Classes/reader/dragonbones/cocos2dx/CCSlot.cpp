@@ -4,11 +4,11 @@
 
 DRAGONBONES_NAMESPACE_BEGIN
 
-CCSlot::CCSlot() 
+CCSlot::CCSlot()
 {
     _onClear();
 }
-CCSlot::~CCSlot() 
+CCSlot::~CCSlot()
 {
     _onClear();
 }
@@ -87,27 +87,27 @@ void CCSlot::_updateBlendMode()
     {
         switch (this->_blendMode)
         {
-            case BlendMode::Normal:
-                //spriteDisplay->setBlendFunc(cocos2d::BlendFunc::DISABLE);
-                break;
+        case BlendMode::Normal:
+            //spriteDisplay->setBlendFunc(cocos2d::BlendFunc::DISABLE);
+            break;
 
-            case BlendMode::Add:
+        case BlendMode::Add:
+        {
+            const auto texture = spriteDisplay->getTexture();
+            if (texture && texture->hasPremultipliedAlpha())
             {
-                const auto texture = spriteDisplay->getTexture();
-                if (texture && texture->hasPremultipliedAlpha())
-                {
-                    cocos2d::BlendFunc blendFunc = { GL_ONE, GL_ONE };
-                    spriteDisplay->setBlendFunc(blendFunc);
-                }
-                else
-                {
-                    spriteDisplay->setBlendFunc(cocos2d::BlendFunc::ADDITIVE);
-                }
-                break;
+                cocos2d::BlendFunc blendFunc = { GL_ONE, GL_ONE };
+                spriteDisplay->setBlendFunc(blendFunc);
             }
+            else
+            {
+                spriteDisplay->setBlendFunc(cocos2d::BlendFunc::ADDITIVE);
+            }
+            break;
+        }
 
-            default:
-                break;
+        default:
+            break;
         }
     }
     else if (this->_childArmature)
@@ -130,7 +130,7 @@ void CCSlot::_updateColor()
     _renderDisplay->setColor(helpColor);
 }
 
-void CCSlot::_updateFilters() 
+void CCSlot::_updateFilters()
 {
 }
 
@@ -197,7 +197,7 @@ void CCSlot::_updateFrame()
                         boundsRect.origin.x = x;
                     }
 
-                    if (boundsRect.size.width < x) 
+                    if (boundsRect.size.width < x)
                     {
                         boundsRect.size.width = x;
                     }
@@ -316,7 +316,7 @@ void CCSlot::_updateFrame()
     frameDisplay->setPosition(this->origin.x, this->origin.y);
 }
 
-void CCSlot::_updateMesh() 
+void CCSlot::_updateMesh()
 {
     const auto meshDisplay = static_cast<DBCCSprite*>(this->_meshDisplay);
     const auto hasFFD = !this->_ffdVertices.empty();
@@ -330,9 +330,9 @@ void CCSlot::_updateMesh()
         {
             const auto iH = unsigned(i / 2);
 
-            const auto& boneIndices = this->_meshData->boneIndices[iH];
-            const auto& boneVertices = this->_meshData->boneVertices[iH];
-            const auto& weights = this->_meshData->weights[iH];
+            const auto & boneIndices = this->_meshData->boneIndices[iH];
+            const auto & boneVertices = this->_meshData->boneVertices[iH];
+            const auto & weights = this->_meshData->weights[iH];
 
             float xG = 0.f, yG = 0.f;
             for (std::size_t iB = 0, lB = boneIndices.size(); iB < lB; ++iB)
@@ -359,8 +359,8 @@ void CCSlot::_updateMesh()
                 iF += 2;
             }
 
-            auto& vertices = displayVertices[iH];
-            auto& vertex = vertices.vertices;
+            auto & vertices = displayVertices[iH];
+            auto & vertex = vertices.vertices;
 
             vertex.set(xG, -yG, 0.f);
 
@@ -394,8 +394,8 @@ void CCSlot::_updateMesh()
             const auto xG = vertices[i] + _ffdVertices[i];
             const auto yG = vertices[i + 1] + _ffdVertices[i + 1];
 
-            auto& vertices = displayVertices[iH];
-            auto& vertex = vertices.vertices;
+            auto & vertices = displayVertices[iH];
+            auto & vertex = vertices.vertices;
 
             vertex.set(xG, -yG, 0.f);
 

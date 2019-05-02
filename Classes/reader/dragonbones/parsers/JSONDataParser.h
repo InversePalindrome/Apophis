@@ -32,7 +32,7 @@ protected:
                     stringValue == "false" ||
                     stringValue == "null" ||
                     stringValue == "undefined"
-                )
+                    )
                 {
                     return false;
                 }
@@ -94,7 +94,7 @@ protected:
     {
         if (rawData.Size() > index)
         {
-            return rawData[(int) index].GetInt();
+            return rawData[(int)index].GetInt();
         }
 
         return defaultValue;
@@ -104,7 +104,7 @@ protected:
     {
         if (rawData.Size() > index)
         {
-            return rawData[(int) index].GetFloat();
+            return rawData[(int)index].GetFloat();
         }
 
         return defaultValue;
@@ -114,7 +114,7 @@ protected:
     {
         if (rawData.Size() > index)
         {
-            return rawData[(int) index].GetString();
+            return rawData[(int)index].GetString();
         }
 
         return defaultValue;
@@ -162,9 +162,9 @@ protected:
             {
                 frame.tweenEasing = this->_isAutoTween ? this->_animationTweenEasing : NO_TWEEN;
             }
-            
+
             // TODO
-            /*if (this->_isOldData && this->_animation.scale == 1.f && (static_cast<TimelineData*>(this->_timeline))->scale == 1.f && frame.duration * this->_armature->frameRate < 2.f) 
+            /*if (this->_isOldData && this->_animation.scale == 1.f && (static_cast<TimelineData*>(this->_timeline))->scale == 1.f && frame.duration * this->_armature->frameRate < 2.f)
             {
                 frame.tweenEasing = NO_TWEEN;
             }*/
@@ -201,7 +201,7 @@ protected:
     void _parseTimeline(
         const rapidjson::Value& rawData,
         TimelineData<T>& timeline,
-        const std::function<T*(const rapidjson::Value& rawData, unsigned frameStart, unsigned frameCount)>& frameParser) const
+        const std::function<T* (const rapidjson::Value& rawData, unsigned frameStart, unsigned frameCount)>& frameParser) const
     {
         timeline.scale = _getNumber(rawData, SCALE, 1.f);
         timeline.offset = _getNumber(rawData, OFFSET, 0.f);
@@ -226,8 +226,8 @@ protected:
 
                     unsigned frameStart = 0;
                     unsigned frameCount = 0;
-                    T* frame = nullptr;
-                    T* prevFrame = nullptr;
+                    T * frame = nullptr;
+                    T * prevFrame = nullptr;
 
                     for (unsigned i = 0, iW = 0, l = this->_animation->frameCount + 1; i < l; ++i)
                     {
@@ -243,7 +243,7 @@ protected:
                                 prevFrame->next = frame;
                                 frame->prev = prevFrame;
 
-                                if (this->_isOldData) 
+                                if (this->_isOldData)
                                 {
                                     const auto tweenFrame = dynamic_cast<TweenFrameData<T>*>(frame);
                                     if (tweenFrame && frameObject.HasMember(DISPLAY_INDEX) && frameObject[DISPLAY_INDEX].GetInt() == -1)
@@ -265,7 +265,7 @@ protected:
                     prevFrame->next = frame;
                     frame->prev = prevFrame;
 
-                    if (this->_isOldData) 
+                    if (this->_isOldData)
                     {
                         const auto& frameObject = rawFrames[0];
                         const auto tweenFrame = dynamic_cast<TweenFrameData<T>*>(prevFrame);

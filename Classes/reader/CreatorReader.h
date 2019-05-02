@@ -39,7 +39,7 @@
 
 NS_CCR_BEGIN
 
-class CreatorReader: public cocos2d::Ref
+class CreatorReader : public cocos2d::Ref
 {
 public:
     static CreatorReader* createWithFilename(const std::string& filename);
@@ -49,13 +49,13 @@ public:
      @return A `Scene*`
      */
     cocos2d::Scene* getSceneGraph() const;
-    
+
     /**
      Return the AnimationManager. It is added as a child of the Scene to simplify the codes.
      @return The `AnimationManager` of the scene
      */
     AnimationManager* getAnimationManager() const;
-    
+
     /**
      Return the CollisionManager. It is added as a child of the Scene to make collision take effect.
      @return The `CollisionManager` of the scene
@@ -118,36 +118,36 @@ protected:
 
     spine::SkeletonAnimation* createSpineSkeleton(const buffers::SpineSkeleton* spineBuffer) const;
     void parseSpineSkeleton(spine::SkeletonAnimation* button, const buffers::SpineSkeleton* spineBuffer) const;
-    
+
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     cocos2d::experimental::ui::VideoPlayer* createVideoPlayer(const buffers::VideoPlayer* videoPlayerBuffer) const;
     void parseVideoPlayer(cocos2d::experimental::ui::VideoPlayer* videoPlayer, const buffers::VideoPlayer* videoPlayerBuffer) const;
-    
+
     cocos2d::experimental::ui::WebView* createWebView(const buffers::WebView* webViewBuffer) const;
     void parseWebView(cocos2d::experimental::ui::WebView* webView, const buffers::WebView* webViewBuffer) const;
 #endif
-    
+
     cocos2d::ui::Slider* createSlider(const buffers::Slider* sliderBuffer) const;
     void parseSlider(cocos2d::ui::Slider* slider, const buffers::Slider* sliderBuffer) const;
-    
+
     cocos2d::ui::CheckBox* createToggle(const buffers::Toggle* toggleBuffer) const;
     void parseToggle(cocos2d::ui::CheckBox* checkBox, const buffers::Toggle* toggleBuffer) const;
-    
+
     cocos2d::ui::RadioButtonGroup* createToggleGroup(const buffers::ToggleGroup* toggleGroupBuffer) const;
     void parseToggleGroup(cocos2d::ui::RadioButtonGroup* radioGroup, const buffers::ToggleGroup* toggleGroupBuffer) const;
-    
+
     cocos2d::ui::PageView* createPageView(const buffers::PageView* pageViewBuffer) const;
     void parsePageView(cocos2d::ui::PageView* pageview, const buffers::PageView* pageViewBuffer) const;
-    
+
     cocos2d::ClippingNode* createMask(const buffers::Mask* maskBuffer) const;
     void parseMask(cocos2d::ClippingNode* mask, const buffers::Mask* maskBuffer) const;
-    
+
     dragonBones::CCArmatureDisplay* createArmatureDisplay(const buffers::DragonBones* dragonBonesBuffer) const;
     void parseArmatureDisplay(dragonBones::CCArmatureDisplay* armatureDisplay, const buffers::DragonBones* dragonBonesBuffer) const;
-    
+
     cocos2d::MotionStreak* createMotionStreak(const buffers::MotionStreak* motionStreakBuffer) const;
     void parseMotionStreak(cocos2d::MotionStreak* motionStreak, const buffers::MotionStreak* motionStreakBuffer) const;
-    
+
     void setupSpriteFrames();
     void setupCollisionMatrix();
 
@@ -160,14 +160,14 @@ protected:
     // variables
     cocos2d::Data _data;
     std::string _version;
-    
-    AnimationManager *_animationManager;
-    ColliderManager *_collisionManager;
-    
+
+    AnimationManager* _animationManager;
+    ColliderManager* _collisionManager;
+
     // creator will make scene at the center of screen when apply design solution strategy, cocos2d-x doesn't do it like this
     // this value record the diff
     cocos2d::Vec2 _positionDiffDesignResolution;
-    
+
     CREATOR_DISALLOW_COPY_ASSIGN_AND_MOVE(CreatorReader);
 };
 

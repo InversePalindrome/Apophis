@@ -44,7 +44,7 @@ void CCTextureAtlasData::_onClear()
     }
 }
 
-TextureData * CCTextureAtlasData::generateTexture() const
+TextureData* CCTextureAtlasData::generateTexture() const
 {
     return BaseObject::borrowObject<CCTextureData>();
 }

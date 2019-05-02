@@ -38,23 +38,23 @@ DRAGONBONES_NAMESPACE_BEGIN
 
 enum class TextureFormat
 {
-    DEFAULT, 
-    RGBA8888, 
-    BGRA8888, 
-    RGBA4444, 
-    RGB888, 
-    RGB565, 
+    DEFAULT,
+    RGBA8888,
+    BGRA8888,
+    RGBA4444,
+    RGB888,
+    RGB565,
     RGBA5551
 };
 
-enum class DisplayType 
+enum class DisplayType
 {
-    Image = 0, 
-    Armature = 1, 
+    Image = 0,
+    Armature = 1,
     Mesh = 2
 };
 
-enum class ArmatureType 
+enum class ArmatureType
 {
     Armature = 0,
     MovieClip = 1,
@@ -86,7 +86,7 @@ enum class ActionType {
     FadeOut = 5
 };
 
-enum class BlendMode 
+enum class BlendMode
 {
     Normal = 0,
     Add = 1,
@@ -130,16 +130,16 @@ inline T* mapFind(const std::map<std::string, T*>& map, const std::string& key)
 }
 
 template<class T>
-inline int indexOf(const std::vector<T>& vector, const T& value)
+inline int indexOf(const std::vector<T> & vector, const T & value)
 {
     for (std::size_t i = 0, l = vector.size(); i < l; ++i)
     {
         if (vector[i] == value)
         {
-            return (int) i;
+            return (int)i;
         }
     }
-    
+
     return -1;
 }
 

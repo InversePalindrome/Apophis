@@ -4,7 +4,7 @@ DRAGONBONES_NAMESPACE_BEGIN
 
 WorldClock WorldClock::clock;
 
-WorldClock::WorldClock():
+WorldClock::WorldClock() :
     time(0.f),
     timeScale(1.f),
     _animatebles()
@@ -78,12 +78,12 @@ void WorldClock::advanceTime(float passedTime)
     }
 }
 
-bool WorldClock::contains(const IAnimateble* value) const
+bool WorldClock::contains(const IAnimateble * value) const
 {
     return std::find(_animatebles.cbegin(), _animatebles.cend(), value) != _animatebles.cend();
 }
 
-void WorldClock::add(IAnimateble* value)
+void WorldClock::add(IAnimateble * value)
 {
     if (std::find(_animatebles.begin(), _animatebles.end(), value) == _animatebles.end())
     {
@@ -91,7 +91,7 @@ void WorldClock::add(IAnimateble* value)
     }
 }
 
-void WorldClock::remove(IAnimateble* value)
+void WorldClock::remove(IAnimateble * value)
 {
     const auto iterator = std::find(_animatebles.begin(), _animatebles.end(), value);
     if (iterator != _animatebles.end())

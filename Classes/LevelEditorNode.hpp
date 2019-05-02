@@ -18,28 +18,28 @@ InversePalindrome.com
 #include <vector>
 
 
-class LevelEditorNode: public PanZoomLayer, public entityx::Receiver<LevelEditorNode>
+class LevelEditorNode : public PanZoomLayer, public entityx::Receiver<LevelEditorNode>
 {
 public:
-	LevelEditorNode();
+    LevelEditorNode();
 
-	virtual bool init() override;
-	virtual void receive(const entityx::EntityCreatedEvent& event);
-	virtual void receive(const entityx::EntityDestroyedEvent& event);
+    virtual bool init() override;
+    virtual void receive(const entityx::EntityCreatedEvent& event);
+    virtual void receive(const entityx::EntityDestroyedEvent& event);
 
-	CREATE_FUNC(LevelEditorNode);
+    CREATE_FUNC(LevelEditorNode);
 
-	static cocos2d::Scene* scene();
+    static cocos2d::Scene* scene();
 
 private:
-	std::vector<entityx::Entity> entities;
+    std::vector<entityx::Entity> entities;
 
-	entityx::EventManager eventManager;
-	entityx::EntityManager entityManager;
-	entityx::SystemManager systemManager;
-	
-	std::string entityName;
-	b2Vec2 mapDimensions;
+    entityx::EventManager eventManager;
+    entityx::EntityManager entityManager;
+    entityx::SystemManager systemManager;
 
-	void initSystems();
+    std::string entityName;
+    b2Vec2 mapDimensions;
+
+    void initSystems();
 };

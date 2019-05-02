@@ -16,9 +16,9 @@ InversePalindrome.com
 class AudioSystem : public entityx::System<AudioSystem>, public entityx::Receiver<AudioSystem>
 {
 public:
-	virtual void configure(entityx::EventManager& eventManager) override;
-	virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
-	virtual void receive(const entityx::EntityDestroyedEvent& event);
-	virtual void receive(const entityx::ComponentRemovedEvent<SoundComponent>& event);
-	virtual void receive(const StateChanged& event);
+    virtual void configure(entityx::EventManager& eventManager) override;
+    virtual void update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime) override;
+    virtual void receive(const entityx::EntityDestroyedEvent& event);
+    virtual void receive(const entityx::ComponentRemovedEvent<SoundComponent>& event);
+    virtual void receive(const StateChanged& event);
 };

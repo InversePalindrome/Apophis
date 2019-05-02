@@ -21,9 +21,9 @@ void CCFactory::destroyInstance()
     s_factory = nullptr;
 }
 
-CCFactory::CCFactory() 
+CCFactory::CCFactory()
 {
-    if (!EventObject::_soundEventManager) 
+    if (!EventObject::_soundEventManager)
     {
         const auto display = CCArmatureDisplay::create();
         display->retain();
@@ -31,12 +31,12 @@ CCFactory::CCFactory()
         EventObject::_soundEventManager = display;
     }
 }
-CCFactory::~CCFactory() 
+CCFactory::~CCFactory()
 {
     clear();
 }
 
-TextureAtlasData * CCFactory::_generateTextureAtlasData(TextureAtlasData* textureAtlasData, void* textureAtlas) const
+TextureAtlasData* CCFactory::_generateTextureAtlasData(TextureAtlasData* textureAtlasData, void* textureAtlas) const
 {
     if (textureAtlasData)
     {
@@ -50,7 +50,7 @@ TextureAtlasData * CCFactory::_generateTextureAtlasData(TextureAtlasData* textur
     return textureAtlasData;
 }
 
-Armature * CCFactory::_generateArmature(const BuildArmaturePackage & dataPackage) const
+Armature* CCFactory::_generateArmature(const BuildArmaturePackage& dataPackage) const
 {
     const auto armature = BaseObject::borrowObject<Armature>();
     const auto armatureDisplay = CCArmatureDisplay::create();
@@ -71,7 +71,7 @@ Armature * CCFactory::_generateArmature(const BuildArmaturePackage & dataPackage
     return armature;
 }
 
-Slot * CCFactory::_generateSlot(const BuildArmaturePackage& dataPackage, const SlotDisplayDataSet& slotDisplayDataSet) const
+Slot* CCFactory::_generateSlot(const BuildArmaturePackage& dataPackage, const SlotDisplayDataSet& slotDisplayDataSet) const
 {
     const auto slot = BaseObject::borrowObject<CCSlot>();
     const auto slotData = slotDisplayDataSet.slot;
@@ -92,39 +92,39 @@ Slot * CCFactory::_generateSlot(const BuildArmaturePackage& dataPackage, const S
     {
         switch (displayData->type)
         {
-            case DisplayType::Image:
-                if (!displayData->texture)
-                {
-                    displayData->texture = this->_getTextureData(dataPackage.dataName, displayData->name);
-                }
-
-                displayList.push_back(std::make_pair(slot->_rawDisplay, DisplayType::Image));
-                break;
-
-            case DisplayType::Mesh:
-                if (!displayData->texture)
-                {
-                    displayData->texture = this->_getTextureData(dataPackage.dataName, displayData->name);
-                }
-
-                displayList.push_back(std::make_pair(slot->_meshDisplay, DisplayType::Mesh));
-                break;
-
-            case DisplayType::Armature:
+        case DisplayType::Image:
+            if (!displayData->texture)
             {
-                const auto childArmature = buildArmature(displayData->name, dataPackage.dataName);
-                if (childArmature)
-                {
-                    childArmature->getAnimation().play();
-                }
-
-                displayList.push_back(std::make_pair(childArmature, DisplayType::Armature));
-                break;
+                displayData->texture = this->_getTextureData(dataPackage.dataName, displayData->name);
             }
 
-            default:
-                displayList.push_back(std::make_pair(nullptr, DisplayType::Image));
-                break;
+            displayList.push_back(std::make_pair(slot->_rawDisplay, DisplayType::Image));
+            break;
+
+        case DisplayType::Mesh:
+            if (!displayData->texture)
+            {
+                displayData->texture = this->_getTextureData(dataPackage.dataName, displayData->name);
+            }
+
+            displayList.push_back(std::make_pair(slot->_meshDisplay, DisplayType::Mesh));
+            break;
+
+        case DisplayType::Armature:
+        {
+            const auto childArmature = buildArmature(displayData->name, dataPackage.dataName);
+            if (childArmature)
+            {
+                childArmature->getAnimation().play();
+            }
+
+            displayList.push_back(std::make_pair(childArmature, DisplayType::Armature));
+            break;
+        }
+
+        default:
+            displayList.push_back(std::make_pair(nullptr, DisplayType::Image));
+            break;
         }
     }
 
@@ -157,7 +157,7 @@ DragonBonesData* CCFactory::loadDragonBonesData(const std::string& filePath, con
     return this->parseDragonBonesData(data.c_str(), dragonBonesName, 1.f / scale);
 }
 
-TextureAtlasData* CCFactory::loadTextureAtlasData(const std::string& filePath, const std::string& dragonBonesName, float scale)
+TextureAtlasData* CCFactory::loadTextureAtlasData(const std::string & filePath, const std::string & dragonBonesName, float scale)
 {
     const auto fullpath = cocos2d::FileUtils::getInstance()->fullPathForFilename(filePath);
     const auto data = cocos2d::FileUtils::getInstance()->getStringFromFile(fullpath);
@@ -174,23 +174,23 @@ TextureAtlasData* CCFactory::loadTextureAtlasData(const std::string& filePath, c
         const auto basePath = filePath.substr(0, pos + 1);
         textureAtlasData->imagePath = basePath + textureAtlasData->imagePath;
     }
-    
+
     _initTextureAtlasData(textureAtlasData);
 
     return textureAtlasData;
 }
 
-TextureAtlasData* CCFactory::parseTextureAtlasData(const std::string& atlasData, const std::string& texturePath, const std::string& dragonBonesName, float scale)
+TextureAtlasData* CCFactory::parseTextureAtlasData(const std::string & atlasData, const std::string & texturePath, const std::string & dragonBonesName, float scale)
 {
     const auto textureAtlasData = static_cast<CCTextureAtlasData*>(BaseFactory::parseTextureAtlasData(atlasData.c_str(), nullptr, dragonBonesName, scale));
     textureAtlasData->imagePath = texturePath;
     _initTextureAtlasData(textureAtlasData);
-    
+
     return textureAtlasData;
 
 }
 
-void CCFactory::_initTextureAtlasData(TextureAtlasData* atlasData)
+void CCFactory::_initTextureAtlasData(TextureAtlasData * atlasData)
 {
     const auto textureCache = cocos2d::Director::getInstance()->getTextureCache();
     auto texture = textureCache->getTextureForKey(atlasData->imagePath);
@@ -200,44 +200,44 @@ void CCFactory::_initTextureAtlasData(TextureAtlasData* atlasData)
         auto pixelFormat = defaultPixelFormat;
         switch (atlasData->format)
         {
-            case TextureFormat::RGBA8888:
-                pixelFormat = cocos2d::Texture2D::PixelFormat::RGBA8888;
-                break;
-                
-            case TextureFormat::BGRA8888:
-                pixelFormat = cocos2d::Texture2D::PixelFormat::BGRA8888;
-                break;
-                
-            case TextureFormat::RGBA4444:
-                pixelFormat = cocos2d::Texture2D::PixelFormat::RGBA4444;
-                break;
-                
-            case TextureFormat::RGB888:
-                pixelFormat = cocos2d::Texture2D::PixelFormat::RGB888;
-                break;
-                
-            case TextureFormat::RGB565:
-                pixelFormat = cocos2d::Texture2D::PixelFormat::RGB565;
-                break;
-                
-            case TextureFormat::RGBA5551:
-                pixelFormat = cocos2d::Texture2D::PixelFormat::RGB5A1;
-                break;
-                
-            case TextureFormat::DEFAULT:
-            default:
-                break;
+        case TextureFormat::RGBA8888:
+            pixelFormat = cocos2d::Texture2D::PixelFormat::RGBA8888;
+            break;
+
+        case TextureFormat::BGRA8888:
+            pixelFormat = cocos2d::Texture2D::PixelFormat::BGRA8888;
+            break;
+
+        case TextureFormat::RGBA4444:
+            pixelFormat = cocos2d::Texture2D::PixelFormat::RGBA4444;
+            break;
+
+        case TextureFormat::RGB888:
+            pixelFormat = cocos2d::Texture2D::PixelFormat::RGB888;
+            break;
+
+        case TextureFormat::RGB565:
+            pixelFormat = cocos2d::Texture2D::PixelFormat::RGB565;
+            break;
+
+        case TextureFormat::RGBA5551:
+            pixelFormat = cocos2d::Texture2D::PixelFormat::RGB5A1;
+            break;
+
+        case TextureFormat::DEFAULT:
+        default:
+            break;
         }
-        
+
         cocos2d::Texture2D::setDefaultAlphaPixelFormat(pixelFormat);
         texture = textureCache->addImage(atlasData->imagePath);
         cocos2d::Texture2D::setDefaultAlphaPixelFormat(defaultPixelFormat);
     }
-    
+
     static_cast<CCTextureAtlasData*>(atlasData)->texture = texture;
 }
 
-CCArmatureDisplay * CCFactory::buildArmatureDisplay(const std::string& armatureName, const std::string& dragonBonesName, const std::string& skinName) const
+CCArmatureDisplay* CCFactory::buildArmatureDisplay(const std::string & armatureName, const std::string & dragonBonesName, const std::string & skinName) const
 {
     const auto armature = this->buildArmature(armatureName, dragonBonesName, skinName);
     const auto armatureDisplay = armature ? dynamic_cast<CCArmatureDisplay*>(armature->_display) : nullptr;
@@ -249,10 +249,10 @@ CCArmatureDisplay * CCFactory::buildArmatureDisplay(const std::string& armatureN
     return armatureDisplay;
 }
 
-cocos2d::Sprite* CCFactory::getTextureDisplay(const std::string& textureName, const std::string& dragonBonesName) const
+cocos2d::Sprite* CCFactory::getTextureDisplay(const std::string & textureName, const std::string & dragonBonesName) const
 {
     const auto textureData = static_cast<CCTextureData*>(this->_getTextureData(dragonBonesName, textureName));
-    if (textureData) 
+    if (textureData)
     {
         if (!textureData->texture)
         {

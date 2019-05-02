@@ -13,16 +13,16 @@ InversePalindrome.com
 class ArriveComponent
 {
 public:
-	ArriveComponent();
+    ArriveComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	float getSlowRadius() const;
-	void setSlowRadius(float slowRadius);
+    float getSlowRadius() const;
+    void setSlowRadius(float slowRadius);
 
 private:
-	float slowRadius;
+    float slowRadius;
 };

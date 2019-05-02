@@ -45,11 +45,11 @@ InversePalindrome.com
 #include <brigand/algorithms/transform.hpp>
 
 
-using ComponentList = brigand::list<NameComponent, TransformComponent, ObjectComponent, BodyComponent, DistanceJointComponent, SpeedComponent, 
-                               	 AccelerationComponent, SpriteComponent, ArriveComponent, LabelComponent, ParticleComponent, AnimationComponent,
-                                 SoundComponent, HealthComponent, DamageComponent,  WeaponComponent, TargetComponent, DropComponent, SpeedBoostComponent, 
-                                 RegenBoostComponent, ExplosionComponent, VisionComponent, WanderComponent, PatrolComponent, PathwayComponent,
-	                             FollowComponent, AvoidComponent, FlockComponent, QueueComponent, SatelliteComponent, StateComponent>;
+using ComponentList = brigand::list<NameComponent, TransformComponent, ObjectComponent, BodyComponent, DistanceJointComponent, SpeedComponent,
+    AccelerationComponent, SpriteComponent, ArriveComponent, LabelComponent, ParticleComponent, AnimationComponent,
+    SoundComponent, HealthComponent, DamageComponent, WeaponComponent, TargetComponent, DropComponent, SpeedBoostComponent,
+    RegenBoostComponent, ExplosionComponent, VisionComponent, WanderComponent, PatrolComponent, PathwayComponent,
+    FollowComponent, AvoidComponent, FlockComponent, QueueComponent, SatelliteComponent, StateComponent>;
 
 using ComponentHandleList = brigand::transform<ComponentList, AddComponetHandle<brigand::_1>>;
 

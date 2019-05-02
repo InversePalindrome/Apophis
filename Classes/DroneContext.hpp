@@ -20,14 +20,14 @@ InversePalindrome.com
 
 struct DroneContext
 {
-	entityx::Entity drone;
-	entityx::Entity leader;
-	BodyComponent& body;
-	WanderComponent& wander;
-	const SpeedComponent& speed;
-	const ArriveComponent& arrive;
-	const FollowComponent& follow;
-	const FlockComponent& flock;
-	const VisionComponent& vision;
-	const entityx::ComponentHandle<BodyComponent> leaderBody;
+    entityx::Entity drone;
+    entityx::Entity leader;
+    BodyComponent& body;
+    WanderComponent& wander;
+    const SpeedComponent& speed;
+    const ArriveComponent& arrive;
+    const FollowComponent& follow;
+    const FlockComponent& flock;
+    const VisionComponent& vision;
+    const entityx::ComponentHandle<BodyComponent> leaderBody;
 };

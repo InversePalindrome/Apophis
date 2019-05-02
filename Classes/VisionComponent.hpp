@@ -13,16 +13,16 @@ InversePalindrome.com
 class VisionComponent
 {
 public:
-	VisionComponent();
+    VisionComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	float getVisionDistance() const;
-	void setVisionDistance(float visionDistance);
+    float getVisionDistance() const;
+    void setVisionDistance(float visionDistance);
 
 private:
-	float visionDistance;
+    float visionDistance;
 };

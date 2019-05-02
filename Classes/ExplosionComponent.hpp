@@ -15,21 +15,21 @@ InversePalindrome.com
 class ExplosionComponent
 {
 public:
-	ExplosionComponent();
+    ExplosionComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	std::string getExplosionFilename() const;
-	void setExplosionFilename(const std::string& explosionFilename);
+    std::string getExplosionFilename() const;
+    void setExplosionFilename(const std::string& explosionFilename);
 
     std::chrono::milliseconds getExplosionTime() const;
-	void setExplosionTime(const std::chrono::milliseconds& explosionTime);
+    void setExplosionTime(const std::chrono::milliseconds& explosionTime);
 
 private:
-	std::string explosionFilename;
+    std::string explosionFilename;
 
-	std::chrono::milliseconds explosionTime;
+    std::chrono::milliseconds explosionTime;
 };

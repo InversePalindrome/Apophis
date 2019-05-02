@@ -20,7 +20,7 @@ DRAGONBONES_NAMESPACE_BEGIN
 class BaseObject
 {
 public:
-    typedef std::function<void(BaseObject*,int)> RecycleOrDestroyCallback;
+    typedef std::function<void(BaseObject*, int)> RecycleOrDestroyCallback;
 private:
     static std::size_t _hashCode;
     static std::size_t _defaultMaxCount;
@@ -28,7 +28,7 @@ private:
     static std::unordered_map<std::size_t, std::vector<BaseObject*>> _poolsMap;
 
     static RecycleOrDestroyCallback _recycleOrDestroyCallback;
-    static void _returnObject(BaseObject *object);
+    static void _returnObject(BaseObject* object);
 public:
 
     static void setObjectRecycleOrDestroyCallback(const RecycleOrDestroyCallback& cb);
@@ -36,7 +36,7 @@ public:
     static void clearPool(std::size_t classTypeIndex);
 
     template<typename T>
-    static T* borrowObject() 
+    static T* borrowObject()
     {
         const auto classTypeIndex = T::getTypeIndex();
         const auto iterator = _poolsMap.find(classTypeIndex);
@@ -70,7 +70,7 @@ protected:
 public:
     /** @private */
     virtual std::size_t getClassTypeIndex() const = 0;
-    
+
     void returnToPool();
 };
 

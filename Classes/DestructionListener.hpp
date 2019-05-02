@@ -17,11 +17,11 @@ InversePalindrome.com
 class DestructionListener : public b2DestructionListener
 {
 public:
-	explicit DestructionListener(entityx::EntityManager& entityManager);
+    explicit DestructionListener(entityx::EntityManager& entityManager);
 
 private:
-	entityx::EntityManager& entityManager;
+    entityx::EntityManager& entityManager;
 
-	virtual void SayGoodbye(b2Joint* joint) override;
-	virtual void SayGoodbye(b2Fixture* fixture) override;
+    virtual void SayGoodbye(b2Joint* joint) override;
+    virtual void SayGoodbye(b2Fixture* fixture) override;
 };

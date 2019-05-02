@@ -13,7 +13,7 @@ DRAGONBONES_NAMESPACE_BEGIN
 class DragonBonesData;
 class ArmatureData;
 
-class BoneData : public BaseObject 
+class BoneData : public BaseObject
 {
     BIND_CLASS_TYPE(BoneData);
 
@@ -93,7 +93,7 @@ protected:
     void _onClear() override;
 };
 
-/** 
+/**
  * @private
  */
 class MeshData final : public BaseObject

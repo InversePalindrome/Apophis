@@ -6,11 +6,11 @@
 
 DRAGONBONES_NAMESPACE_BEGIN
 
-AnimationTimelineState::AnimationTimelineState() 
+AnimationTimelineState::AnimationTimelineState()
 {
     this->_onClear();
 }
-AnimationTimelineState::~AnimationTimelineState() 
+AnimationTimelineState::~AnimationTimelineState()
 {
     this->_onClear();
 }
@@ -49,11 +49,11 @@ void AnimationTimelineState::_onCrossFrame(AnimationFrameData* frame)
         }
 
         if (
-            (eventData->type == EventType::Sound ? 
-                (EventObject::_soundEventManager ? EventObject::_soundEventManager : eventDispatcher) :
+            (eventData->type == EventType::Sound ?
+            (EventObject::_soundEventManager ? EventObject::_soundEventManager : eventDispatcher) :
                 eventDispatcher
-            )->hasEvent(eventType)
-        )
+                )->hasEvent(eventType)
+            )
         {
             const auto eventObject = BaseObject::borrowObject<EventObject>();
             eventObject->animationState = this->_animationState;
@@ -96,7 +96,7 @@ void AnimationTimelineState::update(float time)
         {
             _isStarted = true;
 
-            if (eventDispatcher->hasEvent(EventObject::START)) 
+            if (eventDispatcher->hasEvent(EventObject::START))
             {
                 const auto eventObject = BaseObject::borrowObject<EventObject>();
                 eventObject->animationState = this->_animationState;
@@ -108,51 +108,51 @@ void AnimationTimelineState::update(float time)
         {
             const auto currentFrameIndex = this->_keyFrameCount > 1 ? (unsigned)(this->_currentTime * this->_frameRate) : 0;
             const auto currentFrame = this->_timeline->frames[currentFrameIndex];
-            if (this->_currentFrame != currentFrame) 
+            if (this->_currentFrame != currentFrame)
             {
-                if (this->_keyFrameCount > 1) 
+                if (this->_keyFrameCount > 1)
                 {
                     auto crossedFrame = this->_currentFrame;
                     this->_currentFrame = currentFrame;
 
-                    if (!crossedFrame) 
+                    if (!crossedFrame)
                     {
                         const auto prevFrameIndex = (unsigned)(prevTime * this->_frameRate);
                         crossedFrame = this->_timeline->frames[prevFrameIndex];
 
-                        if (this->_isReverse) 
+                        if (this->_isReverse)
                         {
                         }
-                        else 
+                        else
                         {
                             if (
                                 prevTime <= crossedFrame->position ||
                                 prevPlayTimes != this->_currentPlayTimes
-                            ) 
+                                )
                             {
                                 crossedFrame = crossedFrame->prev;
                             }
                         }
                     }
 
-                    if (this->_isReverse) 
+                    if (this->_isReverse)
                     {
-                        while (crossedFrame != currentFrame) 
+                        while (crossedFrame != currentFrame)
                         {
                             this->_onCrossFrame(crossedFrame);
                             crossedFrame = crossedFrame->prev;
                         }
                     }
-                    else 
+                    else
                     {
-                        while (crossedFrame != currentFrame) 
+                        while (crossedFrame != currentFrame)
                         {
                             crossedFrame = crossedFrame->next;
                             this->_onCrossFrame(crossedFrame);
                         }
                     }
                 }
-                else 
+                else
                 {
                     this->_currentFrame = currentFrame;
                     this->_onCrossFrame(this->_currentFrame);
@@ -162,7 +162,7 @@ void AnimationTimelineState::update(float time)
 
         if (prevPlayTimes != this->_currentPlayTimes)
         {
-            if (eventDispatcher->hasEvent(EventObject::LOOP_COMPLETE)) 
+            if (eventDispatcher->hasEvent(EventObject::LOOP_COMPLETE))
             {
                 const auto eventObject = BaseObject::borrowObject<EventObject>();
                 eventObject->animationState = this->_animationState;
@@ -187,11 +187,11 @@ void AnimationTimelineState::setCurrentTime(float value)
     this->_currentFrame = nullptr;
 }
 
-BoneTimelineState::BoneTimelineState() 
+BoneTimelineState::BoneTimelineState()
 {
     _onClear();
 }
-BoneTimelineState::~BoneTimelineState() 
+BoneTimelineState::~BoneTimelineState()
 {
     _onClear();
 }
@@ -362,7 +362,7 @@ void BoneTimelineState::_onUpdateFrame(bool isUpdate)
     }
 }
 
-void BoneTimelineState::fadeIn(Armature* armature, AnimationState* animationState, BoneTimelineData* timelineData, float time)
+void BoneTimelineState::fadeIn(Armature * armature, AnimationState * animationState, BoneTimelineData * timelineData, float time)
 {
     TimelineState::fadeIn(armature, animationState, timelineData, time);
 
@@ -412,11 +412,11 @@ void BoneTimelineState::update(float time)
     }
 }
 
-SlotTimelineState::SlotTimelineState() 
+SlotTimelineState::SlotTimelineState()
 {
     _onClear();
 }
-SlotTimelineState::~SlotTimelineState() 
+SlotTimelineState::~SlotTimelineState()
 {
     _onClear();
 }
@@ -551,7 +551,7 @@ void SlotTimelineState::_onUpdateFrame(bool isUpdate)
     }
 }
 
-void SlotTimelineState::fadeIn(Armature* armature, AnimationState* animationState, SlotTimelineData* timelineData, float time)
+void SlotTimelineState::fadeIn(Armature * armature, AnimationState * animationState, SlotTimelineData * timelineData, float time)
 {
     TimelineState::fadeIn(armature, animationState, timelineData, time);
 
@@ -583,7 +583,7 @@ void SlotTimelineState::update(float time)
                 _slotColor->redOffset += (_color.alphaMultiplier - _slotColor->redOffset) * fadeProgress;
                 _slotColor->greenOffset += (_color.alphaMultiplier - _slotColor->greenOffset) * fadeProgress;
                 _slotColor->blueOffset += (_color.alphaMultiplier - _slotColor->blueOffset) * fadeProgress;
-                
+
                 slot->_colorDirty = true;
             }
             else if (_colorDirty)
@@ -609,7 +609,7 @@ FFDTimelineState::FFDTimelineState() :
 {
     _onClear();
 }
-FFDTimelineState::~FFDTimelineState() 
+FFDTimelineState::~FFDTimelineState()
 {
     _onClear();
 }
@@ -679,7 +679,7 @@ void FFDTimelineState::_onUpdateFrame(bool isUpdate)
     }
 }
 
-void FFDTimelineState::fadeIn(Armature* armature, AnimationState* animationState, FFDTimelineData* timelineData, float time)
+void FFDTimelineState::fadeIn(Armature * armature, AnimationState * animationState, FFDTimelineData * timelineData, float time)
 {
     TimelineState::fadeIn(armature, animationState, timelineData, time);
 

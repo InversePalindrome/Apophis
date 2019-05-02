@@ -13,16 +13,16 @@ InversePalindrome.com
 class TargetComponent
 {
 public:
-	TargetComponent();
+    TargetComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	int getTargetID() const;
-	void setTargetID(int targetID);
+    int getTargetID() const;
+    void setTargetID(int targetID);
 
 private:
-	int targetID;
+    int targetID;
 };

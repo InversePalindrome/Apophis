@@ -12,15 +12,15 @@ InversePalindrome.com
 
 namespace Conversions
 {
-	template<typename T>
-	T degreesToRadians(T degrees)
-	{
-		return degrees * boost::math::constants::pi<T>() / (T)180;
-	}
+    template<typename T>
+    T degreesToRadians(T degrees)
+    {
+        return degrees * boost::math::constants::pi<T>() / (T)180;
+    }
 
-	template<typename T>
-	T radiansToDegrees(T radians)
-	{
-		return radians * (T)180 / boost::math::constants::pi<T>();
-	}
+    template<typename T>
+    T radiansToDegrees(T radians)
+    {
+        return radians * (T)180 / boost::math::constants::pi<T>();
+    }
 }

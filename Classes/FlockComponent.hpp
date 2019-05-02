@@ -13,33 +13,33 @@ InversePalindrome.com
 class FlockComponent
 {
 public:
-	FlockComponent();
+    FlockComponent();
 
-	void load(const pugi::xml_node& componentNode);
-	void save(pugi::xml_node& componentNode) const;
+    void load(const pugi::xml_node& componentNode);
+    void save(pugi::xml_node& componentNode) const;
 
-	void display();
+    void display();
 
-	int getGroupID() const;
-	void setGroupID(int groupID);
+    int getGroupID() const;
+    void setGroupID(int groupID);
 
-	float getGroupRadius() const;
-	void setGroupRadius(float groupRadius);
+    float getGroupRadius() const;
+    void setGroupRadius(float groupRadius);
 
-	float getAlignmentForce() const;
-	void setAlignmentForce(float alignmentForce);
+    float getAlignmentForce() const;
+    void setAlignmentForce(float alignmentForce);
 
-	float getCohesionForce() const;
-	void setCohesionForce(float cohesionForce);
+    float getCohesionForce() const;
+    void setCohesionForce(float cohesionForce);
 
-	float getSeparationForce() const;
-	void setSeparationForce(float separationForce);
+    float getSeparationForce() const;
+    void setSeparationForce(float separationForce);
 
 private:
-	int groupID;
-	float groupRadius;
+    int groupID;
+    float groupRadius;
 
-	float alignmentForce;
-	float cohesionForce;
-	float separationForce;
+    float alignmentForce;
+    float cohesionForce;
+    float separationForce;
 };
