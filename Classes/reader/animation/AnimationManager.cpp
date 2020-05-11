@@ -13,7 +13,7 @@ AnimationManager::~AnimationManager()
         animationInfo.target->release();
 }
 
-void AnimationManager::addAnimation(const AnimationInfo & animationInfo)
+void AnimationManager::addAnimation(const AnimationInfo& animationInfo)
 {
     _animations.push_back(animationInfo);
 }
@@ -36,7 +36,7 @@ void AnimationManager::stopAnimationClipsRunByPlayOnLoad()
     }
 }
 
-void AnimationManager::playAnimationClip(cocos2d::Node * target, const std::string & animationClipName)
+void AnimationManager::playAnimationClip(cocos2d::Node* target, const std::string& animationClipName)
 {
     bool foundTarget = false;
     bool foundAnimationClip = false;
@@ -69,7 +69,7 @@ void AnimationManager::playAnimationClip(cocos2d::Node * target, const std::stri
     }
 }
 
-void AnimationManager::stopAnimationClip(cocos2d::Node * target, const std::string & animationClipName)
+void AnimationManager::stopAnimationClip(cocos2d::Node* target, const std::string& animationClipName)
 {
     auto animateClip = getAnimateClip(target, animationClipName);
     if (animateClip)
@@ -79,21 +79,21 @@ void AnimationManager::stopAnimationClip(cocos2d::Node * target, const std::stri
     }
 }
 
-void AnimationManager::pauseAnimationClip(cocos2d::Node * target, const std::string & animationClipName)
+void AnimationManager::pauseAnimationClip(cocos2d::Node* target, const std::string& animationClipName)
 {
     auto animateClip = getAnimateClip(target, animationClipName);
     if (animateClip)
         animateClip->pauseAnimate();
 }
 
-void AnimationManager::resumeAnimationClip(cocos2d::Node * target, const std::string & animationClipName)
+void AnimationManager::resumeAnimationClip(cocos2d::Node* target, const std::string& animationClipName)
 {
     auto animateClip = getAnimateClip(target, animationClipName);
     if (animateClip)
         animateClip->resumeAnimate();
 }
 
-void AnimationManager::runAnimationClip(cocos2d::Node * target, AnimationClip * animationClip)
+void AnimationManager::runAnimationClip(cocos2d::Node* target, AnimationClip* animationClip)
 {
     auto animate = AnimateClip::createWithAnimationClip(target, animationClip);
     animate->retain();
@@ -107,7 +107,7 @@ void AnimationManager::runAnimationClip(cocos2d::Node * target, AnimationClip * 
     _cachedAnimates.push_back(std::make_tuple(target, animationClip->getName(), animate));
 }
 
-void AnimationManager::removeAnimateClip(cocos2d::Node * target, const std::string & animationClipName)
+void AnimationManager::removeAnimateClip(cocos2d::Node* target, const std::string& animationClipName)
 {
     for (auto iter = _cachedAnimates.begin(), end = _cachedAnimates.end(); iter != end; ++iter)
     {
@@ -123,7 +123,7 @@ void AnimationManager::removeAnimateClip(cocos2d::Node * target, const std::stri
     }
 }
 
-AnimateClip* AnimationManager::getAnimateClip(cocos2d::Node * target, const std::string & animationClipName) const
+AnimateClip* AnimationManager::getAnimateClip(cocos2d::Node* target, const std::string& animationClipName) const
 {
     for (auto&& e : _cachedAnimates)
     {

@@ -157,7 +157,7 @@ DragonBonesData* CCFactory::loadDragonBonesData(const std::string& filePath, con
     return this->parseDragonBonesData(data.c_str(), dragonBonesName, 1.f / scale);
 }
 
-TextureAtlasData* CCFactory::loadTextureAtlasData(const std::string & filePath, const std::string & dragonBonesName, float scale)
+TextureAtlasData* CCFactory::loadTextureAtlasData(const std::string& filePath, const std::string& dragonBonesName, float scale)
 {
     const auto fullpath = cocos2d::FileUtils::getInstance()->fullPathForFilename(filePath);
     const auto data = cocos2d::FileUtils::getInstance()->getStringFromFile(fullpath);
@@ -180,7 +180,7 @@ TextureAtlasData* CCFactory::loadTextureAtlasData(const std::string & filePath, 
     return textureAtlasData;
 }
 
-TextureAtlasData* CCFactory::parseTextureAtlasData(const std::string & atlasData, const std::string & texturePath, const std::string & dragonBonesName, float scale)
+TextureAtlasData* CCFactory::parseTextureAtlasData(const std::string& atlasData, const std::string& texturePath, const std::string& dragonBonesName, float scale)
 {
     const auto textureAtlasData = static_cast<CCTextureAtlasData*>(BaseFactory::parseTextureAtlasData(atlasData.c_str(), nullptr, dragonBonesName, scale));
     textureAtlasData->imagePath = texturePath;
@@ -190,7 +190,7 @@ TextureAtlasData* CCFactory::parseTextureAtlasData(const std::string & atlasData
 
 }
 
-void CCFactory::_initTextureAtlasData(TextureAtlasData * atlasData)
+void CCFactory::_initTextureAtlasData(TextureAtlasData* atlasData)
 {
     const auto textureCache = cocos2d::Director::getInstance()->getTextureCache();
     auto texture = textureCache->getTextureForKey(atlasData->imagePath);
@@ -237,7 +237,7 @@ void CCFactory::_initTextureAtlasData(TextureAtlasData * atlasData)
     static_cast<CCTextureAtlasData*>(atlasData)->texture = texture;
 }
 
-CCArmatureDisplay* CCFactory::buildArmatureDisplay(const std::string & armatureName, const std::string & dragonBonesName, const std::string & skinName) const
+CCArmatureDisplay* CCFactory::buildArmatureDisplay(const std::string& armatureName, const std::string& dragonBonesName, const std::string& skinName) const
 {
     const auto armature = this->buildArmature(armatureName, dragonBonesName, skinName);
     const auto armatureDisplay = armature ? dynamic_cast<CCArmatureDisplay*>(armature->_display) : nullptr;
@@ -249,7 +249,7 @@ CCArmatureDisplay* CCFactory::buildArmatureDisplay(const std::string & armatureN
     return armatureDisplay;
 }
 
-cocos2d::Sprite* CCFactory::getTextureDisplay(const std::string & textureName, const std::string & dragonBonesName) const
+cocos2d::Sprite* CCFactory::getTextureDisplay(const std::string& textureName, const std::string& dragonBonesName) const
 {
     const auto textureData = static_cast<CCTextureData*>(this->_getTextureData(dragonBonesName, textureName));
     if (textureData)

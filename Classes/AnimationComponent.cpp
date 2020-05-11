@@ -36,7 +36,7 @@ void AnimationComponent::load(const pugi::xml_node& componentNode)
             loopsAttribute = animationNode.attribute("loops");
             stateAttribute && nameAttribute && loopsAttribute)
         {
-            if (auto * animation = addAnimation(State::_from_string(stateAttribute.as_string()), nameAttribute.as_string()))
+            if (auto* animation = addAnimation(State::_from_string(stateAttribute.as_string()), nameAttribute.as_string()))
             {
                 animation->setLoops(loopsAttribute.as_int());
             }
@@ -99,7 +99,7 @@ void AnimationComponent::display()
 
             if (ImGui::Button("Add"))
             {
-                if (auto * animation = addAnimation(animationToAdd.first, animationToAdd.second.first.c_str()))
+                if (auto* animation = addAnimation(animationToAdd.first, animationToAdd.second.first.c_str()))
                 {
                     animation->setLoops(animationToAdd.second.second);
                 }

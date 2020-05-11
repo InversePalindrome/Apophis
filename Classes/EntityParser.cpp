@@ -31,7 +31,7 @@ void EntityParser::parseEntity(entityx::Entity& entity, entityx::EventManager& e
     {
         if (componentParser.count(componentNode.name()))
         {
-            std::visit([entity, &eventManager, &componentNode](auto & component)
+            std::visit([entity, &eventManager, &componentNode](auto& component)
                 {
                     component->load(componentNode);
 

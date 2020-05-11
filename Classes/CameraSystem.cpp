@@ -42,7 +42,7 @@ void CameraSystem::update(entityx::EntityManager& entityManager, entityx::EventM
     }
 }
 
-void CameraSystem::receive(const EntityParsed & event)
+void CameraSystem::receive(const EntityParsed& event)
 {
     if (const auto [object, transform] = event.entity.components<ObjectComponent, TransformComponent>();
         object && transform && object->getObjectType() == +ObjectType::Player)

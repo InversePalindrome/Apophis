@@ -34,7 +34,7 @@ void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::Even
 {
     brigand::for_each<Renderables>([&entityManager](auto renderableElement)
         {
-            entityManager.each<decltype(renderableElement)::type, TransformComponent>([](auto entity, auto & renderable, const auto & transform)
+            entityManager.each<decltype(renderableElement)::type, TransformComponent>([](auto entity, auto& renderable, const auto& transform)
                 {
                     renderable.setPosition({ transform.getPosition().x * Constants::PTM_RATIO, transform.getPosition().y * Constants::PTM_RATIO });
                     renderable.setRotation(-transform.getAngle());
@@ -44,27 +44,27 @@ void GraphicsSystem::update(entityx::EntityManager& entityManager, entityx::Even
     updateHealthBar();
 }
 
-void GraphicsSystem::receive(const entityx::ComponentAddedEvent<SpriteComponent> & event)
+void GraphicsSystem::receive(const entityx::ComponentAddedEvent<SpriteComponent>& event)
 {
     gameNode->addChild(event.component->getNode());
 }
 
-void GraphicsSystem::receive(const entityx::ComponentAddedEvent<LabelComponent> & event)
+void GraphicsSystem::receive(const entityx::ComponentAddedEvent<LabelComponent>& event)
 {
     gameNode->addChild(event.component->getNode());
 }
 
-void GraphicsSystem::receive(const entityx::ComponentAddedEvent<ParticleComponent> & event)
+void GraphicsSystem::receive(const entityx::ComponentAddedEvent<ParticleComponent>& event)
 {
     gameNode->addChild(event.component->getNode());
 }
 
-void GraphicsSystem::receive(const EntityParsed & event)
+void GraphicsSystem::receive(const EntityParsed& event)
 {
     syncHealthBar(event.entity);
 }
 
-void GraphicsSystem::receive(const UpdateTransform & event)
+void GraphicsSystem::receive(const UpdateTransform& event)
 {
     brigand::for_each<Renderables>([event](auto renderableElement)
     {

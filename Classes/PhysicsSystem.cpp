@@ -37,7 +37,7 @@ void PhysicsSystem::configure(entityx::EventManager& eventManager)
 
 void PhysicsSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
 {
-    entityManager.each<TransformComponent, BodyComponent>([](auto entity, auto & transform, const auto & body)
+    entityManager.each<TransformComponent, BodyComponent>([](auto entity, auto& transform, const auto& body)
         {
             transform.setPosition(body.getPosition());
             transform.setAngle(Conversions::radiansToDegrees(body.getAngle()));

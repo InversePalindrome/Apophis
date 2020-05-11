@@ -22,7 +22,7 @@ bool ImGuiLayer::init()
     // events
     auto listener = EventListenerTouchOneByOne::create();
     listener->setSwallowTouches(true);
-    listener->onTouchBegan = [](Touch * touch, Event*) -> bool {
+    listener->onTouchBegan = [](Touch* touch, Event*) -> bool {
         //bool inImGuiWidgets = ImGui::IsPosHoveringAnyWindow(ImVec2(touch->getLocationInView().x, touch->getLocationInView().y));
         //CCLOG("touch in ImGui widgets %s", inImGuiWidgets ? "yes" : "no");
         //return inImGuiWidgets;

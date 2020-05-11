@@ -101,21 +101,21 @@ namespace {
         out = start + percent * (end - start);
     }
 
-    void computeNextValue(const cocos2d::Color3B & start, const cocos2d::Color3B & end, float percent, cocos2d::Color3B & out)
+    void computeNextValue(const cocos2d::Color3B& start, const cocos2d::Color3B& end, float percent, cocos2d::Color3B& out)
     {
         computeNextValue(start.r, end.r, percent, out.r);
         computeNextValue(start.g, end.g, percent, out.g);
         computeNextValue(start.b, end.b, percent, out.b);
     }
 
-    void computeNextValue(const cocos2d::Vec2 & start, const cocos2d::Vec2 & end, float percent, cocos2d::Vec2 & out)
+    void computeNextValue(const cocos2d::Vec2& start, const cocos2d::Vec2& end, float percent, cocos2d::Vec2& out)
     {
         computeNextValue(start.x, end.x, percent, out.x);
         computeNextValue(start.y, end.y, percent, out.y);
     }
 
     template<typename P, typename T>
-    bool getNextValue(const P & properties, float elapsed, T & out)
+    bool getNextValue(const P& properties, float elapsed, T& out)
     {
         int index = getValidIndex(properties, elapsed);
         if (index == -1)
@@ -247,7 +247,7 @@ void AnimateClip::update(float dt) {
         doUpdate(animProperties);
 }
 
-void AnimateClip::doUpdate(const AnimProperties & animProperties) const
+void AnimateClip::doUpdate(const AnimProperties& animProperties) const
 {
     auto target = getTarget(animProperties.path);
     if (target)
@@ -307,13 +307,13 @@ void AnimateClip::doUpdate(const AnimProperties & animProperties) const
     }
 }
 
-cocos2d::Node* AnimateClip::getTarget(const std::string & path) const
+cocos2d::Node* AnimateClip::getTarget(const std::string& path) const
 {
     if (path.empty())
         return _rootTarget;
 
     cocos2d::Node* ret = nullptr;
-    _rootTarget->enumerateChildren(path, [&ret](cocos2d::Node * result) -> bool {
+    _rootTarget->enumerateChildren(path, [&ret](cocos2d::Node* result) -> bool {
         ret = result;
         return true;
         });

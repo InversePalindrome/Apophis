@@ -3138,7 +3138,7 @@ namespace creator {
             }
         };
 
-        inline flatbuffers::Offset<AnimEvents> CreateAnimEvents(flatbuffers::FlatBufferBuilder & _fbb) {
+        inline flatbuffers::Offset<AnimEvents> CreateAnimEvents(flatbuffers::FlatBufferBuilder& _fbb) {
             AnimEventsBuilder builder_(_fbb);
             return builder_.Finish();
         }

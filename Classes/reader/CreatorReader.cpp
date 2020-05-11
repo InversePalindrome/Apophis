@@ -72,7 +72,7 @@ namespace {
     }
 
     template <typename T, typename U>
-    void setupAnimClipsPropVec2(T fbPropList, U & proplist)
+    void setupAnimClipsPropVec2(T fbPropList, U& proplist)
     {
         if (fbPropList) {
             for (const auto fbProp : *fbPropList) {
@@ -98,7 +98,7 @@ namespace {
     }
 
     template <typename T, typename U>
-    void setupAnimClipsPropColor(T fbPropList, U & proplist)
+    void setupAnimClipsPropColor(T fbPropList, U& proplist)
     {
         if (fbPropList) {
             for (const auto fbProp : *fbPropList) {
@@ -141,7 +141,7 @@ CreatorReader::~CreatorReader()
     CC_SAFE_RELEASE_NULL(_animationManager);
 }
 
-CreatorReader* CreatorReader::createWithFilename(const std::string & filename)
+CreatorReader* CreatorReader::createWithFilename(const std::string& filename)
 {
     CreatorReader* reader = new(std::nothrow) CreatorReader;
     if (reader && reader->initWithFilename(filename)) {
@@ -151,7 +151,7 @@ CreatorReader* CreatorReader::createWithFilename(const std::string & filename)
     return nullptr;
 }
 
-bool CreatorReader::initWithFilename(const std::string & filename)
+bool CreatorReader::initWithFilename(const std::string& filename)
 {
     FileUtils* fileUtils = FileUtils::getInstance();
 
@@ -284,7 +284,7 @@ cocos2d::Scene* CreatorReader::getSceneGraph() const
     return static_cast<cocos2d::Scene*>(node);
 }
 
-AnimationManager * CreatorReader::getAnimationManager() const
+AnimationManager* CreatorReader::getAnimationManager() const
 {
     return _animationManager;
 }
@@ -299,7 +299,7 @@ std::string CreatorReader::getVersion() const
     return _version;
 }
 
-cocos2d::Node* CreatorReader::createTree(const buffers::NodeTree * tree) const
+cocos2d::Node* CreatorReader::createTree(const buffers::NodeTree* tree) const
 {
     cocos2d::Node* node = nullptr;
 
@@ -411,18 +411,18 @@ cocos2d::Node* CreatorReader::createTree(const buffers::NodeTree * tree) const
  * Render Nodes
  *
  *=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
-cocos2d::Scene* CreatorReader::createScene(const buffers::Scene * sceneBuffer) const
+cocos2d::Scene* CreatorReader::createScene(const buffers::Scene* sceneBuffer) const
 {
     cocos2d::Scene* scene = cocos2d::Scene::create();
     return scene;
 }
 
-void CreatorReader::parseScene(cocos2d::Scene * scene, const buffers::Scene * sceneBuffer) const
+void CreatorReader::parseScene(cocos2d::Scene* scene, const buffers::Scene* sceneBuffer) const
 {
 
 }
 
-cocos2d::Node* CreatorReader::createNode(const buffers::Node * nodeBuffer) const
+cocos2d::Node* CreatorReader::createNode(const buffers::Node* nodeBuffer) const
 {
     cocos2d::Node* node = cocos2d::Node::create();
     if (node)
@@ -430,7 +430,7 @@ cocos2d::Node* CreatorReader::createNode(const buffers::Node * nodeBuffer) const
     return node;
 }
 
-void CreatorReader::parseNode(cocos2d::Node * node, const buffers::Node * nodeBuffer) const
+void CreatorReader::parseNode(cocos2d::Node* node, const buffers::Node* nodeBuffer) const
 {
     const auto& globalZOrder = nodeBuffer->globalZOrder();
     node->setGlobalZOrder(globalZOrder);
@@ -469,7 +469,7 @@ void CreatorReader::parseNode(cocos2d::Node * node, const buffers::Node * nodeBu
     parseColliders(node, nodeBuffer);
 }
 
-void CreatorReader::parseNodeAnimation(cocos2d::Node * node, const buffers::Node * nodeBuffer) const
+void CreatorReader::parseNodeAnimation(cocos2d::Node* node, const buffers::Node* nodeBuffer) const
 {
     const AnimationRef* animRef = nodeBuffer->anim();
 
@@ -504,7 +504,7 @@ void CreatorReader::parseNodeAnimation(cocos2d::Node * node, const buffers::Node
             if (hasDefaultAnimclip && name->str() == animRef->defaultClip()->str())
                 animationInfo.defaultClip = animClip;
 
-            const auto & curveDatas = fbAnimationClip->curveData();
+            const auto& curveDatas = fbAnimationClip->curveData();
             for (const auto& fbCurveData : *curveDatas) {
 
                 if (fbCurveData) {
@@ -564,7 +564,7 @@ void CreatorReader::parseNodeAnimation(cocos2d::Node * node, const buffers::Node
     }
 }
 
-void CreatorReader::parseColliders(cocos2d::Node * node, const buffers::Node * nodeBuffer) const
+void CreatorReader::parseColliders(cocos2d::Node* node, const buffers::Node* nodeBuffer) const
 {
     const auto& collidersBuffer = nodeBuffer->colliders();
     const auto& groupIndex = nodeBuffer->groupIndex();
@@ -601,7 +601,7 @@ void CreatorReader::parseColliders(cocos2d::Node * node, const buffers::Node * n
         _collisionManager->addCollider(collider);
 }
 
-cocos2d::Sprite* CreatorReader::createSprite(const buffers::Sprite * spriteBuffer) const
+cocos2d::Sprite* CreatorReader::createSprite(const buffers::Sprite* spriteBuffer) const
 {
     cocos2d::Sprite* sprite = cocos2d::Sprite::create();
     if (sprite)
@@ -609,7 +609,7 @@ cocos2d::Sprite* CreatorReader::createSprite(const buffers::Sprite * spriteBuffe
     return sprite;
 }
 
-void CreatorReader::parseSprite(cocos2d::Sprite * sprite, const buffers::Sprite * spriteBuffer) const
+void CreatorReader::parseSprite(cocos2d::Sprite* sprite, const buffers::Sprite* spriteBuffer) const
 {
     // order is important:
     // 1st: set sprite frame
@@ -653,7 +653,7 @@ void CreatorReader::parseSprite(cocos2d::Sprite * sprite, const buffers::Sprite 
 #endif
 }
 
-cocos2d::TMXTiledMap* CreatorReader::createTileMap(const buffers::TileMap * tilemapBuffer) const
+cocos2d::TMXTiledMap* CreatorReader::createTileMap(const buffers::TileMap* tilemapBuffer) const
 {
     const auto& tmxfilename = tilemapBuffer->tmxFilename();
     cocos2d::TMXTiledMap* tilemap = TMXTiledMap::create(tmxfilename->str());
@@ -662,7 +662,7 @@ cocos2d::TMXTiledMap* CreatorReader::createTileMap(const buffers::TileMap * tile
     return tilemap;
 }
 
-void CreatorReader::parseTilemap(cocos2d::TMXTiledMap * tilemap, const buffers::TileMap * tilemapBuffer) const
+void CreatorReader::parseTilemap(cocos2d::TMXTiledMap* tilemap, const buffers::TileMap* tilemapBuffer) const
 {
     const auto& nodeBuffer = tilemapBuffer->node();
     parseNode(tilemap, nodeBuffer);
@@ -682,7 +682,7 @@ void CreatorReader::parseTilemap(cocos2d::TMXTiledMap * tilemap, const buffers::
     tilemap->setScaleY(hr * sy);
 }
 
-cocos2d::Label* CreatorReader::createLabel(const buffers::Label * labelBuffer) const
+cocos2d::Label* CreatorReader::createLabel(const buffers::Label* labelBuffer) const
 {
     cocos2d::Label* label = nullptr;
     auto text = labelBuffer->labelText();
@@ -709,7 +709,7 @@ cocos2d::Label* CreatorReader::createLabel(const buffers::Label * labelBuffer) c
     return label;
 }
 
-void CreatorReader::parseLabel(cocos2d::Label * label, const buffers::Label * labelBuffer) const
+void CreatorReader::parseLabel(cocos2d::Label* label, const buffers::Label* labelBuffer) const
 {
     const auto& nodeBuffer = labelBuffer->node();
     parseNode(label, nodeBuffer);
@@ -727,7 +727,7 @@ void CreatorReader::parseLabel(cocos2d::Label * label, const buffers::Label * la
     label->setOverflow(static_cast<cocos2d::Label::Overflow>(overflowType));
     label->enableWrap(enableWrap);
 
-    const auto & outline = labelBuffer->outline();
+    const auto& outline = labelBuffer->outline();
     if (outline)
     {
         const auto& color = outline->color();
@@ -736,14 +736,14 @@ void CreatorReader::parseLabel(cocos2d::Label * label, const buffers::Label * la
     }
 }
 
-cocos2d::ui::RichText* CreatorReader::createRichText(const buffers::RichText * richTextBuffer) const
+cocos2d::ui::RichText* CreatorReader::createRichText(const buffers::RichText* richTextBuffer) const
 {
     cocos2d::ui::RichText* richText = cocos2d::ui::RichText::create();
     parseRichText(richText, richTextBuffer);
     return richText;
 }
 
-void CreatorReader::parseRichText(cocos2d::ui::RichText * richText, const buffers::RichText * richTextBuffer) const
+void CreatorReader::parseRichText(cocos2d::ui::RichText* richText, const buffers::RichText* richTextBuffer) const
 {
     const auto& nodeBuffer = richTextBuffer->node();
     parseNode(richText, nodeBuffer);
@@ -787,7 +787,7 @@ void CreatorReader::parseRichText(cocos2d::ui::RichText * richText, const buffer
     }
 }
 
-cocos2d::ParticleSystemQuad* CreatorReader::createParticle(const buffers::Particle * particleBuffer) const
+cocos2d::ParticleSystemQuad* CreatorReader::createParticle(const buffers::Particle* particleBuffer) const
 {
     const auto& particleFilename = particleBuffer->particleFilename();
     cocos2d::ParticleSystemQuad* particle = cocos2d::ParticleSystemQuad::create(particleFilename->str());
@@ -796,7 +796,7 @@ cocos2d::ParticleSystemQuad* CreatorReader::createParticle(const buffers::Partic
     return particle;
 }
 
-void CreatorReader::parseParticle(cocos2d::ParticleSystemQuad * particle, const buffers::Particle * particleBuffer) const
+void CreatorReader::parseParticle(cocos2d::ParticleSystemQuad* particle, const buffers::Particle* particleBuffer) const
 {
     const auto& nodeBuffer = particleBuffer->node();
     parseNode(particle, nodeBuffer);
@@ -814,14 +814,14 @@ void CreatorReader::parseParticle(cocos2d::ParticleSystemQuad * particle, const 
  * UI Nodes
  *
  *=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
-cocos2d::ui::ScrollView* CreatorReader::createScrollView(const buffers::ScrollView * scrollViewBuffer) const
+cocos2d::ui::ScrollView* CreatorReader::createScrollView(const buffers::ScrollView* scrollViewBuffer) const
 {
     auto scrollView = ui::ScrollView::create();
     parseScrollView(scrollView, scrollViewBuffer);
     return scrollView;
 }
 
-void CreatorReader::parseScrollView(cocos2d::ui::ScrollView * scrollView, const buffers::ScrollView * scrollViewBuffer) const
+void CreatorReader::parseScrollView(cocos2d::ui::ScrollView* scrollView, const buffers::ScrollView* scrollViewBuffer) const
 {
     const auto& nodeBuffer = scrollViewBuffer->node();
     parseNode(scrollView, nodeBuffer);
@@ -858,14 +858,14 @@ void CreatorReader::parseScrollView(cocos2d::ui::ScrollView * scrollView, const 
     scrollView->jumpToPercentVertical((1 - anchorPoint->y() * 100.0f));
 }
 
-cocos2d::ui::LoadingBar* CreatorReader::createProgressBar(const buffers::ProgressBar * progressBarBuffer) const
+cocos2d::ui::LoadingBar* CreatorReader::createProgressBar(const buffers::ProgressBar* progressBarBuffer) const
 {
     ui::LoadingBar* progressBar = ui::LoadingBar::create();
 
     parseProgressBar(progressBar, progressBarBuffer);
     return progressBar;
 }
-void CreatorReader::parseProgressBar(cocos2d::ui::LoadingBar * progressBar, const buffers::ProgressBar * progressBarBuffer) const
+void CreatorReader::parseProgressBar(cocos2d::ui::LoadingBar* progressBar, const buffers::ProgressBar* progressBarBuffer) const
 {
     const auto& nodeBuffer = progressBarBuffer->node();
     parseNode(progressBar, nodeBuffer);
@@ -903,7 +903,7 @@ void CreatorReader::parseProgressBar(cocos2d::ui::LoadingBar * progressBar, cons
         progressBar->setDirection(cocos2d::ui::LoadingBar::Direction::RIGHT);
 }
 
-cocos2d::ui::EditBox* CreatorReader::createEditBox(const buffers::EditBox * editBoxBuffer) const
+cocos2d::ui::EditBox* CreatorReader::createEditBox(const buffers::EditBox* editBoxBuffer) const
 {
     const auto& contentSize = editBoxBuffer->node()->contentSize();
     const auto& spriteFrameName = editBoxBuffer->backgroundImage();
@@ -915,7 +915,7 @@ cocos2d::ui::EditBox* CreatorReader::createEditBox(const buffers::EditBox * edit
     return editBox;
 }
 
-void CreatorReader::parseEditBox(cocos2d::ui::EditBox * editBox, const buffers::EditBox * editBoxBuffer) const
+void CreatorReader::parseEditBox(cocos2d::ui::EditBox* editBox, const buffers::EditBox* editBoxBuffer) const
 {
     const auto& nodeBuffer = editBoxBuffer->node();
     parseNode(editBox, nodeBuffer);
@@ -954,7 +954,7 @@ void CreatorReader::parseEditBox(cocos2d::ui::EditBox * editBox, const buffers::
     editBox->setText(text->c_str());
 }
 
-cocos2d::ui::Button* CreatorReader::createButton(const buffers::Button * buttonBuffer) const
+cocos2d::ui::Button* CreatorReader::createButton(const buffers::Button* buttonBuffer) const
 {
 
     ui::Button* button = nullptr;
@@ -974,7 +974,7 @@ cocos2d::ui::Button* CreatorReader::createButton(const buffers::Button * buttonB
     return button;
 }
 
-void CreatorReader::parseButton(cocos2d::ui::Button * button, const buffers::Button * buttonBuffer) const
+void CreatorReader::parseButton(cocos2d::ui::Button* button, const buffers::Button* buttonBuffer) const
 {
     const auto& nodeBuffer = buttonBuffer->node();
     parseNode(button, nodeBuffer);
@@ -990,14 +990,14 @@ void CreatorReader::parseButton(cocos2d::ui::Button * button, const buffers::But
 }
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-cocos2d::experimental::ui::VideoPlayer * CreatorReader::createVideoPlayer(const buffers::VideoPlayer * videoPlayerBuffer) const
+cocos2d::experimental::ui::VideoPlayer* CreatorReader::createVideoPlayer(const buffers::VideoPlayer* videoPlayerBuffer) const
 {
     auto videoPlayer = cocos2d::experimental::ui::VideoPlayer::create();
     parseVideoPlayer(videoPlayer, videoPlayerBuffer);
     return videoPlayer;
 }
 
-void CreatorReader::parseVideoPlayer(cocos2d::experimental::ui::VideoPlayer * videoPlayer, const buffers::VideoPlayer * videoPlayerBuffer) const
+void CreatorReader::parseVideoPlayer(cocos2d::experimental::ui::VideoPlayer* videoPlayer, const buffers::VideoPlayer* videoPlayerBuffer) const
 {
     const auto& nodeBuffer = videoPlayerBuffer->node();
     parseNode(videoPlayer, nodeBuffer);
@@ -1016,14 +1016,14 @@ void CreatorReader::parseVideoPlayer(cocos2d::experimental::ui::VideoPlayer * vi
         videoPlayer->setURL(url->str());
 }
 
-cocos2d::experimental::ui::WebView* CreatorReader::createWebView(const buffers::WebView * webViewBuffer) const
+cocos2d::experimental::ui::WebView* CreatorReader::createWebView(const buffers::WebView* webViewBuffer) const
 {
     auto webView = cocos2d::experimental::ui::WebView::create();
     parseWebView(webView, webViewBuffer);
     return webView;
 }
 
-void CreatorReader::parseWebView(cocos2d::experimental::ui::WebView * webView, const buffers::WebView * webViewBuffer) const
+void CreatorReader::parseWebView(cocos2d::experimental::ui::WebView* webView, const buffers::WebView* webViewBuffer) const
 {
     const auto& nodeBuffer = webViewBuffer->node();
     parseNode(webView, nodeBuffer);
@@ -1034,14 +1034,14 @@ void CreatorReader::parseWebView(cocos2d::experimental::ui::WebView * webView, c
 }
 #endif
 
-cocos2d::ui::Slider* CreatorReader::createSlider(const buffers::Slider * sliderBuffer) const
+cocos2d::ui::Slider* CreatorReader::createSlider(const buffers::Slider* sliderBuffer) const
 {
     auto slider = cocos2d::ui::Slider::create();
     parseSlider(slider, sliderBuffer);
     return slider;
 }
 
-void CreatorReader::parseSlider(cocos2d::ui::Slider * slider, const buffers::Slider * sliderBuffer) const
+void CreatorReader::parseSlider(cocos2d::ui::Slider* slider, const buffers::Slider* sliderBuffer) const
 {
     const auto& nodeBuffer = sliderBuffer->node();
     parseNode(slider, nodeBuffer);
@@ -1102,7 +1102,7 @@ void CreatorReader::parseSlider(cocos2d::ui::Slider * slider, const buffers::Sli
     }
 }
 
-cocos2d::ui::CheckBox* CreatorReader::createToggle(const buffers::Toggle * toggleBuffer) const
+cocos2d::ui::CheckBox* CreatorReader::createToggle(const buffers::Toggle* toggleBuffer) const
 {
     const auto& backgroundSpritePath = toggleBuffer->backgroundSpritePath();
     const auto& checkMarkSpritePath = toggleBuffer->checkMarkSpritePath();
@@ -1114,7 +1114,7 @@ cocos2d::ui::CheckBox* CreatorReader::createToggle(const buffers::Toggle * toggl
     return checkBox;
 }
 
-void CreatorReader::parseToggle(cocos2d::ui::CheckBox * checkBox, const buffers::Toggle * toggleBuffer) const
+void CreatorReader::parseToggle(cocos2d::ui::CheckBox* checkBox, const buffers::Toggle* toggleBuffer) const
 {
     const auto& nodeBuffer = toggleBuffer->node();
     parseNode(checkBox, nodeBuffer);
@@ -1137,14 +1137,14 @@ void CreatorReader::parseToggle(cocos2d::ui::CheckBox * checkBox, const buffers:
     }
 }
 
-cocos2d::ui::RadioButtonGroup* CreatorReader::createToggleGroup(const buffers::ToggleGroup * toggleGroupBuffer) const
+cocos2d::ui::RadioButtonGroup* CreatorReader::createToggleGroup(const buffers::ToggleGroup* toggleGroupBuffer) const
 {
     auto radioGroup = cocos2d::ui::RadioButtonGroup::create();
     parseToggleGroup(radioGroup, toggleGroupBuffer);
     return radioGroup;
 }
 
-void CreatorReader::parseToggleGroup(cocos2d::ui::RadioButtonGroup * radioGroup, const buffers::ToggleGroup * toggleGroupBuffer) const
+void CreatorReader::parseToggleGroup(cocos2d::ui::RadioButtonGroup* radioGroup, const buffers::ToggleGroup* toggleGroupBuffer) const
 {
     const auto& nodeBuffer = toggleGroupBuffer->node();
     parseNode(radioGroup, nodeBuffer);
@@ -1187,14 +1187,14 @@ void CreatorReader::parseToggleGroup(cocos2d::ui::RadioButtonGroup * radioGroup,
     }
 }
 
-cocos2d::ui::PageView* CreatorReader::createPageView(const buffers::PageView * pageViewBuffer) const
+cocos2d::ui::PageView* CreatorReader::createPageView(const buffers::PageView* pageViewBuffer) const
 {
     auto pageview = CreatorPageView::create();
     parsePageView(pageview, pageViewBuffer);
     return pageview;
 }
 
-void CreatorReader::parsePageView(cocos2d::ui::PageView * pageview, const buffers::PageView * pageViewBuffer) const
+void CreatorReader::parsePageView(cocos2d::ui::PageView* pageview, const buffers::PageView* pageViewBuffer) const
 {
     const auto& nodeBuffer = pageViewBuffer->node();
     parseNode(pageview, nodeBuffer);
@@ -1260,14 +1260,14 @@ void CreatorReader::parsePageView(cocos2d::ui::PageView * pageview, const buffer
     }
 }
 
-cocos2d::ClippingNode* CreatorReader::createMask(const buffers::Mask * maskBuffer) const
+cocos2d::ClippingNode* CreatorReader::createMask(const buffers::Mask* maskBuffer) const
 {
     auto mask = cocos2d::ClippingNode::create();
     parseMask(mask, maskBuffer);
     return mask;
 }
 
-void CreatorReader::parseMask(cocos2d::ClippingNode * mask, const buffers::Mask * maskBuffer) const
+void CreatorReader::parseMask(cocos2d::ClippingNode* mask, const buffers::Mask* maskBuffer) const
 {
     const auto& nodeBuffer = maskBuffer->node();
     parseNode(mask, nodeBuffer);
@@ -1313,7 +1313,7 @@ void CreatorReader::parseMask(cocos2d::ClippingNode * mask, const buffers::Mask 
     }
 }
 
-cocos2d::MotionStreak* CreatorReader::createMotionStreak(const buffers::MotionStreak * motionStreakBuffer) const
+cocos2d::MotionStreak* CreatorReader::createMotionStreak(const buffers::MotionStreak* motionStreakBuffer) const
 {
     const auto& timeToFade = motionStreakBuffer->timeToFade();
     const auto& minSeg = motionStreakBuffer->minSeg();
@@ -1330,7 +1330,7 @@ cocos2d::MotionStreak* CreatorReader::createMotionStreak(const buffers::MotionSt
     return motionStreak;
 }
 
-void CreatorReader::parseMotionStreak(cocos2d::MotionStreak * motionStreak, const buffers::MotionStreak * motionStreakBuffer) const
+void CreatorReader::parseMotionStreak(cocos2d::MotionStreak* motionStreak, const buffers::MotionStreak* motionStreakBuffer) const
 {
     const auto& nodeBuffer = motionStreakBuffer->node();
 
@@ -1382,7 +1382,7 @@ void CreatorReader::parseMotionStreak(cocos2d::MotionStreak * motionStreak, cons
  * Misc Nodes
  *
  *=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
-spine::SkeletonAnimation* CreatorReader::createSpineSkeleton(const buffers::SpineSkeleton * spineBuffer) const
+spine::SkeletonAnimation* CreatorReader::createSpineSkeleton(const buffers::SpineSkeleton* spineBuffer) const
 {
     const auto& jsonFile = spineBuffer->jsonFile()->str();
     const auto& atlasFile = spineBuffer->atlasFile()->str();
@@ -1395,7 +1395,7 @@ spine::SkeletonAnimation* CreatorReader::createSpineSkeleton(const buffers::Spin
     return spine;
 }
 
-void CreatorReader::parseSpineSkeleton(spine::SkeletonAnimation * spine, const buffers::SpineSkeleton * spineBuffer) const
+void CreatorReader::parseSpineSkeleton(spine::SkeletonAnimation* spine, const buffers::SpineSkeleton* spineBuffer) const
 {
     const auto& nodeBuffer = spineBuffer->node();
     parseNode(spine, nodeBuffer);
@@ -1421,7 +1421,7 @@ void CreatorReader::parseSpineSkeleton(spine::SkeletonAnimation * spine, const b
     spine->setDebugBonesEnabled(debugBones);
 }
 
-dragonBones::CCArmatureDisplay* CreatorReader::createArmatureDisplay(const buffers::DragonBones * dragonBonesBuffer) const
+dragonBones::CCArmatureDisplay* CreatorReader::createArmatureDisplay(const buffers::DragonBones* dragonBonesBuffer) const
 {
     const auto& boneDataPath = dragonBonesBuffer->boneDataPath();
     const auto& atlasDataPath = dragonBonesBuffer->textureDataPath();
@@ -1449,7 +1449,7 @@ dragonBones::CCArmatureDisplay* CreatorReader::createArmatureDisplay(const buffe
 
 }
 
-void CreatorReader::parseArmatureDisplay(dragonBones::CCArmatureDisplay * armatureDisplay, const buffers::DragonBones * dragonBonesBuffer) const
+void CreatorReader::parseArmatureDisplay(dragonBones::CCArmatureDisplay* armatureDisplay, const buffers::DragonBones* dragonBonesBuffer) const
 {
     const auto& nodeBuffer = dragonBonesBuffer->node();
     parseNode(armatureDisplay, nodeBuffer);
@@ -1465,7 +1465,7 @@ void CreatorReader::parseArmatureDisplay(dragonBones::CCArmatureDisplay * armatu
 //
 // Helper methods
 //
-void CreatorReader::adjustPosition(cocos2d::Node * node) const
+void CreatorReader::adjustPosition(cocos2d::Node* node) const
 {
     const cocos2d::Node* parent = node->getParent();
     // only adjust position if there is a parent, and the parent is no the root scene
@@ -1482,7 +1482,7 @@ void CreatorReader::adjustPosition(cocos2d::Node * node) const
 //
 // Helper free functions
 //
-static void setSpriteQuad(cocos2d::V3F_C4B_T2F_Quad * quad, const cocos2d::Size & origSize, const int x, const int y, float x_factor, float y_factor)
+static void setSpriteQuad(cocos2d::V3F_C4B_T2F_Quad* quad, const cocos2d::Size& origSize, const int x, const int y, float x_factor, float y_factor)
 {
     float offset_x = origSize.width * x;
     float offset_y = origSize.height * y;
@@ -1502,7 +1502,7 @@ static void setSpriteQuad(cocos2d::V3F_C4B_T2F_Quad * quad, const cocos2d::Size 
     }
 }
 
-static void tileSprite(cocos2d::Sprite * sprite)
+static void tileSprite(cocos2d::Sprite* sprite)
 {
     const auto new_s = sprite->getContentSize();
     const auto frame = sprite->getSpriteFrame();

@@ -70,12 +70,12 @@ namespace Easing
     // Easing equation function for a cubic (t^3)
     float cubicIn(float k)
     {
-        return k * k* k;
+        return k * k * k;
     }
     float cubicOut(float k)
     {
         --k;
-        return k * k* k + 1;
+        return k * k * k + 1;
     }
     float cubicInOut(float k)
     {
@@ -84,7 +84,7 @@ namespace Easing
         else
         {
             k -= 2;
-            return 0.5f* (k * k * k + 2);
+            return 0.5f * (k * k * k + 2);
         }
     }
 
@@ -92,7 +92,7 @@ namespace Easing
     // Easing equation function for a quartic (t^4)
     float quartIn(float k)
     {
-        return k * k* k* k;
+        return k * k * k * k;
     }
     float quartOut(float k)
     {
@@ -114,12 +114,12 @@ namespace Easing
     // Easing equation function for a quintic (t^5)
     float quintIn(float k)
     {
-        return k * k* k* k* k;
+        return k * k * k * k * k;
     }
     float quintOut(float k)
     {
         --k;
-        return k * k* k* k* k + 1;
+        return k * k * k * k * k + 1;
     }
     float quintInOut(float k)
     {
@@ -128,7 +128,7 @@ namespace Easing
         else
         {
             k -= 2;
-            return 0.5f* (k * k * k * k * k + 2);
+            return 0.5f * (k * k * k * k * k + 2);
         }
     }
 
@@ -144,7 +144,7 @@ namespace Easing
     }
     float sineInOut(float k)
     {
-        return 0.5f* (1.f - std::cos(M_PI * k));
+        return 0.5f * (1.f - std::cos(M_PI * k));
     }
 
     // expo
@@ -188,7 +188,7 @@ namespace Easing
         else
         {
             k -= 2;
-            return 0.5f* std::sqrt(1 - (k * k) + 1);
+            return 0.5f * std::sqrt(1 - (k * k) + 1);
         }
     }
 
@@ -248,24 +248,24 @@ namespace Easing
     float backIn(float k)
     {
         float s = 1.70158f;
-        return k * k* ((s + 1) * k - s);
+        return k * k * ((s + 1) * k - s);
     }
     float backOut(float k)
     {
         float s = 1.70158f;
         --k;
-        return k * k* ((s + 1) * k + s) + 1;
+        return k * k * ((s + 1) * k + s) + 1;
     }
     float backInOut(float k)
     {
         float s = 1.70158f * 1.525f;
         if ((k *= 2) < 1.f) {
-            return 0.5f* (k * k * ((s + 1) * k - s));
+            return 0.5f * (k * k * ((s + 1) * k - s));
         }
         else
         {
             k -= 2;
-            return 0.5f* (k * k * ((s + 1) * k + s) + 2);
+            return 0.5f * (k * k * ((s + 1) * k + s) + 2);
         }
     }
 
@@ -298,7 +298,7 @@ namespace Easing
     float bounceInOut(float k)
     {
         if (k < 0.5f)
-            return bounceIn(k * 2)* 0.5f;
+            return bounceIn(k * 2) * 0.5f;
         else
             return bounceOut(k * 2 - 1) * 0.5f + 0.5f;
     }
@@ -329,7 +329,7 @@ namespace Easing
             return t * t * t * (t * (t * 6 - 15) + 10);
     }
 
-    std::function<float(float)> makeOutIn(const std::function<float(float)> & fnIn, const std::function<float(float)> & fnOut)
+    std::function<float(float)> makeOutIn(const std::function<float(float)>& fnIn, const std::function<float(float)>& fnOut)
     {
         return [=](float k) -> float {
             if (k < 0.5f)
@@ -397,7 +397,7 @@ namespace Easing
         {"fade", fade}
     };
 
-    std::function<float(float)> getFunction(const std::string & type)
+    std::function<float(float)> getFunction(const std::string& type)
     {
         if (functions.find(type) != functions.end())
             return functions[type];

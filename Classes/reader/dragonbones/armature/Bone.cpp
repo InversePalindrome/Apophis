@@ -186,7 +186,7 @@ void Bone::_computeIKB()
     this->global.toMatrix(*this->globalTransformMatrix);
 }
 
-void Bone::_setArmature(Armature * value)
+void Bone::_setArmature(Armature* value)
 {
     if (this->_armature == value)
     {
@@ -233,7 +233,7 @@ void Bone::_setArmature(Armature * value)
     }
 }
 
-void Bone::_setIK(Bone * value, unsigned chain, int chainIndex)
+void Bone::_setIK(Bone* value, unsigned chain, int chainIndex)
 {
     if (value)
     {
@@ -376,7 +376,7 @@ void Bone::_update(int cacheFrameIndex)
     }
 }
 
-bool Bone::contains(const TransformObject * child) const
+bool Bone::contains(const TransformObject* child) const
 {
     if (child)
     {

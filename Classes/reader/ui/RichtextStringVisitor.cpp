@@ -136,7 +136,7 @@ int RichtextStringVisitor::getMaxFontSize() const
     return _maxFontSize;
 }
 
-std::string RichtextStringVisitor::convertColorString2Hex(const std::string & colorString) const
+std::string RichtextStringVisitor::convertColorString2Hex(const std::string& colorString) const
 {
     if (colorString[0] == '#')
         return colorString;
@@ -150,7 +150,7 @@ std::string RichtextStringVisitor::convertColorString2Hex(const std::string & co
     }
 }
 
-std::string RichtextStringVisitor::convertAttributeName(const std::string & tagName, const std::string & attributeName) const
+std::string RichtextStringVisitor::convertAttributeName(const std::string& tagName, const std::string& attributeName) const
 {
     // <outline width...> -> <outline size...>
     if (tagName == "outline" && attributeName == "width")
@@ -159,7 +159,7 @@ std::string RichtextStringVisitor::convertAttributeName(const std::string & tagN
         return attributeName;
 }
 
-std::string RichtextStringVisitor::convertAttributeValue(const std::string & tagName, const std::string & attributeName, const std::string & attributeValue) const
+std::string RichtextStringVisitor::convertAttributeValue(const std::string& tagName, const std::string& attributeName, const std::string& attributeValue) const
 {
     if (attributeName == "color")
         return convertColorString2Hex(attributeValue);

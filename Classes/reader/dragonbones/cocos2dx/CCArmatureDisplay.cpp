@@ -78,7 +78,7 @@ void CCArmatureDisplay::advanceTimeBySelf(bool on)
 
 void CCArmatureDisplay::addEvent(const std::string& type, const std::function<void(EventObject*)>& callback)
 {
-    auto lambda = [callback](cocos2d::EventCustom * event) -> void {
+    auto lambda = [callback](cocos2d::EventCustom* event) -> void {
         callback(static_cast<EventObject*>(event->getUserData()));
     };
     _dispatcher->addCustomEventListener(type, lambda);
@@ -129,7 +129,7 @@ cocos2d::Vec2 DBCCSprite::projectGL(const cocos2d::Vec3& src) const
     return screenPos;
 }
 
-bool DBCCSprite::_checkVisibility(const cocos2d::Mat4 & transform, const cocos2d::Size & size, const cocos2d::Rect & rect)
+bool DBCCSprite::_checkVisibility(const cocos2d::Mat4& transform, const cocos2d::Size& size, const cocos2d::Rect& rect)
 {
     ////---- TODO Not support camera in -x-lite now
 //    auto scene = cocos2d::Director::getInstance()->getRunningScene();
@@ -166,7 +166,7 @@ bool DBCCSprite::_checkVisibility(const cocos2d::Mat4 & transform, const cocos2d
     return ret;
 }
 
-void DBCCSprite::draw(cocos2d::Renderer * renderer, const cocos2d::Mat4 & transform, uint32_t flags)
+void DBCCSprite::draw(cocos2d::Renderer* renderer, const cocos2d::Mat4& transform, uint32_t flags)
 {
 #if CC_USE_CULLING
     const auto& rect = this->_polyInfo.getRect();

@@ -116,13 +116,13 @@ const std::vector<int>& DropComponent::getWeights() const
     return weights;
 }
 
-void DropComponent::addItem(const std::string & itemFilename, int weight)
+void DropComponent::addItem(const std::string& itemFilename, int weight)
 {
     itemFilenames.push_back(itemFilename);
     weights.push_back(weight);
 }
 
-void DropComponent::removeItem(const std::string & itemFilename)
+void DropComponent::removeItem(const std::string& itemFilename)
 {
     auto index = std::find(std::cbegin(itemFilenames), std::cend(itemFilenames), itemFilename) - std::cbegin(itemFilenames);
 

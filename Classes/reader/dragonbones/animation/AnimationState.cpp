@@ -152,7 +152,7 @@ void AnimationState::_advanceFadeTime(float passedTime)
     }
 }
 
-bool AnimationState::_isDisabled(const Slot & slot) const
+bool AnimationState::_isDisabled(const Slot& slot) const
 {
     if (
         displayControl &&
@@ -170,7 +170,7 @@ bool AnimationState::_isDisabled(const Slot & slot) const
 }
 
 void AnimationState::_fadeIn(
-    Armature * armature, AnimationData * clip, const std::string & animationName,
+    Armature* armature, AnimationData* clip, const std::string& animationName,
     unsigned playTimes, float position, float duration, float time, float timeScale, float fadeInTime,
     bool pausePlayhead
 )
@@ -497,7 +497,7 @@ void AnimationState::fadeOut(float fadeOutTime, bool pausePlayhead)
     _fadeTime = fadeTotalTime * (1.f - _fadeProgress);
 }
 
-void AnimationState::addBoneMask(const std::string & name, bool recursive)
+void AnimationState::addBoneMask(const std::string& name, bool recursive)
 {
     const auto currentBone = _armature->getBone(name);
     if (!currentBone)
@@ -532,7 +532,7 @@ void AnimationState::addBoneMask(const std::string & name, bool recursive)
     _updateTimelineStates();
 }
 
-void AnimationState::removeBoneMask(const std::string & name, bool recursive)
+void AnimationState::removeBoneMask(const std::string& name, bool recursive)
 {
     auto iterator = std::find(_boneMask.begin(), _boneMask.end(), name);
     if (iterator != _boneMask.cend())

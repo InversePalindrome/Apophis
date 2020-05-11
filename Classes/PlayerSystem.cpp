@@ -25,14 +25,14 @@ PlayerSystem::PlayerSystem(cocos2d::Node* gameNode) :
     const auto& appSettings = AppSettings::getInstance();
 
     auto* keyboardListener = cocos2d::EventListenerKeyboard::create();
-    keyboardListener->onKeyPressed = [this, &appSettings](auto keyCode, auto * event)
+    keyboardListener->onKeyPressed = [this, &appSettings](auto keyCode, auto* event)
     {
         if (appSettings.hasKeyAction(keyCode))
         {
             keyActions.push_back(appSettings.getKeyAction(keyCode));
         }
     };
-    keyboardListener->onKeyReleased = [this, &appSettings](auto keyCode, auto * event)
+    keyboardListener->onKeyReleased = [this, &appSettings](auto keyCode, auto* event)
     {
         if (appSettings.hasKeyAction(keyCode))
         {
@@ -41,9 +41,9 @@ PlayerSystem::PlayerSystem(cocos2d::Node* gameNode) :
     };
 
     auto* mouseListener = cocos2d::EventListenerMouse::create();
-    mouseListener->onMouseMove = [this, gameNode](auto * event) { playerFocusPoint = gameNode->convertToNodeSpace({ event->getCursorX(), event->getCursorY() }); };
-    mouseListener->onMouseDown = [this](auto * event) { isShooting = true; };
-    mouseListener->onMouseUp = [this](auto * event) { isShooting = false; };
+    mouseListener->onMouseMove = [this, gameNode](auto* event) { playerFocusPoint = gameNode->convertToNodeSpace({ event->getCursorX(), event->getCursorY() }); };
+    mouseListener->onMouseDown = [this](auto* event) { isShooting = true; };
+    mouseListener->onMouseUp = [this](auto* event) { isShooting = false; };
 
     gameNode->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, gameNode);
     gameNode->getEventDispatcher()->addEventListenerWithSceneGraphPriority(mouseListener, gameNode);
@@ -102,7 +102,7 @@ void PlayerSystem::updateRotation(entityx::ComponentHandle<BodyComponent> body)
     body->applyAngularImpulse(SteeringBehaviors::face(body->getPosition(), { playerFocusPoint.x / Constants::PTM_RATIO, playerFocusPoint.y / Constants::PTM_RATIO }, body->getAngle(), body->getAngularVelocity(), body->getInertia()));
 }
 
-void PlayerSystem::updateShooting(entityx::EventManager & eventManager)
+void PlayerSystem::updateShooting(entityx::EventManager& eventManager)
 {
     if (isShooting)
     {

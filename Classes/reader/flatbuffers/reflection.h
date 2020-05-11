@@ -68,23 +68,23 @@ namespace flatbuffers {
     }
 
     // Get a field, if you know it's floating point and its exact type.
-    template<typename T> T GetFieldF(const Table & table,
-        const reflection::Field & field) {
+    template<typename T> T GetFieldF(const Table& table,
+        const reflection::Field& field) {
         assert(sizeof(T) == GetTypeSize(field.type()->base_type()));
         return table.GetField<T>(field.offset(),
             static_cast<T>(field.default_real()));
     }
 
     // Get a field, if you know it's a string.
-    inline const String* GetFieldS(const Table & table,
-        const reflection::Field & field) {
+    inline const String* GetFieldS(const Table& table,
+        const reflection::Field& field) {
         assert(field.type()->base_type() == reflection::String);
         return table.GetPointer<const String*>(field.offset());
     }
 
     // Get a field, if you know it's a vector.
-    template<typename T> Vector<T>* GetFieldV(const Table & table,
-        const reflection::Field & field) {
+    template<typename T> Vector<T>* GetFieldV(const Table& table,
+        const reflection::Field& field) {
         assert(field.type()->base_type() == reflection::Vector &&
             sizeof(T) == GetTypeSize(field.type()->element()));
         return table.GetPointer<Vector<T>*>(field.offset());
@@ -93,22 +93,22 @@ namespace flatbuffers {
     // Get a field, if you know it's a vector, generically.
     // To actually access elements, use the return value together with
     // field.type()->element() in any of GetAnyVectorElemI below etc.
-    inline VectorOfAny* GetFieldAnyV(const Table & table,
-        const reflection::Field & field) {
+    inline VectorOfAny* GetFieldAnyV(const Table& table,
+        const reflection::Field& field) {
         return table.GetPointer<VectorOfAny*>(field.offset());
     }
 
     // Get a field, if you know it's a table.
-    inline Table* GetFieldT(const Table & table,
-        const reflection::Field & field) {
+    inline Table* GetFieldT(const Table& table,
+        const reflection::Field& field) {
         assert(field.type()->base_type() == reflection::Obj ||
             field.type()->base_type() == reflection::Union);
         return table.GetPointer<Table*>(field.offset());
     }
 
     // Get a field, if you know it's a struct.
-    inline const Struct* GetFieldStruct(const Table & table,
-        const reflection::Field & field) {
+    inline const Struct* GetFieldStruct(const Table& table,
+        const reflection::Field& field) {
         // TODO: This does NOT check if the field is a table or struct, but we'd need
         // access to the schema to check the is_struct flag.
         assert(field.type()->base_type() == reflection::Obj);
@@ -116,8 +116,8 @@ namespace flatbuffers {
     }
 
     // Get a structure's field, if you know it's a struct.
-    inline const Struct* GetFieldStruct(const Struct & structure,
-        const reflection::Field & field) {
+    inline const Struct* GetFieldStruct(const Struct& structure,
+        const reflection::Field& field) {
         assert(field.type()->base_type() == reflection::Obj);
         return structure.GetStruct<const Struct*>(field.offset());
     }
@@ -126,27 +126,27 @@ namespace flatbuffers {
     // double or a string.
     // All scalars get static_cast to an int64_t, strings use strtoull, every other
     // data type returns 0.
-    int64_t GetAnyValueI(reflection::BaseType type, const uint8_t * data);
+    int64_t GetAnyValueI(reflection::BaseType type, const uint8_t* data);
     // All scalars static cast to double, strings use strtod, every other data
     // type is 0.0.
-    double GetAnyValueF(reflection::BaseType type, const uint8_t * data);
+    double GetAnyValueF(reflection::BaseType type, const uint8_t* data);
     // All scalars converted using stringstream, strings as-is, and all other
     // data types provide some level of debug-pretty-printing.
-    std::string GetAnyValueS(reflection::BaseType type, const uint8_t * data,
-        const reflection::Schema * schema,
+    std::string GetAnyValueS(reflection::BaseType type, const uint8_t* data,
+        const reflection::Schema* schema,
         int type_index);
 
     // Get any table field as a 64bit int, regardless of what type it is.
-    inline int64_t GetAnyFieldI(const Table & table,
-        const reflection::Field & field) {
+    inline int64_t GetAnyFieldI(const Table& table,
+        const reflection::Field& field) {
         auto field_ptr = table.GetAddressOf(field.offset());
         return field_ptr ? GetAnyValueI(field.type()->base_type(), field_ptr)
             : field.default_integer();
     }
 
     // Get any table field as a double, regardless of what type it is.
-    inline double GetAnyFieldF(const Table & table,
-        const reflection::Field & field) {
+    inline double GetAnyFieldF(const Table& table,
+        const reflection::Field& field) {
         auto field_ptr = table.GetAddressOf(field.offset());
         return field_ptr ? GetAnyValueF(field.type()->base_type(), field_ptr)
             : field.default_real();
@@ -156,9 +156,9 @@ namespace flatbuffers {
     // Get any table field as a string, regardless of what type it is.
     // You may pass nullptr for the schema if you don't care to have fields that
     // are of table type pretty-printed.
-    inline std::string GetAnyFieldS(const Table & table,
-        const reflection::Field & field,
-        const reflection::Schema * schema) {
+    inline std::string GetAnyFieldS(const Table& table,
+        const reflection::Field& field,
+        const reflection::Schema* schema) {
         auto field_ptr = table.GetAddressOf(field.offset());
         return field_ptr ? GetAnyValueS(field.type()->base_type(), field_ptr, schema,
             field.type()->index())
@@ -166,40 +166,40 @@ namespace flatbuffers {
     }
 
     // Get any struct field as a 64bit int, regardless of what type it is.
-    inline int64_t GetAnyFieldI(const Struct & st,
-        const reflection::Field & field) {
+    inline int64_t GetAnyFieldI(const Struct& st,
+        const reflection::Field& field) {
         return GetAnyValueI(field.type()->base_type(),
             st.GetAddressOf(field.offset()));
     }
 
     // Get any struct field as a double, regardless of what type it is.
-    inline double GetAnyFieldF(const Struct & st,
-        const reflection::Field & field) {
+    inline double GetAnyFieldF(const Struct& st,
+        const reflection::Field& field) {
         return GetAnyValueF(field.type()->base_type(),
             st.GetAddressOf(field.offset()));
     }
 
     // Get any struct field as a string, regardless of what type it is.
-    inline std::string GetAnyFieldS(const Struct & st,
-        const reflection::Field & field) {
+    inline std::string GetAnyFieldS(const Struct& st,
+        const reflection::Field& field) {
         return GetAnyValueS(field.type()->base_type(),
             st.GetAddressOf(field.offset()), nullptr, -1);
     }
 
     // Get any vector element as a 64bit int, regardless of what type it is.
-    inline int64_t GetAnyVectorElemI(const VectorOfAny * vec,
+    inline int64_t GetAnyVectorElemI(const VectorOfAny* vec,
         reflection::BaseType elem_type, size_t i) {
         return GetAnyValueI(elem_type, vec->Data() + GetTypeSize(elem_type) * i);
     }
 
     // Get any vector element as a double, regardless of what type it is.
-    inline double GetAnyVectorElemF(const VectorOfAny * vec,
+    inline double GetAnyVectorElemF(const VectorOfAny* vec,
         reflection::BaseType elem_type, size_t i) {
         return GetAnyValueF(elem_type, vec->Data() + GetTypeSize(elem_type) * i);
     }
 
     // Get any vector element as a string, regardless of what type it is.
-    inline std::string GetAnyVectorElemS(const VectorOfAny * vec,
+    inline std::string GetAnyVectorElemS(const VectorOfAny* vec,
         reflection::BaseType elem_type, size_t i) {
         return GetAnyValueS(elem_type, vec->Data() + GetTypeSize(elem_type) * i,
             nullptr, -1);
@@ -208,7 +208,7 @@ namespace flatbuffers {
     // Get a vector element that's a table/string/vector from a generic vector.
     // Pass Table/String/VectorOfAny as template parameter.
     // Warning: does no typechecking.
-    template<typename T> T* GetAnyVectorElemPointer(const VectorOfAny * vec,
+    template<typename T> T* GetAnyVectorElemPointer(const VectorOfAny* vec,
         size_t i) {
         auto elem_ptr = vec->Data() + sizeof(uoffset_t) * i;
         return (T*)(elem_ptr + ReadScalar<uoffset_t>(elem_ptr));
@@ -219,7 +219,7 @@ namespace flatbuffers {
     // Get elem_size from GetTypeSizeInline().
     // Note: little-endian data on all platforms, use EndianScalar() instead of
     // raw pointer access with scalars).
-    template<typename T> T* GetAnyVectorElemAddressOf(const VectorOfAny * vec,
+    template<typename T> T* GetAnyVectorElemAddressOf(const VectorOfAny* vec,
         size_t i,
         size_t elem_size) {
         // C-cast to allow const conversion.
@@ -227,21 +227,21 @@ namespace flatbuffers {
     }
 
     // Similarly, for elements of tables.
-    template<typename T> T* GetAnyFieldAddressOf(const Table & table,
-        const reflection::Field & field) {
+    template<typename T> T* GetAnyFieldAddressOf(const Table& table,
+        const reflection::Field& field) {
         return (T*)table.GetAddressOf(field.offset());
     }
 
     // Similarly, for elements of structs.
-    template<typename T> T* GetAnyFieldAddressOf(const Struct & st,
-        const reflection::Field & field) {
+    template<typename T> T* GetAnyFieldAddressOf(const Struct& st,
+        const reflection::Field& field) {
         return (T*)st.GetAddressOf(field.offset());
     }
 
     // ------------------------- SETTERS -------------------------
 
     // Set any scalar field, if you know its exact type.
-    template<typename T> bool SetField(Table * table, const reflection::Field & field,
+    template<typename T> bool SetField(Table* table, const reflection::Field& field,
         T val) {
         assert(sizeof(T) == GetTypeSize(field.type()->base_type()));
         return table->SetField(field.offset(), val);
@@ -251,12 +251,12 @@ namespace flatbuffers {
     // double or a string.
     // These work for all scalar values, but do nothing for other data types.
     // To set a string, see SetString below.
-    void SetAnyValueI(reflection::BaseType type, uint8_t * data, int64_t val);
-    void SetAnyValueF(reflection::BaseType type, uint8_t * data, double val);
-    void SetAnyValueS(reflection::BaseType type, uint8_t * data, const char* val);
+    void SetAnyValueI(reflection::BaseType type, uint8_t* data, int64_t val);
+    void SetAnyValueF(reflection::BaseType type, uint8_t* data, double val);
+    void SetAnyValueS(reflection::BaseType type, uint8_t* data, const char* val);
 
     // Set any table field as a 64bit int, regardless of type what it is.
-    inline bool SetAnyFieldI(Table * table, const reflection::Field & field,
+    inline bool SetAnyFieldI(Table* table, const reflection::Field& field,
         int64_t val) {
         auto field_ptr = table->GetAddressOf(field.offset());
         if (!field_ptr) return false;
@@ -265,7 +265,7 @@ namespace flatbuffers {
     }
 
     // Set any table field as a double, regardless of what type it is.
-    inline bool SetAnyFieldF(Table * table, const reflection::Field & field,
+    inline bool SetAnyFieldF(Table* table, const reflection::Field& field,
         double val) {
         auto field_ptr = table->GetAddressOf(field.offset());
         if (!field_ptr) return false;
@@ -274,7 +274,7 @@ namespace flatbuffers {
     }
 
     // Set any table field as a string, regardless of what type it is.
-    inline bool SetAnyFieldS(Table * table, const reflection::Field & field,
+    inline bool SetAnyFieldS(Table* table, const reflection::Field& field,
         const char* val) {
         auto field_ptr = table->GetAddressOf(field.offset());
         if (!field_ptr) return false;
@@ -283,40 +283,40 @@ namespace flatbuffers {
     }
 
     // Set any struct field as a 64bit int, regardless of type what it is.
-    inline void SetAnyFieldI(Struct * st, const reflection::Field & field,
+    inline void SetAnyFieldI(Struct* st, const reflection::Field& field,
         int64_t val) {
         SetAnyValueI(field.type()->base_type(), st->GetAddressOf(field.offset()),
             val);
     }
 
     // Set any struct field as a double, regardless of type what it is.
-    inline void SetAnyFieldF(Struct * st, const reflection::Field & field,
+    inline void SetAnyFieldF(Struct* st, const reflection::Field& field,
         double val) {
         SetAnyValueF(field.type()->base_type(), st->GetAddressOf(field.offset()),
             val);
     }
 
     // Set any struct field as a string, regardless of type what it is.
-    inline void SetAnyFieldS(Struct * st, const reflection::Field & field,
+    inline void SetAnyFieldS(Struct* st, const reflection::Field& field,
         const char* val) {
         SetAnyValueS(field.type()->base_type(), st->GetAddressOf(field.offset()),
             val);
     }
 
     // Set any vector element as a 64bit int, regardless of type what it is.
-    inline void SetAnyVectorElemI(VectorOfAny * vec, reflection::BaseType elem_type,
+    inline void SetAnyVectorElemI(VectorOfAny* vec, reflection::BaseType elem_type,
         size_t i, int64_t val) {
         SetAnyValueI(elem_type, vec->Data() + GetTypeSize(elem_type) * i, val);
     }
 
     // Set any vector element as a double, regardless of type what it is.
-    inline void SetAnyVectorElemF(VectorOfAny * vec, reflection::BaseType elem_type,
+    inline void SetAnyVectorElemF(VectorOfAny* vec, reflection::BaseType elem_type,
         size_t i, double val) {
         SetAnyValueF(elem_type, vec->Data() + GetTypeSize(elem_type) * i, val);
     }
 
     // Set any vector element as a string, regardless of type what it is.
-    inline void SetAnyVectorElemS(VectorOfAny * vec, reflection::BaseType elem_type,
+    inline void SetAnyVectorElemS(VectorOfAny* vec, reflection::BaseType elem_type,
         size_t i, const char* val) {
         SetAnyValueS(elem_type, vec->Data() + GetTypeSize(elem_type) * i, val);
     }
@@ -340,7 +340,7 @@ namespace flatbuffers {
         T* operator->() const {
             return operator*();
         }
-        void operator=(const pointer_inside_vector & piv);
+        void operator=(const pointer_inside_vector& piv);
     private:
         size_t offset_;
         std::vector<U>& vec_;
@@ -373,25 +373,25 @@ namespace flatbuffers {
     // "str" must live inside "flatbuf" and may be invalidated after this call.
     // If your FlatBuffer's root table is not the schema's root table, you should
     // pass in your root_table type as well.
-    void SetString(const reflection::Schema & schema, const std::string & val,
-        const String * str, std::vector<uint8_t> * flatbuf,
-        const reflection::Object * root_table = nullptr);
+    void SetString(const reflection::Schema& schema, const std::string& val,
+        const String* str, std::vector<uint8_t>* flatbuf,
+        const reflection::Object* root_table = nullptr);
 
     // Resizes a flatbuffers::Vector inside a FlatBuffer. FlatBuffer must
     // live inside a std::vector so we can resize the buffer if needed.
     // "vec" must live inside "flatbuf" and may be invalidated after this call.
     // If your FlatBuffer's root table is not the schema's root table, you should
     // pass in your root_table type as well.
-    uint8_t * ResizeAnyVector(const reflection::Schema & schema, uoffset_t newsize,
-        const VectorOfAny * vec, uoffset_t num_elems,
-        uoffset_t elem_size, std::vector<uint8_t> * flatbuf,
-        const reflection::Object * root_table = nullptr);
+    uint8_t* ResizeAnyVector(const reflection::Schema& schema, uoffset_t newsize,
+        const VectorOfAny* vec, uoffset_t num_elems,
+        uoffset_t elem_size, std::vector<uint8_t>* flatbuf,
+        const reflection::Object* root_table = nullptr);
 
 #ifndef FLATBUFFERS_CPP98_STL
     template <typename T>
-    void ResizeVector(const reflection::Schema & schema, uoffset_t newsize, T val,
-        const Vector<T> * vec, std::vector<uint8_t> * flatbuf,
-        const reflection::Object * root_table = nullptr) {
+    void ResizeVector(const reflection::Schema& schema, uoffset_t newsize, T val,
+        const Vector<T>* vec, std::vector<uint8_t>* flatbuf,
+        const reflection::Object* root_table = nullptr) {
         auto delta_elem = static_cast<int>(newsize) - static_cast<int>(vec->size());
         auto newelems = ResizeAnyVector(schema, newsize,
             reinterpret_cast<const VectorOfAny*>(vec),
@@ -420,11 +420,11 @@ namespace flatbuffers {
     // existing one.
     // The return value can now be set using Vector::MutateOffset or SetFieldT
     // below.
-    const uint8_t* AddFlatBuffer(std::vector<uint8_t> & flatbuf,
-        const uint8_t * newbuf, size_t newlen);
+    const uint8_t* AddFlatBuffer(std::vector<uint8_t>& flatbuf,
+        const uint8_t* newbuf, size_t newlen);
 
-    inline bool SetFieldT(Table * table, const reflection::Field & field,
-        const uint8_t * val) {
+    inline bool SetFieldT(Table* table, const reflection::Field& field,
+        const uint8_t* val) {
         assert(sizeof(uoffset_t) == GetTypeSize(field.type()->base_type()));
         return table->SetPointer(field.offset(), val);
     }
@@ -440,19 +440,19 @@ namespace flatbuffers {
     // DAG, the copy will be a tree instead (with duplicates). Strings can be
     // shared however, by passing true for use_string_pooling.
 
-    Offset<const Table*> CopyTable(FlatBufferBuilder & fbb,
-        const reflection::Schema & schema,
-        const reflection::Object & objectdef,
-        const Table & table,
+    Offset<const Table*> CopyTable(FlatBufferBuilder& fbb,
+        const reflection::Schema& schema,
+        const reflection::Object& objectdef,
+        const Table& table,
         bool use_string_pooling = false);
 
     // Verifies the provided flatbuffer using reflection.
     // root should point to the root type for this flatbuffer.
     // buf should point to the start of flatbuffer data.
     // length specifies the size of the flatbuffer data.
-    bool Verify(const reflection::Schema & schema,
-        const reflection::Object & root,
-        const uint8_t * buf,
+    bool Verify(const reflection::Schema& schema,
+        const reflection::Object& root,
+        const uint8_t* buf,
         size_t length);
 
 }  // namespace flatbuffers

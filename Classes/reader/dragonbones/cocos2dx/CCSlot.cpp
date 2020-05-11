@@ -330,9 +330,9 @@ void CCSlot::_updateMesh()
         {
             const auto iH = unsigned(i / 2);
 
-            const auto & boneIndices = this->_meshData->boneIndices[iH];
-            const auto & boneVertices = this->_meshData->boneVertices[iH];
-            const auto & weights = this->_meshData->weights[iH];
+            const auto& boneIndices = this->_meshData->boneIndices[iH];
+            const auto& boneVertices = this->_meshData->boneVertices[iH];
+            const auto& weights = this->_meshData->weights[iH];
 
             float xG = 0.f, yG = 0.f;
             for (std::size_t iB = 0, lB = boneIndices.size(); iB < lB; ++iB)
@@ -359,8 +359,8 @@ void CCSlot::_updateMesh()
                 iF += 2;
             }
 
-            auto & vertices = displayVertices[iH];
-            auto & vertex = vertices.vertices;
+            auto& vertices = displayVertices[iH];
+            auto& vertex = vertices.vertices;
 
             vertex.set(xG, -yG, 0.f);
 
@@ -394,8 +394,8 @@ void CCSlot::_updateMesh()
             const auto xG = vertices[i] + _ffdVertices[i];
             const auto yG = vertices[i + 1] + _ffdVertices[i + 1];
 
-            auto & vertices = displayVertices[iH];
-            auto & vertex = vertices.vertices;
+            auto& vertices = displayVertices[iH];
+            auto& vertex = vertices.vertices;
 
             vertex.set(xG, -yG, 0.f);
 

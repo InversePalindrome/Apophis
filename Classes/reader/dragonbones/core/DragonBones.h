@@ -130,7 +130,7 @@ inline T* mapFind(const std::map<std::string, T*>& map, const std::string& key)
 }
 
 template<class T>
-inline int indexOf(const std::vector<T> & vector, const T & value)
+inline int indexOf(const std::vector<T>& vector, const T& value)
 {
     for (std::size_t i = 0, l = vector.size(); i < l; ++i)
     {

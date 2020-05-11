@@ -77,7 +77,7 @@ void CombatSystem::receive(const ShootProjectile& event)
     }
 }
 
-void CombatSystem::receive(const CombatOcurred & event)
+void CombatSystem::receive(const CombatOcurred& event)
 {
     auto victimHealth = event.victim.component<HealthComponent>();
     const auto attackerDamage = event.attacker.component<DamageComponent>();

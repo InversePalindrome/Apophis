@@ -26,18 +26,18 @@ cocos2d::Scene* getSettingsScene()
     auto* canvas = scene->getChildByName("Canvas");
     auto* director = cocos2d::Director::getInstance();
 
-    static_cast<cocos2d::ui::Button*>(canvas->getChildByName("backButton"))->addTouchEventListener([director](auto * sender, auto event)
+    static_cast<cocos2d::ui::Button*>(canvas->getChildByName("backButton"))->addTouchEventListener([director](auto* sender, auto event)
         {
             director->popScene();
         });
 
     auto* soundVolumeSlider = static_cast<cocos2d::ui::Slider*>(canvas->getChildByName("soundSlider"));
     soundVolumeSlider->setPercent(static_cast<int>(appSettings.getSoundVolume() * 100));
-    soundVolumeSlider->addClickEventListener([soundVolumeSlider, &appSettings](auto * sender) { appSettings.setSoundVolume(soundVolumeSlider->getPercent() / 100.f); });
+    soundVolumeSlider->addClickEventListener([soundVolumeSlider, &appSettings](auto* sender) { appSettings.setSoundVolume(soundVolumeSlider->getPercent() / 100.f); });
 
-    auto * musicVolumeSlider = static_cast<cocos2d::ui::Slider*>(canvas->getChildByName("musicSlider"));
+    auto* musicVolumeSlider = static_cast<cocos2d::ui::Slider*>(canvas->getChildByName("musicSlider"));
     musicVolumeSlider->setPercent(static_cast<int>(appSettings.getMusicVolume() * 100));
-    musicVolumeSlider->addClickEventListener([musicVolumeSlider, &appSettings](auto * sender) { appSettings.setMusicVolume(musicVolumeSlider->getPercent() / 100.f); });
+    musicVolumeSlider->addClickEventListener([musicVolumeSlider, &appSettings](auto* sender) { appSettings.setMusicVolume(musicVolumeSlider->getPercent() / 100.f); });
 
     return scene;
 }

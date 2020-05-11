@@ -468,7 +468,7 @@ void Armature::addBone(Bone* value, const std::string& parentName)
     }
 }
 
-void Armature::removeBone(Bone * value)
+void Armature::removeBone(Bone* value)
 {
     if (value && value->getArmature() == this)
     {

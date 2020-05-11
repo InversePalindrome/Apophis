@@ -77,7 +77,7 @@ cocos2d::Vec2 Collider::getOffset() const
     return _offset;
 }
 
-void Collider::setOffset(const cocos2d::Vec2 & offset)
+void Collider::setOffset(const cocos2d::Vec2& offset)
 {
     _offset = offset;
 }
@@ -86,7 +86,7 @@ void Collider::setOffset(const cocos2d::Vec2 & offset)
 // Implementation of CircleCollider
 //
 
-CircleCollider::CircleCollider(cocos2d::Node * target, int targetGroupIndex, const cocos2d::Vec2 & offset, float radius)
+CircleCollider::CircleCollider(cocos2d::Node* target, int targetGroupIndex, const cocos2d::Vec2& offset, float radius)
     : creator::Collider(target, targetGroupIndex, offset)
     , _radius(radius)
     , _worldRadius(radius)
@@ -138,7 +138,7 @@ float CircleCollider::getWorldRadius() const
 // Implementation of BoxCollider
 //
 
-BoxCollider::BoxCollider(cocos2d::Node * target, int targetGroupIndex, const cocos2d::Vec2 & offset, const cocos2d::Size & size)
+BoxCollider::BoxCollider(cocos2d::Node* target, int targetGroupIndex, const cocos2d::Vec2& offset, const cocos2d::Size& size)
     : creator::Collider(target, targetGroupIndex, offset)
     , _size(size)
 {
@@ -183,7 +183,7 @@ cocos2d::Size BoxCollider::getSize() const
     return _size;
 }
 
-void BoxCollider::setSize(const cocos2d::Size & size)
+void BoxCollider::setSize(const cocos2d::Size& size)
 {
     _size = size;
 }
@@ -192,7 +192,7 @@ void BoxCollider::setSize(const cocos2d::Size & size)
 // Implementation of PolygonCollider
 //
 
-PolygonCollider::PolygonCollider(cocos2d::Node * target, int targetGroupIndex, const cocos2d::Vec2 & offset, const std::vector<cocos2d::Vec2> & points)
+PolygonCollider::PolygonCollider(cocos2d::Node* target, int targetGroupIndex, const cocos2d::Vec2& offset, const std::vector<cocos2d::Vec2>& points)
     : creator::Collider(target, targetGroupIndex, offset)
 {
     _points = std::move(points);
@@ -235,7 +235,7 @@ std::vector<cocos2d::Vec2> PolygonCollider::getPoints() const
     return _points;
 }
 
-void PolygonCollider::setPoints(const std::vector<cocos2d::Vec2> & points)
+void PolygonCollider::setPoints(const std::vector<cocos2d::Vec2>& points)
 {
     _points = points;
 }

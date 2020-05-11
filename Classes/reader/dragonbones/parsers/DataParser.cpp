@@ -348,7 +348,7 @@ void DataParser::_getTimelineFrameMatrix(const AnimationData& animation, BoneTim
     transform.add(timeline.originTransform);
 }
 
-void DataParser::_globalToLocal(ArmatureData * armature) const
+void DataParser::_globalToLocal(ArmatureData* armature) const
 {
     std::vector<BoneFrameData*> keyFrames;
     auto bones = armature->getSortedBones(); // copy
@@ -421,7 +421,7 @@ void DataParser::_globalToLocal(ArmatureData * armature) const
     }
 }
 
-void DataParser::_mergeFrameToAnimationTimeline(float framePosition, const std::vector<ActionData*> & actions, const std::vector<EventData*> & events) const
+void DataParser::_mergeFrameToAnimationTimeline(float framePosition, const std::vector<ActionData*>& actions, const std::vector<EventData*>& events) const
 {
     const auto frameStart = std::floor(framePosition * _armature->frameRate);
     auto& frames = _animation->frames;

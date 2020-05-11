@@ -57,7 +57,7 @@ namespace reflection {
         BaseType base_type() const { return static_cast<BaseType>(GetField<int8_t>(VT_BASE_TYPE, 0)); }
         BaseType element() const { return static_cast<BaseType>(GetField<int8_t>(VT_ELEMENT, 0)); }
         int32_t index() const { return GetField<int32_t>(VT_INDEX, -1); }
-        bool Verify(flatbuffers::Verifier & verifier) const {
+        bool Verify(flatbuffers::Verifier& verifier) const {
             return VerifyTableStart(verifier) &&
                 VerifyField<int8_t>(verifier, VT_BASE_TYPE) &&
                 VerifyField<int8_t>(verifier, VT_ELEMENT) &&
@@ -72,7 +72,7 @@ namespace reflection {
         void add_base_type(BaseType base_type) { fbb_.AddElement<int8_t>(Type::VT_BASE_TYPE, static_cast<int8_t>(base_type), 0); }
         void add_element(BaseType element) { fbb_.AddElement<int8_t>(Type::VT_ELEMENT, static_cast<int8_t>(element), 0); }
         void add_index(int32_t index) { fbb_.AddElement<int32_t>(Type::VT_INDEX, index, -1); }
-        TypeBuilder(flatbuffers::FlatBufferBuilder & _fbb) : fbb_(_fbb) { start_ = fbb_.StartTable(); }
+        TypeBuilder(flatbuffers::FlatBufferBuilder& _fbb) : fbb_(_fbb) { start_ = fbb_.StartTable(); }
         TypeBuilder& operator=(const TypeBuilder&);
         flatbuffers::Offset<Type> Finish() {
             auto o = flatbuffers::Offset<Type>(fbb_.EndTable(start_, 3));

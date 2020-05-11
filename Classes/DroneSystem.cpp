@@ -38,7 +38,7 @@ DroneSystem::DroneSystem(entityx::EntityManager& entityManager, entityx::EventMa
 
                 std::vector<b2Vec2> neighborPositions;
 
-                entityManager.each<FlockComponent, BodyComponent>([&context, &neighborPositions](auto entity, const auto & flock, const auto & body)
+                entityManager.each<FlockComponent, BodyComponent>([&context, &neighborPositions](auto entity, const auto& flock, const auto& body)
                     {
                         if (context.drone != entity && context.flock.getGroupID() == flock.getGroupID() && (context.body.getPosition() - body.getPosition()).Length() <= context.flock.getGroupRadius())
                         {
@@ -60,7 +60,7 @@ DroneSystem::DroneSystem(entityx::EntityManager& entityManager, entityx::EventMa
                     void DroneSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
                     {
                         entityManager.each<ObjectComponent, BodyComponent, WanderComponent, SpeedComponent, ArriveComponent, FollowComponent, FlockComponent, VisionComponent>
-                            ([this, &entityManager](auto entity, const auto & object, auto & body, auto & wander, const auto & speed, const auto & arrive, const auto & follow, const auto & flock, const auto & vision)
+                            ([this, &entityManager](auto entity, const auto& object, auto& body, auto& wander, const auto& speed, const auto& arrive, const auto& follow, const auto& flock, const auto& vision)
                                 {
                                     if (object.getObjectType() == +ObjectType::Drone)
                                     {

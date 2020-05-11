@@ -488,11 +488,11 @@ bool IMGUIGLViewImpl::initWithFullScreen(const std::string& viewName)
     if (nullptr == _monitor)
         return false;
 
-    const GLFWvidmode * videoMode = glfwGetVideoMode(_monitor);
+    const GLFWvidmode* videoMode = glfwGetVideoMode(_monitor);
     return initWithRect(viewName, Rect(0, 0, videoMode->width, videoMode->height), 1.0f, false);
 }
 
-bool IMGUIGLViewImpl::initWithFullscreen(const std::string & viewname, const GLFWvidmode & videoMode, GLFWmonitor * monitor)
+bool IMGUIGLViewImpl::initWithFullscreen(const std::string& viewname, const GLFWvidmode& videoMode, GLFWmonitor* monitor)
 {
     //Create fullscreen on specified monitor at the specified video mode.
     _monitor = monitor;
@@ -682,7 +682,7 @@ void IMGUIGLViewImpl::onGLFWWindowFocusCallback(GLFWwindow* /*window*/, int focu
     }
 }
 
-void IMGUIGLViewImpl::onGLFWMouseCallBack(GLFWwindow * window, int button, int action, int modify)
+void IMGUIGLViewImpl::onGLFWMouseCallBack(GLFWwindow* window, int button, int action, int modify)
 {
     if (GLFW_MOUSE_BUTTON_LEFT == button)
     {
@@ -726,7 +726,7 @@ void IMGUIGLViewImpl::onGLFWMouseCallBack(GLFWwindow * window, int button, int a
     }
 }
 
-void IMGUIGLViewImpl::onGLFWMouseMoveCallBack(GLFWwindow * window, double x, double y)
+void IMGUIGLViewImpl::onGLFWMouseMoveCallBack(GLFWwindow* window, double x, double y)
 {
     _mouseX = (float)x;
     _mouseY = (float)y;
@@ -771,7 +771,7 @@ void IMGUIGLViewImpl::onGLFWMouseMoveCallBack(GLFWwindow * window, double x, dou
     Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
 }
 
-void IMGUIGLViewImpl::onGLFWMouseScrollCallback(GLFWwindow * window, double x, double y)
+void IMGUIGLViewImpl::onGLFWMouseScrollCallback(GLFWwindow* window, double x, double y)
 {
     EventMouse event(EventMouse::MouseEventType::MOUSE_SCROLL);
     //Because OpenGL and cocos2d-x uses different Y axis, we need to convert the coordinate here
@@ -782,7 +782,7 @@ void IMGUIGLViewImpl::onGLFWMouseScrollCallback(GLFWwindow * window, double x, d
     Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
 }
 
-void IMGUIGLViewImpl::onGLFWKeyCallback(GLFWwindow * window, int key, int scancode, int action, int mods)
+void IMGUIGLViewImpl::onGLFWKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (GLFW_REPEAT != action)
     {
@@ -797,7 +797,7 @@ void IMGUIGLViewImpl::onGLFWKeyCallback(GLFWwindow * window, int key, int scanco
     }
 }
 
-void IMGUIGLViewImpl::onGLFWCharCallback(GLFWwindow * window, unsigned int character)
+void IMGUIGLViewImpl::onGLFWCharCallback(GLFWwindow* window, unsigned int character)
 {
     char16_t wcharString[2] = { (char16_t)character, 0 };
     std::string utf8String;
@@ -806,12 +806,12 @@ void IMGUIGLViewImpl::onGLFWCharCallback(GLFWwindow * window, unsigned int chara
     IMEDispatcher::sharedDispatcher()->dispatchInsertText(utf8String.c_str(), utf8String.size());
 }
 
-void IMGUIGLViewImpl::onGLFWWindowPosCallback(GLFWwindow * windows, int x, int y)
+void IMGUIGLViewImpl::onGLFWWindowPosCallback(GLFWwindow* windows, int x, int y)
 {
     Director::getInstance()->setViewport();
 }
 
-void IMGUIGLViewImpl::onGLFWframebuffersize(GLFWwindow * window, int w, int h)
+void IMGUIGLViewImpl::onGLFWframebuffersize(GLFWwindow* window, int w, int h)
 {
     float frameSizeW = _screenSize.width;
     float frameSizeH = _screenSize.height;
@@ -840,7 +840,7 @@ void IMGUIGLViewImpl::onGLFWframebuffersize(GLFWwindow * window, int w, int h)
     }
 }
 
-void IMGUIGLViewImpl::onGLFWWindowSizeFunCallback(GLFWwindow * window, int width, int height)
+void IMGUIGLViewImpl::onGLFWWindowSizeFunCallback(GLFWwindow* window, int width, int height)
 {
     /*if (_resolutionPolicy != ResolutionPolicy::UNKNOWN)
     {
@@ -861,7 +861,7 @@ void IMGUIGLViewImpl::onGLFWWindowSizeFunCallback(GLFWwindow * window, int width
     }
 }
 
-void IMGUIGLViewImpl::onGLFWWindowIconifyCallback(GLFWwindow * window, int iconified)
+void IMGUIGLViewImpl::onGLFWWindowIconifyCallback(GLFWwindow* window, int iconified)
 {
     if (iconified == GL_TRUE)
     {

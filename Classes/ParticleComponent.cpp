@@ -331,7 +331,7 @@ void ParticleComponent::initWithFile(const std::string& filename)
 
 void ParticleComponent::setDisplayFrame(const std::string& spriteFrameName)
 {
-    if (auto * spriteFrame = cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFrameName))
+    if (auto* spriteFrame = cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName(spriteFrameName))
     {
         this->spriteFrameName = spriteFrameName;
 

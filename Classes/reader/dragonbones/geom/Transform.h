@@ -82,7 +82,7 @@ public:
         return *this;
     }
 
-    inline Transform & fromMatrix(const Matrix & matrix)
+    inline Transform& fromMatrix(const Matrix& matrix)
     {
         const auto  backupScaleX = scaleX, backupScaleY = scaleY;
 
@@ -112,7 +112,7 @@ public:
         return *this;
     }
 
-    inline Transform& toMatrix(Matrix & matrix)
+    inline Transform& toMatrix(Matrix& matrix)
     {
         matrix.a = scaleX * cos(skewY);
         matrix.b = scaleX * sin(skewY);

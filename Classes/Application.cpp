@@ -33,7 +33,7 @@ bool Application::applicationDidFinishLaunching()
 {
     auto* director = cocos2d::Director::getInstance();
 
-    if (auto * view = director->getOpenGLView(); !view)
+    if (auto* view = director->getOpenGLView(); !view)
     {
         view = cocos2d::IMGUIGLViewImpl::createWithRect("Apophis", { 0, 0, 2048, 1536 });
         view->setDesignResolutionSize(1024.f, 768.f, ResolutionPolicy::EXACT_FIT);

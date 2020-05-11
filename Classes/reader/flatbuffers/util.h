@@ -113,7 +113,7 @@ namespace flatbuffers {
     }
 
     typedef bool (*LoadFileFunction)(const char* filename, bool binary,
-        std::string * dest);
+        std::string* dest);
     typedef bool (*FileExistsFunction)(const char* filename);
 
     LoadFileFunction SetLoadFileFunction(LoadFileFunction load_file_function);
@@ -132,7 +132,7 @@ namespace flatbuffers {
     // false otherwise.  If "binary" is false data is read
     // using ifstream's text mode, otherwise data is read with
     // no transcoding.
-    bool LoadFile(const char* name, bool binary, std::string * buf);
+    bool LoadFile(const char* name, bool binary, std::string* buf);
 
     // Save data "buf" of length "len" bytes into a file
     // "name" returning true if successful, false otherwise.
@@ -151,7 +151,7 @@ namespace flatbuffers {
     // successful, false otherwise.  If "binary" is false
     // data is written using ifstream's text mode, otherwise
     // data is written with no transcoding.
-    inline bool SaveFile(const char* name, const std::string & buf, bool binary) {
+    inline bool SaveFile(const char* name, const std::string& buf, bool binary) {
         return SaveFile(name, buf.c_str(), buf.size(), binary);
     }
 
@@ -167,33 +167,33 @@ namespace flatbuffers {
 #endif // _WIN32
 
     // Returns the path with the extension, if any, removed.
-    inline std::string StripExtension(const std::string & filepath) {
+    inline std::string StripExtension(const std::string& filepath) {
         size_t i = filepath.find_last_of(".");
         return i != std::string::npos ? filepath.substr(0, i) : filepath;
     }
 
     // Returns the extension, if any.
-    inline std::string GetExtension(const std::string & filepath) {
+    inline std::string GetExtension(const std::string& filepath) {
         size_t i = filepath.find_last_of(".");
         return i != std::string::npos ? filepath.substr(i + 1) : "";
     }
 
     // Return the last component of the path, after the last separator.
-    inline std::string StripPath(const std::string & filepath) {
+    inline std::string StripPath(const std::string& filepath) {
         size_t i = filepath.find_last_of(PathSeparatorSet);
         return i != std::string::npos ? filepath.substr(i + 1) : filepath;
     }
 
     // Strip the last component of the path + separator.
-    inline std::string StripFileName(const std::string & filepath) {
+    inline std::string StripFileName(const std::string& filepath) {
         size_t i = filepath.find_last_of(PathSeparatorSet);
         return i != std::string::npos ? filepath.substr(0, i) : "";
     }
 
     // Concatenates a path with a filename, regardless of wether the path
     // ends in a separator or not.
-    inline std::string ConCatPathFileName(const std::string & path,
-        const std::string & filename) {
+    inline std::string ConCatPathFileName(const std::string& path,
+        const std::string& filename) {
         std::string filepath = path;
         if (path.length() && path[path.size() - 1] != kPathSeparator &&
             path[path.size() - 1] != kPosixPathSeparator)
@@ -204,7 +204,7 @@ namespace flatbuffers {
 
     // This function ensure a directory exists, by recursively
     // creating dirs for any parts of the path that don't exist yet.
-    inline void EnsureDirExists(const std::string & filepath) {
+    inline void EnsureDirExists(const std::string& filepath) {
         auto parent = StripFileName(filepath);
         if (parent.length()) EnsureDirExists(parent);
 #ifdef _WIN32
@@ -216,7 +216,7 @@ namespace flatbuffers {
 
     // Obtains the absolute path from any other path.
     // Returns the input path if the absolute path couldn't be resolved.
-    inline std::string AbsolutePath(const std::string & filepath) {
+    inline std::string AbsolutePath(const std::string& filepath) {
 #ifdef FLATBUFFERS_NO_ABSOLUTE_PATH_RESOLUTION
         return filepath;
 #else
@@ -236,7 +236,7 @@ namespace flatbuffers {
 
     // Convert a unicode code point into a UTF-8 representation by appending it
     // to a string. Returns the number of bytes generated.
-    inline int ToUTF8(uint32_t ucc, std::string * out) {
+    inline int ToUTF8(uint32_t ucc, std::string* out) {
         assert(!(ucc & 0x80000000));  // Top bit can't be set.
         // 6 possible encodings: http://en.wikipedia.org/wiki/UTF-8
         for (int i = 0; i < 6; i++) {

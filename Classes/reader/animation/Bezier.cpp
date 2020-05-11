@@ -53,7 +53,7 @@ namespace
 
     // Modified from http://jsbin.com/yibipofeqi/1/edit, optimized for animations.
     // The origin Cardano's algorithm is based on http://www.trans4mind.com/personal_development/mathematics/polynomials/cubicAlgebra.htm
-    float cardano(const std::vector<float> & curve, float x)
+    float cardano(const std::vector<float>& curve, float x)
     {
         auto pa = x - 0;
         auto pb = x - curve[0];
@@ -169,7 +169,7 @@ namespace Bazier
         float p2y = controlPoints[3]; // c
         float p3y = 1.f;                // d
         float t1 = 1.f - percent;
-        return p0y * t1* t1* t1 +
+        return p0y * t1 * t1 * t1 +
             p1y * 3 * percent * t1 * t1 +
             p2y * 3 * percent * percent * t1 +
             p3y * percent * percent * percent;

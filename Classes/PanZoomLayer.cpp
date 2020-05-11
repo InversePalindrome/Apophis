@@ -73,7 +73,7 @@ void PanZoomLayer::update(float dt) {
     }
 }
 
-void PanZoomLayer::onTouchesBegan(const std::vector<Touch*> & touches, Event * event) {
+void PanZoomLayer::onTouchesBegan(const std::vector<Touch*>& touches, Event* event) {
     if (_isHolding) return;
 
     for (auto& touch : touches) {
@@ -85,7 +85,7 @@ void PanZoomLayer::onTouchesBegan(const std::vector<Touch*> & touches, Event * e
     gettimeofday(&_timeStamp, NULL);
 }
 
-void PanZoomLayer::onTouchesMoved(const std::vector<Touch*> & touches, Event * event) {
+void PanZoomLayer::onTouchesMoved(const std::vector<Touch*>& touches, Event* event) {
     if (_isHolding) return;
 
     if (_touches.size() == 1) {
@@ -150,7 +150,7 @@ void PanZoomLayer::onTouchesMoved(const std::vector<Touch*> & touches, Event * e
     }
 }
 
-void PanZoomLayer::onTouchesEnded(const std::vector<Touch*> & touches, Event * event) {
+void PanZoomLayer::onTouchesEnded(const std::vector<Touch*>& touches, Event* event) {
     if (_isHolding) return;
 
     for (auto touch : touches) {

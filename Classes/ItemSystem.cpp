@@ -37,7 +37,7 @@ void ItemSystem::receive(const entityx::EntityDestroyedEvent& event)
 
     if (const auto [destroyedDrop, destroyedTransform] = destroyedEntity.components<DropComponent, TransformComponent>(); destroyedDrop && destroyedTransform)
     {
-        if (const auto & destroyedItemFilenames = destroyedDrop->getItemFilenames(); !destroyedItemFilenames.empty())
+        if (const auto& destroyedItemFilenames = destroyedDrop->getItemFilenames(); !destroyedItemFilenames.empty())
         {
             const auto& destroyedWeights = destroyedDrop->getWeights();
 

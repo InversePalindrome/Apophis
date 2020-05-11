@@ -65,7 +65,7 @@ bool Intersection::circleCircle(const cocos2d::Vec2& pos1, float r1, const cocos
     return distance < (r1 + r2);
 }
 
-bool Intersection::polygonCircle(const std::vector<cocos2d::Vec2> & polygon, const cocos2d::Vec2 & pos, float r)
+bool Intersection::polygonCircle(const std::vector<cocos2d::Vec2>& polygon, const cocos2d::Vec2& pos, float r)
 {
     if (Intersection::pointInPolygon(pos, polygon))
         return true;
@@ -82,7 +82,7 @@ bool Intersection::polygonCircle(const std::vector<cocos2d::Vec2> & polygon, con
     return false;
 }
 
-bool Intersection::linePolygon(const cocos2d::Vec2 & A, const cocos2d::Vec2 & B, const std::vector<cocos2d::Vec2> & polygon)
+bool Intersection::linePolygon(const cocos2d::Vec2& A, const cocos2d::Vec2& B, const std::vector<cocos2d::Vec2>& polygon)
 {
     auto length = polygon.size();
     for (size_t i = 0; i < length; ++i)
@@ -97,7 +97,7 @@ bool Intersection::linePolygon(const cocos2d::Vec2 & A, const cocos2d::Vec2 & B,
     return false;
 }
 
-bool Intersection::pointInPolygon(const cocos2d::Vec2 & pos, const std::vector<cocos2d::Vec2> & polygon)
+bool Intersection::pointInPolygon(const cocos2d::Vec2& pos, const std::vector<cocos2d::Vec2>& polygon)
 {
     bool inside = false;
     auto x = pos.x;
@@ -112,7 +112,7 @@ bool Intersection::pointInPolygon(const cocos2d::Vec2 & pos, const std::vector<c
     {
         auto xi = polygon[i].x, yi = polygon[i].y,
             xj = polygon[j].x, yj = polygon[j].y;
-        intersect = ((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        intersect = ((yi > y) != (yj > y)) && (x < (xj - xi)* (y - yi) / (yj - yi) + xi);
 
         if (intersect)
             inside = !inside;
@@ -121,7 +121,7 @@ bool Intersection::pointInPolygon(const cocos2d::Vec2 & pos, const std::vector<c
     return inside;
 }
 
-float Intersection::pointLineDistance(const cocos2d::Vec2 & point, const cocos2d::Vec2 & start, const cocos2d::Vec2 & end, bool isSegment)
+float Intersection::pointLineDistance(const cocos2d::Vec2& point, const cocos2d::Vec2& start, const cocos2d::Vec2& end, bool isSegment)
 {
     auto dx = end.x - start.x;
     auto dy = end.y - start.y;

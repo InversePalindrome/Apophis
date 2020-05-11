@@ -155,7 +155,7 @@ void BodyComponent::display()
                 }
             }
 
-            std::visit([this](auto & shape)
+            std::visit([this](auto& shape)
                 {
                     using ShapeType = std::decay_t<decltype(shape)>;
 
@@ -181,7 +181,7 @@ void BodyComponent::display()
             {
                 b2FixtureDef fixtureDef;
 
-                std::visit([this, &fixtureDef](auto & shape)
+                std::visit([this, &fixtureDef](auto& shape)
                     {
                         using ShapeType = std::decay_t<decltype(shape)>;
 

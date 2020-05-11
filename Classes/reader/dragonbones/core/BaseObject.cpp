@@ -37,7 +37,7 @@ void BaseObject::_returnObject(BaseObject* object)
     }
 }
 
-void BaseObject::setObjectRecycleOrDestroyCallback(const std::function<void(BaseObject*, int)> & cb)
+void BaseObject::setObjectRecycleOrDestroyCallback(const std::function<void(BaseObject*, int)>& cb)
 {
     _recycleOrDestroyCallback = cb;
 }

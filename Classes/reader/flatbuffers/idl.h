@@ -178,7 +178,7 @@ switch (type) {
             return false;
         }
 
-        void Move(const std::string & oldname, const std::string & newname) {
+        void Move(const std::string& oldname, const std::string& newname) {
             auto it = dict.find(oldname);
             if (it != dict.end()) {
                 auto obj = it->second;
@@ -190,7 +190,7 @@ switch (type) {
             }
         }
 
-        T* Lookup(const std::string & name) const {
+        T* Lookup(const std::string& name) const {
             auto it = dict.find(name);
             return it == dict.end() ? nullptr : it->second;
         }
@@ -219,8 +219,8 @@ switch (type) {
 
         flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<
             reflection::KeyValue>>>
-            SerializeAttributes(FlatBufferBuilder * builder,
-                const Parser & parser) const;
+            SerializeAttributes(FlatBufferBuilder* builder,
+                const Parser& parser) const;
 
         std::string name;
         std::string file;
@@ -328,8 +328,8 @@ switch (type) {
         return a.base_type == b.base_type && a.element == b.element &&
             (a.struct_def == b.struct_def ||
                 a.struct_def->name == b.struct_def->name) &&
-                (a.enum_def == b.enum_def ||
-                    a.enum_def->name == b.enum_def->name);
+            (a.enum_def == b.enum_def ||
+                a.enum_def->name == b.enum_def->name);
     }
 
     struct RPCCall {

@@ -50,7 +50,7 @@ void AnimationTimelineState::_onCrossFrame(AnimationFrameData* frame)
 
         if (
             (eventData->type == EventType::Sound ?
-            (EventObject::_soundEventManager ? EventObject::_soundEventManager : eventDispatcher) :
+                (EventObject::_soundEventManager ? EventObject::_soundEventManager : eventDispatcher) :
                 eventDispatcher
                 )->hasEvent(eventType)
             )
@@ -362,7 +362,7 @@ void BoneTimelineState::_onUpdateFrame(bool isUpdate)
     }
 }
 
-void BoneTimelineState::fadeIn(Armature * armature, AnimationState * animationState, BoneTimelineData * timelineData, float time)
+void BoneTimelineState::fadeIn(Armature* armature, AnimationState* animationState, BoneTimelineData* timelineData, float time)
 {
     TimelineState::fadeIn(armature, animationState, timelineData, time);
 
@@ -551,7 +551,7 @@ void SlotTimelineState::_onUpdateFrame(bool isUpdate)
     }
 }
 
-void SlotTimelineState::fadeIn(Armature * armature, AnimationState * animationState, SlotTimelineData * timelineData, float time)
+void SlotTimelineState::fadeIn(Armature* armature, AnimationState* animationState, SlotTimelineData* timelineData, float time)
 {
     TimelineState::fadeIn(armature, animationState, timelineData, time);
 
@@ -679,7 +679,7 @@ void FFDTimelineState::_onUpdateFrame(bool isUpdate)
     }
 }
 
-void FFDTimelineState::fadeIn(Armature * armature, AnimationState * animationState, FFDTimelineData * timelineData, float time)
+void FFDTimelineState::fadeIn(Armature* armature, AnimationState* animationState, FFDTimelineData* timelineData, float time)
 {
     TimelineState::fadeIn(armature, animationState, timelineData, time);
 

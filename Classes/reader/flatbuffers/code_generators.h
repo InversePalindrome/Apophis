@@ -100,7 +100,7 @@ namespace flatbuffers {
 
         // Ensure that a type is prefixed with its namespace whenever it is used
         // outside of its namespace.
-        std::string WrapInNameSpace(const Namespace * ns, const std::string & name) {
+        std::string WrapInNameSpace(const Namespace* ns, const std::string& name) {
             if (CurrentNameSpace() == ns) return name;
             std::string qualified_name = qualifying_start_;
             for (auto it = ns->components.begin(); it != ns->components.end(); ++it)
@@ -108,7 +108,7 @@ namespace flatbuffers {
             return qualified_name + name;
         }
 
-        std::string WrapInNameSpace(const Definition & def) {
+        std::string WrapInNameSpace(const Definition& def) {
             return WrapInNameSpace(def.defined_namespace, def.name);
         }
 

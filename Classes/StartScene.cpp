@@ -24,7 +24,7 @@ cocos2d::Scene* getStartScene()
 
     auto* keyboardListener = cocos2d::EventListenerKeyboard::create();
 
-    keyboardListener->onKeyPressed = [](const auto keyCode, auto * event)
+    keyboardListener->onKeyPressed = [](const auto keyCode, auto* event)
     {
         cocos2d::Director::getInstance()->replaceScene(getMenuScene());
     };

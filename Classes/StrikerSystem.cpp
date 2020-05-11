@@ -52,7 +52,7 @@ StrikerSystem::StrikerSystem(entityx::EventManager& eventManager) :
                                     void StrikerSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
                                     {
                                         entityManager.each<ObjectComponent, TargetComponent, BodyComponent, SpeedComponent, WanderComponent, VisionComponent, HealthComponent>
-                                            ([this, &entityManager](auto entity, const auto & object, const auto & target, auto & body, const auto & speed, auto & wander, const auto & vision, const auto & health)
+                                            ([this, &entityManager](auto entity, const auto& object, const auto& target, auto& body, const auto& speed, auto& wander, const auto& vision, const auto& health)
                                                 {
                                                     if (object.getObjectType() == +ObjectType::Striker)
                                                     {

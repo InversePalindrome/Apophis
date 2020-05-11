@@ -95,14 +95,14 @@ void CCIMGUI::updateImGUI()
     }
 }
 
-void CCIMGUI::removeImGUI(const std::string & name)
+void CCIMGUI::removeImGUI(const std::string& name)
 {
     auto iter = _callPiplines.find(name);
     if (iter != _callPiplines.end())
         _callPiplines.erase(iter);
 }
 
-void CCIMGUI::setValue(bool value, const std::string & uid)
+void CCIMGUI::setValue(bool value, const std::string& uid)
 {
     if (_values.find(uid) == _values.end()) {
         _values[uid] = new (std::nothrow)CCImValue(value);
@@ -112,7 +112,7 @@ void CCIMGUI::setValue(bool value, const std::string & uid)
     }
 }
 
-void CCIMGUI::setValue(int value, const std::string & uid)
+void CCIMGUI::setValue(int value, const std::string& uid)
 {
     if (_values.find(uid) == _values.end()) {
         _values[uid] = new (std::nothrow)CCImValue(value);
@@ -122,18 +122,18 @@ void CCIMGUI::setValue(int value, const std::string & uid)
     }
 }
 
-CCImValue* CCIMGUI::getValue(const std::string & uid)
+CCImValue* CCIMGUI::getValue(const std::string& uid)
 {
     return _values[uid];
 }
 
-void CCIMGUI::removeValue(const std::string & uid)
+void CCIMGUI::removeValue(const std::string& uid)
 {
     _values.erase(uid);
 }
 
 #include <tuple>
-static std::tuple<Texture2D*, ImVec2, ImVec2, ImVec2> getTextureInfo(const std::string & fn, int w = -1, int h = -1) {
+static std::tuple<Texture2D*, ImVec2, ImVec2, ImVec2> getTextureInfo(const std::string& fn, int w = -1, int h = -1) {
     std::string name = fn;
     cocos2d::Texture2D* texture = NULL;
     ImVec2 uv0(0, 0);
@@ -182,7 +182,7 @@ static std::tuple<Texture2D*, ImVec2, ImVec2, ImVec2> getTextureInfo(const std::
     return std::make_tuple(texture, size, uv0, uv1);
 }
 
-void CCIMGUI::image(const std::string & fn, int w, int h)
+void CCIMGUI::image(const std::string& fn, int w, int h)
 {
     cocos2d::Texture2D* texture = NULL;
     ImVec2 uv0(0, 0);
@@ -209,7 +209,7 @@ void CCIMGUI::image(const std::string & fn, int w, int h)
         }
     }
 }
-bool CCIMGUI::imageButton(const std::string & fn, int w, int h)
+bool CCIMGUI::imageButton(const std::string& fn, int w, int h)
 {
     cocos2d::Texture2D* texture = NULL;
     ImVec2 uv0(0, 0);

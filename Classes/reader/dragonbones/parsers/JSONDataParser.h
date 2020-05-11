@@ -226,8 +226,8 @@ protected:
 
                     unsigned frameStart = 0;
                     unsigned frameCount = 0;
-                    T * frame = nullptr;
-                    T * prevFrame = nullptr;
+                    T* frame = nullptr;
+                    T* prevFrame = nullptr;
 
                     for (unsigned i = 0, iW = 0, l = this->_animation->frameCount + 1; i < l; ++i)
                     {

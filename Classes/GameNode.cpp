@@ -44,7 +44,7 @@ bool GameNode::init()
 
     auto* keyboardListener = cocos2d::EventListenerKeyboard::create();
 
-    keyboardListener->onKeyPressed = [this](const auto keyCode, auto * event)
+    keyboardListener->onKeyPressed = [this](const auto keyCode, auto* event)
     {
         if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_ESCAPE)
         {
@@ -55,8 +55,8 @@ bool GameNode::init()
     };
 
     getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyboardListener, this);
-    getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("resume", [this](auto * event) { scheduleUpdate(); }), this);
-    getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("retry", [this](auto * event) { reloadGame(); }), this);
+    getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("resume", [this](auto* event) { scheduleUpdate(); }), this);
+    getEventDispatcher()->addEventListenerWithSceneGraphPriority(cocos2d::EventListenerCustom::create("retry", [this](auto* event) { reloadGame(); }), this);
 
     initSystems();
 

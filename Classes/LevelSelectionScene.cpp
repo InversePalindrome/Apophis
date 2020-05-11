@@ -26,7 +26,7 @@ cocos2d::Scene* getLevelSelectionScene()
     auto* canvas = scene->getChildByName("Canvas");
     auto* director = cocos2d::Director::getInstance();
 
-    static_cast<cocos2d::ui::Button*>(canvas->getChildByName("backButton"))->addTouchEventListener([director](auto * sender, auto event)
+    static_cast<cocos2d::ui::Button*>(canvas->getChildByName("backButton"))->addTouchEventListener([director](auto* sender, auto event)
         {
             director->replaceScene(getMenuScene());
         });
@@ -51,7 +51,7 @@ cocos2d::Scene* getLevelSelectionScene()
     auto* button = cocos2d::ui::Button::create("RegularRectangleButton", "SelectedRectangleButton", "", cocos2d::ui::Widget::TextureResType::PLIST);
     button->setPosition({ 300.f, 300.f });
     canvas->addChild(button);
-    button->addTouchEventListener([director](auto * sender, auto event)
+    button->addTouchEventListener([director](auto* sender, auto event)
         {
             director->replaceScene(getGameScene("MilkyWay.xml"));
         });

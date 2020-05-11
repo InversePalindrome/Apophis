@@ -26,22 +26,22 @@ cocos2d::Scene* getMenuScene()
     auto* canvas = scene->getChildByName("Canvas");
     auto* director = cocos2d::Director::getInstance();
 
-    static_cast<cocos2d::ui::Button*>(canvas->getChildByName("playButton"))->addTouchEventListener([director](auto * sender, auto event)
+    static_cast<cocos2d::ui::Button*>(canvas->getChildByName("playButton"))->addTouchEventListener([director](auto* sender, auto event)
         {
             director->replaceScene(getLevelSelectionScene());
         });
-    static_cast<cocos2d::ui::Button*>(canvas->getChildByName("settingsButton"))->addTouchEventListener([director](auto * sender, auto event)
+    static_cast<cocos2d::ui::Button*>(canvas->getChildByName("settingsButton"))->addTouchEventListener([director](auto* sender, auto event)
         {
             director->pushScene(getSettingsScene());
         });
-    static_cast<cocos2d::ui::Button*>(canvas->getChildByName("exitButton"))->addTouchEventListener([director](auto * sender, auto event)
+    static_cast<cocos2d::ui::Button*>(canvas->getChildByName("exitButton"))->addTouchEventListener([director](auto* sender, auto event)
         {
             director->end();
         });
 
     auto* keyboardListener = cocos2d::EventListenerKeyboard::create();
 
-    keyboardListener->onKeyPressed = [director](const auto keyCode, auto * event)
+    keyboardListener->onKeyPressed = [director](const auto keyCode, auto* event)
     {
         if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_L)
         {

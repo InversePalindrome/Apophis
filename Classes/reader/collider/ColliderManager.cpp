@@ -85,7 +85,7 @@ bool ColliderManager::isDebugDrawEnabled() const
     return _debugDrawEnabled;
 }
 
-void ColliderManager::addCollider(Collider * collider)
+void ColliderManager::addCollider(Collider* collider)
 {
     const auto& result = std::find(_colliders.begin(), _colliders.end(), collider);
     if (result == _colliders.end())
@@ -108,12 +108,12 @@ bool ColliderManager::isAABBDebugDrawEnabled() const
     return _AABBDebugDrawEnabled;
 }
 
-void ColliderManager::setCollistionMatrix(const std::vector<std::vector<bool>> & collistionMatrix)
+void ColliderManager::setCollistionMatrix(const std::vector<std::vector<bool>>& collistionMatrix)
 {
     _collisionMatrix = std::move(collistionMatrix);
 }
 
-bool ColliderManager::shouldColider(Collider * collider1, Collider * collider2) const
+bool ColliderManager::shouldColider(Collider* collider1, Collider* collider2) const
 {
     auto target1 = collider1->getTarget();
     auto target2 = collider2->getTarget();
@@ -142,7 +142,7 @@ void ColliderManager::checkColliders()
         removeCollider(collider);
 }
 
-void ColliderManager::removeCollider(creator::Collider * collider)
+void ColliderManager::removeCollider(creator::Collider* collider)
 {
     auto found = std::find(_colliders.begin(), _colliders.end(), collider);
     if (found != _colliders.end())
@@ -162,7 +162,7 @@ void ColliderManager::removeCollider(creator::Collider * collider)
         assert(false);
 }
 
-void ColliderManager::registerCollitionCallback(CollistionCallback callback, const std::string & key)
+void ColliderManager::registerCollitionCallback(CollistionCallback callback, const std::string& key)
 {
     if (_collisionCallbacks.find(key) != _collisionCallbacks.end())
     {
@@ -172,7 +172,7 @@ void ColliderManager::registerCollitionCallback(CollistionCallback callback, con
 
     _collisionCallbacks[key] = callback;
 }
-void ColliderManager::unregisterCollisionCallback(const std::string & key)
+void ColliderManager::unregisterCollisionCallback(const std::string& key)
 {
     if (_collisionCallbacks.find(key) != _collisionCallbacks.end())
         _collisionCallbacks.erase(key);
@@ -188,7 +188,7 @@ void ColliderManager::drawColliders() const
     if (_debugDrawNode->getParent() == nullptr)
         cocos2d::Director::getInstance()->getRunningScene()->addChild(_debugDrawNode);
 
-    CircleCollider * circleCollider = nullptr;
+    CircleCollider* circleCollider = nullptr;
     for (const auto& collider : _colliders)
     {
         if (_debugDrawEnabled)

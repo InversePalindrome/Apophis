@@ -179,7 +179,7 @@ void Slot::_updateDisplay()
     }
 }
 
-void Slot::_setArmature(Armature * value)
+void Slot::_setArmature(Armature* value)
 {
     if (this->_armature == value)
     {
@@ -364,7 +364,7 @@ void Slot::_update(int cacheFrameIndex)
     }
 }
 
-bool Slot::_setDisplayList(const std::vector<std::pair<void*, DisplayType>> & value)
+bool Slot::_setDisplayList(const std::vector<std::pair<void*, DisplayType>>& value)
 {
     if (!value.empty())
     {
@@ -431,7 +431,7 @@ bool Slot::_setBlendMode(BlendMode value)
     return true;
 }
 
-bool Slot::_setColor(const ColorTransform & value)
+bool Slot::_setColor(const ColorTransform& value)
 {
     _colorTransform = value; // copy
     _colorDirty = true;
@@ -447,7 +447,7 @@ void Slot::setDisplayIndex(int value)
     }
 }
 
-void Slot::setDisplayList(const std::vector<std::pair<void*, DisplayType>> & value)
+void Slot::setDisplayList(const std::vector<std::pair<void*, DisplayType>>& value)
 {
     const auto backupDisplayList = _displayList; // copy
     auto disposeDisplayList = backupDisplayList; // copy
@@ -515,7 +515,7 @@ void Slot::setDisplay(void* value, DisplayType displayType)
     }
 }
 
-void Slot::setChildArmature(Armature * value)
+void Slot::setChildArmature(Armature* value)
 {
     if (_childArmature == value)
     {
