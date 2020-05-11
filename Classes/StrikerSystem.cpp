@@ -49,20 +49,20 @@ StrikerSystem::StrikerSystem(entityx::EventManager& eventManager) :
 {
 }
 
-                                    void StrikerSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
-                                    {
-                                        entityManager.each<ObjectComponent, TargetComponent, BodyComponent, SpeedComponent, WanderComponent, VisionComponent, HealthComponent>
-                                            ([this, &entityManager](auto entity, const auto& object, const auto& target, auto& body, const auto& speed, auto& wander, const auto& vision, const auto& health)
-                                                {
-                                                    if (object.getObjectType() == +ObjectType::Striker)
-                                                    {
-                                                        if (auto targetEntity = entityManager.get(entityManager.create_id(target.getTargetID())))
-                                                        {
-                                                            if (const auto targetTransform = targetEntity.component<TransformComponent>())
-                                                            {
-                                                                strikerTree.process(StrikerContext{ entity, targetEntity, body, speed, wander, vision, health, targetTransform });
-                                                            }
-                                                        }
-                                                    }
-                                                });
-                                    }
+void StrikerSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
+{
+    entityManager.each<ObjectComponent, TargetComponent, BodyComponent, SpeedComponent, WanderComponent, VisionComponent, HealthComponent>
+        ([this, &entityManager](auto entity, const auto& object, const auto& target, auto& body, const auto& speed, auto& wander, const auto& vision, const auto& health)
+            {
+                if (object.getObjectType() == +ObjectType::Striker)
+                {
+                    if (auto targetEntity = entityManager.get(entityManager.create_id(target.getTargetID())))
+                    {
+                        if (const auto targetTransform = targetEntity.component<TransformComponent>())
+                        {
+                            strikerTree.process(StrikerContext{ entity, targetEntity, body, speed, wander, vision, health, targetTransform });
+                        }
+                    }
+                }
+            });
+}
