@@ -57,20 +57,20 @@ DroneSystem::DroneSystem(entityx::EntityManager& entityManager, entityx::EventMa
 {
 }
 
-                    void DroneSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
+void DroneSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
+{
+    entityManager.each<ObjectComponent, BodyComponent, WanderComponent, SpeedComponent, ArriveComponent, FollowComponent, FlockComponent, VisionComponent>
+        ([this, &entityManager](auto entity, const auto& object, auto& body, auto& wander, const auto& speed, const auto& arrive, const auto& follow, const auto& flock, const auto& vision)
+            {
+                if (object.getObjectType() == +ObjectType::Drone)
+                {
+                    if (auto leaderEntity = entityManager.get(entityManager.create_id(follow.getLeaderID())))
                     {
-                        entityManager.each<ObjectComponent, BodyComponent, WanderComponent, SpeedComponent, ArriveComponent, FollowComponent, FlockComponent, VisionComponent>
-                            ([this, &entityManager](auto entity, const auto& object, auto& body, auto& wander, const auto& speed, const auto& arrive, const auto& follow, const auto& flock, const auto& vision)
-                                {
-                                    if (object.getObjectType() == +ObjectType::Drone)
-                                    {
-                                        if (auto leaderEntity = entityManager.get(entityManager.create_id(follow.getLeaderID())))
-                                        {
-                                            if (const auto leaderBody = leaderEntity.component<BodyComponent>())
-                                            {
-                                                droneTree.process(DroneContext{ entity, leaderEntity, body, wander, speed, arrive, follow, flock, vision, leaderBody });
-                                            }
-                                        }
-                                    }
-                                });
+                        if (const auto leaderBody = leaderEntity.component<BodyComponent>())
+                        {
+                            droneTree.process(DroneContext{ entity, leaderEntity, body, wander, speed, arrive, follow, flock, vision, leaderBody });
+                        }
                     }
+                }
+            });
+}
