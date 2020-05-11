@@ -21,40 +21,40 @@ PatrolSystem::PatrolSystem() :
 {
 }
 
-            void PatrolSystem::configure(entityx::EventManager& eventManager)
-            {
-                eventManager.subscribe<CrossedWaypoint>(*this);
-            }
+void PatrolSystem::configure(entityx::EventManager& eventManager)
+{
+    eventManager.subscribe<CrossedWaypoint>(*this);
+}
 
-            void PatrolSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
+void PatrolSystem::update(entityx::EntityManager& entityManager, entityx::EventManager& eventManager, entityx::TimeDelta deltaTime)
+{
+    entityManager.each<ObjectComponent, BodyComponent, SpeedComponent, PatrolComponent>
+        ([this, &entityManager](auto entity, const auto& object, auto& body, const auto& speed, const auto& patrol)
             {
-                entityManager.each<ObjectComponent, BodyComponent, SpeedComponent, PatrolComponent>
-                    ([this, &entityManager](auto entity, const auto& object, auto& body, const auto& speed, const auto& patrol)
-                        {
-                            if (auto pathEntity = entityManager.get(entityManager.create_id(patrol.getPathwayID())); pathEntity && object.getObjectType() == +ObjectType::Patrol)
-                            {
-                                if (auto pathway = pathEntity.component<PathwayComponent>())
-                                {
-                                    patrolTree.process(PatrolContext{ entity, pathway->operator[](patrol.getCurrentPointIndex()), body, speed });
-                                }
-                            }
-                        });
-            }
-
-            void PatrolSystem::receive(const CrossedWaypoint& event)
-            {
-                auto pathway = event.pathEntity.component<PathwayComponent>();
-                auto patrol = event.patrolEntity.component<PatrolComponent>();
-
-                if (pathway && patrol && patrol->getPathwayID() == event.pathEntity.id().index())
+                if (auto pathEntity = entityManager.get(entityManager.create_id(patrol.getPathwayID())); pathEntity && object.getObjectType() == +ObjectType::Patrol)
                 {
-                    auto currentPointIndex = patrol->getCurrentPointIndex();
-
-                    if (++currentPointIndex == pathway->getPathwayPointsCount())
+                    if (auto pathway = pathEntity.component<PathwayComponent>())
                     {
-                        currentPointIndex = 0;
+                        patrolTree.process(PatrolContext{ entity, pathway->operator[](patrol.getCurrentPointIndex()), body, speed });
                     }
-
-                    patrol->setCurrentPointIndex(currentPointIndex);
                 }
-            }
+            });
+}
+
+void PatrolSystem::receive(const CrossedWaypoint& event)
+{
+    auto pathway = event.pathEntity.component<PathwayComponent>();
+    auto patrol = event.patrolEntity.component<PatrolComponent>();
+
+    if (pathway && patrol && patrol->getPathwayID() == event.pathEntity.id().index())
+    {
+        auto currentPointIndex = patrol->getCurrentPointIndex();
+
+        if (++currentPointIndex == pathway->getPathwayPointsCount())
+        {
+            currentPointIndex = 0;
+        }
+
+        patrol->setCurrentPointIndex(currentPointIndex);
+    }
+}
